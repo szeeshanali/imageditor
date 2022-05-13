@@ -6817,6 +6817,7 @@ CMF.products = (function($)
      */
     function select()
     {
+        debugger;
         var $product;
         var sheetHeight;
         var arg = arguments[0];
