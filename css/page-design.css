@@ -4,11 +4,11 @@
 }
 
 .section {
-    padding: 0 30px;
+    padding: 0 0;
 }
 
 .section:first-child {
-    padding: 20px 30px;
+    /* padding: 20px 30px; */
 }
 
 /*.container {*/

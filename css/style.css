@@ -116,9 +116,15 @@ input[type="color"],
 }
 
 #main {
-    background-color: transparent;
+    background-color: #f6f6f6;
 }
 
+
+#main > .container
+{
+    background-color:transparent;
+    width:100%
+}
 .btn-primary:active,
 .btn-primary:focus {
     background: #3a9cee !important;
@@ -127,7 +133,7 @@ input[type="color"],
 
 
 .section {
-    background: #fff;
+    background:transparent;
 }
 
 .section-title {
@@ -159,7 +165,7 @@ input[type="color"],
 }
 
 .navbar .navbar-inner {
-    background: #fff none;
+    background: #000000 none;
     /* box-shadow: 0 0 8px 0 rgba(0,0,0,.4); */
     /*filter: e(%("progid:DXImageTransform.Microsoft.gradient(enabled = false)"));*/
 }
@@ -184,9 +190,9 @@ input[type="color"],
 .navbar .nav > li > a,
 .navbar .nav > li > a:active,
 .navbar .nav > li > a:focus {
-    color: #111;
-    font-weight: bold;
-    font-size: 13px;
+    color: #fff;
+    font-weight:normal;
+    font-size: 14px;
 }
 
 
@@ -194,7 +200,7 @@ input[type="color"],
 .navbar .nav > .active > a,
 .navbar .nav > .active > a:hover,
 .navbar .nav > .active > a:focus {
-    color: #1ba1e2;
+    color: #fff;
 }
 
 /*.navbar .select-theme .select-theme {
