@@ -160,18 +160,21 @@ input[type="color"],
 
 .navbar .navbar-inner {
     background: #fff none;
-    box-shadow: 0 0 8px 0 rgba(0,0,0,.4);
+    /* box-shadow: 0 0 8px 0 rgba(0,0,0,.4); */
     /*filter: e(%("progid:DXImageTransform.Microsoft.gradient(enabled = false)"));*/
 }
 
 .navbar-static-top .container,
 .navbar-fixed-top .container {
     border-bottom: none;
+    width:95%;
+    padding-top:10px;
 }
 
 .navbar .site-title .brand {
     color: #111;
     font-weight: normal;
+    padding:0px;
 }
 
 .nav .active {
