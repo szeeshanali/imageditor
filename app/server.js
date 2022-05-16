@@ -6,15 +6,22 @@ const multer  = require('multer')
 const imageSize = require('image-size');
 const fs = require('fs');
 const path = require('path');
-
-
 const app = express();
 const port = process.env.PORT || 8080;
 app.use(express.static('public'))
+const config = {
+  host: "localhost",
+  app: "app",
+  api: "api",
+  port: "8080",
+  protocol:"http://"
+  
+}
+
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, './server/uploads/')
+      cb(null,  'uploads')
     },
     filename: function (req, file, cb) {
         console.log(file);
@@ -35,15 +42,15 @@ router.get('/', (req, res) => {
 
 router.get('/api/user-images/:id', (req, res) => {
     const url = req.params.id;
-    res.sendFile(`D:\\Projects\\imgeditor\\imageditor\\server\\uploads\\${url}`);
+    res.sendFile(path.join(__dirname,"uploads",url));
 });
 
 router.post("/api/upload-image", upload.single('userimages[]'), (req,res)=>{
    
 console.log( req.file)
 const url =  "http://localhost:8080/api/user-images/" + req.file.filename;
-const dimensions = imageSize(req.file.filename)
-console.log(dimensions);
+// const dimensions = imageSize(req.file.filename)
+// console.log(dimensions);
 
 console.log
     res.json({
