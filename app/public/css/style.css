@@ -2713,3 +2713,27 @@ and (max-device-width: 1024px) {
     color: white;
     padding: 7px 12px;
 }
+
+.fieldset-viewport {
+    border:dotted 2px #8d8d8d;
+    background-color: white;
+    width:460px;
+    margin:10px auto;
+    padding: 10 20;
+    
+}
+.fieldset-viewport > legend {
+    
+    background-color: #000;
+    padding:0 10px; 
+    color:white;
+    display: block;
+    width: auto; 
+    padding: 0 10px;
+     margin-bottom: 0px; 
+    font-size: 12;
+     line-height: 1.5; 
+    color: #e9e9e9;
+    border: 0;
+    border-bottom: 1px solid #e5e5e5;
+}

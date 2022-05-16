@@ -2751,7 +2751,7 @@ CMF.dashboard = (function($, undefined){
         }
     }
 
-
+    
     /**
      * Makes the dashboard controls usable
      */
@@ -3262,6 +3262,8 @@ CMF.dashboard = (function($, undefined){
             } else {
                 $button.hide();
             }
+            
+
         });
 
         $('#imageUploadForm [type="reset"]').on('click', function () {
@@ -4520,7 +4522,7 @@ CMF.lightbox = (function($, undefined) {
 
         $doc.on("change", "#tpr-upl-copyright-ack", function () {
             var $button = $("#imageUploadForm").find("[type='submit']");
-
+            //var $button = $("#addimage");
             if (this.checked) {
                 $button.prop('disabled', false);
             } else {
@@ -5010,9 +5012,20 @@ CMF.lightbox = (function($, undefined) {
     function handleFileUpload (event)
     {
         var imagesHaveCopyright = $(".tpr-upl-copyright-notice input")[0].checked;
+        var userfiles =  $("#imageUploadForm").find("[type='file']")[0].files;
+
+
 
         event.preventDefault();
-
+        // if (imagesHaveCopyright) {
+        //     const reader = new FileReader();
+        //     reader.onload = function(evt) {
+        //       disableImagesSelectionForm(),
+        //       processImagesSelectionResponse(evt.target.result),
+        //       console.log(evt.target.result);
+        //     };
+        //     reader.readAsDataURL(userfiles[0]);
+        // }
         if (imagesHaveCopyright) {
             $(this).asyncFileUpload({
                 afterSubmit: disableImagesSelectionForm,
@@ -6874,10 +6887,13 @@ CMF.products = (function($)
 
         // When $product is undefined, it means that the locally saved design is based
         // on a product that does not exist (anymore), in which case it has to be erased.
+        console.log('selected product: ',$product)
         if (!$product) {
+           
             return false;
         }
 
+        $("#page-title").text($product.text());
         CMF.viewport.width = CMF.viewport.resizeViewport($product.data('template').Width, $product.data('template').Height);
 
         template = new CMF.template($product.data('template'), $product.data('id'));
