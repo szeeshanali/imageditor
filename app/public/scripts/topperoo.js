@@ -2663,9 +2663,9 @@ CMF.dashboard = (function($, undefined){
         var placeholder = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC";
 
         $(".tpr-lazy-image").each(function() {
-             if (this.getAttribute("src") !== this.getAttribute("data-src")) {
-                 this.setAttribute("src", placeholder);
-             }
+            //  if (this.getAttribute("src") !== this.getAttribute("data-src")) {
+            //      this.setAttribute("src", placeholder);
+            //  }
         });
     }
 
@@ -2682,36 +2682,37 @@ CMF.dashboard = (function($, undefined){
             return;
         }
 
-        $images.each(function() {
-            var $image = $(this);
+        // $images.each(function() {
+        //     var $image = $(this);
 
-            if ( $image.offset().top <= offsetLimit ) {
-                if ( $image.attr("src") != $image.attr("data-src") ) {
-                    $image.attr("src", $image.attr("data-src"));
-                }
-            }
-        });
+        //     if ( $image.offset().top <= offsetLimit ) {
+        //         if ( $image.attr("src") != $image.attr("data-src") ) {
+        //             $image.attr("src", $image.attr("data-src"));
+        //         }
+        //     }
+        // });
     }
 
     function enableCustomScrollbars ()
     {
         $(".tpr-has-scrollbar").each(function(){
-            var $wrapper = $(this);
-            var $lazyImages = $wrapper.find(".tpr-lazy-image");
-            var offsetLimit;
+            // var $wrapper = $(this);
+            // var $lazyImages = $wrapper.find(".tpr-lazy-image");
+            // var offsetLimit;
 
-            var checkForLazyImages = function () {
-                if (!$lazyImages.length) {
-                    return;
-                }
+            // var checkForLazyImages = function () {
+            //     if (!$lazyImages.length) {
+            //         return;
+            //     }
 
-                offsetLimit = $wrapper.offset().top + $wrapper.height();
-                loadVisibleLazyImages($lazyImages, offsetLimit);
-            };
+            //     offsetLimit = $wrapper.offset().top + $wrapper.height();
+            //     loadVisibleLazyImages($lazyImages, offsetLimit);
+            // };
 
-            $wrapper.on('scroll', function() {
-                checkForLazyImages();
-            });
+            // $wrapper.on('scroll', function() {
+            //     checkForLazyImages();
+            // });
+
         });
     }
 
@@ -4931,8 +4932,8 @@ CMF.lightbox = (function($, undefined) {
            $("<input />", {
                id: inputId,
                type: "hidden",
-               name: "galleryImages[]",
-               value: image.attr("src")
+               name: "cliparts[]",
+               value: "https://app.topperoo.com/gallery/54f00c6f90b40b6227966d41a34e5e22/viewport/cmf_597a52de21c1a2511.png"
            }).appendTo("#clipArtSelectionForm");
        }
     }

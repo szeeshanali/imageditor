@@ -45,26 +45,46 @@ router.get('/api/user-images/:id', (req, res) => {
     res.sendFile(path.join(__dirname,"uploads",url));
 });
 
-router.post("/api/upload-image", upload.single('userimages[]'), (req,res)=>{
-   
+router.post("/api/upload-image", upload.single('userimages[]'), (req,res)=>{ 
 console.log( req.file)
 const url =  "http://localhost:8080/api/user-images/" + req.file.filename;
-// const dimensions = imageSize(req.file.filename)
-// console.log(dimensions);
+ const dimensions = imageSize(req.file.path)
+ console.log(dimensions);
 
 console.log
     res.json({
         images: [
             {
             "url":url,
-            "pxWidth":1200,
-            "pxHeight":630,
-            "inWidth":4,
-            "inHeight":2.1
+            "pxWidth": dimensions.width,
+            "pxHeight":dimensions.height,
+            "inWidth": parseFloat((dimensions.width * 0.0104166667).toFixed(2)),
+            "inHeight": parseFloat((dimensions.height * 0.0104166667).toFixed(2))
             }]
             
     });
 });
+
+router.post("/api/cliparts", upload.single('cliparts[]'), (req,res)=>{ 
+  console.log( req.file)
+  const url =  "http://localhost:8080/api/user-images/" + req.file.filename;
+  // const dimensions = imageSize(req.file.filename)
+  // console.log(dimensions);
+  
+  console.log
+      res.json({
+          images: [
+              {
+              "url":url,
+              "pxWidth":1200,
+              "pxHeight":630,
+              "inWidth":4,
+              "inHeight":2.1
+              }]
+              
+      });
+  });
+
 app.use("/",router);
 app.listen(8080, () => {
     console.log('api server is listening on port 8080');
