@@ -1,30 +1,8 @@
 <!DOCTYPE html>
 <!-- saved from url=(0075)http://themepixels.me/demo/amanda/app/index.html?storefront=envato-elements -->
 <html lang="en">
-    <head><meta
-        http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <!-- Required meta tags -->
-
-        <meta
-        name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-        <!-- Twitter -->
-
-
-        <title>Editable Image Software.</title>
-
-        <!-- vendor css -->
-        <link href="/theme/assets/css/font-awesome.css" rel="stylesheet">
-        <link href="/theme/assets/css/ionicons.css" rel="stylesheet">
-        <link href="/theme/assets/css/perfect-scrollbar.css" rel="stylesheet">
-        <link href="/theme/assets/css/toggles-full.css" rel="stylesheet">
-        <link
-        href="/theme/assets/css/rickshaw.min.css" rel="stylesheet">
-
-        <!-- Amanda CSS -->
-        <link rel="stylesheet" href="/theme/assets/css/amanda.css">
-        <script type="text/javascript" charset="UTF-8" src="/theme/assets/common.js"></script>
-        <script type="text/javascript" charset="UTF-8" src="/theme/assets/util.js"></script>
+    <head>
+        <%- include('../partials/head'); %>
     </head>
 
     <body data-new-gr-c-s-check-loaded="14.1060.0" data-gr-ext-installed="" class="">
@@ -373,80 +351,16 @@
                 </div>
                 <!-- #mainMenu -->
                 <div id="emailMenu" class="tab-pane ps ps--theme_default" data-ps-id="af614671-51ab-0c55-f503-1202717f8b03">
-                  
+                    <%- include('../partials/templates'); %>
                 </div>
                 <!-- #emailMenu -->
                 <div id="chatMenu" class="tab-pane ps ps--theme_default" data-ps-id="f5c57c47-7146-1f7e-4b16-db68dbb7baa4">
-                    <div class="chat-search-bar">
-                        <input type="search" class="form-control wd-150" placeholder="Search chat...">
-                        <button class="btn btn-secondary">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </div>
+
                     <!-- chat-search-bar -->
 
-                    <label class="pd-x-15 tx-uppercase tx-11 mg-t-20 tx-orange mg-b-10 tx-medium">Recent Chat History</label>
+                    <label class="pd-x-15 tx-uppercase tx-11 mg-t-20 tx-orange mg-b-10 tx-medium">cliparts</label>
                     <div class="list-group list-group-chat">
-                        <a href="http://themepixels.me/demo/amanda/app/index.html?storefront=envato-elements#" class="list-group-item">
-                            <div class="d-flex align-items-center">
-                                <img src="/theme/assets/img6.jpg" class="wd-32 rounded-circle" alt="">
-                                <div class="mg-l-10">
-                                    <h6>Russell M. Evans</h6>
-                                    <span>Tuesday, 10:33am</span>
-                                </div>
-                            </div>
-                            <!-- d-flex -->
-                            <p>Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain...</p>
-                        </a>
-                        <!-- list-group-item -->
-                        <a href="http://themepixels.me/demo/amanda/app/index.html?storefront=envato-elements#" class="list-group-item">
-                            <div class="d-flex align-items-center">
-                                <img src="/theme/assets/img7.jpg" class="wd-32 rounded-circle" alt="">
-                                <div class="mg-l-10">
-                                    <h6>James F. Sears</h6>
-                                    <span>Monday, 4:21pm</span>
-                                </div>
-                            </div>
-                            <!-- d-flex -->
-                            <p>But who has any right to find fault with a man who chooses to enjoy a pleasure that has...</p>
-                        </a>
-                        <!-- list-group-item -->
-                        <a href="http://themepixels.me/demo/amanda/app/index.html?storefront=envato-elements#" class="list-group-item">
-                            <div class="d-flex align-items-center">
-                                <img src="/theme/assets/img8.jpg" class="wd-32 rounded-circle" alt="">
-                                <div class="mg-l-10">
-                                    <h6>Sharon R. Rowe</h6>
-                                    <span>Sunday, 7:45pm</span>
-                                </div>
-                            </div>
-                            <!-- d-flex -->
-                            <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising...</p>
-                        </a>
-                        <!-- list-group-item -->
-                        <a href="http://themepixels.me/demo/amanda/app/index.html?storefront=envato-elements#" class="list-group-item">
-                            <div class="d-flex align-items-center">
-                                <img src="/theme/assets/img9.jpg" class="wd-32 rounded-circle" alt="">
-                                <div class="mg-l-10">
-                                    <h6>Ruby M. Martin</h6>
-                                    <span>Sunday, 7:45pm</span>
-                                </div>
-                            </div>
-                            <!-- d-flex -->
-                            <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising...</p>
-                        </a>
-                        <!-- list-group-item -->
-                        <a href="http://themepixels.me/demo/amanda/app/index.html?storefront=envato-elements#" class="list-group-item">
-                            <div class="d-flex align-items-center">
-                                <img src="/theme/assets/img10.jpg" class="wd-32 rounded-circle" alt="">
-                                <div class="mg-l-10">
-                                    <h6>Joslyn C. Mayo</h6>
-                                    <span>Sunday, 7:45pm</span>
-                                </div>
-                            </div>
-                            <!-- d-flex -->
-                            <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising...</p>
-                        </a>
-                        <!-- list-group-item -->
+                        <%- include('../partials/cliparts'); %>
                     </div>
                     <!-- list-group -->
                     <span class="d-block pd-15 tx-12">Loading messages...</span>
@@ -546,113 +460,16 @@
 
 
                 <div class="row row-sm mg-t-15 mg-sm-t-20">
-                    <div class="col-lg-8">
+                  
+                    <!-- col-4 -->
+                    <div class="col-lg-9">
                         <div class="card">
-                            <div class="card-header bg-transparent pd-20">
-                                <h6 class="card-title tx-uppercase tx-12 mg-b-0">User Transaction History</h6>
-                            </div>
-                            <!-- card-header -->
-                            <div class="table-responsive">
-                                <table class="table table-white mg-b-0 tx-12">
-                                    <tbody>
-                                        <tr>
-                                            <td class="pd-l-20 tx-center">
-                                                <img src="/theme/assets/img1.jpg" class="wd-36 rounded-circle" alt="Image">
-                                            </td>
-                                            <td>
-                                                <a href="http://themepixels.me/demo/amanda/app/index.html?storefront=envato-elements" class="tx-inverse tx-14 tx-medium d-block">Mark K. Peters</a>
-                                                <span class="tx-11 d-block">TRANSID: 1234567890</span>
-                                            </td>
-                                            <td class="tx-12">
-                                                <span class="square-8 bg-success mg-r-5 rounded-circle"></span>
-                                                Email verified
-                                            </td>
-                                            <td>Just Now</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="pd-l-20 tx-center">
-                                                <img src="/theme/assets/img2.jpg" class="wd-36 rounded-circle" alt="Image">
-                                            </td>
-                                            <td>
-                                                <a href="http://themepixels.me/demo/amanda/app/index.html?storefront=envato-elements" class="tx-inverse tx-14 tx-medium d-block">Karmen F. Brown</a>
-                                                <span class="tx-11 d-block">TRANSID: 1234567890</span>
-                                            </td>
-                                            <td class="tx-12">
-                                                <span class="square-8 bg-warning mg-r-5 rounded-circle"></span>
-                                                Pending verification
-                                            </td>
-                                            <td>Apr 21, 2017 8:34am</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="pd-l-20 tx-center">
-                                                <img src="/theme/assets/img3.jpg" class="wd-36 rounded-circle" alt="Image">
-                                            </td>
-                                            <td>
-                                                <a href="http://themepixels.me/demo/amanda/app/index.html?storefront=envato-elements" class="tx-inverse tx-14 tx-medium d-block">Gorgonio Magalpok</a>
-                                                <span class="tx-11 d-block">TRANSID: 1234567890</span>
-                                            </td>
-                                            <td class="tx-12">
-                                                <span class="square-8 bg-success mg-r-5 rounded-circle"></span>
-                                                Purchased success
-                                            </td>
-                                            <td>Apr 10, 2017 4:40pm</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="pd-l-20 tx-center">
-                                                <img src="/theme/assets/img5.jpg" class="wd-36 rounded-circle" alt="Image">
-                                            </td>
-                                            <td>
-                                                <a href="http://themepixels.me/demo/amanda/app/index.html?storefront=envato-elements" class="tx-inverse tx-14 tx-medium d-block">Ariel T. Hall</a>
-                                                <span class="tx-11 d-block">TRANSID: 1234567890</span>
-                                            </td>
-                                            <td class="tx-12">
-                                                <span class="square-8 bg-warning mg-r-5 rounded-circle"></span>
-                                                Payment on hold
-                                            </td>
-                                            <td>Apr 02, 2017 6:45pm</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="pd-l-20 tx-center">
-                                                <img src="/theme/assets/img4.jpg" class="wd-36 rounded-circle" alt="Image">
-                                            </td>
-                                            <td>
-                                                <a href="http://themepixels.me/demo/amanda/app/index.html?storefront=envato-elements" class="tx-inverse tx-14 tx-medium d-block">John L. Goulette</a>
-                                                <span class="tx-11 d-block">TRANSID: 1234567890</span>
-                                            </td>
-                                            <td class="tx-12">
-                                                <span class="square-8 bg-pink mg-r-5 rounded-circle"></span>
-                                                Account deactivated
-                                            </td>
-                                            <td>Mar 30, 2017 10:30am</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="pd-l-20 tx-center">
-                                                <img src="/theme/assets/img5.jpg" class="wd-36 rounded-circle" alt="Image">
-                                            </td>
-                                            <td>
-                                                <a href="http://themepixels.me/demo/amanda/app/index.html?storefront=envato-elements" class="tx-inverse tx-14 tx-medium d-block">John L. Goulette</a>
-                                                <span class="tx-11 d-block">TRANSID: 1234567890</span>
-                                            </td>
-                                            <td class="tx-12">
-                                                <span class="square-8 bg-pink mg-r-5 rounded-circle"></span>
-                                                Account deactivated
-                                            </td>
-                                            <td>Mar 30, 2017 10:30am</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- table-responsive -->
-                            <div class="card-footer tx-12 pd-y-15 bg-transparent bd-t bd-gray-200">
-                                <a href="http://themepixels.me/demo/amanda/app/index.html?storefront=envato-elements">
-                                    <i class="fa fa-angle-down mg-r-5"></i>View All Transaction History</a>
-                            </div>
-                            <!-- card-footer -->
+                            <%- include('../partials/workspace'); %>
                         </div>
                         <!-- card -->
                     </div>
                     <!-- col-8 -->
-                    <div class="col-lg-4 mg-t-15 mg-sm-t-20 mg-lg-t-0">
+                    <div class="col-lg-3 mg-t-15 mg-sm-t-20 mg-lg-t-0">
                         <div class="card pd-20">
                             <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Sales Report</h6>
                             <div class="d-flex mg-b-10">
@@ -715,7 +532,6 @@
                             </li>
                         </ul>
                     </div>
-                    <!-- col-4 -->
                 </div>
                 <!-- row -->
 
@@ -737,24 +553,8 @@
         </div>
         <!-- am-mainpanel -->
 
-        <script src="/theme/assets/js/jquery.js"></script>
-        <script src="/theme/assets/js/popper.js"></script>
-        <script src="/theme/assets/js/bootstrap.js"></script>
-        <script src="/theme/assets/js/perfect-scrollbar.jquery.js"></script>
-        <script src="/theme/assets/js/toggles.min.js"></script>
-        <script src="/theme/assets/js/d3.js"></script>
-        <script src="/theme/assets/js/rickshaw.min.js"></script>
-        <script src="/theme/assets/js"></script>
-        <script src="/theme/assets/js/gmaps.js"></script>
-        <script src="/theme/assets/js/jquery.flot.js"></script>
-        <script src="/theme/assets/js/jquery.flot.pie.js"></script>
-        <script src="/theme/assets/js/jquery.flot.resize.js"></script>
-        <script src="/theme/assets/js/jquery.flot.spline.js"></script>
-
-        <script src="/theme/assets/js/amanda.js"></script>
-        <script src="/theme/assets/js/ResizeSensor.js"></script>
-        <script src="/theme/assets/js/dashboard.js"></script>
-
+        
+        <%- include('../partials/footer'); %>
 
     </body>
     <grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

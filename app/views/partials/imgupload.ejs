@@ -1,0 +1,24 @@
+<form 
+    action="http://localhost:8080/api/upload-image" id="imageUploadForm" 
+    enctype="multipart/form-data" 
+    method="post" 
+    accept-charset="utf-8">
+
+    <div class="file-upload-section">
+        <p class="error"></p>
+        <p>You can upload multiple photos at once by pressing Ctrl + the image:</p>
+        <input type="file" name="userimages[]" multiple=""  >
+        <button type="reset" class="tpr-button tpr-button__light tpr-button__small">Remove</button>
+        <label class="tpr-upl-copyright-notice">
+            <input type="checkbox" id="tpr-upl-copyright-ack">
+            <span>By uploading I confirm I have the rights to use these images</span>
+        </label>
+    </div>
+
+    <button type="submit"  class="tpr-button" disabled="">Add image(s)</button>
+    <button type="button" class="tpr-button tpr-button__light lightboxClose">Cancel</button>
+    <div class="loader">
+        <span class="graphic"></span>
+        Loading images...    </div>
+
+    </form>
