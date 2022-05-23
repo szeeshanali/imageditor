@@ -44,7 +44,7 @@ router.get('/app', (req, res) => {
 
 router.get('/app/old', (req, res) => {
   const url = req.params.id;
-  res.sendFile(`${__dirname}/_index.html`);
+  res.render(`pages/_index`);
 });
 
 

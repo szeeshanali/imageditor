@@ -93,19 +93,19 @@ $(document).ready(function(){
 });
 
 
-var canvas = document.getElementById("canvasTop");
-var ctx = canvas.getContext("2d");
-var canvas2 = document.getElementById("canvasBottom");
-var ctx2 = canvas2.getContext("2d");
+// var canvas = document.getElementById("canvasTop");
+// var ctx = canvas.getContext("2d");
+// var canvas2 = document.getElementById("canvasBottom");
+// var ctx2 = canvas2.getContext("2d");
 
-ctx2.beginPath();
-for (var i = 0; i < canvas.width; i += 10) {
-    var y = (i / 100 == parseInt(i / 100)) ? 0 : 10;
-    ctx2.moveTo(i + 15, y);
-    ctx2.lineTo(i + 15, 15);
-    var x = (i / 100 == parseInt(i / 100)) ? 0 : 10;
-    ctx2.moveTo(x, i + 15);
-    ctx2.lineTo(15, i + 15);
-}
-ctx2.stroke();
+// ctx2.beginPath();
+// for (var i = 0; i < canvas.width; i += 10) {
+//     var y = (i / 100 == parseInt(i / 100)) ? 0 : 10;
+//     ctx2.moveTo(i + 15, y);
+//     ctx2.lineTo(i + 15, 15);
+//     var x = (i / 100 == parseInt(i / 100)) ? 0 : 10;
+//     ctx2.moveTo(x, i + 15);
+//     ctx2.lineTo(15, i + 15);
+// }
+// ctx2.stroke();
 
