@@ -1,0 +1,9 @@
+<svg id="SvgjsSvg1234" width="462" height="653.6154776299879" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs">
+    <defs id="SvgjsDefs1235">
+        <mask id="SvgjsMask1237">
+            <rect id="SvgjsRect1238" width="462" height="653.6154776299879" fill="#000000"></rect>
+            <circle id="SvgjsCircle1241" r="200" cx="220" cy="325" fill="#ffffff"></circle>
+        </mask>
+    </defs>
+    <rect id="SvgjsRect1236" width="462" height="653.6154776299879" fill="#c2d1e1" fill-opacity="0.9" mask="url(&quot;#SvgjsMask1237&quot;)"></rect>
+</svg>

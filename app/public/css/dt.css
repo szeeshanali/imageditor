@@ -1,0 +1,33 @@
+.workarea{
+    width: 100%;
+    height: 100%;
+    padding-bottom: 20px;
+}
+.drag-drop-input:hover{
+    border:dashed 1px #d8dce3;
+    background-color: #ebeff5;
+    cursor: pointer;
+    
+
+}
+.maska48i1c{  
+    background-color: #ffffff;
+        -webkit-mask-image: url(/images/test.svg),linear-gradient(rgba(0,0,0,0.4) 0 0);
+        mask-image: url(/images/test.svg),linear-gradient(rgba(0,0,0,0.4) 0 0);
+        height:600px;
+    
+}
+
+.maska43i6c {
+    background-color: #ffffff;
+    -webkit-mask-image: url(/images/a43i6c.svg),linear-gradient(rgba(0,0,0,0.4) 0 0);
+    mask-image: url(/images/a43i6c.svg),linear-gradient(rgba(0,0,0,0.4) 0 0);
+    height:600px;
+    
+}
+
+#templateconatiner {
+    background-color: #8cffa0;
+    height:600px;
+}
+/*  */
