@@ -55,31 +55,93 @@
 
     $(`${this.containerSelector} .toolpanel#shapes-panel .content .button`).click(function () {
       let svg = $(this).html();
+    //   var group = [];
+
+    //   fabric.loadSVGFromURL("/images/a43i6c.svg",function(objects,options)
+    //   {
+    //     var loadedObjects = new fabric.Group(group);
+    //     loadedObjects.set({
+    //       left: 0,
+    //       top: 0,
+    //       width:100,
+    //       height:100
+    //     });
+    //     _self.canvas.add(loadedObjects);
+    //     _self.canvas.renderAll();
+    // })
+      
+
       var maskid = $(this).attr("id");
-      try {
+      // var p = $(this).attr("path");
+      // var path = `/images/${p}.svg`
+     try {
         fabric.loadSVGFromString(
           svg,
           (objects, options) => {
 
             var obj = fabric.util.groupSVGElements(objects, options)
-            //obj.strokeUniform = true
-            //obj.strokeLineJoin = 'miter'
-            obj.scaleToWidth(_self.canvas.getWidth())
-            obj.scaleToHeight(_self.canvas.getHeight())
-            
+           
+          
             // obj.set({
             //   left: 0,
-            //   top: 0
+            //   top: 0,
+            //   scaleY: _self.canvas.height / obj.height,
+            //   scaleX: _self.canvas.width / obj.width,
+            //   fill: 'transparent',
+            //   opacity: 0,
+            //   });
+              // clipTo = function (ctx) {
+              //   obj.render(ctx);
+              // };
+
+            // obj.strokeUniform = true
+            // obj.strokeLineJoin = 'miter'
+            // obj.scaleToWidth(_self.canvas.getWidth())
+            // obj.scaleToHeight(_self.canvas.getHeight())
+           
+            // obj.set({
+            //   left: 0,
+            //   top: 0,
             // })
-            $('#templatemask').addClass(`${maskid}`)
+           /$('#templatemask').attr("class",  `${maskid}`)
            // $("#template-container").append();
-           // _self.canvas.add(obj).renderAll();
+            //_self.canvas.add(obj).renderAll();
            // _self.canvas.trigger('object:modified')
+          //  const [top, left, width, height] = [100,200,250,300];
+          //  const right = left + width;
+          //   const bottom = top + height;
+        //   if(maskid === 'maska48i1c')
+        //   {
+        //     var _top = _self.canvas.getHeight()/2;
+        //     var _left = _self.canvas.getWidth()/2;
+        //    _self.canvas.clipTo = (ctx) => {
+        //     ctx.strokeStyle = 'black';
+        //     ctx.strokeWidth = 2
+        //     ctx.beginPath();
+        //     ctx.arc(_left, _top, 180, 0, 2 * Math.PI);
+        //     ctx.stroke();
+        //   }
+        // }else if(maskid === 'maska43i6c'){
+        //      _self.canvas.clipTo = (ctx) => {
+        //       ctx.strokeStyle = 'black';
+        //       ctx.strokeWidth = 2
+        //       ctx.beginPath();
+        //       ctx.arc(50, 10, 90, 0, 2 * Math.PI);
+        //       ctx.stroke();
+        //       ctx.beginPath();
+        //       ctx.arc(230, 10, 90, 0, 2 * Math.PI);
+
+        //       ctx.stroke();
+        //   }
+        // }
+          
+          _self.canvas.renderAll();
+
           }
-        )
+       )
       } catch (_) {
-        console.error("can't add shape");
-      }
+       console.error("can't add shape");
+     }
     })
   }
 

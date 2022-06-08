@@ -45,7 +45,7 @@
      */
     this.setActiveTool = (id) => {
       this.activeTool = id;
-      $(`${containerSelector} .toolpanel`).removeClass('visible');
+     // $(`${containerSelector} .toolpanel`).removeClass('visible');
       if (id !== 'select' || (id == 'select' && this.activeSelection)) {
         $(`${containerSelector} .toolpanel#${id}-panel`).addClass('visible');
         if (id === 'select') {
@@ -105,7 +105,7 @@
           });
           break;
         case 'upload':
-          this.openDragDropPanel();
+          //this.openDragDropPanel();
           break;
         default:
           //this.updateTip('Tip: hold Shift when drawing a line for 15° angle jumps!');
@@ -198,13 +198,13 @@
      */
     this.init = () => {
       this.configUndoRedoStack();
-      // this.initializeToolbar();
+       this.initializeToolbar();
       // this.initializeMainPanel();
 
        this.initializeShapes();
      // this.initializeFreeDrawSettings();
       this.initializeCanvasSettingPanel();
-      //this.initializeSelectionSettings();
+      this.initializeSelectionSettings();
 
       this.canvas = this.initializeCanvas();
 

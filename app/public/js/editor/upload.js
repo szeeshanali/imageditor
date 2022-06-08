@@ -115,12 +115,25 @@
         reader.onload = (f) => {
           
           fabric.Image.fromURL(f.target.result, (img) => {
-            img.set({
-              left: 0,
-              top: 0
-            })
-            img.scaleToHeight(300)
-            img.scaleToWidth(300)
+            // img.set({
+            //   left: 0,
+            //   top: 0
+            // })
+             img.scaleToHeight(300)
+             img.scaleToWidth(300)
+            //
+
+            // var clipPath = new fabric.Circle(
+            //   { 
+            //     radius: 200, 
+            //     fill: '#f55',
+            //     top: 122,
+            //     left: 17 ,
+            //     selectable: false,
+            //     stroke: "red",
+            //     });
+
+            // canvas.clipPath = clipPath;
             canvas.add(img)
 
             canvas.renderAll()

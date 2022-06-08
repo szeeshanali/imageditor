@@ -3,7 +3,6 @@
  */
 (function () {
   const textBoxDrawing = function (fabricCanvas) {
-
     let isDrawingText = false,
       textboxRect, origX, origY, pointer;
 

@@ -85,7 +85,6 @@ const getRealBBox = async (obj) => {
 
       var image = new Image();
       image.addEventListener('load', () => {
-        debugger;
         w = image.width;
         h = image.height;
         tempCanv.width = w;
