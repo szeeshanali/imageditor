@@ -76,15 +76,16 @@
     }
 
     try {
-      this.containerEl.append(`<div class="toolbar" id="toolbar"><div class="main-buttons"></div><div class="extended-buttons"></div></div>`);
+     // this.containerEl.append(`<div class="toolbar" id="toolbar"><div class="main-buttons"></div><div class="extended-buttons"></div></div>`);
 
       // main buttons
       (() => {
-        buttons.forEach(item => {
-          $(`${this.containerSelector} #toolbar .main-buttons`).append(`<button id="${item.name}">${item.icon}</button>`);
-        })
+        // buttons.forEach(item => {
+        //   $(`${this.containerSelector} #toolbar .main-buttons`).append(`<button id="${item.name}">${item.icon}</button>`);
+        // })
 
-        $(`${this.containerSelector} #toolbar .main-buttons button`).click(function () {
+        $(`${this.containerSelector} #toolbar .main-buttons .nav-link`).click(function () {
+          debugger;
           let id = $(this).attr('id');
 
           $(`${_self.containerSelector} #toolbar button`).removeClass('active');
@@ -94,31 +95,32 @@
       })();
 
       // zoom
-      (() => {
-        let currentZoomLevel = 1;
-        $(`${"floating-zoom-level-container"}`).append(
-          `<div class="floating-zoom-level-container"></div>`
-        )
-        $(`${this.containerSelector} .floating-zoom-level-container`).append(`
-          <label>Zoom</label>
-          <select id="input-zoom-level">
-            ${[0.05, 0.1, 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3].map((item => 
-              `<option value="${item}" ${item === currentZoomLevel ? 'selected':''}>${item*100}%</option>`
-              ))}
-          </select>
-        `);
-        $(`${this.containerSelector} .floating-zoom-level-container #input-zoom-level`).change(function () {
-          let zoom = parseFloat($(this).val());
-          typeof _self.applyZoom === 'function' && _self.applyZoom(zoom)
-        })
-      })();
+      // (() => {
+      //   let currentZoomLevel = 1;
+      //   $(`${"floating-zoom-level-container"}`).append(
+      //     `<div class="floating-zoom-level-container"></div>`
+      //   )
+      //   $(`${this.containerSelector} .floating-zoom-level-container`).append(`
+      //     <label>Zoom</label>
+      //     <select id="input-zoom-level">
+      //       ${[0.05, 0.1, 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3].map((item => 
+      //         `<option value="${item}" ${item === currentZoomLevel ? 'selected':''}>${item*100}%</option>`
+      //         ))}
+      //     </select>
+      //   `);
+      //   $(`${this.containerSelector} .floating-zoom-level-container #input-zoom-level`).change(function () {
+      //     let zoom = parseFloat($(this).val());
+      //     typeof _self.applyZoom === 'function' && _self.applyZoom(zoom)
+      //   })
+      // })();
       // extended buttons
       (() => {
-        extendedButtons.forEach(item => {
-          $(`${this.containerSelector} #toolbar .extended-buttons`).append(`<button id="${item.name}">${item.icon}</button>`);
-        })
+        // extendedButtons.forEach(item => {
+        //   $(`${this.containerSelector} #toolbar .extended-buttons`).append(`<button id="${item.name}">${item.icon}</button>`);
+        // })
 
-        $(`${this.containerSelector} #toolbar .extended-buttons button`).click(function () {
+        $(`${this.containerSelector} #maintools .main-tool-button`).click(function () {
+          debugger;
           let id = $(this).attr('id');
           if (id === 'save') {
             if (window.confirm('The current canvas will be saved in your local! Are you sure?')) {
@@ -142,8 +144,26 @@
             })
 
             $(".custom-modal-container .button-download").click(function (e) {
+              debugger;
               let type = $(this).attr('id');
-              if (type === 'svg') downloadSVG(_self.canvas.toSVG());
+              var element = $("#templateconatiner")
+              if (type === 'svg') {
+                debugger;
+                html2canvas(element, {
+                  onrendered: function (canvas) {
+                   // _self.canvas = canvas;
+                  // $("#previewImage").append(canvas);
+                   // downloadSVG( _self.canvas.toSVG());
+                   var imgData = canvas.toDataURL(
+                    'image/png');              
+                var doc = new jsPDF('p', 'mm');
+                doc.addImage(imgData, 'PNG', 10, 10);
+                doc.save('sample-file.pdf');
+
+                  }
+                });
+                
+              }
               else if (type === 'png') downloadImage(_self.canvas.toDataURL())
               else if (type === 'jpg') downloadImage(_self.canvas.toDataURL({
                 format: 'jpeg'

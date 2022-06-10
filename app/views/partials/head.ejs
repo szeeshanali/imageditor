@@ -13,42 +13,41 @@ href="/css/rickshaw.min.css" rel="stylesheet">
 <link rel="stylesheet" href="/css/amanda.css">
 <link rel="stylesheet" href="/css/dt.css">
 
-<link rel="stylesheet" href="/css/editor/style.css">
+<meta http-equiv="X-UA-Compatible" content="chrome=1"/>
+  <link rel="icon" href="images/favicon.svg" sizes="any" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <title>Method Draw Vector Editor</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Method Draw is an open source SVG editor for the web, you can use it online without signing up.">
 
-<script src="/js/editor/jquery-3.5.1.min.js"></script>
-
-<!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> -->
-<script>
-  jQuery.fn.outerHTML = function() {
-    return jQuery('<div />').append(this.eq(0).clone()).html();
-  };
-  Number.prototype.countDecimals = function () {
-    if(Math.floor(this.valueOf()) === this.valueOf()) return 0;
-    return this.toString().split(".")[1].length || 0; 
-  }
-</script>
-<script src="/js/editor/fabric.min.js"></script>
-<script src="/js/editor/spectrum.min.js"></script>
-<link rel="stylesheet" type="text/css" href="/css/editor/spectrum.min.css">
-<link rel="stylesheet" href="/css/editor/grapick.min.css">
-<script src="/js/editor/grapick.min.js"></script>
-
-<script src="/js/editor/undo-redo-stack.js"></script>
-<script src="/js/editor/core.js"></script>
-<script src="/js/editor/toolbar.js"></script>
-<script src="/js/editor/canvas.js"></script>
-<script src="/js/editor/shapes.js"></script>
-<script src="/js/editor/freeDrawSettings.js"></script>
-<script src="/js/editor/canvasSettings.js"></script>
-<script src="/js/editor/selectionSettings.js"></script>
-<script src="/js/editor/drawingLine.js"></script>
-<script src="/js/editor/drawingPath.js"></script>
-<script src="/js/editor/drawingText.js"></script>
-<script src="/js/editor/tip.js"></script>
-<script src="/js/editor/upload.js"></script>
-<script src="/js/editor/copyPaste.js"></script>
-<script src="/js/editor/utils.js"></script>
-<script src="/js/editor/zoom.js"></script>
-<script src="/js/editor/saveInBrowser.js"></script>
+  <!-- build:css all.css -->
+  <link rel="stylesheet" href="/css/svgeditor/base.css" type="text/css"/>
+  <link rel="stylesheet" href="/css/svgeditor/method-draw.css" type="text/css"/>
+  <link rel="stylesheet" href="/css/svgeditor/jpicker.css" type="text/css"/>
+  <link rel="stylesheet" href="/css/svgeditor/jgraduate.css" type="text/css"/>
+  <link rel="stylesheet" href="/css/svgeditor/fonts.css" type="text/css"/>
+  <link rel="stylesheet" href="/css/svgeditor/dropdown.css" type="text/css"/>
+  <link rel="stylesheet" href="/css/svgeditor/draginput.css" type="text/css"/>
+  <link rel="stylesheet" href="/css/svgeditor/menu.css" type="text/css"/>
+  <link rel="stylesheet" href="/css/svgeditor/rulers.css" type="text/css"/>
+  <link rel="stylesheet" href="/css/svgeditor/palette.css" type="text/css"/>
+  <link rel="stylesheet" href="/css/svgeditor/color-tool.css" type="text/css"/>
+  <link rel="stylesheet" href="/css/svgeditor/context-menu.css" type="text/css"/>
+  <link rel="stylesheet" href="/css/svgeditor/shapelib.css" type="text/css"/>
+  <link rel="stylesheet" href="/css/svgeditor/modal.css" type="text/css"/>
+  <link rel="stylesheet" href="/css/svgeditor/source.css" type="text/css"/>
+  <link rel="stylesheet" href="/css/svgeditor/keyboard.css" type="text/css"/>
+  <link rel="stylesheet" href="/css/svgeditor/dialog.css" type="text/css"/>
+  <link rel="stylesheet" href="/css/svgeditor/app.css" type="text/css"/>
+  <link rel="stylesheet" href="/css/svgeditor/tools.css" type="text/css"/>
+  <link rel="stylesheet" href="/css/svgeditor/button.css" type="text/css"/>
+  <link rel="stylesheet" href="/css/svgeditor/select.css" type="text/css"/>
+  <link rel="stylesheet" href="/css/svgeditor/panel.css" type="text/css"/>
+  <link rel="stylesheet" href="/css/svgeditor/align_buttons.css" type="text/css"/>
+  <link rel="stylesheet" href="/css/svgeditor/text.css" type="text/css"/>
+  <link rel="stylesheet" href="/css/svgeditor/sponsors.css" type="text/css"/>
+  <link rel="stylesheet" href="/css/svgeditor/zoom-dropdown.css" type="text/css"/>
+  <link rel="stylesheet" href="/css/svgeditor/loading.css" type="text/css"/>
 
 <link href="/css/font-awesome.css" rel="stylesheet">

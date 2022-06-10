@@ -1,72 +1,32 @@
-<div class="col-lg-3 mg-t-15 mg-sm-t-20 mg-lg-t-0">
-    <div class="card pd-20">
-        <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Layers</h6>
-        <div class="d-flex mg-b-10">
-            <div class="bd-r pd-r-10">
-                <label class="tx-12">Rotate</label>
-                <p class="tx-lato tx-inverse tx-bold">1,898</p>
+<div class="col-lg-3 mg-t-15 mg-sm-t-20 mg-lg-t-0 " >
+    <div id="panels" class="tools_panel">
+        <%- include('../partials/canvassettings'); %>
+        <%- include('../partials/imagesettings'); %>
+        <!-- <div class="card pd-20 mg-t-15" id="objectoptions">
+            <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">View Options</h6>
+            <div class="d-flex mg-b-10 object-options">
+               
+                
+                <div class="bd-r pd-x-10 ">
+                    <i class="ion-ios-copy-outline " id="duplicate" title="duplicate"></i>
+                </div>
+                <div class="bd-r pd-x-10 " id="flip-h">
+                    <i class="ion-ios-arrow-thin-left flip-h"  title="flip left" title="flip left/right"></i>
+                    <i class="ion-ios-arrow-thin-right flip-h" style="margin-left:-25px" title="flip left/right"></i>
+                </div>
+                <div class="bd-r pd-x-10 " id="flip-v">
+                    <i class="ion-ios-arrow-thin-up flip-v"  title="flip up" title="flip up/down"></i>
+                    <i class="ion-ios-arrow-thin-down flip-v" style="margin-left:-10px"  title="flip up/down"></i>
+                </div>
+               
+                
             </div>
-            <div class="bd-r pd-x-10">
-                <label class="tx-12">This Week</label>
-                <p class="tx-lato tx-inverse tx-bold">32,112</p>
+         
+            <div class="progress mg-b-10">
+                <div class="floating-zoom-level-container"></div>
             </div>
-            <div class="pd-l-10">
-                <label class="tx-12">This Month</label>
-                <p class="tx-lato tx-inverse tx-bold">72,067</p>
-            </div>
-        </div>
-        <!-- d-flex -->
-        <div class="progress mg-b-10">
-            <div class="floating-zoom-level-container"></div>
-        </div>
-        <p class="tx-12 mg-b-0">Maecenas tempus, tellus eget condimentum rhoncus</p>
+            <p class="tx-12 mg-b-0">Maecenas tempus, tellus eget condimentum rhoncus</p>
+        </div> -->
     </div>
-    <div class="card pd-20 mg-t-15">
-        <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Canvas Size</h6>
-        <div class="d-flex mg-b-10">
-            <div class="bd-r pd-r-10">
-                <label class="tx-12">Rotate</label>
-                <p class="tx-lato tx-inverse tx-bold">1,898</p>
-            </div>
-            <div class="bd-r pd-x-10">
-                <label class="tx-12">This Week</label>
-                <p class="tx-lato tx-inverse tx-bold">32,112</p>
-            </div>
-            <div class="pd-l-10">
-                <label class="tx-12">This Month</label>
-                <p class="tx-lato tx-inverse tx-bold">72,067</p>
-            </div>
-        </div>
-        <!-- d-flex -->
-        <div class="progress mg-b-10">
-            <div class="floating-zoom-level-container"></div>
-        </div>
-        <p class="tx-12 mg-b-0">Maecenas tempus, tellus eget condimentum rhoncus</p>
-    </div>
-    <!-- card -->
 
-   <div id="settingpanel">
-    <div class="canvas-size-setting">
-        <p>Canvas Size</p>
-        <div class="input-container">
-          <label>Width</label>
-          <div class="custom-number-input">
-          <button class="decrease">-</button>
-          <input type="number" min="100" id="input-width" value="640"/>
-          <button class="increase">+</button>
-          </div>
-        </div>
-        <div class="input-container">
-          <label>Height</label>
-          <div class="custom-number-input">
-          <button class="decrease">-</button>
-          <input type="number" min="100" id="input-height" value="480"/>
-          <button class="increase">+</button>
-          </div>
-        </div>
-      </div>
-
-
-
-   </div>
 </div>

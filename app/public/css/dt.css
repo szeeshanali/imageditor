@@ -30,4 +30,28 @@
     background-color: #8cffa0;
     height:600px;
 }
+
+.object-options, i
+{
+ font-size: 30px;
+ cursor: pointer;
+}
+
+.text-section .font-style .fa{
+
+    padding: 0px 5px;
+    margin:0px 5px;
+    border: solid 1px #bec4cf;
+    border-radius: 50%;
+    line-height: 20px;
+    background: #d8dce3;
+    color: #2d3a50;
+}
+.text-section .font-style .fa:hover{
+
+   
+    background: #2d3a50;
+    color: #d8dce3;
+    border: solid 1px #2d3a50;
+}
 /*  */

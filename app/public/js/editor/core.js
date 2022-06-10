@@ -45,7 +45,7 @@
      */
     this.setActiveTool = (id) => {
       this.activeTool = id;
-      $(`${containerSelector} .toolpanel`).removeClass('visible');
+     // $(`${containerSelector} .toolpanel`).removeClass('visible');
       if (id !== 'select' || (id == 'select' && this.activeSelection)) {
         $(`${containerSelector} .toolpanel#${id}-panel`).addClass('visible');
         if (id === 'select') {
@@ -105,7 +105,7 @@
           });
           break;
         case 'upload':
-          this.openDragDropPanel();
+          //this.openDragDropPanel();
           break;
         default:
           //this.updateTip('Tip: hold Shift when drawing a line for 15° angle jumps!');
@@ -198,15 +198,16 @@
      */
     this.init = () => {
       this.configUndoRedoStack();
-      // this.initializeToolbar();
-      // this.initializeMainPanel();
+       this.initializeToolbar();
+       this.initializeMainPanel();
 
        this.initializeShapes();
      // this.initializeFreeDrawSettings();
       this.initializeCanvasSettingPanel();
-      //this.initializeSelectionSettings();
-
+      this.initializeSelectionSettings();
+      debugger;
       this.canvas = this.initializeCanvas();
+    
 
       this.initializeLineDrawing(this.canvas);
       this.initializePathDrawing(this.canvas);
@@ -214,7 +215,6 @@
       this.initializeUpload(this.canvas);
       this.initializeCopyPaste(this.canvas);
       //this.initializeTipSection();
-
       this.initializeZoomEvents();
 
       this.extendHideShowToolPanel();
@@ -246,6 +246,7 @@
      * Extend custom number input with increase/decrease button
      */
     this.extendNumberInput = () => {
+      debugger;
       $(`${containerSelector} .decrease`).click(function () {
         let input = $(this).closest('.custom-number-input').find('input[type=number]')
         let step = input.attr('step');

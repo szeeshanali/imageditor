@@ -24,7 +24,6 @@
       fabric.Object.prototype.cornerColor = '#C00000';
       fabric.Object.prototype.cornerStrokeColor = '#FFF';
       fabric.Object.prototype.padding = 0;
-
       // retrieve active selection to react state
       fabricCanvas.on('selection:created', (e) => this.setActiveSelection(e.target))
       fabricCanvas.on('selection:updated', (e) => this.setActiveSelection(e.target))
