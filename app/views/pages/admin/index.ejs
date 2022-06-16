@@ -5,12 +5,13 @@
     <body>
      <div id="image-editor-container">
          <div class="main-panel">
-        <%- include('../partials/topbar'); %>
-        <%- include('../partials/leftpanel'); %>
+        <%- include('.../partials/admin/topbar'); %>
+        <%- include('../partials/admin/leftpanel'); %>
 
         <div class="am-mainpanel" style="position: relative;">
             <div class="am-pagetitle">
-                <h5 class="am-title">Workspace</h5>
+                <h5 class="am-title">Workspace <p> Welcome <%= user.fname %></p>
+                </h5>
             </div>
             <div class="am-pagebody">
                 <div class="row row-sm mg-t-15 mg-sm-t-20">

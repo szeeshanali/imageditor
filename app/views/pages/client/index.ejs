@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<!-- saved from url=(0075)http://themepixels.me/demo/amanda/app/index.html?storefront=envato-elements -->
+<html lang="en">
+    <head><%- include('../../partials/client/head'); %> </head>
+    <body>
+     <div id="image-editor-container">
+         <div class="main-panel">
+        <%- include('../../partials/client/topbar'); %>
+        <%- include('../../partials/client/leftpanel'); %>
+
+        <div class="am-mainpanel" style="position: relative;">
+            <div class="am-pagetitle">
+                <h5 class="am-title">Workspace <p> Welcome <%= user.fname %></p>
+                </h5>
+            </div>
+            <div class="am-pagebody">
+                <div class="row row-sm mg-t-15 mg-sm-t-20">
+                    <!-- col-4 -->
+                    <div class="col-lg-9">
+                        <div class="card">
+
+                            <%- include('../../partials/client/workspace'); %>
+                        </div>
+                        <!-- card -->
+                    </div>
+                    <!-- col-8 -->
+                    <%- include('../../partials/client/rightpanel'); %>
+                </div>
+                <!-- row -->
+
+            </div>
+            <!-- am-pagebody -->
+           
+            <div class="resize-sensor" style="position: absolute; inset: 0px; overflow: hidden; z-index: -1; visibility: hidden;">
+                <div class="resize-sensor-expand" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; z-index: -1; visibility: hidden;">
+                    <div style="position: absolute; left: 0px; top: 0px; transition: all 0s ease 0s; width: 100000px; height: 100000px;"></div>
+                </div>
+                <div class="resize-sensor-shrink" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; z-index: -1; visibility: hidden;">
+                    <div style="position: absolute; left: 0; top: 0; transition: 0s; width: 200%; height: 200%"></div>
+                </div>
+            </div>
+        </div>
+        <!-- am-mainpanel -->
+
+        
+        <%- include('../../partials/client/footer'); %>
+    </div>
+</div>
+    </body>
+
+</html>

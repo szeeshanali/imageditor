@@ -1,10 +1,11 @@
 <html lang="en">
-    <head><%- include('../partials/head'); %> </head>
+    <head><%- include('../../partials/client/head'); %> </head>
 
   <body data-new-gr-c-s-check-loaded="14.1063.0" data-gr-ext-installed="">
-
+    <form action="/app/client/login" method="POST">
     <div class="am-signin-wrapper">
-        <%- include('../partials/topbar'); %>
+        <%- include('../../partials/client/topbar'); %>
+
       <div class="am-signin-box">
         <div class="row no-gutters">
           <div class="col-lg-5">
@@ -19,6 +20,7 @@
           </div>
           <div class="col-lg-7">
             <h5 class="tx-gray-800 mg-b-25">Signin to Your Account</h5>
+            <%- include ('../../partials/client/messages') %>
 
             <div class="form-group">
               <label class="form-control-label">Email:</label>
@@ -38,7 +40,7 @@
         <p class="tx-center tx-white-5 tx-12 mg-t-15">Copyright © 2017. All Rights Reserved. Amanda by ThemePixels</p>
       </div><!-- signin-box -->
     </div><!-- am-signin-wrapper -->
-
+</form>
     <script src="../lib/jquery/jquery.js"></script>
     <script src="../lib/popper.js/popper.js"></script>
     <script src="../lib/bootstrap/bootstrap.js"></script>
