@@ -1,0 +1,237 @@
+<div class="am-sideleft">
+  <ul class="nav am-sideleft-tab">
+    <li class="nav-item">
+      <a href="#mainMenu" class="nav-link active"><i class="icon ion-ios-home-outline tx-24"></i></a>
+    </li>
+    <li class="nav-item">
+      <a href="#emailMenu" class="nav-link"><i class="icon ion-ios-email-outline tx-24"></i></a>
+    </li>
+    <li class="nav-item">
+      <a href="#chatMenu" class="nav-link"><i class="icon ion-ios-chatboxes-outline tx-24"></i></a>
+    </li>
+    <li class="nav-item">
+      <a href="#settingMenu" class="nav-link"><i class="icon ion-ios-gear-outline tx-24"></i></a>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    <div id="mainMenu" class="tab-pane active ps ps--theme_default" data-ps-id="2b02f5ed-8be3-90be-b56c-33297526abd5">
+      <ul class="nav am-sideleft-menu">
+        <li class="nav-item">
+          <a href="index.html" class="nav-link active">
+            <i class="icon ion-ios-home-outline"></i>
+            <span>Dashboard</span>
+          </a>
+        </li><!-- nav-item -->
+        <li class="nav-item">
+          <a href="" class="nav-link with-sub">
+            <i class="icon ion-ios-gear-outline"></i>
+            <span>Categories</span>
+          </a>
+          <ul class="nav-sub">
+            <% for(var i=0; i< categories.length; i++) {  %>
+              <li class="nav-item"><a href="form-elements.html" code="<%= categories[i].code %>" class="nav-link"><%= categories[i].name %> <sup>(<%= categories[i].items.length %>)</sup></a></li>
+             <%} %>
+            
+            
+          </ul>
+        </li><!-- nav-item -->
+        <li class="nav-item">
+          <a href="" class="nav-link with-sub">
+            <i class="icon ion-ios-filing-outline"></i>
+            <span>Layouts</span>
+          </a>
+          <div class="list-group widget-list-group">
+            <div class="list-group-item d-flex">
+              <div class="media d-block d-sm-flex">
+                <div class="d-block d-sm-flex mg-sm-r-20">
+                  <img src="../img/img2.jpg" class="rounded-circle wd-40" alt="Image">
+                </div><!-- d-flex -->
+                <div class="media-body mg-t-10 mg-sm-t-0">
+                  <h6 class="mg-b-5 tx-14"><a href="" class="tx-inverse hover-primary">Paper size: A4 </a></h6>
+                  <p class="mg-b-0 tx-12">(21.0x29.7)cm</p>
+                </div><!-- media-body -->
+              </div><!-- media -->
+            </div><!-- list-group-item -->
+</div>
+        </li><!-- nav-item -->
+        <li class="nav-item">
+          <a href="" class="nav-link with-sub">
+            <i class="icon ion-ios-analytics-outline"></i>
+            <span>Charts</span>
+          </a>
+          <ul class="nav-sub">
+            <li class="nav-item"><a href="chart-morris.html" class="nav-link">Morris Charts</a></li>
+            <li class="nav-item"><a href="chart-flot.html" class="nav-link">Flot Charts</a></li>
+            <li class="nav-item"><a href="chart-chartjs.html" class="nav-link">Chart JS</a></li>
+            <li class="nav-item"><a href="chart-rickshaw.html" class="nav-link">Rickshaw</a></li>
+            <li class="nav-item"><a href="chart-sparkline.html" class="nav-link">Sparkline</a></li>
+          </ul>
+        </li><!-- nav-item -->
+        <li class="nav-item">
+          <a href="" class="nav-link with-sub">
+            <i class="icon ion-ios-navigate-outline"></i>
+            <span>Maps</span>
+          </a>
+          <ul class="nav-sub">
+            <li class="nav-item"><a href="map-google.html" class="nav-link">Google Maps</a></li>
+            <li class="nav-item"><a href="map-vector.html" class="nav-link">Vector Maps</a></li>
+          </ul>
+        </li><!-- nav-item -->
+        <li class="nav-item">
+          <a href="" class="nav-link with-sub">
+            <i class="icon ion-ios-list-outline"></i>
+            <span>Tables</span>
+          </a>
+          <ul class="nav-sub">
+            <li class="nav-item"><a href="table-basic.html" class="nav-link">Basic Table</a></li>
+            <li class="nav-item"><a href="table-datatable.html" class="nav-link">Data Table</a></li>
+          </ul>
+        </li><!-- nav-item -->
+        <li class="nav-item">
+          <a href="" class="nav-link with-sub">
+            <i class="icon ion-ios-bookmarks-outline"></i>
+            <span>Pages</span>
+          </a>
+          <ul class="nav-sub">
+            <li class="nav-item"><a href="blank.html" class="nav-link">Blank Page</a></li>
+            <li class="nav-item"><a href="page-signin.html" class="nav-link">Signin Page</a></li>
+            <li class="nav-item"><a href="page-signup.html" class="nav-link">Signup Page</a></li>
+            <li class="nav-item"><a href="page-notfound.html" class="nav-link">404 Page Not Found</a></li>
+          </ul>
+        </li><!-- nav-item -->
+        <li class="nav-item">
+          <a href="widgets.html" class="nav-link">
+            <i class="icon ion-ios-briefcase-outline"></i>
+            <span>Widgets</span>
+          </a>
+        </li><!-- nav-item -->
+      </ul>
+    <div class="ps__scrollbar-x-rail" style="left: 0px; bottom: 0px;"><div class="ps__scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__scrollbar-y-rail" style="top: 0px; right: 0px;"><div class="ps__scrollbar-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></div><!-- #mainMenu -->
+    <div id="emailMenu" class="tab-pane ps ps--theme_default" data-ps-id="c4879003-7a3b-40db-cf16-3e289e49d307">
+      <div class="pd-x-20 pd-y-10">
+        <a href="" class="btn btn-orange btn-block btn-compose">Compose Email</a>
+      </div>
+      <ul class="nav am-sideleft-menu">
+        <li class="nav-item">
+          <a href="page-inbox.html" class="nav-link">
+            <i class="icon ion-ios-filing-outline"></i>
+            <span>Inbox</span>
+          </a>
+        </li><!-- nav-item -->
+        <li class="nav-item">
+          <a href="page-inbox.html" class="nav-link">
+            <i class="icon ion-ios-filing-outline"></i>
+            <span>Drafts</span>
+          </a>
+        </li><!-- nav-item -->
+        <li class="nav-item">
+          <a href="page-inbox.html" class="nav-link">
+            <i class="icon ion-ios-paperplane-outline"></i>
+            <span>Sent</span>
+          </a>
+        </li><!-- nav-item -->
+        <li class="nav-item">
+          <a href="page-inbox.html" class="nav-link">
+            <i class="icon ion-ios-trash-outline"></i>
+            <span>Trash</span>
+          </a>
+        </li><!-- nav-item -->
+        <li class="nav-item">
+          <a href="page-inbox.html" class="nav-link">
+            <i class="icon ion-ios-filing-outline"></i>
+            <span>Spam</span>
+          </a>
+        </li><!-- nav-item -->
+      </ul>
+
+      <label class="pd-x-20 tx-uppercase tx-11 mg-t-10 tx-orange mg-b-0 tx-medium">My Folder</label>
+      <ul class="nav am-sideleft-menu">
+        <li class="nav-item">
+          <a href="page-inbox.html" class="nav-link">
+            <i class="icon ion-ios-folder-outline"></i>
+            <span>Updates</span>
+          </a>
+        </li><!-- nav-item -->
+        <li class="nav-item">
+          <a href="page-inbox.html" class="nav-link">
+            <i class="icon ion-ios-folder-outline"></i>
+            <span>Social</span>
+          </a>
+        </li><!-- nav-item -->
+        <li class="nav-item">
+          <a href="page-inbox.html" class="nav-link">
+            <i class="icon ion-ios-folder-outline"></i>
+            <span>Promotions</span>
+          </a>
+        </li><!-- nav-item -->
+      </ul>
+    <div class="ps__scrollbar-x-rail" style="left: 0px; bottom: 0px;"><div class="ps__scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__scrollbar-y-rail" style="top: 0px; right: 0px;"><div class="ps__scrollbar-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></div><!-- #emailMenu -->
+    <div id="chatMenu" class="tab-pane ps ps--theme_default" data-ps-id="08b08776-1fd1-37a2-18aa-b1b7bee3a55a">
+      <div class="chat-search-bar">
+        <input type="search" class="form-control wd-150" placeholder="Search chat...">
+        <button class="btn btn-secondary"><i class="fa fa-search"></i></button>
+      </div><!-- chat-search-bar -->
+
+      <label class="pd-x-15 tx-uppercase tx-11 mg-t-20 tx-orange mg-b-10 tx-medium">Recent Chat History</label>
+      <div class="list-group list-group-chat">
+        <a href="#" class="list-group-item">
+          <div class="d-flex align-items-center">
+            <img src="../img/img6.jpg" class="wd-32 rounded-circle" alt="">
+            <div class="mg-l-10">
+              <h6>Russell M. Evans</h6>
+              <span>Tuesday, 10:33am</span>
+            </div>
+          </div><!-- d-flex -->
+          <p>Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain...</p>
+        </a><!-- list-group-item -->
+        <a href="#" class="list-group-item">
+          <div class="d-flex align-items-center">
+            <img src="../img/img7.jpg" class="wd-32 rounded-circle" alt="">
+            <div class="mg-l-10">
+              <h6>James F. Sears</h6>
+              <span>Monday, 4:21pm</span>
+            </div>
+          </div><!-- d-flex -->
+          <p>But who has any right to find fault with a man who chooses to enjoy a pleasure that has...</p>
+        </a><!-- list-group-item -->
+        <a href="#" class="list-group-item">
+          <div class="d-flex align-items-center">
+            <img src="../img/img8.jpg" class="wd-32 rounded-circle" alt="">
+            <div class="mg-l-10">
+              <h6>Sharon R. Rowe</h6>
+              <span>Sunday, 7:45pm</span>
+            </div>
+          </div><!-- d-flex -->
+          <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising...</p>
+        </a><!-- list-group-item -->
+        <a href="#" class="list-group-item">
+          <div class="d-flex align-items-center">
+            <img src="../img/img9.jpg" class="wd-32 rounded-circle" alt="">
+            <div class="mg-l-10">
+              <h6>Ruby M. Martin</h6>
+              <span>Sunday, 7:45pm</span>
+            </div>
+          </div><!-- d-flex -->
+          <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising...</p>
+        </a><!-- list-group-item -->
+        <a href="#" class="list-group-item">
+          <div class="d-flex align-items-center">
+            <img src="../img/img10.jpg" class="wd-32 rounded-circle" alt="">
+            <div class="mg-l-10">
+              <h6>Joslyn C. Mayo</h6>
+              <span>Sunday, 7:45pm</span>
+            </div>
+          </div><!-- d-flex -->
+          <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising...</p>
+        </a><!-- list-group-item -->
+      </div><!-- list-group -->
+      <span class="d-block pd-15 tx-12">Loading messages...</span>
+
+    <div class="ps__scrollbar-x-rail" style="left: 0px; bottom: 0px;"><div class="ps__scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__scrollbar-y-rail" style="top: 0px; right: 0px;"><div class="ps__scrollbar-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></div><!-- #chatMenu -->
+    <div id="settingMenu" class="tab-pane ps ps--theme_default ">
+      <%- include('../../partials/client/imgupload'); %>
+    </div>
+    <div class="ps__scrollbar-x-rail" style="left: 0px; bottom: 0px;"><div class="ps__scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__scrollbar-y-rail" style="top: 0px; right: 0px;"><div class="ps__scrollbar-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></div><!-- #settingMenu -->
+  </div><!-- tab-content -->
+</div>

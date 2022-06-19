@@ -1,13 +1,13 @@
 <html lang="en">
     
-    <head><%- include('../partials/head'); %> </head>
+    <head><%- include('../../partials/client/head'); %> </head>
 
 
   <body data-new-gr-c-s-check-loaded="14.1063.0" data-gr-ext-installed="">
 
     <div class="am-signup-wrapper">
-        <%- include('../partials/topbar'); %>
-        <form action="/app/register" method="POST">
+        <%- include('../../partials/client/topbar',{user:null}); %>
+        <form  method="POST">
 
 
       <div class="am-signup-box">
@@ -24,7 +24,7 @@
           </div>
           <div class="col-lg-7">
             <h5 class="tx-gray-800 mg-b-25">Signin to Your Account</h5>
-            <%- include ('../partials/messages') %>
+            <%- include ('../../partials/client/messages') %>
 
             <div class="form-group">
               <label class="form-control-label">Email:</label>

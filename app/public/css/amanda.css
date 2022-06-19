@@ -11885,7 +11885,7 @@ textarea.parsley-success:focus {
   top: 0;
   left: 0;
   width: 100%;
-  height: 60px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -12034,11 +12034,11 @@ textarea.parsley-success:focus {
 
 .am-navicon {
   width: 60px;
-  height: 60px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  font-size: 18px;
   line-height: 0;
   color: #FB9337;
 }
@@ -12050,11 +12050,10 @@ textarea.parsley-success:focus {
 }
 
 .am-logo {
-  font-size: 24px;
+  font-size: 18px;
   font-weight: bold;
   color: #fff;
   position: relative;
-  top: -3px;
 }
 .am-logo:hover, .am-logo:focus {
   color: #fff;
@@ -12063,7 +12062,7 @@ textarea.parsley-success:focus {
 /***** LEFT SIDEBAR *****/
 .am-sideleft {
   position: fixed;
-  top: 60px;
+  top: 40px;
   left: -300px;
   bottom: 0;
   width: 300px;
@@ -12078,7 +12077,7 @@ textarea.parsley-success:focus {
 }
 .am-sideleft .tab-pane {
   position: absolute;
-  top: 82px;
+  top: 40px;
   bottom: 0;
   left: 0;
   right: 0;
@@ -12174,7 +12173,7 @@ textarea.parsley-success:focus {
 
 .am-sideleft-tab .nav-item {
   width: 60px;
-  height: 60px;
+  height: 40px;
   border-right: 1px solid #3b4d6a;
 }
 .am-sideleft-tab .nav-link {
@@ -12276,6 +12275,8 @@ textarea.parsley-success:focus {
 }
 .am-sideleft-menu .nav-sub .nav-link {
   color: #868e96;
+  padding: 2px 15px;
+  border-bottom: solid 1px #eee;
 }
 .am-sideleft-menu .nav-sub .nav-link:hover, .am-sideleft-menu .nav-sub .nav-link:focus {
   color: #343a40;
@@ -12299,14 +12300,14 @@ textarea.parsley-success:focus {
 .am-pagetitle {
   position: fixed;
   z-index: 900;
-  top: 60px;
+  top: 40px;
   left: 0;
   right: 0;
   padding: 0 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 60px;
+  height: 40px;
   background-color: #2d3a50;
   transition: all 0.2s ease-in-out;
 }
@@ -12359,11 +12360,11 @@ textarea.parsley-success:focus {
 }
 
 .am-pagebody {
-  padding: 15px;
+  padding: 0px 15px;
 }
 @media (min-width: 576px) {
   .am-pagebody {
-    padding: 1px 22px;
+    /* padding: 1px 22px; */
   }
 }
 .am-pagebody .hljs {
@@ -12424,9 +12425,9 @@ textarea.parsley-success:focus {
 .am-signin-wrapper,
 .am-signup-wrapper {
   min-height: 100vh;
-  background-color: #32415A;
-  background-image: linear-gradient(to right, #32415A 0%, #202939 100%);
-  background-repeat: repeat-x;
+  /* background-color: #32415A; */
+  /* background-image: linear-gradient(to right, #32415A 0%, #202939 100%);
+  background-repeat: repeat-x; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12437,17 +12438,17 @@ textarea.parsley-success:focus {
 .am-signup-box > .row > div:first-child {
   text-align: center;
   padding: 40px;
-  background-color: #FB9337;
+  /* background-color: #FB9337;
   background-image: linear-gradient(to bottom, #FB9337 0%, #fb861e 100%);
-  background-repeat: repeat-x;
-  color: #fff;
+  background-repeat: repeat-x; */
+  color: #32415a;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .am-signin-box > .row > div:first-child a,
 .am-signup-box > .row > div:first-child a {
-  color: #fff;
+  color: #0056b3;
   text-decoration: underline;
 }
 .am-signin-box > .row > div:last-child,

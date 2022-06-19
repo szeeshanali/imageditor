@@ -503,6 +503,18 @@
         this.canvas.getActiveObjects().forEach(obj => this.canvas.remove(obj))
         this.canvas.discardActiveObject().requestRenderAll(), this.canvas.trigger('object:modified');
       })
+      $(`${this.containerSelector} #select-panel #save`).click(() => {
+
+        var data = this.canvas.toDataURL();
+        var json = JSON.stringify(this.canvas.toJSON());      
+        $("#previewcanvas").attr("src",data);
+        $("#inputpreviewcanvas").attr("value",json);
+        
+
+        //blob = new Blob([data], {type: "octet/stream"});
+        //this.canvas.getActiveObjects().forEach(obj => this.canvas.remove(obj))
+        //this.canvas.discardActiveObject().requestRenderAll(), this.canvas.trigger('object:modified');
+      })
       $(`${this.containerSelector} .toolpanel#select-panel .object-options #group`).click(() => {
         if (this.activeSelection.type !== 'activeSelection') return;
         this.canvas.getActiveObject().toGroup()
