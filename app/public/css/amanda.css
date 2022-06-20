@@ -12217,6 +12217,11 @@ textarea.parsley-success:focus {
   display: block;
   width: 100%;
 }
+.am-sideleft-menu > .nav-item sup{
+  color:orange;
+  font-weight: bold;
+  
+}
 .am-sideleft-menu > .nav-item + .nav-item {
   border-top: 1px solid #e9ecef;
 }
@@ -12352,10 +12357,10 @@ textarea.parsley-success:focus {
   }
 }
 .am-pagetitle .am-title {
-  color: rgba(255, 255, 255, 0.8);
-  font-weight: 400;
-  font-size: 16px;
-  margin-bottom: 2px;
+  color: orange;
+  font-weight: bold;
+  font-size: 12px;
+  margin-bottom: 0px;
   position: relative;
 }
 

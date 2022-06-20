@@ -508,8 +508,8 @@
         var data = this.canvas.toDataURL();
         var json = JSON.stringify(this.canvas.toJSON());      
         $("#previewcanvas").attr("src",data);
-        $("#inputpreviewcanvas").attr("value",json);
-        
+        $("#inputcanvasjson").attr("value",json);
+        $("#inputcanvasbase64").attr("value",data);
 
         //blob = new Blob([data], {type: "octet/stream"});
         //this.canvas.getActiveObjects().forEach(obj => this.canvas.remove(obj))
