@@ -2,8 +2,12 @@ const express               = require('express');
 const router                = express.Router();
 const {isLoggedIn,isAdmin}  = require('../../config/auth');
 const categories            = require('../../models/categories');
-PATH_USER_HOME              = 'pages/client/index';
+PATH_USER_HOME              = 'pages/client/main';
+PATH_USER_PROFILE           = 'pages/client/profile';
 ROUTE_USER_HOME             = '/app'
+ROUTE_USER_PROFILE          = '/app/profile';
+const cached_layout_data    = {}; 
+
 
 // layout. 
 router.use((req, res, next) => {
@@ -12,12 +16,15 @@ router.use((req, res, next) => {
 });
 
 
-router.get("profile", isLoggedIn, (req,res)=>{    
-    res.render(PATH_PROFILE,{user:req.user});
+router.get(ROUTE_USER_PROFILE, isLoggedIn, (req,res)=>{    
+    res.render(PATH_USER_PROFILE,{
+        user:req.user,
+        categories:cached_layout_data.categories
+    });
 })
 
 
-router.post("profile", isLoggedIn, (req,res)=>{
+router.post(ROUTE_USER_PROFILE, isLoggedIn, (req,res)=>{
     const {fname,lname,email,address, password2,company_name} = req.body;
     let errors = [];
     if(!fname || !email || !lname ) {
@@ -46,19 +53,11 @@ router.post("profile", isLoggedIn, (req,res)=>{
         res.redirect("/app",{user:req.user})  
   }
 })
-const cached_layout_data = {}; 
 
-router.get(ROUTE_USER_HOME, async (req, res) => {
-    cached_layout_data.user = req.user;
-    cached_layout_data.pagetitle = "Home";
-    if(cached_layout_data.categories == null) 
-    { cached_layout_data.categories = await categories.find({active:true, items:{$gt: []}}); }
-    
-    console.log("categories:",cached_layout_data.categories)
-    res.render(PATH_USER_HOME,cached_layout_data);
-
-    res.render(PATH_USER_HOME,
-    { user:req.user });
+router.get(ROUTE_USER_HOME,  async (req, res) => {
+    res.render(PATH_USER_HOME,{layout:false});
 });
+
+
 
 module.exports = router;

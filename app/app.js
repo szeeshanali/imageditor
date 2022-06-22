@@ -2,18 +2,17 @@ const express               = require('express')
 const app                   = express()
 var expressLayouts          = require('express-ejs-layouts');
 
-const port                  = 3000
+const port                  = 3000 
 const mongoose              = require('mongoose');
 const bodyParser            = require('body-parser');
-const bcrypt                = require('bcrypt');
 const session               = require('express-session');
 const flash                 = require('connect-flash');
-const {isLoggedIn,isAdmin}  = require("../app/config/auth.js")
-const appusers              = require("../app/models/appuser.js")
-const admin_routes          = require("../app/routes/admin/adminroutes");
-const client_routes         = require("../app/routes/client/clientroutes");
-const auth_routes           = require("../app/routes/authroutes");
-const passport              = require('passport');
+const adminroutes          = require("../app/routes/admin/adminroutes");
+const clientroutes         = require("../app/routes/client/clientroutes");
+const authroutes           = require("../app/routes/authroutes");
+const mainroutes           = require("../app/routes/mainroutes");
+const passport             = require('passport');
+const commonService        = require('../app/services/common');
 require("../app/config/passport")(passport);
 
 //mongoose
@@ -35,18 +34,21 @@ app.use(session(
 app.use(passport.initialize());
 app.use(passport.session());
 
- //use flash
+ //use flash 
  app.use(flash());
- app.use((req,res,next)=> {
+ app.use(async (req,res,next) => {
    res.locals.success_msg   = req.flash('success_msg');
    res.locals.error_msg     = req.flash('error_msg');
    res.locals.error         = req.flash('error'); 
+   res.locals.categories    = await commonService.categoryService.getCategoriesAsync();
+   res.locals.user          = req.user;
   next();
  })
 
-app.use("/",  admin_routes);  
-app.use("/",  client_routes);  
-app.use("/",  auth_routes);  
+app.use("/",  adminroutes);  
+app.use("/",  clientroutes);  
+app.use("/",  authroutes);  
+app.use("/",  mainroutes);  
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

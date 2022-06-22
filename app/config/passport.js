@@ -8,10 +8,10 @@ module.exports = function(passport) {
                 {usernameField : 'email'},
                 (email, password , done)=> {
                 //match user
-                User.findOne({email : email})
+                User.findOne({email : email}).exec()
                 .then((user)=>{
                  if(!user) {
-                     return done(null,false,{ message : 'Incorrent username or password'});
+                     return done(null,false, { message : 'Incorrent username or password'});
                  }
                  //match pass
                  bcrypt.compare(password,user.password,(err,isMatch)=>{

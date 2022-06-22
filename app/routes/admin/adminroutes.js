@@ -12,6 +12,7 @@ const PATH_ADMIN_CATEGORY_ITEMS      = 'pages/admin/categoryitems';
 const PATH_ADMIN_HOME       =  `pages/admin/index`;
 const PATH_ADMIN_UPLOADS    = `../app/uploads/admin`;
 const ROUTE_ADMIN_HOME      = '/app/admin/';
+const ROUTE_ADMIN_SAVEDESIGN      = '/app/admin/savedesign';
 
 
 // layout. 
@@ -21,7 +22,7 @@ router.use((req, res, next) => {
 });
 
 var cached_layout_data = {};
-router.get('/category/:categoryid/', isAdmin, async (req,res)=>{
+router.get('/app/admin/category/:categoryid/', isAdmin, async (req,res)=>{
     const categories = cached_layout_data.categories; 
     const categoryid =  req.params["categoryid"];   
     const category =  categories.find(o => o._id == categoryid);
@@ -43,18 +44,20 @@ router.get('dashboard', isAdmin, async (req,res)=>{
     const cats = await categories.find({}); 
         res.render(PATH_ADMIN_HOME,cached_layout_data);
 })
-router.get('/',  isAdmin, async (req, res) => {
+router.get('/app/admin/',  isAdmin, async (req, res) => {
 
     cached_layout_data.user = req.user;
     cached_layout_data.pagetitle = "Home";
-    if(cached_layout_data.categories == null)
-    { cached_layout_data.categories = await categories.find({}); }    
+    //if(cached_layout_data.categories == null)
+    //{ 
+      cached_layout_data.categories = await categories.find({});
+   //}    
     res.render(PATH_ADMIN_HOME,cached_layout_data);          
 });
 
   
 
-  router.post("/savedesign",  isAdmin,  (req,res)=>{
+  router.post(ROUTE_ADMIN_SAVEDESIGN,  isAdmin,  (req,res)=>{
     const {title,description,categoryId,json,base64} = req.body;
     let errors = [];
 
@@ -95,7 +98,7 @@ router.get('/',  isAdmin, async (req, res) => {
     .then((value)=>{
       
       console.log("canvas json uploaded successfully..");
-      console.log("updating category items");
+      console.log("updating category items"); 
       console.log(categoryId);
       categories.findOneAndUpdate(
         {"_id" : categoryId},

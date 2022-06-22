@@ -1,4 +1,5 @@
-<div class="am-sideleft">
+<div id="toolbar">
+<div class="am-sideleft main-buttons" >
   <ul class="nav am-sideleft-tab">
     <li class="nav-item">
       <a href="#mainMenu" class="nav-link active"><i class="icon ion-ios-home-outline tx-24"></i></a>
@@ -9,6 +10,12 @@
     <li class="nav-item">
       <a href="#chatMenu" class="nav-link"><i class="icon ion-ios-chatboxes-outline tx-24"></i></a>
     </li>
+
+  <li class="nav-item">
+    <a href="#textmenu" class="nav-link" id="textbox">
+        <i class="icon ion-social-tumblr-outline tx-24"></i>
+    </a>
+</li>
     <li class="nav-item">
       <a href="#settingMenu" class="nav-link" ><i class="icon ion-ios-gear-outline tx-24"></i></a>
     </li>
@@ -161,6 +168,10 @@
     <div id="settingMenu" class="tab-pane ps ps--theme_default ">
       <%- include('../../partials/client/imgupload'); %>
     </div>
+    <div id="textmenu" class="tab-pane ps ps--theme_default">
+      <%- include('../../partials/client/typo'); %>
+  </div>
     <div class="ps__scrollbar-x-rail" style="left: 0px; bottom: 0px;"><div class="ps__scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__scrollbar-y-rail" style="top: 0px; right: 0px;"><div class="ps__scrollbar-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></div><!-- #settingMenu -->
   </div><!-- tab-content -->
+</div>
 </div>

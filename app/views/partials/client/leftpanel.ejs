@@ -1,10 +1,10 @@
 <div class="am-sideleft">
     <%- include('../../partials/client/toolbar'); %>
     <div class="tab-content">
-        <div id="mainMenu" class="tab-pane ps ps--theme_default" data-ps-id="2eb2b066-5808-1af2-efe4-5545ef09dd17">
+        <div id="mainMenu" class="tab-pane ps ps--theme_default active" data-ps-id="2eb2b066-5808-1af2-efe4-5545ef09dd17">
             <ul class="nav am-sideleft-menu">
                 <li class="nav-item">
-                    <a href="http://themepixels.me/demo/amanda/app/index.html" class="nav-link active">
+                    <a href="/app/dashboard" class="nav-link active">
                         <i class="icon ion-ios-home-outline"></i>
                         <span>Dashboard</span>
                     </a>
@@ -13,15 +13,24 @@
                 <li class="nav-item">
                     <a href="http://themepixels.me/demo/amanda/app/index.html?storefront=envato-elements" class="nav-link with-sub">
                         <i class="icon ion-ios-gear-outline"></i>
-                        <span>Forms</span>
+                        <span>Pattern Library (<%= categories.length || 0 %>)</span>
                     </a>
-                    <ul class="nav-sub">
+                    <ul class="nav-sub " style="display: block;">
                         <% for(var i=0; i< categories.length; i++) {  %>
-                            <li class="nav-item"><a href="/app/admin/category/<%= categories[i]._id %>" code="<%= categories[i].code %>" class="nav-link"><%= categories[i].name %> <sup>(<%= categories[i].items.length %>)</sup></a></li>
-                           <%} %>
+                            <li class="nav-item " >
+                                <a data-toggle="modal" id="<%=categories[i]._id %>"  data-target="#popupcategoryitems" href="/app/admin/category/<%= categories[i]._id %>" code="<%= categories[i].code %>" class="nav-link categoryitem" ><%= categories[i].name %>
+                                    <sup>(<%= categories[i].items.length %>)</sup>
+                                </a>
+                            </li>
+                        <%} %>
                     </ul>
                 </li>
-
+                <li class="nav-item">
+                    <a href="/app/templates" class="nav-link">
+                        <i class="icon ion-ios-home-outline"></i>
+                        <span>Templates</span>
+                    </a>
+                </li>
             </ul>
             <div class="ps__scrollbar-x-rail" style="left: 0px; bottom: 0px;">
                 <div class="ps__scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div>
@@ -30,11 +39,11 @@
                 <div class="ps__scrollbar-y" tabindex="0" style="top: 0px; height: 0px;"></div>
             </div>
         </div>
-        <div id="clipartmenu" class="tab-pane ps ps--theme_default active" data-ps-id="af614671-51ab-0c55-f503-1202717f8b03">
+        <div id="clipartmenu" class="tab-pane ps ps--theme_default" data-ps-id="af614671-51ab-0c55-f503-1202717f8b03">
             <%- include('../../partials/client/clipart'); %>
         </div>
         <!-- #mainMenu -->
-        <div id="templatemenu" class="tab-pane ps ps--theme_default active" data-ps-id="af614671-51ab-0c55-f503-1202717f8b03">
+        <div id="templatemenu" class="tab-pane ps ps--theme_default " data-ps-id="af614671-51ab-0c55-f503-1202717f8b03">
             <%- include('../../partials/client/templates'); %>
         </div>
         <!-- #emailMenu -->
@@ -49,3 +58,4 @@
     </div>
     <!-- tab-content -->
 </div>
+

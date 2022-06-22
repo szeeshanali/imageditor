@@ -104,13 +104,12 @@
         let currentState = fabricCanvas.toJSON();
         this.history.push(JSON.stringify(currentState));
       }, 1000);
-
+      document.getElementById("c").fabric = fabricCanvas;
       return fabricCanvas;
     } catch (_) {
       console.error("can't create canvas instance");
       return null;
     }
   }
-
   window.ImageEditor.prototype.initializeCanvas = canvas;
 })();
