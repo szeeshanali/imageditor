@@ -31,6 +31,26 @@
 
         <%- include('../../partials/client/popups/categoryitems'); %>
         <%- include('../../partials/client/footer'); %>
+
+        <script>
+            // invoked from server.
+            function callback(res)
+            {
+                var wi = res.width; 
+                var hi = res.height; 
+                var canvas = document.getElementById('c').fabric;
+                var wpx = (wi  * 100); 
+                var hpx = (hi * 100);
+                
+                var wratio = (wpx <= 425)?wpx: wpx/2;
+                var hratio = (hpx <= 700)?hpx: hpx/2;
+                
+                canvas.setDimensions({ width: wratio, height: hratio });
+                $("#canvas-holder").width(wratio+30).height(hratio);
+                $("#canvas-holder .lbl-width").text(`${wi} x ${hi} in`);
+            }
+            <%= executescript %> 
+        </script>
     </div>
 </div>
     </body>

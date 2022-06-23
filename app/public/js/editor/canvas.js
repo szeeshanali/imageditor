@@ -19,11 +19,14 @@
 
       // set up selection style
       fabric.Object.prototype.transparentCorners = false;
-      fabric.Object.prototype.cornerStyle = 'circle';
-      fabric.Object.prototype.borderColor = '#C00000';
-      fabric.Object.prototype.cornerColor = '#C00000';
-      fabric.Object.prototype.cornerStrokeColor = '#FFF';
-      fabric.Object.prototype.padding = 0;
+      fabric.Object.prototype.cornerStyle = 'square';
+      fabric.Object.prototype.borderColor = '#999';
+      fabric.Object.prototype.cornerColor = '#999';
+      fabric.Object.prototype.cornerStrokeColor = '#999';
+      fabric.Object.prototype.cornerSize = 10;
+      fabric.Object.prototype.padding = 15;
+      
+      
       // retrieve active selection to react state
       fabricCanvas.on('selection:created', (e) => this.setActiveSelection(e.target))
       fabricCanvas.on('selection:updated', (e) => this.setActiveSelection(e.target))
@@ -43,6 +46,9 @@
         let currentState = this.canvas.toJSON();
         this.history.push(JSON.stringify(currentState));
       })
+
+      
+
 
       const savedCanvas = saveInBrowser.load('canvasEditor');
       if (savedCanvas) {

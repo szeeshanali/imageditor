@@ -17,6 +17,7 @@ const ROUTE_USER_REGISTER   = '/app/register';
 const ROUTE_SIGNOUT         = '/app/signout';
 const ROUTE_USER_HOME       = '/app';
 const ROUTE_ADMIN_HOME      = '/app/admin/';
+const ROUTE_ADMIN_DASHBOARD = '/app/admin/dashboard';
 
 
 router.get(ROUTE_SIGNOUT,(req,res)=>{
@@ -35,9 +36,11 @@ router.get(ROUTE_SIGNOUT,(req,res)=>{
     res.render(PATH_ADMIN_LOGIN,{layout: false});
   });
 
+  // admin dashboard 
   router.post(ROUTE_ADMIN_LOGIN, (req, res, next) => {
+
     passport.authenticate('local',{
-      successRedirect : ROUTE_ADMIN_HOME,
+      successRedirect : ROUTE_ADMIN_DASHBOARD,
       failureRedirect : ROUTE_ADMIN_LOGIN,
       failureFlash : true,
       })(req, res, next);

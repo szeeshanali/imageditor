@@ -1,18 +1,21 @@
 const express               = require('express');
 const router                = express.Router();
 
-const categories  = require("../../models/categories.js")
-const uploads     = require("../../models/uploads.js")
+const categories            = require("../../models/categories.js")
+const uploads               = require("../../models/uploads.js")
+const commonService         = require("../../services/common")
 
 const {isLoggedIn,isAdmin}  = require('../../config/auth')
 const passport = require('passport');
 const { default: mongoose, mongo } = require('mongoose');
 require("../../config/passport")(passport);
-const PATH_ADMIN_CATEGORY_ITEMS      = 'pages/admin/categoryitems';
-const PATH_ADMIN_HOME       =  `pages/admin/index`;
-const PATH_ADMIN_UPLOADS    = `../app/uploads/admin`;
-const ROUTE_ADMIN_HOME      = '/app/admin/';
-const ROUTE_ADMIN_SAVEDESIGN      = '/app/admin/savedesign';
+const PATH_ADMIN_CATEGORY_ITEMS       = 'pages/admin/categoryitems';
+const PATH_ADMIN_HOME                 =  `pages/admin/main`;
+const PATH_ADMIN_UPLOADS              = `/app/uploads/admin`;
+const PATH_ADMIN_DASHBOARD            = `pages/admin/dashboard`;
+const ROUTE_ADMIN_DASHBOARD           = `/app/admin/dashboard`;
+const ROUTE_ADMIN_HOME                = '/app/admin/';
+const ROUTE_ADMIN_SAVEDESIGN          = '/app/admin/savedesign';
 
 
 // layout. 
@@ -40,9 +43,16 @@ router.get('/app/admin/category/:categoryid/', isAdmin, async (req,res)=>{
 })
 
 
-router.get('dashboard', isAdmin, async (req,res)=>{
-    const cats = await categories.find({}); 
-        res.render(PATH_ADMIN_HOME,cached_layout_data);
+router.get(ROUTE_ADMIN_DASHBOARD, isAdmin, async (req,res)=>{
+  res.locals.pagetitle ="Dashboard";
+  var customerReport = await commonService.reportingService.getCustomerReport(); 
+  var summaryReport  = await commonService.reportingService.getSummaryReport(); 
+
+  res.locals.reports = {
+    customerReport  : customerReport,
+    summaryReport   : summaryReport  
+  } ;
+  res.render(PATH_ADMIN_DASHBOARD);
 })
 router.get('/app/admin/',  isAdmin, async (req, res) => {
 

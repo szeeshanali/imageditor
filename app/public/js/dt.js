@@ -1,20 +1,51 @@
 (function($){
 
-    var canvas = document.getElementById("c").fabric;
+    var canvas = document.getElementById("c")?.fabric;
     var categoryItemTemplate = 
     `<div class='col-lg-2'  >
         <div style="width:150px;height:150px;overflow:hidden" >
             <img src='{0}' style='width:150px;' id='{1}' onclick='loadCategoryItemsToCanvas(this.id)' >
         </div>
     <div>`;
-    
     var clientCategoryItems = $(".categoryitem");
+
     clientCategoryItems.on("click",(elem)=>{
         var categoryItemId = elem.target.id; 
         displayUserCategoryItems(categoryItemId);
     })
 
-    
+    var dropdownCanvasSize  =   $("#dropdownCanvasSize");
+    var inputCanvasWidth    =   $("#inputCanvasWidth"); 
+    var inputCanvasHeight   =   $("#inputCanvasHeight");
+    var heightInchsToCM     =   $("#heightInchsToCM");
+    var widthInchsToCM      =   $("#widthInchsToCM");
+
+    inputCanvasWidth.on("input", (elem)=>{
+        var value = elem.target.value || 0;
+        widthInchsToCM.text(inchesToCentimeter(value) + " (cm)");
+    })
+    inputCanvasHeight.on("input", (elem)=>{
+        var value = elem.target.value || 0;
+        heightInchsToCM.text(inchesToCentimeter(value) + " (cm)");
+    })
+
+    dropdownCanvasSize.on("change",(elem)=>{
+        var values = elem.target.value; 
+        var dimensions = values.split('x'); 
+        var w = dimensions[0];
+        var h = dimensions[1];
+        var wcm = inchesToCentimeter(w) + " (cm)"; 
+        var hcm = inchesToCentimeter(h) + " (cm)"; 
+        $("#widthInchsToCM").text(wcm);
+        $("#heightInchsToCM").text(hcm);
+        inputCanvasWidth.val(w); 
+        inputCanvasHeight.val(h); 
+
+    })
+
+    function inchesToCentimeter(value){
+        return (parseFloat(value) * 2.54).toFixed(1);
+    }
 
 
 
@@ -44,4 +75,9 @@
             })    
         })    
     }
+
+
+
+
+
 })($);

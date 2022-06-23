@@ -1,7 +1,8 @@
 .workarea{
     width: 100%;
     height: 100%;
-    padding-bottom: 20px;
+    background-image: url('/images/transbg.png');
+
 }
 .drag-drop-input:hover{
     border:dashed 1px #d8dce3;
@@ -59,5 +60,17 @@
     background: #2d3a50;
     color: #d8dce3;
     border: solid 1px #2d3a50;
+}
+
+.canvas-container {
+    background-color: white;
+
+}
+
+.lbl-width{
+    background: #a5a8af;
+    padding: 1px 5px;
+    color: white;
+    font-weight: bold;
 }
 /*  */

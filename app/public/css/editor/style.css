@@ -64,13 +64,16 @@ body {
 
 .canvas-holder {
 
-  width:462px;
+  /* width:462px;
   height:651.253px;
-  margin:5px auto;
+  margin:5px auto; */
+  
+  margin:auto;
 }
 
 .canvas-holder .content {
-  border:dashed 2px #ccc;
+ border:dashed 1px #aaa; 
+ padding:15px;
 
 }
 

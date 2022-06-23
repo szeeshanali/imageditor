@@ -36,5 +36,8 @@ router.get('/app/404',(req,res)=>{
 router.get('*',(req,res)=>{
     res.render("pages/admin/404.ejs",{layout:false})
 })
-
+router.post('/app/workspace',(req,res)=>{
+    const  {width, height, title} = req.body;
+    res.render("pages/client/index",{ executescript: `callback({width:${width},height:${height},title:${title}});` })
+})
 module.exports = router;

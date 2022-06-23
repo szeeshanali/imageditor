@@ -50,9 +50,13 @@
         $(`${containerSelector} .toolpanel#${id}-panel`).addClass('visible');
         if (id === 'select') {
           console.log('selection')
+
+
           $(`${containerSelector} .toolpanel#${id}-panel`).attr('class', `toolpanel visible type-${this.activeSelection.type}`)
         }
       }
+
+      
 
       if (id !== 'select') {
         this.canvas.discardActiveObject();
