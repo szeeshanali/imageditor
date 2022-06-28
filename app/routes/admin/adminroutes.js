@@ -127,4 +127,15 @@ router.get('/app/admin/',  isAdmin, async (req, res) => {
 
 });
 
+
+router.post('/app/admin/workspace',(req,res)=>{
+  const  {width, height, title} = req.body;
+  res.render("pages/admin/index",{ executescript: `callback({width:${width},height:${height},title:${title}});` })
+})
+router.get('/app/admin/workspace',(req,res)=>{
+  const  {width, height, title} = req.body;
+  res.render("pages/admin/index",);``
+})
+
+
 module.exports = router;

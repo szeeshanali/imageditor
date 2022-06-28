@@ -7,6 +7,7 @@
   var upload = function (canvas) {
     const _self = this;
 
+    
     $('.drag-drop-input').click(function () {
 
       console.log('click drag drop')
@@ -119,25 +120,21 @@
             //   left: 0,
             //   top: 0
             // })
+
+            
+
+
              img.scaleToHeight(300)
              img.scaleToWidth(300)
             //
+        img.globalCompositeOperation = 'source-atop';
 
-            // var clipPath = new fabric.Circle(
-            //   { 
-            //     radius: 200, 
-            //     fill: '#f55',
-            //     top: 122,
-            //     left: 17 ,
-            //     selectable: false,
-            //     stroke: "red",
-            //     });
+           canvas.add(img)
 
-            // canvas.clipPath = clipPath;
-            canvas.add(img)
 
-            canvas.renderAll()
-            canvas.trigger('object:modified')
+                       
+            //canvas.renderAll()
+            //canvas.trigger('object:modified')
           })
         }
 

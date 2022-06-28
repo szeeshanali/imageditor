@@ -1,19 +1,31 @@
 /**
  * Canvas section management of image editor
  */
+
+ function selectLayer(id)
+ {
+   var index = id.replace("texture",""); 
+   var canvas  = document.getElementById('c').fabric;
+   canvas.setActiveObject(canvas.item(index));
+
+   setTimeout(function(){
+    $(`#${id}`).remove();
+   },1000)
+   
+ }
+
+ 
 (function () {
   'use strict';
+
+  var layerTemplate = $("#layerItems").html();
   var canvas = function () {
     try {
       // $(`${this.containerSelector} .main-panel`).append(`
       //   <div class="canvas-holder" id="canvas-holder">
       //     <div class="content"><canvas id="c"></canvas>
       //   </div></div>`);
-      const fabricCanvas = new fabric.Canvas('c').setDimensions({
-        width: 462,
-        height: 653
-      })
-
+      const fabricCanvas = new fabric.Canvas('c');
       fabricCanvas.originalW = fabricCanvas.width;
       fabricCanvas.originalH = fabricCanvas.height;
 
@@ -26,11 +38,41 @@
       fabric.Object.prototype.cornerSize = 10;
       fabric.Object.prototype.padding = 15;
       
-      
+     
       // retrieve active selection to react state
-      fabricCanvas.on('selection:created', (e) => this.setActiveSelection(e.target))
+      fabricCanvas.on('selection:created', (e) => {})
       fabricCanvas.on('selection:updated', (e) => this.setActiveSelection(e.target))
       fabricCanvas.on('selection:cleared', (e) => this.setActiveSelection(null))
+
+      // var ctx = fabricCanvas.getContext('2d'); 
+      // var img = new Image(500, 500);
+      // img.src = 'https://i.stack.imgur.com/aTQuf.png';
+    
+     
+
+      // img.onload = function(){ 
+      //   ctx.drawImage(img, 0, 0);
+      //   ctx.globalCompositeOperation = 'source-in';
+      //   ctx.save();
+      //   ctx.restore();
+      // };
+
+      // var img2 = new Image(500, 500);
+      // img2.src = 'https://i.stack.imgur.com/uVQ0X.jpg';
+
+      // img2.onload = function(){ 
+      //   ctx.drawImage(img2, 0, 0);
+      //   ctx.save();
+      //   ctx.restore();
+
+      // };
+      
+/// draw the shape we want to use for clipping
+//ctx1.drawImage(imgClip, 0, 0);
+
+/// change composite mode to use that shape
+//ctx1.globalCompositeOperation = 'source-in';
+
 
       // snap to an angle on rotate if shift key is down
       fabricCanvas.on('object:rotating', (e) => {
@@ -46,9 +88,80 @@
         let currentState = this.canvas.toJSON();
         this.history.push(JSON.stringify(currentState));
       })
+      var prevSelectedLayer = null;
+      fabricCanvas.on('object:added', (o) => {
+        
+        $("#maintools").show();
+        var temp = layerTemplate; 
+        var obj = o.target; 
+        var index = obj.cacheKey.replace("texture","");
+        
+        temp = temp.replace("{id}",obj.cacheKey)
+        .replace("{src}",obj._element.currentSrc)
+        .replace("{_id}",obj.cacheKey)
+        .replace("{index}", parseInt(index) + 1);
+          $("#layers").prepend(temp);
+        // layer click handler. 
+          
+          var layerId = `#${obj.cacheKey}`;   
+          $(layerId).on("click", function() {
 
+            fabricCanvas.setActiveObject(obj);
+            fabricCanvas.renderAll()
+
+            $(`${layerId} .layers-controls`).show();
+
+            if(prevSelectedLayer != null)
+            { $(`${prevSelectedLayer} .layers-controls`).attr("style","display:none !important"); }
+            
+            prevSelectedLayer = layerId;
+
+            $(`#select-panel #delete`).click(() => {
+              fabricCanvas.getActiveObjects().forEach(obj1 => fabricCanvas.remove(obj1)); 
+              fabricCanvas.discardActiveObject().requestRenderAll(); 
+              fabricCanvas.trigger('object:modified');
+              fabricCanvas.renderAll()
+            });
+
+            $(`#select-panel #duplicate`).click(() => {
+              let clonedObjects = []
+              let activeObjects = fabricCanvas.getActiveObjects()
+              activeObjects.forEach(obj => {
+                obj.clone(clone => {
+                  fabricCanvas.add(clone.set({
+                    strokeUniform: true,
+                    left: obj.aCoords.tl.x + 20,
+                    top: obj.aCoords.tl.y + 20
+                  }));
       
+                  if (activeObjects.length === 1) {
+                    fabricCanvas.setActiveObject(clone)
+                  }
+                  clonedObjects.push(clone)
+                })
+              })
+      
+              if (clonedObjects.length > 1) {
+                let sel = new fabric.ActiveSelection(clonedObjects, {
+                  canvas: fabricCanvas,
+                });
+                fabricCanvas.setActiveObject(sel)
+              }
+      
+              fabricCanvas.requestRenderAll(), fabricCanvas.trigger('object:modified')
+            })
+            //fabricCanvas.remove(obj);
+            //$(this).remove();
+          })
+          
+      })
 
+      fabricCanvas.on('object:removed', (o) => {
+        var obj = o.target; 
+        alert(obj.cacheKey);
+        alert("removed");
+        $(`#${obj.cacheKey}`).remove();
+      })
 
       const savedCanvas = saveInBrowser.load('canvasEditor');
       if (savedCanvas) {
@@ -85,6 +198,10 @@
           fabricCanvas.renderAll();
           fabricCanvas.trigger('object:modified');
         }
+
+
+
+
       }))();
 
       // delete object on del key
@@ -117,5 +234,6 @@
       return null;
     }
   }
+  
   window.ImageEditor.prototype.initializeCanvas = canvas;
 })();

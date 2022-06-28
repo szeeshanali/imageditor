@@ -44,14 +44,13 @@
      * @param {String} id tool id
      */
     this.setActiveTool = (id) => {
+      
       this.activeTool = id;
      // $(`${containerSelector} .toolpanel`).removeClass('visible');
       if (id !== 'select' || (id == 'select' && this.activeSelection)) {
         $(`${containerSelector} .toolpanel#${id}-panel`).addClass('visible');
         if (id === 'select') {
           console.log('selection')
-
-
           $(`${containerSelector} .toolpanel#${id}-panel`).attr('class', `toolpanel visible type-${this.activeSelection.type}`)
         }
       }
@@ -59,9 +58,9 @@
       
 
       if (id !== 'select') {
-        this.canvas.discardActiveObject();
-        this.canvas.renderAll();
-        this.activeSelection = null;
+        //this.canvas.discardActiveObject();
+        //this.canvas.renderAll();
+        //this.activeSelection = null;
       }
 
       this.canvas.isDrawingLineMode = false;

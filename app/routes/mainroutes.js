@@ -33,11 +33,18 @@ router.get('/api/categoryitem/:id', async (req,res)=>{
 router.get('/app/404',(req,res)=>{
     res.redirect("pages/admin/404.ejs")
 })
-router.get('*',(req,res)=>{
-    res.render("pages/admin/404.ejs",{layout:false})
-})
+
 router.post('/app/workspace',(req,res)=>{
     const  {width, height, title} = req.body;
     res.render("pages/client/index",{ executescript: `callback({width:${width},height:${height},title:${title}});` })
+})
+router.get('/app/workspace',(req,res)=>{
+    const  {width, height, title} = req.body;
+
+    res.render("pages/client/index",);``
+})
+
+router.get('*',(req,res)=>{
+    res.render("pages/admin/404.ejs",{layout:false})
 })
 module.exports = router;

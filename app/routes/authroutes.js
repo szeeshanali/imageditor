@@ -38,7 +38,6 @@ router.get(ROUTE_SIGNOUT,(req,res)=>{
 
   // admin dashboard 
   router.post(ROUTE_ADMIN_LOGIN, (req, res, next) => {
-
     passport.authenticate('local',{
       successRedirect : ROUTE_ADMIN_DASHBOARD,
       failureRedirect : ROUTE_ADMIN_LOGIN,

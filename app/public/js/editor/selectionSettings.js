@@ -83,6 +83,7 @@
 
     // font section
      (() => {
+
     //   $(`${this.containerSelector} .toolpanel#select-panel .content`).append(`
         // <div class="text-section">
         //   <h4>Font Style</h4>
