@@ -23,6 +23,8 @@ app.use(expressLayouts);
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'))
+app.use(express.static('uploads'))
+
 app.use(express.json({limit: '25mb'}));
 app.use(express.urlencoded({limit: '25mb'}));
 app.use(session(
@@ -43,6 +45,7 @@ app.use(passport.session());
    res.locals.categories    = await commonService.categoryService.getCategoriesAsync();
    res.locals.user          = req.user;
    res.locals.pagetitle     = req.pagetitle;
+   res.locals.templates     = await commonService.uploadService.getTemplatesAsync();
   next();
  })
 

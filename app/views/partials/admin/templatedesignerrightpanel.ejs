@@ -1,0 +1,95 @@
+<div class="col-lg-3 mg-t-15 mg-sm-t-20 mg-lg-t-0 toolpanel" >
+    <div id="select-panel">
+        <div class="card pd-20" id="maintools">
+            <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Template Sheets</h6>
+            <div class="mg-b-10 object-options">
+               
+                <div class="form-group">
+                    <label class="form-control-label">Select Sheet Size:
+                    </label>
+                    <select id="dropdownTemplateSize" class="form-control select2 select2-hidden-accessible " data-placeholder="Choose one (with optgroup)" tabindex="-1" aria-hidden="true">
+                        <option label="Choose one"></option>
+                        <optgroup label="Letter Size">
+                            <option value="8.5x11" selected>Letter : 8.5 x 11"</option>
+                        </optgroup>
+                        <optgroup label="Legal Size">
+                            <option value="8.5x14">Legal : 8.5 x 14"</option>
+                        </optgroup>
+                        <optgroup label="A4 Size">
+                            <option value="8.3x11.7" >A4 : 8.3 x 11.7</option>
+                        </optgroup>
+                    </select>
+                    <small id="lblSheetSize"></small>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label">Select Shape
+                    </label>
+                    <select id="dropdownCanvasShape" class="form-control select2 select2-hidden-accessible " data-placeholder="Choose one (with optgroup)" tabindex="-1" aria-hidden="true">
+                        <option label="Choose one"></option>
+                        <option value="circle" selected>Circle</option>
+                        <option value="square">Square</option>
+                        <option value="rectangle">Rectangle</option>
+                    </select>
+                    <small id="lblSheetSize"></small>
+                </div>
+                <div class="" id="shapeDiameter"  >
+                    <label class="tx-12" >Diameter (in)</label>
+                 <input type="number" pattern="[0-9]" class="form-control" id="inputTemplateDiameter">
+                </div>
+                <div class="d-flex mg-b-10" id="shapeWidthHeight">
+                    <div class="pd-r-10" >
+                        <label class="tx-12" >Width (in) </label>
+                     <input type="text" pattern="[0-9]" class="form-control" id="inputTemplateShapeWidth">
+                    </div>
+                    <div >
+                        <label class="tx-12">Height (in) </label>
+                        <input type="text" pattern="[0-9]" class="form-control" id="inputTemplateShapeHeight">
+                    </div>
+                    <p class="tx-12 mg-b-0">Width and Height for each image.</p>
+
+                </div>
+
+                <div class="d-flex mg-b-10" id="shapePosition">
+                    <div class="pd-r-10" >
+                        <label class="tx-12" >Left (cm) </label>
+                     <input type="number" pattern="[0-9]" class="form-control" id="inputTemplateShapeLeft">
+                    </div>
+                    <div  >
+                        <label class="tx-12">Top (cm) </label>
+                        <input type="number" pattern="[0-9]" class="form-control" id="inputTemplateShapeTop">
+                    </div>
+                </div>
+               
+                <div class="d-flex mg-b-10 ">
+                    
+                    <div class="pd-r-10" >
+                        <label class="tx-12">Rows </label>
+                        <input type="text" pattern="[0-9]" class="form-control" id="inputRows" >
+                    </div>
+                    <div  >
+                        <label class="tx-12" >Columns </label>
+                     <input type="text" pattern="[0-9]" class="form-control" id="inputColumns" >
+                    </div>
+                </div>
+                <p class="tx-12 mg-b-0">Leave empty if only one image is priented.</p>
+                <div class="form-group">
+                    <div >
+                        <label class="tx-12">Title :</label>
+                        <input type="text" class="form-control" id="templateDesc" placeholder="Template description.">
+                    </div>
+                </div>
+
+            </div>
+            <button class="btn btn-outline-success active btn-block mg-b-10" id="saveTemplate">Save</button>
+        </div>
+        
+        
+
+      
+    </div>
+
+   
+    <!-- card -->
+
+ 
+</div>

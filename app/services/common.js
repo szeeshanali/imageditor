@@ -1,16 +1,33 @@
 const categoryModel = require("../models/categories");
-const uploadModel = require("../models/uploads"); 
+const uploads = require("../models/uploads"); 
 const appuserModel = require("../models/appuser"); 
+const { default: mongoose, mongo } = require('mongoose');
 
 const commonService = (function() {
     this.cached_categories = null;
     this.cached_categoryItems = {};
+    this.cached_templates = null;
     this.getCategoriesAsync = async ()=>
     { 
         console.log("Called: CommonService>CategoryService.");
         if(cached_categories == null)
         { cached_categories = await categoryModel.find({}); }
         return cached_categories; 
+    },
+
+    this.getTemplatesAsync = async ()=>
+    { 
+        console.log("Called: CommonService> getTemplatesAsync");
+        if(cached_templates == null || cached_templates.length == 0)
+        { cached_templates = await uploads.find({active:true,type:'template',uploaded_by:'admin'}); }
+        return cached_templates; 
+    },
+
+    this.deleteTemplatesAsync = async (id)=>
+    { 
+        console.log("Called: CommonService > DeleteTemplatesAsync");
+       var d = await uploads.deleteOne({code: id, active:true,type:'template',uploaded_by:'admin'});
+       cached_templates = null; 
     },
 
     this.getCategoryAsync = async (categoryId)=>{
@@ -74,11 +91,25 @@ const commonService = (function() {
         var categories  = await this.getCategoriesAsync(); 
         report.totalCategories = categories?.length || 0;
 
-        var uploads     = await uploadModel.find({}).select({_id:1});   
-        report.totalUploads = uploads?.length || 0;
+        // var uploads     = await uploads.find({}).select({_id:1});   
+        // report.totalUploads = uploads?.length || 0;
 
         return report; 
 
+    }
+    this.upload = (uploadModel)=>{
+
+        var ticks = new Date().getTime();
+        var objectId = mongoose.Types.ObjectId();
+        var upload = new uploads(uploadModel);
+        upload.save()
+        .then((value)=>{
+           // res.redirect(ROUTE_ADMIN_HOME);
+        }).catch(value=> console.log(value));
+       }
+       this.clearUploads = ()=> {
+        this.cached_templates = null;
+       
     }
 
     this.clearCache = ()=> {
@@ -90,6 +121,12 @@ const commonService = (function() {
         categoryService: {
             getCategoriesAsync  :   this.getCategoriesAsync,
             getCategoryAsync    :   this.getCategoryAsync
+        },
+        uploadService:{
+            upload              :   this.upload,
+            getTemplatesAsync   :   this.getTemplatesAsync,
+            deleteTemplatesAsync:   this.deleteTemplatesAsync, 
+            clear               :   this.clearUploads
         },
         reportingService: {
             getCustomerReport   :   this.getCustomerReport,

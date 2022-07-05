@@ -30,6 +30,14 @@ router.get('/api/categoryitem/:id', async (req,res)=>{
     res.send(item);
 })
 
+router.get('/api/templates', async (req,res)=>{
+
+    var items = await uploads.find({type:'templates',uploaded_by:"admin",active:true});    
+    if(!items)
+    {console.log(`category items not found against ${itemid}`)}
+    res.send(items);
+})
+
 router.get('/app/404',(req,res)=>{
     res.redirect("pages/admin/404.ejs")
 })
@@ -41,7 +49,7 @@ router.post('/app/workspace',(req,res)=>{
 router.get('/app/workspace',(req,res)=>{
     const  {width, height, title} = req.body;
 
-    res.render("pages/client/index",);``
+    res.render("pages/client/index",);
 })
 
 router.get('*',(req,res)=>{

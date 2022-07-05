@@ -97,7 +97,7 @@
         var index = obj.cacheKey.replace("texture","");
         
         temp = temp.replace("{id}",obj.cacheKey)
-        .replace("{src}",obj._element.currentSrc)
+        .replace("{src}",obj._element?.currentSrc)
         .replace("{_id}",obj.cacheKey)
         .replace("{index}", parseInt(index) + 1);
           $("#layers").prepend(temp);

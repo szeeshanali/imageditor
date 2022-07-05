@@ -1,5 +1,6 @@
 const express               = require('express');
 const router                = express.Router();
+const fs                    = require('fs');
 
 const categories            = require("../../models/categories.js")
 const uploads               = require("../../models/uploads.js")
@@ -8,6 +9,8 @@ const commonService         = require("../../services/common")
 const {isLoggedIn,isAdmin}  = require('../../config/auth')
 const passport = require('passport');
 const { default: mongoose, mongo } = require('mongoose');
+const { title } = require('process');
+const { response } = require('express');
 require("../../config/passport")(passport);
 const PATH_ADMIN_CATEGORY_ITEMS       = 'pages/admin/categoryitems';
 const PATH_ADMIN_HOME                 =  `pages/admin/main`;
@@ -16,7 +19,7 @@ const PATH_ADMIN_DASHBOARD            = `pages/admin/dashboard`;
 const ROUTE_ADMIN_DASHBOARD           = `/app/admin/dashboard`;
 const ROUTE_ADMIN_HOME                = '/app/admin/';
 const ROUTE_ADMIN_SAVEDESIGN          = '/app/admin/savedesign';
-
+ 
 
 // layout. 
 router.use((req, res, next) => {
@@ -137,5 +140,56 @@ router.get('/app/admin/workspace',(req,res)=>{
   res.render("pages/admin/index",);``
 })
 
+router.get('/app/admin/template-designer', isAdmin, (req,res)=>{
+  const  {width, height, title} = req.body;
+  console.log(req.session)
+  res.render("pages/admin/templatedesigner",{user:req.user});
+})
+router.get('/app/admin/templates', isAdmin, async (req,res)=>{
+  const  {width, height, title} = req.body;
+  res.locals.pagetitle ="Templates";
+  var templates = await commonService.uploadService.getTemplatesAsync();
+  res.locals.templates = templates;
+  res.render("pages/admin/templates",{user:req.user});
+})
+router.delete('/app/admin/delete-template/:id', isAdmin, async (req,res)=>{
+  const  templateid = req.params["id"];
+  var templates = await commonService.uploadService.deleteTemplatesAsync(templateid);
+  res.locals.templates = templates;
+  commonService.uploadService.clear();
+  res.send();  
+}) 
+router.post('/app/admin/save-template', function(req, res) {
+  const {imgBase64, desc} = req.body; 
+  //var base64Data = imgBase64.replace(/^data:image\/png;base64,/, "");
+ 
+  var _id = mongoose.Types.ObjectId();
+  var uploadModel = {
+    title           :   desc || " ",
+    desc            :   desc || " ",
+    code            :   _id,
+    active          :   true,
+    blob            :   null,
+    json            :   "",
+    base64          :   imgBase64,
+    editable        :   false,
+    paid            :   false,
+    category        :   null,
+    type            :   "template",
+    uploaded_by     :   "admin"
+  };
+
+  commonService.uploadService.upload(uploadModel);
+  var templatename = `../app/uploads/admin/templates/t-${_id}.png`;
+  require("fs").writeFile(templatename, imgBase64, 'base64', function(err) {
+      if(err){
+         console.log(err);
+       }
+       commonService.uploadService.upload(uploadModel);
+       commonService.uploadService.clear();
+       //response.redirect('/app/admin/template-designer');
+  });
+  res.redirect('/app/admin/template-designer');
+})
 
 module.exports = router;

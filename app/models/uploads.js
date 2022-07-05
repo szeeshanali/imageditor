@@ -6,12 +6,14 @@ const schema  = new mongoose.Schema({
     code            :   {   type    :   mongoose.ObjectId,  required   :   true    },
     active          :   {   type    :   Boolean,default    :   true     },
     blob            :   {   type    :   Buffer, required   :   false    },
-    json            :   {   type    :   String, required   :   true     },
+    json            :   {   type    :   String, required   :   false     },
     base64          :   {   type    :   String, required   :   false    },
     editable        :   {   type    :   Boolean, default   :   false    },
     paid            :   {   type    :   Boolean, default   :   false    },
     category        :   {   type    :   Buffer, required   :   false    },
     created_dt      :   {   type    :   Date,   default    :   Date.now()},
+    type            :   {   type    :   String},
+    uploaded_by     :   {   type    :   String},
     modified_dt     :   {   type    :   Date}});
 
 const uploads   = mongoose.model('uploads',schema);
