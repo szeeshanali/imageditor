@@ -12293,7 +12293,9 @@ textarea.parsley-success:focus {
 /***** MAIN PANEL *****/
 .am-mainpanel {
   margin-left: 0;
-  margin-top: 120px;
+  /* margin-top: 120px; */
+  margin-top: 96px;
+
   transition: all 0.2s ease-in-out;
 }
 @media (min-width: 992px) {

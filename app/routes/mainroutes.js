@@ -42,15 +42,7 @@ router.get('/app/404',(req,res)=>{
     res.redirect("pages/admin/404.ejs")
 })
 
-router.post('/app/workspace',(req,res)=>{
-    const  {width, height, title} = req.body;
-    res.render("pages/client/index",{ executescript: `callback({width:${width},height:${height},title:${title}});` })
-})
-router.get('/app/workspace',(req,res)=>{
-    const  {width, height, title} = req.body;
 
-    res.render("pages/client/index",);
-})
 
 router.get('*',(req,res)=>{
     res.render("pages/admin/404.ejs",{layout:false})

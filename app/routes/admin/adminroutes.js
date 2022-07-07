@@ -160,7 +160,7 @@ router.delete('/app/admin/delete-template/:id', isAdmin, async (req,res)=>{
   res.send();  
 }) 
 router.post('/app/admin/save-template', function(req, res) {
-  const {imgBase64, desc} = req.body; 
+  const {imgBase64, desc, meta} = req.body; 
   //var base64Data = imgBase64.replace(/^data:image\/png;base64,/, "");
  
   var _id = mongoose.Types.ObjectId();
@@ -176,14 +176,14 @@ router.post('/app/admin/save-template', function(req, res) {
     paid            :   false,
     category        :   null,
     type            :   "template",
-    uploaded_by     :   "admin"
+    uploaded_by     :   "admin",
+    meta            :   meta
   };
 
-  commonService.uploadService.upload(uploadModel);
   var templatename = `../app/uploads/admin/templates/t-${_id}.png`;
   require("fs").writeFile(templatename, imgBase64, 'base64', function(err) {
       if(err){
-         console.log(err);
+         console.log(err); 
        }
        commonService.uploadService.upload(uploadModel);
        commonService.uploadService.clear();

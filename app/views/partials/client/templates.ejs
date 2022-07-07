@@ -2,19 +2,22 @@
     <div class="content">
         <label class="tx-uppercase tx-11 mg-t-10 tx-orange mg-b-15 tx-medium">Templates</label>
 
-        <div class="list-group list-group-chat">
+        <div >
+            <%if(templates.length == 0){%>
+                <p>No template found.</p>
+            <%}%>
             <% for(var i=0; i< templates.length; i++) {  %>
-            <a href="#" class="list-group-item template-thumbs" id="<%= templates[i].code %>">
-                <div class="d-flex align-items-center button" id="maska48i1c" path="a48i1c">
-
-                   <img src="<%= templates[i].base64 %>" width="80px">
-
-                    <div class="mg-l-10">
-                        <h6><%= templates[i].title %></h6>
-                        <span></span>
-                    </div>
+                <div >
+                    <a href="#" >
+                        <div class="align-items-center button template-image" id="maska48i1c" path="a48i1c">
+                           <img src="<%= templates[i].base64 %>" width="80px" class="template-thumbs" id="<%= templates[i].code %>" data-meta="<%= templates[i].meta %>">
+                            <div class="pd-y-10">
+                                <p ><%= templates[i].title %> </p>
+                                <span></span>
+                            </div>
+                        </div>
+                    </a>
                 </div>
-            </a>
            <% }  %>
         </div>
     </div>

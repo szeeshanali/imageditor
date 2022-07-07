@@ -9,15 +9,12 @@
                     </label>
                     <select id="dropdownTemplateSize" class="form-control select2 select2-hidden-accessible " data-placeholder="Choose one (with optgroup)" tabindex="-1" aria-hidden="true">
                         <option label="Choose one"></option>
-                        <optgroup label="Letter Size">
-                            <option value="8.5x11" selected>Letter : 8.5 x 11"</option>
-                        </optgroup>
-                        <optgroup label="Legal Size">
-                            <option value="8.5x14">Legal : 8.5 x 14"</option>
-                        </optgroup>
-                        <optgroup label="A4 Size">
-                            <option value="8.3x11.7" >A4 : 8.3 x 11.7</option>
-                        </optgroup>
+                        <option value="8.5x11" >Letter : 8.5" x 11"</option>
+                        <option value="11x17" >Ledger : 11" x 17"</option>
+                        <option value="8.3x11.7" selected>A4 : 8.3" x 11.7"</option>
+                        <option value="11.7x16.5" >A3 : 11.7" x 16.5"</option>
+
+                       
                     </select>
                     <small id="lblSheetSize"></small>
                 </div>
@@ -75,7 +72,7 @@
                 <div class="form-group">
                     <div >
                         <label class="tx-12">Title :</label>
-                        <input type="text" class="form-control" id="templateDesc" placeholder="Template description.">
+                        <input type="text" class="form-control" id="templateTitle" placeholder="Template description.">
                     </div>
                 </div>
 

@@ -85,9 +85,7 @@
         // })
 
         $(`${this.containerSelector} #toolbar .main-buttons .nav-link`).click(function () {
-          debugger;
           let id = $(this).attr('id');
-
           $(`${_self.containerSelector} #toolbar button`).removeClass('active');
           $(`${_self.containerSelector} #toolbar button#${id}`).addClass('active');
           _self.setActiveTool(id);
@@ -120,7 +118,7 @@
         // })
 
         $(`${this.containerSelector} #maintools .main-tool-button`).click(function () {
-          debugger;
+
           let id = $(this).attr('id');
           if (id === 'save') {
             if (window.confirm('The current canvas will be saved in your local! Are you sure?')) {
@@ -146,9 +144,8 @@
             $(".custom-modal-container .button-download").click(function (e) {
               debugger;
               let type = $(this).attr('id');
-              var element = $("#templateconatiner")
+              var element = $("#c")
               if (type === 'svg') {
-                debugger;
                 html2canvas(element, {
                   onrendered: function (canvas) {
                    // _self.canvas = canvas;
@@ -172,6 +169,27 @@
 
           } else if (id === 'undo') _self.undo();
           else if (id === 'redo') _self.redo();
+          else if(id === 'clone'){
+            var obj =  _self.canvas.getActiveObject();
+            var meta = _self.canvas.item(0).meta; 
+            var t = 50;
+
+
+            obj.clone(function(c) {
+
+              
+              for(var i=0;i<meta.rows;i++)
+           {
+              for(var j=0; j<meta.columns; j++)
+              
+              _self.canvas.add(c.set({ left: obj.left, top: t, angle: 0 }));
+              t += 200;
+            }
+            });
+            
+           
+            
+          }
         })
       })()
     } catch (_) {

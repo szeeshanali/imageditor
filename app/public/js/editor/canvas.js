@@ -157,9 +157,7 @@
       })
 
       fabricCanvas.on('object:removed', (o) => {
-        var obj = o.target; 
-        alert(obj.cacheKey);
-        alert("removed");
+        var obj = o.target;       
         $(`#${obj.cacheKey}`).remove();
       })
 

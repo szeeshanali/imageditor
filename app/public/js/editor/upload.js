@@ -115,26 +115,13 @@
         // handle image, read file, add to canvas
         reader.onload = (f) => {
           
-          fabric.Image.fromURL(f.target.result, (img) => {
-            // img.set({
-            //   left: 0,
-            //   top: 0
-            // })
-
-            
-
-
-             img.scaleToHeight(300)
-             img.scaleToWidth(300)
+          fabric.Image.fromURL(f.target.result, (img) => {          
+             img.scaleToHeight(300);
+             img.scaleToWidth(300);
             //
-        img.globalCompositeOperation = 'source-atop';
-
-           canvas.add(img)
-
-
-                       
-            //canvas.renderAll()
-            //canvas.trigger('object:modified')
+          img.globalCompositeOperation = 'source-atop';
+           canvas.add(img);
+           canvas.item(0).cloneObject = canvas.item(1);
           })
         }
 

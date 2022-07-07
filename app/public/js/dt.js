@@ -34,7 +34,7 @@
     })
 
     var dropdownCanvasSize          =   $("#dropdownCanvasSize");
-    var dropdownTemplateSize        =   $("#dropdownTemplateSize");
+    var $dropdownTemplateSize        =   $("#dropdownTemplateSize");
     var $dropdownCanvasShape        =   $("#dropdownCanvasShape");
     var inputCanvasWidth            =   $("#inputCanvasWidth"); 
     var inputCanvasHeight           =   $("#inputCanvasHeight");
@@ -53,7 +53,15 @@
     var $templateContainer          =   $("#templatecontainer");
     var $deleteTemplate            =   $(".delete-template");
     var $templatethumbs            =   $(".template-thumbs");
+    var $templateTitle             =   $("#templateTitle");
+    var $shapeDiameter             = $("#shapeDiameter");
 
+    var templateDefaultSettings = {
+        wi      :   8.3,
+        hi      :   11,
+        shape   :   "circle"
+    }
+    
     
     var shapeWidth = 0; 
     var th = 0; 
@@ -81,8 +89,10 @@
     })
 
     $templatethumbs.on("click", (elem)=>{
-        var id = `t-${elem.target.id}.png`;
-        debugger;
+        canvas.remove.apply(canvas, canvas.getObjects())
+
+        var id = `t-${elem.currentTarget.id}.png`;
+        var meta = JSON.parse($(elem.currentTarget).attr("data-meta"));
         fabric.Image.fromURL(elem.target.src, function (objects, options) {
             background = objects;
             background.set({
@@ -92,7 +102,8 @@
                 //scaleX: canvas.width / background.width,
                // selectable: false
             });
-
+            background.selectable =false;
+            background.meta = meta;
             canvas.add(background);
             canvas.renderAll();
         });
@@ -292,7 +303,8 @@
             $("#shapeDiameter").hide();
         }
     })
-    dropdownTemplateSize.on("change",(elem)=>{
+
+    $dropdownTemplateSize.on("change",(elem)=>{
 
         var values = elem.target.value; 
         var dimensions = values.split('x'); 
@@ -303,13 +315,13 @@
         var size = `${wcm} x ${hcm} cm`;
         $("#lblSheetSize").text(size)
         //converting inches into pixel and then aspect ratio. 
-        var prevW = (parseInt(w) * 96) / 2;
-        var prevH = (parseInt(h) * 96) / 2;
+        var prevW = (parseFloat(w) * 96) / 2;
+        var prevH = (parseFloat(h) * 96) / 2;
 
-        //$("#templatepreview").width(prevW).height(prevH);
-            //var c  = $canvasTemplatePreview;
-            //c.width = prevW;
-           // c.height = prevH;
+        $("#templatepreview").width(prevW).height(prevH);
+            var c  = $canvasTemplatePreview;
+            c.width = prevW;
+            c.height = prevH;
 
         
 
@@ -318,7 +330,7 @@
 
     })
 $saveTemplate.on("click",()=>{
-    var templateDesc = $("#templateDesc").val();
+    var templateDesc = $templateTitle.val();
     toPNG("templateCanvas",templateDesc);
 })
     function inchesToCentimeter(value){
@@ -360,7 +372,6 @@ $saveTemplate.on("click",()=>{
     
     function getTemplates(categoryId) {
         $.get(`/api/templates`, function (data) {
-            debugger;
             var items = data; 
             // var img = categoryItemTemplate;
             // var temp = '';
@@ -429,6 +440,19 @@ function toPNG(id, desc){
         if(isCanvasBlank(canvasElement)){
             return;
         }
+        var meta = {
+            canvasSize  :  $dropdownTemplateSize.val(),
+            canvasTitle :  $templateTitle.val(),
+            widthIn     :  $inputTemplateShapeWidth.val(),
+            heightIn    :  $inputTemplateShapeHeight.val(),
+            diameterIn  :  $shapeDiameter.val(),
+            rows        :  $inputRows.val(),
+            columns     :  $inputColumns.val(),
+            leftCm      :  $inputTemplateShapeLeft.val(), 
+            topCm       :  $inputTemplateShapeTop.val()
+        }; 
+        
+        
         var MIME_TYPE = "image/png";
         var imgURL = canvasElement.toDataURL(MIME_TYPE);    
         $.ajax({
@@ -436,7 +460,8 @@ function toPNG(id, desc){
             url: "/app/admin/save-template",
             data: {  
                 imgBase64: imgURL,
-                desc:desc }
+                desc:desc,
+                meta: JSON.stringify(meta) }
         }).done(function(o) 
         {  toast("Template has been successfully saved.");
             });
@@ -445,8 +470,8 @@ function initTemplateDesigner(){
 
     //var values = elem.target.value; 
     //var dimensions = values.split('x'); 
-    var w = "8.3";
-    var h = "11";
+    var w = templateDefaultSettings.wi;
+    var h = templateDefaultSettings.hi;
     var wcm = inchesToCentimeter(w); 
     var hcm = inchesToCentimeter(h); 
     var size = `${wcm} x ${hcm} cm`;
@@ -455,10 +480,11 @@ function initTemplateDesigner(){
     var prevW = inchesToPixel(w) / 2;
     var prevH = inchesToPixel(h) / 2;
 
-    //$("#templatepreview").width(prevW).height(prevH);
-      //  var c  = $canvasTemplatePreview;
-      //  c.width = prevW;
-     //   c.height = prevH;
+   
+    $("#templatepreview").width(prevW).height(prevH);
+      var c  = $canvasTemplatePreview;
+     c.width = prevW;
+     c.height = prevH;
 }
 function toast(message) {
     var $toast = $("#snackbar").addClass("show");

@@ -58,6 +58,14 @@ router.get(ROUTE_USER_HOME,  async (req, res) => {
     res.render(PATH_USER_HOME,{layout:false});
 });
 
+router.post('/app/workspace', isLoggedIn, (req,res)=>{
+    const  {width, height, title} = req.body;
+    res.render("pages/client/index",{ executescript: `callback({width:${width},height:${height},title:${title}});` })
+})
+router.get('/app/workspace',isLoggedIn, (req,res)=>{
+    const  {width, height, title} = req.body;
 
+    res.render("pages/client/index",);
+})
 
 module.exports = router;

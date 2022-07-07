@@ -98,6 +98,18 @@ overflow: hidden;
     width:40px        
 }
     
+.template-image{
+    width: 120px;
+    float: left;
+    border: dashed 1px #ccc;
+    margin: 5px 5px;
+    text-align: center;
+    padding: 10px;
+    font-size: 12px;
+    background-color: whitesmoke;
+    height: 169px;
+}
+
 #templatepreview{
     background-color: white;
     border:dashed 1px #ccc;

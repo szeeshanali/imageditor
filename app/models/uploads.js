@@ -11,6 +11,7 @@ const schema  = new mongoose.Schema({
     editable        :   {   type    :   Boolean, default   :   false    },
     paid            :   {   type    :   Boolean, default   :   false    },
     category        :   {   type    :   Buffer, required   :   false    },
+    meta            :   {   type    :   String },
     created_dt      :   {   type    :   Date,   default    :   Date.now()},
     type            :   {   type    :   String},
     uploaded_by     :   {   type    :   String},
