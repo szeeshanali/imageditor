@@ -45,16 +45,17 @@
     var $inputRows                  =   $("#inputRows");
     var heightInchsToCM             =   $("#heightInchsToCM");
     var widthInchsToCM              =   $("#widthInchsToCM");
-    var $canvasTemplatePreview      =   document.getElementById("templateCanvas");
+    var canvaspreview              =   new fabric.Canvas("canvaspreview");
     var $shapeWidthHeight           =   $("#shapeWidthHeight"); 
     var $saveTemplate               =   $("#saveTemplate");
     var $inputTemplateShapeLeft     =   $("#inputTemplateShapeLeft");
     var $inputTemplateShapeTop      =   $("#inputTemplateShapeTop");
     var $templateContainer          =   $("#templatecontainer");
-    var $deleteTemplate            =   $(".delete-template");
-    var $templatethumbs            =   $(".template-thumbs");
-    var $templateTitle             =   $("#templateTitle");
-    var $shapeDiameter             = $("#shapeDiameter");
+    var $deleteTemplate             =   $(".delete-template");
+    var $templatethumbs             =   $(".template-thumbs");
+    var $templateTitle              =   $("#templateTitle");
+    var $shapeDiameter              =   $("#shapeDiameter");
+    var $templatepanel              =   $("#templatepanel");
 
     var templateDefaultSettings = {
         wi      :   8.3,
@@ -75,7 +76,53 @@
     var columns = 0;  
     var selectedShape = "circle";
     $shapeWidthHeight.addClass("hidden");
+    $("#templatepanel .template").on("click",(e)=>{
+        //canvaspreview.clear();
+        var id = e.currentTarget.id;
+        canvas.clear();
+       //canvaspreview.globalCompositeOperation   = 'source-atop';
+       canvas.globalCompositeOperation          = 'source-atop';
+       canvas.setDimensions({width:531.2, height:704});
+       fabric.loadSVGFromURL(`http://localhost:3000/api/svg-templates/${id}`,function(objects,options){
+        svg = fabric.util.groupSVGElements(objects,options);
+        svg.scaleToHeight(canvas.height);
+        canvas.setBackgroundImage(svg, canvas.renderAll.bind(canvas));
+        //canvas.item(0).selectable = false;
+        
+        svg.center();
+        canvas.renderAll();
+      
 
+        //var firstElem = svg._objects[0];
+        //firstElem.scaleToHeight(canvas.height);
+        //canvas.add(firstElem);
+        //canvas.renderAll();
+       // svg.setCoords();
+       // var bounds = svg.getObjects();
+       // console.log(bounds[1]);
+       // bounds[0].group.setFill('#00000');
+  
+//   fabric.loadSVGFromString(str, function(objects, options) {		
+//     var group = new fabric.Group(objects,options);
+//     canvaspreview.add(group);
+//     group.scaleToHeight(canvaspreview.getHeight());
+//     canvaspreview.renderAll();
+//     var items = group._objects;
+//     group._restoreObjectsState();
+//     canvaspreview.remove(group);    
+//     for(var i = 0; i < items.length; i++) {	
+//     	items[i].set({
+//       	left:svg.getLeft() + bounds[i].getLeft()*svg.getScaleX(),
+//         top:svg.getTop() + bounds[i].getTop()*svg.getScaleY(),
+//       });
+//       canvaspreview.add(items[i]);
+//     }    
+// 	});   
+	}); 
+       $("#templatepanel").removeClass("active");
+       $("#mainMenu").addClass("active");
+
+    })
     $deleteTemplate.on("click", (elem)=>{
         var id = elem.target.id;
         $.ajax({
@@ -93,6 +140,16 @@
 
         var id = `t-${elem.currentTarget.id}.png`;
         var meta = JSON.parse($(elem.currentTarget).attr("data-meta"));
+
+
+        $(".canvas-size-panel  .page-size").text(meta.canvasSize);
+        $(".canvas-size-panel  .shape-type").text(meta.shape);
+        $(".canvas-size-panel  .page-title").text(meta.canvasTitle);
+
+
+
+
+
         fabric.Image.fromURL(elem.target.src, function (objects, options) {
             background = objects;
             background.set({
@@ -440,18 +497,35 @@ function toPNG(id, desc){
         if(isCanvasBlank(canvasElement)){
             return;
         }
+
+
         var meta = {
             canvasSize  :  $dropdownTemplateSize.val(),
             canvasTitle :  $templateTitle.val(),
-            widthIn     :  $inputTemplateShapeWidth.val(),
-            heightIn    :  $inputTemplateShapeHeight.val(),
-            diameterIn  :  $shapeDiameter.val(),
+            widthIn     :  $inputTemplateShapeWidth.val()  || "0",
+            heightIn    :  $inputTemplateShapeHeight.val() || "0",
+            diameterIn  :  $inputTemplateDiameter.val() || "0",
             rows        :  $inputRows.val(),
             columns     :  $inputColumns.val(),
             leftCm      :  $inputTemplateShapeLeft.val(), 
-            topCm       :  $inputTemplateShapeTop.val()
+            topCm       :  $inputTemplateShapeTop.val(),
+            shape       :  $dropdownCanvasShape.val()
         }; 
-        
+
+        if(  !meta.canvasSize 
+            || !meta.canvasTitle 
+            || !meta.columns 
+            || !meta.diameterIn  
+            || !meta.leftCm 
+            || !meta.topCm
+            || !meta.rows
+            || !meta.columns
+            || !meta.widthIn  
+            || !meta.heightIn ) 
+            {
+                alert("Error: Missing template information.")
+                return; 
+            }
         
         var MIME_TYPE = "image/png";
         var imgURL = canvasElement.toDataURL(MIME_TYPE);    
@@ -481,10 +555,10 @@ function initTemplateDesigner(){
     var prevH = inchesToPixel(h) / 2;
 
    
-    $("#templatepreview").width(prevW).height(prevH);
-      var c  = $canvasTemplatePreview;
-     c.width = prevW;
-     c.height = prevH;
+   // $("#templatepreview").width(prevW).height(prevH);
+    //  var c  = $canvasTemplatePreview;
+    // c.width = prevW;
+    // c.height = prevH;
 }
 function toast(message) {
     var $toast = $("#snackbar").addClass("show");

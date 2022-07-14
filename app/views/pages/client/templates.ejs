@@ -1,0 +1,15 @@
+
+<div class="d-flex">
+<% for(var i=0; i< templates.length; i++) {  %>
+    <div class="card wd-xs-200">
+        <div class="card-body bd bd-b-0 tx-center">
+            <img class="card-img-bottom img-fluid " style="width:80px" src="<%= templates[i].base64 %>" alt="Image">
+
+          <h6 class="mg-t-20" ><a href="" class="tx-bold tx-dark ">
+            <%= templates[i].title %></a></h6>
+            <p><%= JSON.parse(templates[i].meta).canvasSize %>" 
+                <%= JSON.parse(templates[i].meta).rows * JSON.parse(templates[i].meta).columns %> <%= JSON.parse(templates[i].meta).shape %></p>
+                <a href="/app/workspace/<%= templates[i].code %>" class="btn btn-outline-primary btn-block ">Use Template</a>        </div><!-- card-body -->
+      </div>
+<%} %>
+</div>

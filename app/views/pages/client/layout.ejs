@@ -10,8 +10,7 @@
 
         <div class="am-mainpanel" style="position: relative;">
             <div class="am-pagetitle">
-                <h5 class="am-title"></p>
-                </h5>
+                <%- include('../../partials/client/maintools'); %>
             </div>
             <div class="am-pagebody">
             <%-body-%>
@@ -29,38 +28,40 @@
         </div>
         <!-- am-mainpanel -->
 
+        <%- include('../../partials/client/popups/previewdesign'); %>
         <%- include('../../partials/client/popups/categoryitems'); %>
         <%- include('../../partials/client/popups/templates'); %>
+
         <%- include('../../partials/client/footer'); %>
 
         <script>
             // invoked from server.
-            function callback(res)
-            {
+            // function callback(res)
+            // {
 
 
-                var wi = res.width ; 
-                var hi = res.height; 
-                var canvas = document.getElementById('c').fabric;
-                var wpx = (wi  * 96); 
-                var hpx = (hi * 96);
+            //     var wi = res.width ; 
+            //     var hi = res.height; 
+            //     var canvas = document.getElementById('c').fabric;
+            //     var wpx = (wi  * 96); 
+            //     var hpx = (hi * 96);
                 
-                var wratio = (wpx <= 425)?wpx: wpx/2;
-                var hratio = (hpx <= 700)?hpx: hpx/2;
+            //     var wratio = (wpx <= 425)?wpx: wpx/2;
+            //     var hratio = (hpx <= 700)?hpx: hpx/2;
                 
-                localStorage.setItem("canvasSettings",{ width: wi, height: hi}); 
+            //     localStorage.setItem("canvasSettings",{ width: wi, height: hi}); 
 
-                canvas.setDimensions({ width: wratio, height: hratio });
+            //     canvas.setDimensions({ width: wratio, height: hratio });
 
 
-                $("#canvas-holder").width(wratio+30).height(hratio);
-                $("#canvas-holder .lbl-width").text(`${wi} x ${hi} in`);
-            }
-            <% if(typeof errors!= 'undefined') { %>
-                <%= executescript %>
-            <%}else{%>
-                callback({width:8.3,height:11})
-            <%}%>
+            //     $("#canvas-holder").width(wratio+30).height(hratio);
+            //     $("#canvas-holder .lbl-width").text(`${wi} x ${hi} in`);
+            // }
+            // <% if(typeof errors!= 'undefined') { %>
+            //     <%= executescript %>
+            // <%}else{%>
+            //     callback({width:8.3,height:11})
+            // <%}%>
              
         </script>
     </div>

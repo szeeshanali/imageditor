@@ -12166,7 +12166,8 @@ textarea.parsley-success:focus {
   transition: all 0.2s ease-in-out;
 }
 .am-sideleft .list-group-chat .list-group-item:hover, .am-sideleft .list-group-chat .list-group-item:focus {
-  background-color: #f8f9fa;
+  /* background-color: #f8f9fa; */
+  background-color: white;
 }
 .am-sideleft .list-group-chat .list-group-item:hover::before, .am-sideleft .list-group-chat .list-group-item:focus::before {
   opacity: 1;
@@ -12183,7 +12184,9 @@ textarea.parsley-success:focus {
   justify-content: center;
   width: 100%;
   height: 100%;
-  background-color: #32415A;
+  /* background-color: #32415A; */
+  background-color: white;
+
   color: rgba(255, 255, 255, 0.7);
   position: relative;
 }
@@ -12193,17 +12196,21 @@ textarea.parsley-success:focus {
   left: -1px;
   right: -1px;
   height: 1px;
-  background-color: #FB9337;
+  /* background-color: #FB9337; */
+  background-color: white;
   top: 0;
   transition: all 0.2s ease-in-out;
   display: none;
 }
 .am-sideleft-tab .nav-link:hover, .am-sideleft-tab .nav-link:focus {
-  background-color: #2e3c53;
+  /* background-color: #2e3c53; */
+  background-color: white;
   color: #fff;
 }
 .am-sideleft-tab .nav-link.active {
-  background-color: #2d3a50;
+  /* background-color: #2d3a50; */
+  background-color: white;
+
   color: #FB9337;
 }
 .am-sideleft-tab .nav-link.active::after {

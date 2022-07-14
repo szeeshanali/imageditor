@@ -114,14 +114,17 @@
 
         // handle image, read file, add to canvas
         reader.onload = (f) => {
-          
-          fabric.Image.fromURL(f.target.result, (img) => {          
-             img.scaleToHeight(300);
-             img.scaleToWidth(300);
+          $("#uploadpanel").removeClass("active");
+          $("#mainMenu").addClass("active");
+          fabric.Image.fromURL(f.target.result, (img) => {
+             var w = img.width > canvas.width ? canvas.width : img.width;
+             var h = img.height > canvas.height ? canvas.height : img.height;           
+             img.scaleToHeight(w);
+             img.scaleToWidth(h);
             //
           img.globalCompositeOperation = 'source-atop';
            canvas.add(img);
-           canvas.item(0).cloneObject = canvas.item(1);
+           //canvaspreview.item(0).cloneObject = canvas.item(1);
           })
         }
 

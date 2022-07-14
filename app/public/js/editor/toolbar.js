@@ -118,7 +118,7 @@
         // })
 
         $(`${this.containerSelector} #maintools .main-tool-button`).click(function () {
-
+          
           let id = $(this).attr('id');
           if (id === 'save') {
             if (window.confirm('The current canvas will be saved in your local! Are you sure?')) {
@@ -128,34 +128,136 @@
             if (window.confirm('This will clear the canvas! Are you sure?')) {
               _self.canvas.clear(), saveInBrowser.remove('canvasEditor');
             }
-          } else if (id === 'download') {
+          }else if(id == "rotate")
+          {
+            var a = _self.canvas.getActiveObject();
+            a.rotate(50);
+            a.renderAll();
+          } 
+          else if(id == "preview")
+          {
+            var dataURL = _self.canvas.toDataURL({
+              format: "png",
+              left: 0,
+              top: 0,
+              width: _self.canvas.width ,
+              height: _self.canvas.height ,
+          });
+           var meta = _self.canvas.meta;
+           var rows = meta.rows; 
+          var columns = meta.columns;
+          var diameterIn = parseInt(meta.diameterIn);
+          var pageSize = meta.canvasSize.split("x");
+          var dpi = 96;
+          var viewportRatio = 1.5;
+          var pageWi = pageSize[0];
+          var pageHi = pageSize[1];
+          var pageWidthPx =  pageWi * 96 / viewportRatio;
+          var pageHeightPx = pageHi * 96 / viewportRatio;  
+
+           var canvasPreview = new fabric.Canvas('canvasPreview',{ viewportTransform: [meta.width/pageWi, 0, 0, meta.width/pageWi, 0, 0]});
+           canvasPreview.clear();
+           canvasPreview.setDimensions({width:pageWidthPx,height: pageHeightPx })
+           canvasPreview.globalCompositeOperation = 'source-out';
+
+          // var l =0; 
+          for(var i=0;i<rows;i++)
+             {
+               for(var j=0;j<columns;j++)
+               {            
+                 fabric.Image.fromURL(dataURL, function(img) {
+                    img.set({ 
+                      left: 0, 
+                      top: 0,});
+                    canvasPreview.add(img).renderAll(); 
+               })
+             }
+           }; 
+
+           setTimeout(function(){
+            
+            var objs = canvasPreview.getObjects();
+            var objIndex = 0;
+            var t = 0;
+            var w = objs[0].width;
+            var h = objs[0].height;  
+            for(var i=0;i<rows;i++){
+              var l = 0; 
+              
+              for(var j=0;j<columns;j++){
+                var obj = objs[objIndex];
+                obj.left = l ;  
+                obj.top = t ; 
+                l+= w + meta.left;
+                objIndex +=1;  
+              }
+              t += h + meta.top;
+            }
+            canvasPreview.renderAll();
+           },800)
+
+          }
+          
+          else if (id === 'download') {
             $('body').append(`<div class="custom-modal-container">
               <div class="custom-modal-content">
-                <div class="button-download" id="svg">Download as SVG</div>
-                <div class="button-download" id="png">Download as PNG</div>
-                <div class="button-download" id="jpg">Download as JPG</div>
+                <div class="button-download" id="svg">Download as PDF</div>
+
               </div>
             </div>`)
 
             $(".custom-modal-container").click(function () {
               $(this).remove();
             })
-
+            
             $(".custom-modal-container .button-download").click(function (e) {
-              debugger;
               let type = $(this).attr('id');
-              var element = $("#c")
+              var canvas = document.getElementById('canvasPreview');
+             // canvas.fabric.discardActiveObject().renderAll();
+
+              var width = canvas.width; 
+              var height = canvas.height;
+              var pdf = null;   
+              pdf = new jsPDF('p', 'px', [width, height]);
+
+              
+              width = pdf.internal.pageSize.getWidth();
+              height = pdf.internal.pageSize.getHeight();
+              var imgData = canvas.toDataURL('image/png');
+              pdf.addImage(imgData, 'PNG', 0, 0,width,height);
+              pdf.save("download.pdf");
+
+              return;
               if (type === 'svg') {
                 html2canvas(element, {
                   onrendered: function (canvas) {
+
+                  var width = canvas.width; 
+                  var height = canvas.height;
+                  var pdf = null;   
+                  if(width > height){
+                    //pdf = new jsPDF('l', 'px', [width, height]);
+                  }
+                  else{
+                   // pdf = new jsPDF('p', 'px', [height, width]);
+                  }
+                  pdf = new jsPDF('p', 'px', [width, height]);
+                  
+                  width = pdf.internal.pageSize.getWidth();
+                  height = pdf.internal.pageSize.getHeight();
+                  var imgData = canvas.toDataURL('image/png');
+                  pdf.addImage(imgData, 'PNG', 0, 0,width,height);
+                  pdf.save("download.pdf");
+
                    // _self.canvas = canvas;
                   // $("#previewImage").append(canvas);
                    // downloadSVG( _self.canvas.toSVG());
-                   var imgData = canvas.toDataURL(
-                    'image/png');              
-                var doc = new jsPDF('p', 'mm');
-                doc.addImage(imgData, 'PNG', 10, 10);
-                doc.save('sample-file.pdf');
+                  // canvas.width = canvas.width * 2; 
+                  // canvas.height = canvas.height * 2;
+                  // var imgData = canvas.toDataURL('image/png');              
+                  // var doc = new jsPDF();
+                  // doc.addImage(imgData, 'PNG', 10, 10);
+                  // doc.save('sample-file.pdf');
 
                   }
                 });

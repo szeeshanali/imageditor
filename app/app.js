@@ -42,7 +42,7 @@ app.use(passport.session());
    res.locals.success_msg   = req.flash('success_msg');
    res.locals.error_msg     = req.flash('error_msg');
    res.locals.error         = req.flash('error'); 
-   res.locals.categories    = await commonService.categoryService.getCategoriesAsync();
+   //res.locals.categories    = await commonService.categoryService.getCategoriesAsync();
    res.locals.user          = req.user;
    res.locals.pagetitle     = req.pagetitle;
    res.locals.templates     = await commonService.uploadService.getTemplatesAsync();

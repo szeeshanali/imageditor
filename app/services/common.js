@@ -4,9 +4,9 @@ const appuserModel = require("../models/appuser");
 const { default: mongoose, mongo } = require('mongoose');
 
 const commonService = (function() {
-    this.cached_categories = null;
-    this.cached_categoryItems = {};
-    this.cached_templates = null;
+    this.cached_categories = [];
+    this.cached_categoryItems = [];
+    this.cached_templates = [];
     this.getCategoriesAsync = async ()=>
     { 
         console.log("Called: CommonService>CategoryService.");
@@ -18,10 +18,15 @@ const commonService = (function() {
     this.getTemplatesAsync = async ()=>
     { 
         console.log("Called: CommonService> getTemplatesAsync");
-        // if(cached_templates == null || cached_templates.length == 0)
-        // { cached_templates = await uploads.find({active:true,type:'template',uploaded_by:'admin'}); }
-        // return cached_templates; 
-        return await uploads.find({active:true,type:'template',uploaded_by:'admin'});
+        if(cached_templates == null || cached_templates.length == 0)
+        { cached_templates = await uploads.find({active:true,type:'template',uploaded_by:'admin'}); }
+        return cached_templates; 
+    },
+
+    this.getTemplateAsync = async (templateId)=>
+    { 
+        console.log("Called: CommonService> getTemplateAsync");
+        return await uploads.findOne({active:true,type:'template',uploaded_by:'admin', code:templateId}); 
     },
 
     this.deleteTemplatesAsync = async (id)=>
@@ -30,7 +35,10 @@ const commonService = (function() {
        var d = await uploads.deleteOne({code: id, active:true,type:'template',uploaded_by:'admin'});
        cached_templates = null; 
     },
-
+    this.getSVGTemplatesAsync = async (id)=>
+    { 
+        return res.sendFile(`/images/${id}.svg`);
+    },
     this.getCategoryAsync = async (categoryId)=>{
         if(cached_categories == null)
         { cached_categories = await categoryModel.find({}); }
@@ -102,7 +110,7 @@ const commonService = (function() {
 
         var ticks = new Date().getTime();
         var objectId = mongoose.Types.ObjectId();
-        console.log(uploadModel);
+        console.log(uploadModel)
         var upload = new uploads(uploadModel);
         upload.save()
         .then((value)=>{
@@ -127,13 +135,17 @@ const commonService = (function() {
         uploadService:{
             upload              :   this.upload,
             getTemplatesAsync   :   this.getTemplatesAsync,
+            getTemplateAsync   :   this.getTemplateAsync,
             deleteTemplatesAsync:   this.deleteTemplatesAsync, 
+            getSVGtemplates     :   this.getSVGtemplates, 
             clear               :   this.clearUploads
         },
         reportingService: {
             getCustomerReport   :   this.getCustomerReport,
             getSummaryReport    :   this.getSummaryReport,  
         },
+
+       
         clearCache: clearCache
     }
 })();

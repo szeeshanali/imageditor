@@ -16,6 +16,7 @@ const ROUTE_USER_PROFILE    = '/app/profile';
 const ROUTE_USER_REGISTER   = '/app/register';
 const ROUTE_SIGNOUT         = '/app/signout';
 const ROUTE_USER_HOME       = '/app';
+const ROUTE_USER_WORKSPACE  = '/app/workspace';
 const ROUTE_ADMIN_HOME      = '/app/admin/';
 const ROUTE_ADMIN_DASHBOARD = '/app/admin/dashboard';
 
@@ -57,7 +58,7 @@ router.get(ROUTE_LOGIN, (req, res) => {
 
 router.post(ROUTE_LOGIN, (req, res, next) => { 
     passport.authenticate('local',{
-      successRedirect : ROUTE_USER_HOME,
+      successRedirect : ROUTE_USER_WORKSPACE,
       failureRedirect : ROUTE_LOGIN,
       badRequestMessage : 'Missing username or password.',
       failureFlash : true,

@@ -3,6 +3,8 @@ const { default: mongoose } = require('mongoose');
 const router                = express.Router();
 const uploads               = require("../models/uploads");
 const categories            = require("../models/categories");
+const commonService = require('../services/common');
+const path = require('path');
 
 router.get('/api/category/:id', async (req,res)=>{
     const categoryId = req.params["id"]; 
@@ -36,6 +38,11 @@ router.get('/api/templates', async (req,res)=>{
     if(!items)
     {console.log(`category items not found against ${itemid}`)}
     res.send(items);
+})
+router.get('/api/svg-templates/:id', async (req,res)=>{
+
+    var svg = req.params.id;   
+    res.sendFile(path.resolve(`../app/public/images/${svg}.svg`));
 })
 
 router.get('/app/404',(req,res)=>{

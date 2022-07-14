@@ -155,7 +155,7 @@ router.get('/app/admin/templates', isAdmin, async (req,res)=>{
 router.delete('/app/admin/delete-template/:id', isAdmin, async (req,res)=>{
   const  templateid = req.params["id"];
   var templates = await commonService.uploadService.deleteTemplatesAsync(templateid);
-  res.locals.templates = templates;
+  res.locals.templates = templates; 
   commonService.uploadService.clear();
   res.send();  
 }) 
@@ -186,9 +186,11 @@ router.post('/app/admin/save-template', function(req, res) {
          console.log(err); 
        }
        commonService.uploadService.upload(uploadModel);
-       commonService.uploadService.clear();
+
        //response.redirect('/app/admin/template-designer');
   });
+  commonService.uploadService.clear();
+  
   res.redirect('/app/admin/template-designer');
 })
 

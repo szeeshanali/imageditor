@@ -2,7 +2,12 @@ const express               = require('express');
 const router                = express.Router();
 const {isLoggedIn,isAdmin}  = require('../../config/auth');
 const categories            = require('../../models/categories');
-PATH_USER_HOME              = 'pages/client/main';
+const uploads = require('../../models/uploads');
+const commonService = require('../../services/common');
+PATH_USER_HOME              = 'pages/client/myprojects';
+PATH_TEMPLATES              = 'pages/client/templates';
+PATH_WORKSPACE              = 'pages/client/workspace';
+
 PATH_USER_PROFILE           = 'pages/client/profile';
 ROUTE_USER_HOME             = '/app'
 ROUTE_USER_PROFILE          = '/app/profile';
@@ -55,17 +60,45 @@ router.post(ROUTE_USER_PROFILE, isLoggedIn, (req,res)=>{
 })
 
 router.get(ROUTE_USER_HOME,  async (req, res) => {
-    res.render(PATH_USER_HOME,{layout:false});
+    res.locals.pagetitle ="Dashboard";
+    res.redirect("/app/workspace")
 });
 
-router.post('/app/workspace', isLoggedIn, (req,res)=>{
-    const  {width, height, title} = req.body;
-    res.render("pages/client/index",{ executescript: `callback({width:${width},height:${height},title:${title}});` })
-})
-router.get('/app/workspace',isLoggedIn, (req,res)=>{
-    const  {width, height, title} = req.body;
+router.get("/app/projects", isLoggedIn,  async (req, res) => {
+    res.locals.pagetitle ="My Projects";
+    res.render(PATH_USER_HOME, {user:req.user});
+});
+router.get("/app/templates",  isLoggedIn, async (req, res) => {
+    res.locals.pagetitle ="Templates";
+    res.render(PATH_TEMPLATES,{user:req.user});
+}); 
+router.get("/app/workspace/:id?",  isLoggedIn, async (req, res) => {
+    res.locals.pagetitle ="Workspace";
+    var templateId = req.params.id;
+    var template = {};
+    var meta = {};
+    if(templateId){
+        template = await commonService.uploadService.getTemplateAsync(templateId);
+        meta = JSON.parse(template.meta);
+    }
+    
+    res.render(PATH_WORKSPACE,{
+        user:req.user,
+        template:template,
+        templateMeta:meta
+    });
+});
 
-    res.render("pages/client/index",);
-})
+
+
+// router.post('/app/workspace', isLoggedIn, (req,res)=>{
+//     const  {width, height, title} = req.body;
+//     res.render("pages/client/index",{ executescript: `callback({width:${width},height:${height},title:${title}});` })
+// })
+// router.get('/app/workspace',isLoggedIn, (req,res)=>{
+//     const  {width, height, title} = req.body;
+
+//     res.render("pages/client/index",);
+// })
 
 module.exports = router;

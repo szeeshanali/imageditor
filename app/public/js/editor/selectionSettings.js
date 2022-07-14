@@ -457,11 +457,11 @@
       //   </div>
       // `);
 
-      $(`${this.containerSelector} #select-panel #flip-h`).click(() => {
+      $(`${this.containerSelector} #maintools #flip-h`).click(() => {
         this.activeSelection.set('flipX', !this.activeSelection.flipX);
         this.canvas.renderAll(), this.canvas.trigger('object:modified');
       })
-      $(`${this.containerSelector} #select-panel #flip-v`).click(() => {
+      $(`${this.containerSelector} #maintools #flip-v`).click(() => {
         this.activeSelection.set('flipY', !this.activeSelection.flipY);
         this.canvas.renderAll(), this.canvas.trigger('object:modified');
       })
