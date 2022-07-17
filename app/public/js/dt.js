@@ -579,5 +579,29 @@ function isCanvasBlank(canvas) {
     return !pixelBuffer.some(color => color !== 0);
   }
 
+  (()=>{
+
+    $("#repeatdesign").on("click",(e)=>{
+           var txt = $(e.currentTarget).find(".active").text();
+           if(txt == "OFF")
+           {
+            var obj1 = canvas._objects[0];
+            
+            for(var i=0;i< canvas.backgroundImage._objects.length; i++)
+            {
+                canvas.backgroundImage._objects[i].setElement(obj1);
+                
+                //obj1.id = `item${canvas._objects.length}`;
+                //obj1.index = canvas._objects.length;
+                //canvas.add(obj1).renderAll();
+            }
+           }else{
+
+            alert("OFF")
+           }
+    })
+
+  })()
+
 initTemplateDesigner();
 })($);

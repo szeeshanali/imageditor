@@ -1,182 +1,106 @@
-<div id="toolbar">
-<div class="am-sideleft main-buttons" >
-  <ul class="nav am-sideleft-tab">
-    <li class="nav-item">
-      <a href="#mainMenu" class="nav-link active"><i class="icon ion-ios-home-outline tx-24"></i></a>
-    </li>
-    <li class="nav-item">
-      <a href="#emailMenu" class="nav-link"><i class="icon ion-ios-email-outline tx-24"></i></a>
-    </li>
-    <li class="nav-item">
-      <a href="#chatMenu" class="nav-link"><i class="icon ion-ios-chatboxes-outline tx-24"></i></a>
-    </li>
-
-  <li class="nav-item">
-    <a href="#textmenu" class="nav-link" id="textbox">
-        <i class="icon ion-social-tumblr-outline tx-24"></i>
-    </a>
-</li>
-    <li class="nav-item">
-      <a href="#settingMenu" class="nav-link" ><i class="icon ion-ios-gear-outline tx-24"></i></a>
-    </li>
-  </ul>
-
-  <div class="tab-content">
-    <div id="mainMenu" class="tab-pane active ps ps--theme_default" data-ps-id="2b02f5ed-8be3-90be-b56c-33297526abd5">
-      <ul class="nav am-sideleft-menu">
+<div class="am-sideleft" id="toolbar">
+  <!-- <%- include('../../partials/client/toolbar'); %> -->
+  <div class="d-flex flex-column flex-shrink-0 bg-light sidebar " >
+     
+      <ul class="nav nav-pills nav-flush flex-column mb-auto text-center main-buttons am-sideleft-tab">
         <li class="nav-item">
-          <a href="index.html" class="nav-link active">
-            <i class="icon ion-ios-home-outline"></i>
-            <span>Dashboard</span>
+          <a href="#uploadpanel" class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+              <i class="ion-images tx-24 tx-white"></i>
+              <div class="visually-hidden tx-12 tx-white">Images</div>
           </a>
-        </li><!-- nav-item -->
-        <li class="nav-item">
-          <a href="" class="nav-link with-sub">
-            <i class="icon ion-ios-gear-outline"></i>
-            <span>Categories <sup >(<%= categories.length %>)</sup></span>
+        </li>
+        <li>
+          <a href="/app/admin/template-designer" class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+              <i class="ion-ios-keypad-outline tx-24 tx-white"></i>
+              <div class="visually-hidden tx-12 tx-white">Template Designer</div>
           </a>
-          <ul class="nav-sub">
-            <% for(var i=0; i< categories.length; i++) {  %>
-              <li class="nav-item"><a href="/app/admin/category/<%= categories[i]._id %>" code="<%= categories[i].code %>" class="nav-link"><%= categories[i].name %> <sup>(<%= categories[i].items.length %>)</sup></a></li>
-             <%} %>
-          </ul>
-        </li><!-- nav-item -->
-        <li class="nav-item">
-          <a href="/app/admin/templates" class="nav-link active">
-            <i class="icon ion-ios-home-outline"></i>
-            <span>Templates <sup>(<%= templates.length %>)</sup></span>
+        </li>
+        <li>
+          <a href="#" class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+              <i class="ion-ios-keypad tx-24 tx-white"></i>
+              <div class="visually-hidden tx-12 tx-white">Pattern Designer</div>
           </a>
-        </li><!-- nav-item -->
+        </li>
+       
+        <li>
+          <a href="#" class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+              <i class="ion-ios-paw tx-24 tx-white"></i>
+              <div class="visually-hidden tx-12 tx-white">Upload Cliparts</div>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+              <i class="ion-social-tumblr tx-24 tx-white"></i>
+              <div class="visually-hidden tx-12 tx-white">Text</div>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+              <i class="ion-ios-bookmarks tx-24 tx-white"></i>
+              <div class="visually-hidden tx-12 tx-white my-proj">My Projects <sup class="tag">0</sup></div>
+          </a>
+        </li>
+       
       </ul>
-    <div class="ps__scrollbar-x-rail" style="left: 0px; bottom: 0px;"><div class="ps__scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__scrollbar-y-rail" style="top: 0px; right: 0px;"><div class="ps__scrollbar-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></div><!-- #mainMenu -->
-    <div id="emailMenu" class="tab-pane ps ps--theme_default" data-ps-id="c4879003-7a3b-40db-cf16-3e289e49d307">
-      <div class="pd-x-20 pd-y-10">
-        <a href="" class="btn btn-orange btn-block btn-compose">Compose Email</a>
+      <div class="dropdown border-top">
+        <a href="#" class="d-flex align-items-center justify-content-center p-3 link-dark text-decoration-none dropdown-toggle" id="dropdownUser3" data-bs-toggle="dropdown" aria-expanded="false">
+          <img src="https://github.com/mdo.png" alt="mdo" width="24" height="24" class="rounded-circle">
+        </a>
+        <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3">
+          <li><a class="dropdown-item" href="#">New project...</a></li>
+          <li><a class="dropdown-item" href="#">Settings</a></li>
+          <li><a class="dropdown-item" href="#">Profile</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="#">Sign out</a></li>
+        </ul>
       </div>
-      <ul class="nav am-sideleft-menu">
-        <li class="nav-item">
-          <a href="page-inbox.html" class="nav-link">
-            <i class="icon ion-ios-filing-outline"></i>
-            <span>Inbox</span>
-          </a>
-        </li><!-- nav-item -->
-        <li class="nav-item">
-          <a href="page-inbox.html" class="nav-link">
-            <i class="icon ion-ios-filing-outline"></i>
-            <span>Drafts</span>
-          </a>
-        </li><!-- nav-item -->
-        <li class="nav-item">
-          <a href="page-inbox.html" class="nav-link">
-            <i class="icon ion-ios-paperplane-outline"></i>
-            <span>Sent</span>
-          </a>
-        </li><!-- nav-item -->
-        <li class="nav-item">
-          <a href="page-inbox.html" class="nav-link">
-            <i class="icon ion-ios-trash-outline"></i>
-            <span>Trash</span>
-          </a>
-        </li><!-- nav-item -->
-        <li class="nav-item">
-          <a href="page-inbox.html" class="nav-link">
-            <i class="icon ion-ios-filing-outline"></i>
-            <span>Spam</span>
-          </a>
-        </li><!-- nav-item -->
-      </ul>
-
-      <label class="pd-x-20 tx-uppercase tx-11 mg-t-10 tx-orange mg-b-0 tx-medium">My Folder</label>
-      <ul class="nav am-sideleft-menu">
-        <li class="nav-item">
-          <a href="page-inbox.html" class="nav-link">
-            <i class="icon ion-ios-folder-outline"></i>
-            <span>Updates</span>
-          </a>
-        </li><!-- nav-item -->
-        <li class="nav-item">
-          <a href="page-inbox.html" class="nav-link">
-            <i class="icon ion-ios-folder-outline"></i>
-            <span>Social</span>
-          </a>
-        </li><!-- nav-item -->
-        <li class="nav-item">
-          <a href="page-inbox.html" class="nav-link">
-            <i class="icon ion-ios-folder-outline"></i>
-            <span>Promotions</span>
-          </a>
-        </li><!-- nav-item -->
-      </ul>
-    <div class="ps__scrollbar-x-rail" style="left: 0px; bottom: 0px;"><div class="ps__scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__scrollbar-y-rail" style="top: 0px; right: 0px;"><div class="ps__scrollbar-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></div><!-- #emailMenu -->
-    <div id="chatMenu" class="tab-pane ps ps--theme_default" data-ps-id="08b08776-1fd1-37a2-18aa-b1b7bee3a55a">
-      <div class="chat-search-bar">
-        <input type="search" class="form-control wd-150" placeholder="Search chat...">
-        <button class="btn btn-secondary"><i class="fa fa-search"></i></button>
-      </div><!-- chat-search-bar -->
-
-      <label class="pd-x-15 tx-uppercase tx-11 mg-t-20 tx-orange mg-b-10 tx-medium">Recent Chat History</label>
-      <div class="list-group list-group-chat">
-        <a href="#" class="list-group-item">
-          <div class="d-flex align-items-center">
-            <img src="../img/img6.jpg" class="wd-32 rounded-circle" alt="">
-            <div class="mg-l-10">
-              <h6>Russell M. Evans</h6>
-              <span>Tuesday, 10:33am</span>
-            </div>
-          </div><!-- d-flex -->
-          <p>Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain...</p>
-        </a><!-- list-group-item -->
-        <a href="#" class="list-group-item">
-          <div class="d-flex align-items-center">
-            <img src="../img/img7.jpg" class="wd-32 rounded-circle" alt="">
-            <div class="mg-l-10">
-              <h6>James F. Sears</h6>
-              <span>Monday, 4:21pm</span>
-            </div>
-          </div><!-- d-flex -->
-          <p>But who has any right to find fault with a man who chooses to enjoy a pleasure that has...</p>
-        </a><!-- list-group-item -->
-        <a href="#" class="list-group-item">
-          <div class="d-flex align-items-center">
-            <img src="../img/img8.jpg" class="wd-32 rounded-circle" alt="">
-            <div class="mg-l-10">
-              <h6>Sharon R. Rowe</h6>
-              <span>Sunday, 7:45pm</span>
-            </div>
-          </div><!-- d-flex -->
-          <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising...</p>
-        </a><!-- list-group-item -->
-        <a href="#" class="list-group-item">
-          <div class="d-flex align-items-center">
-            <img src="../img/img9.jpg" class="wd-32 rounded-circle" alt="">
-            <div class="mg-l-10">
-              <h6>Ruby M. Martin</h6>
-              <span>Sunday, 7:45pm</span>
-            </div>
-          </div><!-- d-flex -->
-          <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising...</p>
-        </a><!-- list-group-item -->
-        <a href="#" class="list-group-item">
-          <div class="d-flex align-items-center">
-            <img src="../img/img10.jpg" class="wd-32 rounded-circle" alt="">
-            <div class="mg-l-10">
-              <h6>Joslyn C. Mayo</h6>
-              <span>Sunday, 7:45pm</span>
-            </div>
-          </div><!-- d-flex -->
-          <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising...</p>
-        </a><!-- list-group-item -->
-      </div><!-- list-group -->
-      <span class="d-block pd-15 tx-12">Loading messages...</span>
-
-    <div class="ps__scrollbar-x-rail" style="left: 0px; bottom: 0px;"><div class="ps__scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__scrollbar-y-rail" style="top: 0px; right: 0px;"><div class="ps__scrollbar-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></div><!-- #chatMenu -->
-    <div id="settingMenu" class="tab-pane ps ps--theme_default ">
-      <%- include('../../partials/client/imgupload'); %>
+     
     </div>
-    <div id="textmenu" class="tab-pane ps ps--theme_default">
-      <%- include('../../partials/client/typo'); %>
+   
+  <div class="tab-content">
+      <div id="mainMenu" class="tab-pane " >
+          <%- include('../../partials/client/canvas'); %> 
+          <%- include('../../partials/client/layers'); %>
+      </div>
+      <div id="templatepanel" class="tab-pane pd-15" >
+         <div class="d-flex svg-templates tx-center" >
+              <div id="FS15CIRX30" class="template"> 
+                  <img src="/images/FS15CIRX30.svg" style="width:100px"> 
+                  <div class="tx-12 tx-bold pd-y-5">A4: 15 Circles</div>
+              </div>
+              <div id="FSHEART6" class="template"> 
+                  <img src="/images/FSHEART6.svg" style="width:100px"> 
+                  <div class="tx-12 tx-bold pd-y-5">A4: 6 Hearts</div>
+              </div>
+              <div id="FS1875X20C" class="template"> 
+                  <img src="/images/FS1875X20C.svg" style="width:100px"> 
+                  <div class="tx-12 tx-bold pd-y-5">A4: 18 Circles</div>
+              </div>
+              <div id="FS15CIRX30" class="template"> <img src="/images/FS15CIRX30.svg" style="width:100px">
+                  <div class="tx-12 tx-bold pd-y-5">A4: 18 Circles</div>
+              </div>
+        </div>
+      </div>
+      <div id="uploadpanel" class="tab-pane active" >
+          <%- include('../../partials/admin/imgupload'); %>
+      </div>
+      <div id="clipartmenu" class="tab-pane" >
+          <%- include('../../partials/client/clipart'); %>
+      </div>
+      <!-- #mainMenu -->
+      <div id="templatemenu" class="tab-pane" >
+          <%- include('../../partials/client/templates'); %>
+      </div>
+      <!-- #emailMenu -->
+      <div id="textmenu" class="tab-pane">
+          <%- include('../../partials/client/typo'); %>
+          <!-- #chatMenu -->
+          <div id="settingMenu" class="tab-pane">
+              <%- include('../../partials/client/imgupload'); %>
+          </div>
+      </div>
+      <!-- #settingMenu -->
   </div>
-    <div class="ps__scrollbar-x-rail" style="left: 0px; bottom: 0px;"><div class="ps__scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__scrollbar-y-rail" style="top: 0px; right: 0px;"><div class="ps__scrollbar-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></div><!-- #settingMenu -->
-  </div><!-- tab-content -->
+  <!-- tab-content -->
 </div>
-</div>
+

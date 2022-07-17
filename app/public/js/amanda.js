@@ -77,7 +77,7 @@ $(document).ready(function(){
 
   // Toggles
   $('.toggle').toggles({
-    on: true,
+    on: false,
     height: 22
   });
 

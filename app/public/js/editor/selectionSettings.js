@@ -465,45 +465,54 @@
         this.activeSelection.set('flipY', !this.activeSelection.flipY);
         this.canvas.renderAll(), this.canvas.trigger('object:modified');
       })
-      // $(`${this.containerSelector} .toolpanel#select-panel .object-options #bring-fwd`).click(() => {
+
+      // $(`${this.containerSelector} #select-panel .object-options #bring-fwd`).click(() => {
       //   this.canvas.bringForward(this.activeSelection)
       //   this.canvas.renderAll(), this.canvas.trigger('object:modified');
       // })
-      // $(`${this.containerSelector} .toolpanel#select-panel .object-options #bring-back`).click(() => {
+      
+      // $(`${this.containerSelector} #select-panel .object-options #bring-back`).click(() => {
       //   this.canvas.sendBackwards(this.activeSelection)
       //   this.canvas.renderAll(), this.canvas.trigger('object:modified');
       // })
-      $(`${this.containerSelector} #select-panel #duplicate`).click(() => {
-        let clonedObjects = []
-        let activeObjects = this.canvas.getActiveObjects()
-        activeObjects.forEach(obj => {
-          obj.clone(clone => {
-            this.canvas.add(clone.set({
-              strokeUniform: true,
-              left: obj.aCoords.tl.x + 20,
-              top: obj.aCoords.tl.y + 20
-            }));
 
-            if (activeObjects.length === 1) {
-              this.canvas.setActiveObject(clone)
-            }
-            clonedObjects.push(clone)
-          })
-        })
+      // $(`${this.containerSelector} #select-panel #duplicate`).click(() => {
+      //   let clonedObjects = []
+      //   let activeObjects = this.canvas.getActiveObjects()
+      //   activeObjects.forEach(obj => {
+         
+      //     obj.clone(clone => {
+      //       clone.id = `item${canvas._objects.length}`;
+      //       clone.index = canvas._objects.length;
 
-        if (clonedObjects.length > 1) {
-          let sel = new fabric.ActiveSelection(clonedObjects, {
-            canvas: this.canvas,
-          });
-          this.canvas.setActiveObject(sel)
-        }
+      //       this.canvas.add(clone.set({
+      //         strokeUniform: true,
+      //         left: obj.aCoords.tl.x + 20,
+      //         top: obj.aCoords.tl.y + 20
+      //       }));
 
-        this.canvas.requestRenderAll(), this.canvas.trigger('object:modified')
-      })
-      $(`${this.containerSelector} #select-panel #delete`).click(() => {
-        this.canvas.getActiveObjects().forEach(obj => this.canvas.remove(obj))
-        this.canvas.discardActiveObject().requestRenderAll(), this.canvas.trigger('object:modified');
-      })
+      //       if (activeObjects.length === 1) {
+      //         this.canvas.setActiveObject(clone)
+      //       }
+      //       clonedObjects.push(clone)
+      //     })
+      //   })
+
+      //   if (clonedObjects.length > 1) {
+      //     let sel = new fabric.ActiveSelection(clonedObjects, {
+      //       canvas: this.canvas,
+      //     });
+
+      //     this.canvas.setActiveObject(sel)
+      //   }
+
+      //   this.canvas.requestRenderAll(), this.canvas.trigger('object:modified')
+      // })
+      // $(`${this.containerSelector} #select-panel #delete`).click(() => {
+      //   this.canvas.getActiveObjects().forEach(obj => this.canvas.remove(obj));
+    
+      //   this.canvas.discardActiveObject().requestRenderAll();
+      // })
       $(`${this.containerSelector} #select-panel #save`).click(() => {
 
         var data = this.canvas.toDataURL();

@@ -53,9 +53,9 @@ router.get(ROUTE_ADMIN_DASHBOARD, isAdmin, async (req,res)=>{
 
   res.locals.reports = {
     customerReport  : customerReport,
-    summaryReport   : summaryReport  
+    summaryReport   : summaryReport,   
   } ;
-  res.render(PATH_ADMIN_DASHBOARD);
+  res.render(PATH_ADMIN_DASHBOARD,{categories:[]});
 })
 router.get('/app/admin/',  isAdmin, async (req, res) => {
 
@@ -142,7 +142,7 @@ router.get('/app/admin/workspace',(req,res)=>{
 
 router.get('/app/admin/template-designer', isAdmin, (req,res)=>{
   const  {width, height, title} = req.body;
-  console.log(req.session)
+  res.locals.pagetitle = "Template Designer"
   res.render("pages/admin/templatedesigner",{user:req.user});
 })
 router.get('/app/admin/templates', isAdmin, async (req,res)=>{

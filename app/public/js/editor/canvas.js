@@ -25,10 +25,13 @@
       //   <div class="canvas-holder" id="canvas-holder">
       //     <div class="content"><canvas id="c"></canvas>
       //   </div></div>`);
-      const fabricCanvas = new fabric.Canvas('c',{ preserveObjectStacking: true });
+      const fabricCanvas  =  new fabric.Canvas('c',{ preserveObjectStacking: true });
+      const fabricCanvasPreview =  new fabric.Canvas('p',{ preserveObjectStacking: true });
       fabricCanvas.originalW = fabricCanvas.width;
       fabricCanvas.originalH = fabricCanvas.height;
 
+      fabricCanvasPreview.originalW = fabricCanvasPreview.width;
+      fabricCanvasPreview.originalH = fabricCanvasPreview.height;
       // set up selection style
       fabric.Object.prototype.transparentCorners = false;
       fabric.Object.prototype.cornerStyle = 'circle';
@@ -59,47 +62,50 @@
         this.history.push(JSON.stringify(currentState));
       })
       var prevSelectedLayer = null;
+
+      
       fabricCanvas.on('object:added', (o) => {
-        if(o.target.id === "sheet"){
-          return; 
-        }
-        $("#maintools > .image-tools").removeClass("hidden");
-        // var temp = layerTemplate; 
-         var obj = o.target; 
-        // var index = obj.cacheKey.replace("texture","");
+        if(o.target.id === "sheet")
+        { return; }
+        var obj = o.target;
+     
+        fabricCanvasPreview.add(obj).renderAll();
         
-        // temp = temp.replace("{id}",obj.cacheKey)
-        // .replace("{src}",obj._element?.currentSrc)
-        // .replace("{_id}",obj.cacheKey)
-        // .replace("{index}", parseInt(index) + 1);
-        //   $("#layers").prepend(temp);
-        // // layer click handler. 
-          
-           var layerId = `#${obj.cacheKey}`;   
+        $("#maintools > .image-tools").removeClass("hidden");
+         var temp = layerTemplate; 
+         var obj = o.target; 
+        
+          temp = temp.replace("{id}",obj.id)
+          .replace("{src}",obj._element?.currentSrc)
+          .replace("{_id}",obj.id)
+          .replace("{index}", parseInt(obj.index) + 1);
+          $("#layers").prepend(temp);
+        
+          var layerId = `#${obj.id}`;   
            $(layerId).on("click", function() {
-
-        //     fabricCanvas.setActiveObject(obj);
-        //     fabricCanvas.renderAll()
-
-        //     $(`${layerId} .layers-controls`).show();
-
-        //     if(prevSelectedLayer != null)
-        //     { $(`${prevSelectedLayer} .layers-controls`).attr("style","display:none !important"); }
-            
-        //     prevSelectedLayer = layerId;
-
-            $(`#select-panel #delete`).click(() => {
-              fabricCanvas.getActiveObjects().forEach(obj1 => fabricCanvas.remove(obj1)); 
-              fabricCanvas.discardActiveObject().requestRenderAll(); 
-              fabricCanvas.trigger('object:modified');
+              fabricCanvas.setActiveObject(obj);
               fabricCanvas.renderAll()
+              $(`${layerId} .layers-controls`).show();
+              if(prevSelectedLayer != null)
+              { $(`${prevSelectedLayer} .layers-controls`).attr("style","display:none !important"); }            
+              prevSelectedLayer = layerId;
+
+            $(`${layerId} .delete`).click(() => {
+              fabricCanvas.getActiveObjects().forEach(obj => {
+                fabricCanvas.remove(obj);
+              });
+
+              fabricCanvas.discardActiveObject().requestRenderAll();
+              fabricCanvas.trigger('object:modified')
             });
 
-            $(`#select-panel #duplicate`).click(() => {
+            $(`${layerId} .delete`).click(() => {
               let clonedObjects = []
               let activeObjects = fabricCanvas.getActiveObjects()
               activeObjects.forEach(obj => {
                 obj.clone(clone => {
+                  obj.id = `item${fabricCanvas._objects.length}`;
+                  obj.index = fabricCanvas._objects.length;
                   fabricCanvas.add(clone.set({
                     strokeUniform: true,
                     left: obj.aCoords.tl.x + 20,
@@ -122,6 +128,20 @@
       
               fabricCanvas.requestRenderAll(), fabricCanvas.trigger('object:modified')
             })
+
+            $(`${layerId} .bring-fwd`).click(() => {
+              var obj = fabricCanvas.getActiveObject();
+              fabricCanvas.bringForward(obj)
+              fabricCanvas.renderAll(), fabricCanvas.trigger('object:modified');
+            })
+            
+            $(`${layerId} .bring-back`).click(() => {
+              var obj = fabricCanvas.getActiveObject();
+              fabricCanvas.sendBackwards(obj)
+              fabricCanvas.renderAll(), fabricCanvas.trigger('object:modified');
+            })
+      
+           
             //fabricCanvas.remove(obj);
             //$(this).remove();
           })
@@ -129,14 +149,17 @@
       })
 
       fabricCanvas.on('object:removed', (o) => {
-        var obj = o.target;       
-        $(`#${obj.cacheKey}`).remove();
+        //var obj = o.target;       
+        //$(`#${obj.cacheKey}`).remove();
       })
 
       const savedCanvas = saveInBrowser.load('canvasEditor');
       if (savedCanvas) {
         fabricCanvas.loadFromJSON(savedCanvas, fabricCanvas.renderAll.bind(fabricCanvas));
       }
+
+// repeat design
+
 
       // move objects with arrow keys
       (() => document.addEventListener('keydown', (e) => {
@@ -193,10 +216,31 @@
         })
       })();
 
+// load default template 
+      (()=>{
+        
+        fabricCanvas.clear();
+       //canvaspreview.globalCompositeOperation   = 'source-atop';
+       fabricCanvas.globalCompositeOperation          = 'source-atop';
+       fabricCanvasPreview.globalCompositeOperation          = 'source-atop';
+       fabricCanvas.setDimensions({width:531.2, height:704});
+       fabric.loadSVGFromURL(`http://localhost:3000/api/svg-templates/FSHEART6`,function(objects,options){
+        var grp = fabric.util.groupSVGElements(objects,options);
+        grp.scaleToHeight(fabricCanvas.height);
+        fabricCanvas.setBackgroundImage(grp, fabricCanvas.renderAll.bind(fabricCanvas));
+        grp.center();
+        fabricCanvas.renderAll();
+
+        fabricCanvasPreview.setDimensions({width:objects[0].width, height:objects[0].height});
+        fabricCanvasPreview.setBackgroundImage(objects[0], fabricCanvasPreview.renderAll.bind(fabricCanvasPreview));
+        fabricCanvasPreview.renderAll();
+      })})();
+
       setTimeout(() => {
         let currentState = fabricCanvas.toJSON();
         this.history.push(JSON.stringify(currentState));
       }, 1000);
+
       document.getElementById("c").fabric = fabricCanvas;
       return fabricCanvas;
     } catch (_) {

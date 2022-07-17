@@ -18622,6 +18622,9 @@ a.hover-white-8:hover, a.hover-white-8:focus {
 .mg-10 {
   margin: 10px;
 }
+.mg-auto {
+  margin: auto;
+}
 
 .mg-10-force {
   margin: 10px !important;
@@ -45295,6 +45298,9 @@ a.hover-white-8:hover, a.hover-white-8:focus {
 
 .tx-orange {
   color: #FB9337;
+}
+.tx-blue{
+  color:#494699
 }
 
 .tx-pink {
