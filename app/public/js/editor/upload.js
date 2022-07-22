@@ -117,10 +117,10 @@
           $("#uploadpanel").removeClass("active");
           $("#mainMenu").addClass("active");
           fabric.Image.fromURL(f.target.result, (img) => {
-             var w = img.width > canvas.width ? canvas.width/2 : img.width;
-             var h = img.height > canvas.height ? canvas.height/2 : img.height;           
-             img.scaleToHeight(w);
-             img.scaleToWidth(h);
+             var w = canvas.backgroundImage._objects[0].width; //img.width > canvas.width ? canvas.width/2 : img.width;
+             var h = canvas.backgroundImage._objects[0].height; //img.height > canvas.height ? canvas.height/2 : img.height;           
+             //img.scaleToWidth(w);
+             img.scaleToHeight(h);
              img.id = `item${canvas._objects.length}`; 
              img.index = canvas._objects.length;
             //

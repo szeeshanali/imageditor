@@ -212,7 +212,7 @@
             
             $(".custom-modal-container .button-download").click(function (e) {
               let type = $(this).attr('id');
-              var canvas = document.getElementById('canvasPreview');
+              var canvas = document.getElementById('c');
              // canvas.fabric.discardActiveObject().renderAll();
 
               var width = canvas.width; 

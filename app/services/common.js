@@ -17,10 +17,12 @@ const commonService = (function() {
 
     this.getTemplatesAsync = async ()=>
     { 
-        console.log("Called: CommonService> getTemplatesAsync");
-        if(cached_templates == null || cached_templates.length == 0)
-        { cached_templates = await uploads.find({active:true,type:'template',uploaded_by:'admin'}); }
-        return cached_templates; 
+        // console.log("Called: CommonService> getTemplatesAsync");
+        // if(cached_templates == null || cached_templates.length == 0)
+        // { cached_templates = await uploads.find({active:true,type:'template',uploaded_by:'admin'}); }
+        // return cached_templates; 
+
+        return  await uploads.find({active:true,type:'template',uploaded_by:'admin'});
     },
 
     this.getTemplateAsync = async (templateId)=>
@@ -63,7 +65,6 @@ const commonService = (function() {
     this.getCustomerReport = async()=> { 
         console.log("called: commonService:getCustomerReport");
         var customers = await appuserModel.find({is_admin:{$ne:true}});
-        console.log("all customers: ", customers);
         var report = {
             todayCustomer:0,
             thisWeekCustomers:0,
@@ -110,7 +111,6 @@ const commonService = (function() {
 
         var ticks = new Date().getTime();
         var objectId = mongoose.Types.ObjectId();
-        console.log(uploadModel)
         var upload = new uploads(uploadModel);
         upload.save()
         .then((value)=>{
@@ -137,7 +137,7 @@ const commonService = (function() {
             getTemplatesAsync   :   this.getTemplatesAsync,
             getTemplateAsync   :   this.getTemplateAsync,
             deleteTemplatesAsync:   this.deleteTemplatesAsync, 
-            getSVGtemplates     :   this.getSVGtemplates, 
+            getSVGtemplatesAsync     :   this.getSVGTemplatesAsync, 
             clear               :   this.clearUploads
         },
         reportingService: {

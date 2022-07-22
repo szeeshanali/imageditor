@@ -63,11 +63,14 @@
         </div>
         <div id="templatepanel" class="tab-pane pd-15" >
            <div class="d-flex svg-templates tx-center" >
-                <div id="FS15CIRX30" class="template"> 
-                    <img src="/images/FS15CIRX30.svg" style="width:100px"> 
-                    <div class="tx-12 tx-bold pd-y-5">A4: 15 Circles</div>
-                </div>
-                <div id="FSHEART6" class="template"> 
+            <%for(var i=0; i<templates.length;i++){%>
+              <div id="<%=templates[i].code %>" class="template"> 
+                <img src="<%=templates[i].base64 %>" style="width:100px"> 
+                <div class="tx-12 tx-bold pd-y-5"><%=templates[i].title %></div>
+            </div>
+          <%}%>
+               
+                <!-- <div id="FSHEART6" class="template"> 
                     <img src="/images/FSHEART6.svg" style="width:100px"> 
                     <div class="tx-12 tx-bold pd-y-5">A4: 6 Hearts</div>
                 </div>
@@ -77,7 +80,7 @@
                 </div>
                 <div id="FS15CIRX30" class="template"> <img src="/images/FS15CIRX30.svg" style="width:100px">
                     <div class="tx-12 tx-bold pd-y-5">A4: 18 Circles</div>
-                </div>
+                </div> -->
           </div>
         </div>
         <div id="uploadpanel" class="tab-pane active" >

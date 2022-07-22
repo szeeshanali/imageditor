@@ -1,12 +1,12 @@
 /**
- * jQuery.Ruler v1.1
+ * jQuery.Ruler v0.9
  * Add Photoshop-like rulers and mouse position to a container element using jQuery.
  * http://ruler.hilliuse.com
  * 
  * Dual licensed under the MIT and GPL licenses.
  * Copyright 2013 Hillius Ettinoffe http://hilliuse.com
  */
-;(function( $ ){
+ ;(function( $ ){
 
 	$.fn.ruler = function(options) {
 	
@@ -25,7 +25,7 @@
 				hMouse = '<div class="hMouse"></div>',
 				mousePosBox = '<div class="mousePosBox">x: 50%, y: 50%</div>';
 		
-		if (!Modernizr.touch) {
+		// if (!Modernizr.touch) {
 			// Mouse crosshair
 			if (settings.showCrosshair) {
 				$('#ruler-area').append(vMouse, hMouse);
@@ -36,21 +36,21 @@
 			}
 			// If either, then track mouse position
 			if (settings.showCrosshair || settings.showMousePos) {
-				$("#ruler-area").mousemove(function(e) {
+				$(window).mousemove(function(e) {
 					if (settings.showCrosshair) {
 						$('.vMouse').css("top",e.pageY-($(document).scrollTop())+1);
-						$('.hMouse').css("left",e.pageX);
+						$('.hMouse').css("left",e.pageX+1);
 						//-($(window).scrollTop())
 					}
 					if (settings.showMousePos) {
-						$('.mousePosBox').html("x:" + (e.pageX-settings.vRuleSize) + ", y:" + (e.pageY-settings.hRuleSize) ).css({
+						$('.mousePosBox').html("x:" + makeInch(e.pageX-settings.vRuleSize, 2) + ", y:" + makeInch(e.pageY-settings.hRuleSize, 2) ).css({
 							top: e.pageY-($(document).scrollTop()) + 16,
 							left: e.pageX + 12
 						});
 					}
 				});
 			}
-		}
+		// }
 		
 		//resize
 		$(window).resize(function(e){
@@ -63,13 +63,13 @@
 			var tickLabelPos = settings.vRuleSize;
 			var newTickLabel = "";
 			while ( tickLabelPos <= $hRule.width() ) {
-				if ((( tickLabelPos - settings.vRuleSize ) %50 ) == 0 ) {
-					newTickLabel = "<div class='tickLabel'>" + ( tickLabelPos - settings.vRuleSize ) + "</div>";
+				if ((( tickLabelPos - settings.vRuleSize ) %150 ) == 0 ) {
+					newTickLabel = "<div class='tickLabel'>" + ( (tickLabelPos - settings.vRuleSize)/150 ) + "</div>";
 					$(newTickLabel).css( "left", tickLabelPos+"px" ).appendTo($hRule);
-				} else if ((( tickLabelPos - settings.vRuleSize ) %10 ) == 0 ) {
+				} else if ((( tickLabelPos - settings.vRuleSize ) %75 ) == 0 ) {
 					newTickLabel = "<div class='tickMajor'></div>";
 					$(newTickLabel).css("left",tickLabelPos+"px").appendTo($hRule);
-				} else if ((( tickLabelPos - settings.vRuleSize ) %5 ) == 0 ) {
+				} else if ((( tickLabelPos - settings.vRuleSize ) %15 ) == 0 ) {
 					newTickLabel = "<div class='tickMinor'></div>";
 					$(newTickLabel).css( "left", tickLabelPos+"px" ).appendTo($hRule);
 				}
@@ -80,13 +80,13 @@
 			tickLabelPos = settings.hRuleSize;
 			newTickLabel = "";
 			while (tickLabelPos <= $vRule.height()) {
-				if ((( tickLabelPos - settings.hRuleSize ) %50 ) == 0) {
-					newTickLabel = "<div class='tickLabel'><span>" + ( tickLabelPos - settings.hRuleSize ) + "</span></div>";
+				if ((( tickLabelPos - settings.hRuleSize ) %150 ) == 0) {
+					newTickLabel = "<div class='tickLabel'><span>" + ( (tickLabelPos - settings.hRuleSize)/150 ) + "</span></div>";
 					$(newTickLabel).css( "top", tickLabelPos+"px" ).appendTo($vRule);
-				} else if (((tickLabelPos - settings.hRuleSize)%10) == 0) {
+				} else if (((tickLabelPos - settings.hRuleSize)%75) == 0) {
 					newTickLabel = "<div class='tickMajor'></div>";
 					$(newTickLabel).css( "top", tickLabelPos+"px" ).appendTo($vRule);
-				} else if (((tickLabelPos - settings.hRuleSize)%5) == 0) {
+				} else if (((tickLabelPos - settings.hRuleSize)%15) == 0) {
 					newTickLabel = "<div class='tickMinor'></div>";
 					$(newTickLabel).css( "top", tickLabelPos+"px" ).appendTo($vRule);
 				}
@@ -127,13 +127,13 @@
 			var tickLabelPos = settings.vRuleSize;
 			var newTickLabel = "";
 			while ( tickLabelPos <= $hRule.width() ) {
-				if ((( tickLabelPos - settings.vRuleSize ) %100 ) == 0 ) {
-					newTickLabel = "<div class='tickLabel'>" + ( tickLabelPos - settings.vRuleSize ) + "</div>";
+				if ((( tickLabelPos - settings.vRuleSize ) %150 ) == 0 ) {
+					newTickLabel = "<div class='tickLabel'>" + ( (tickLabelPos - settings.vRuleSize)/150 ) + "</div>";
 					$(newTickLabel).css( "left", tickLabelPos+"px" ).appendTo($hRule);
-				} else if ((( tickLabelPos - settings.vRuleSize ) %10 ) == 0 ) {
+				} else if ((( tickLabelPos - settings.vRuleSize ) %75 ) == 0 ) {
 					newTickLabel = "<div class='tickMajor'></div>";
 					$(newTickLabel).css("left",tickLabelPos+"px").appendTo($hRule);
-				} else if ((( tickLabelPos - settings.vRuleSize ) %5 ) == 0 ) {
+				} else if ((( tickLabelPos - settings.vRuleSize ) %15 ) == 0 ) {
 					newTickLabel = "<div class='tickMinor'></div>";
 					$(newTickLabel).css( "left", tickLabelPos+"px" ).appendTo($hRule);
 				}
@@ -144,13 +144,13 @@
 			tickLabelPos = settings.hRuleSize;
 			newTickLabel = "";
 			while (tickLabelPos <= $vRule.height()) {
-				if ((( tickLabelPos - settings.hRuleSize ) %50 ) == 0) {
-					newTickLabel = "<div class='tickLabel'><span>" + ( tickLabelPos - settings.hRuleSize ) + "</span></div>";
+				if ((( tickLabelPos - settings.hRuleSize ) %150 ) == 0) {
+					newTickLabel = "<div class='tickLabel'><span>" + ( (tickLabelPos - settings.hRuleSize)/150 ) + "</span></div>";
 					$(newTickLabel).css( "top", tickLabelPos+"px" ).appendTo($vRule);
-				} else if (((tickLabelPos - settings.hRuleSize)%10) == 0) {
+				} else if (((tickLabelPos - settings.hRuleSize)%75) == 0) {
 					newTickLabel = "<div class='tickMajor'></div>";
 					$(newTickLabel).css( "top", tickLabelPos+"px" ).appendTo($vRule);
-				} else if (((tickLabelPos - settings.hRuleSize)%5) == 0) {
+				} else if (((tickLabelPos - settings.hRuleSize)%15) == 0) {
 					newTickLabel = "<div class='tickMinor'></div>";
 					$(newTickLabel).css( "top", tickLabelPos+"px" ).appendTo($vRule);
 				}
@@ -161,3 +161,4 @@
 		
 	};//ruler
 })( jQuery );
+

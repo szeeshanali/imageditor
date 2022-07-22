@@ -142,7 +142,8 @@ router.get('/app/admin/workspace',(req,res)=>{
 
 router.get('/app/admin/template-designer', isAdmin, (req,res)=>{
   const  {width, height, title} = req.body;
-  res.locals.pagetitle = "Template Designer"
+  res.locals.pagetitle = "Template Designer"; 
+  res.locals.uploadmessage = "Upload SVG Templates.";
   res.render("pages/admin/templatedesigner",{user:req.user});
 })
 router.get('/app/admin/templates', isAdmin, async (req,res)=>{

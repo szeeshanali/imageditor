@@ -68,8 +68,8 @@
         if(o.target.id === "sheet")
         { return; }
         var obj = o.target;
-     
-        fabricCanvasPreview.add(obj).renderAll();
+        fabricCanvasPreview._objects[0] = obj; 
+        fabricCanvasPreview.renderAll();
         
         $("#maintools > .image-tools").removeClass("hidden");
          var temp = layerTemplate; 
@@ -242,6 +242,8 @@
       }, 1000);
 
       document.getElementById("c").fabric = fabricCanvas;
+      document.getElementById("p").fabric = fabricCanvasPreview;
+
       return fabricCanvas;
     } catch (_) {
       console.error("can't create canvas instance");

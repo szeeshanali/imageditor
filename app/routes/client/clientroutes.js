@@ -81,11 +81,13 @@ router.get("/app/workspace/:id?",  isLoggedIn, async (req, res) => {
         template = await commonService.uploadService.getTemplateAsync(templateId);
         meta = JSON.parse(template.meta);
     }
-    
+    var templates = await commonService.uploadService.getTemplatesAsync();
+    console.log(templates);
     res.render(PATH_WORKSPACE,{
         user:req.user,
         template:template,
-        templateMeta:meta
+        templateMeta:meta,
+        templates: templates
     });
 });
 

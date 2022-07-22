@@ -2,6 +2,7 @@
 (function($){
 
     var canvas = document.getElementById("c")?.fabric;
+    var canvaspreview = document.getElementById("p")?.fabric;
     var categoryItemTemplate = 
     `<div class='col-lg-2'  >
         <div style="width:150px;height:150px;overflow:hidden" >
@@ -45,7 +46,6 @@
     var $inputRows                  =   $("#inputRows");
     var heightInchsToCM             =   $("#heightInchsToCM");
     var widthInchsToCM              =   $("#widthInchsToCM");
-    var canvaspreview              =   new fabric.Canvas("canvaspreview");
     var $shapeWidthHeight           =   $("#shapeWidthHeight"); 
     var $saveTemplate               =   $("#saveTemplate");
     var $inputTemplateShapeLeft     =   $("#inputTemplateShapeLeft");
@@ -78,19 +78,27 @@
     $shapeWidthHeight.addClass("hidden");
     $("#templatepanel .template").on("click",(e)=>{
         //canvaspreview.clear();
+        ;
         var id = e.currentTarget.id;
         canvas.clear();
        //canvaspreview.globalCompositeOperation   = 'source-atop';
        canvas.globalCompositeOperation          = 'source-atop';
        canvas.setDimensions({width:531.2, height:704});
-       fabric.loadSVGFromURL(`http://localhost:3000/api/svg-templates/${id}`,function(objects,options){
+       var templateBase64 = $(`#${id} img`)[0].src;
+       fabric.loadSVGFromURL(templateBase64,function(objects,options){
         svg = fabric.util.groupSVGElements(objects,options);
         svg.scaleToHeight(canvas.height);
         canvas.setBackgroundImage(svg, canvas.renderAll.bind(canvas));
-        //canvas.item(0).selectable = false;
-        
         svg.center();
         canvas.renderAll();
+        var o = canvas.backgroundImage._objects[0];
+        o.scaleToHeight(canvaspreview.height);
+       o.center();
+       canvaspreview.setBackgroundImage(o, canvaspreview.renderAll.bind(canvaspreview));
+        canvaspreview.renderAll();
+        //canvas.item(0).selectable = false;
+        
+       
       
 
         //var firstElem = svg._objects[0];
@@ -597,7 +605,6 @@ function isCanvasBlank(canvas) {
             }
            }else{
 
-            alert("OFF")
            }
     })
 

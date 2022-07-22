@@ -20,7 +20,7 @@ mongoose.connect('mongodb+srv://dtimageeditor:Xcccccc123@cluster0.gte2f0n.mongod
 .then(() => console.log('connected,,'))
 .catch((err)=> console.log(err));
 app.use(expressLayouts);
-
+ 
 app.set('view engine', 'ejs');
 app.use(express.static('public'))
 app.use(express.static('uploads'))
