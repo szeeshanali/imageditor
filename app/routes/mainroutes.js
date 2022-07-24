@@ -40,9 +40,17 @@ router.get('/api/templates', async (req,res)=>{
     res.send(items);
 })
 router.get('/api/svg-templates/:id', async (req,res)=>{
-
-    var svg = req.params.id;   
-    res.sendFile(path.resolve(`../app/public/images/${svg}.svg`));
+    const itemid = req.params["id"]; 
+    var result = null; 
+    if(itemid == "default2"){
+        result = await uploads.findOne({
+            type:'template', uploaded_by:"admin", active:true, default:true });    
+    }
+    console.log("========================>",result)
+    res.send("");
+    //var items = await uploads.find({type:'templates',uploaded_by:"admin",active:true});    
+    //var svg = req.params.id;   
+    //res.sendFile(path.resolve(`../app/public/images/${svg}.svg`));
 })
 
 router.get('/app/404',(req,res)=>{

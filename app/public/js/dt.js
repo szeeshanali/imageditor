@@ -91,9 +91,9 @@
         canvas.setBackgroundImage(svg, canvas.renderAll.bind(canvas));
         svg.center();
         canvas.renderAll();
-        var o = canvas.backgroundImage._objects[0];
-        o.scaleToHeight(canvaspreview.height);
-       o.center();
+        //var o = canvas.backgroundImage._objects[0];
+        //o.scaleToHeight(canvaspreview.height);
+      // o.center();
        canvaspreview.setBackgroundImage(o, canvaspreview.renderAll.bind(canvaspreview));
         canvaspreview.renderAll();
         //canvas.item(0).selectable = false;

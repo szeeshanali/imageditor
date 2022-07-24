@@ -11711,10 +11711,10 @@ textarea.parsley-success:focus {
   text-indent: 5px !important;
 }
 .toggle-light.primary .toggle-on.active {
-  background-color: #007bff;
+  background-color: #494699;
 }
 .toggle-light.primary .toggle-on.active + .toggle-blob {
-  border: 3px solid #007bff;
+  border: 3px solid #494699;
 }
 .toggle-light.success .toggle-on.active {
   background-color: #28a745;

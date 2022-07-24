@@ -117,6 +117,7 @@
           $("#uploadpanel").removeClass("active");
           $("#mainMenu").addClass("active");
           fabric.Image.fromURL(f.target.result, (img) => {
+           
              var w = canvas.backgroundImage._objects[0].width; //img.width > canvas.width ? canvas.width/2 : img.width;
              var h = canvas.backgroundImage._objects[0].height; //img.height > canvas.height ? canvas.height/2 : img.height;           
              //img.scaleToWidth(w);
@@ -125,7 +126,7 @@
              img.index = canvas._objects.length;
             //
           img.globalCompositeOperation = 'source-atop';
-           canvas.add(img).renderAll();
+            canvas.add(img).renderAll();
            //canvaspreview.item(0).cloneObject = canvas.item(1);
           })
         }
