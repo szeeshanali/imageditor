@@ -24,17 +24,30 @@
     $btnUploadImage = $("#btn-upload-img"); 
     $btnUploadImageHidden = $("#btn-upload-img-hidden"); 
     $layers = $("#layers");
-    $repeatDesign = $("#repeatdesign");
-    
-         
+    $btnRepeatDesign = $("#repeatdesign");
+    $clientMainCanvas =  $("#client-main-canvas");
+    $canvasPrev =  $("#client-main-canvas-logo");
+    $repeatImageCtrl = $("#repeat-image-ctrl");
+    $btnCancelRepeatDesign =  $("#repeat-image-ctrl .cancel");
+    $btnApplyRepeatDesign =  $("#repeat-image-ctrl .apply");
 
 
-   
+    fabric.Object.prototype.transparentCorners = false;
+    fabric.Object.prototype.cornerStyle = 'circle';
+    fabric.Object.prototype.borderColor = '#000';
+    fabric.Object.prototype.cornerColor = '#494699';
+    fabric.Object.prototype.cornerStrokeColor = '#000';
+    fabric.Object.prototype.cornerSize = 5;
+    fabric.Object.prototype.padding = 0;
 
     var canvas = new fabric.Canvas("client-main-canvas",{
         preserveObjectStacking:true
     })
+    var canvasPrev = new fabric.Canvas("client-main-canvas-logo",{
+        preserveObjectStacking:true
+    });
 
+  
 
    
     // Events: 
@@ -46,15 +59,19 @@
         var group = [];
         $.get(`/api/svg-templates/default`, function (data) {
             const svgBase64 = data.base64;
-            canvas.setDimensions({width: letterPageSize.width, height: letterPageSize.height});
-
+            //canvas.setDimensions({width: letterPageSize.width, height: letterPageSize.height});
+            //canvasPrev.setDimensions({width: letterPageSize.width, height: letterPageSize.height});
             var b = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iNjEycHgiIGhlaWdodD0iNzkycHgiIHZpZXdCb3g9IjAgMCA2MTIgNzkyIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA2MTIgNzkyIiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxwYXRoIGZpbGw9IiNBN0E5QUMiIGQ9Ik0xNTMuMzI0LDIzNC4wNTRjNDUuNDIyLTM2LjQ3NSw3Ni4yMjItNjUuMzM5LDkyLjQwMi04Ni41NDljMTYuMjM4LTIxLjE2NSwyNC4zMjgtNDEuNDczLDI0LjMyOC02MC45MjcNCgljMC0xNS4yMi01LjA5My0yNy40NjgtMTUuMjgxLTM2LjdjLTEwLjE4Ni05LjIzMS0yMy41NDktMTMuODI0LTQwLjAyOC0xMy44MjRjLTEwLjc4NiwwLTIyLjc3Myw0LjQyOC0zMi44MzksMTAuMDExDQoJYy0xMC4wNjcsNS41ODMtMTguNTE1LDIxLjUwMS0yOC41ODIsMzMuMDI5Yy0xMC4wNjctMTEuNTI4LTE4LjU3NS0yNy40NDYtMjguNzYxLTMzLjAyOWMtMTAuMTg3LTUuNTgzLTIyLjI5NC0xMC4wMTEtMzMuMDgtMTAuMDExDQoJYy0xNi41OTksMC0zMC4wMjEsNC41OTMtNDAuMTQ5LDEzLjgyNGMtMTAuMTg3LDkuMjMyLTE1LjI4LDIxLjQ4LTE1LjI4LDM2LjdjMCwxOS4zNjMsOC4wODksMzkuNTgzLDI0LjI2OSw2MC43NDcNCglDNzYuNTYyLDE2OC40ODksMTA3LjU0MiwxOTcuMzk5LDE1My4zMjQsMjM0LjA1NHoiLz4NCjxwYXRoIGZpbGw9IiNBN0E5QUMiIGQ9Ik0xNTMuMzI0LDQ5Ni44NTRjNDUuNDIyLTM2LjQ3NSw3Ni4yMjItNjUuMzM5LDkyLjQwMi04Ni41NDljMTYuMjM4LTIxLjE2NSwyNC4zMjgtNDEuNDczLDI0LjMyOC02MC45MjcNCgljMC0xNS4yMi01LjA5My0yNy40NjgtMTUuMjgxLTM2LjdjLTEwLjE4Ni05LjIzMS0yMy41NDktMTMuODI0LTQwLjAyOC0xMy44MjRjLTEwLjc4NiwwLTIyLjc3Myw0LjQyOC0zMi44MzksMTAuMDExDQoJYy0xMC4wNjcsNS41ODMtMTguNTE1LDIxLjUwMS0yOC41ODIsMzMuMDI5Yy0xMC4wNjctMTEuNTI4LTE4LjU3NS0yNy40NDYtMjguNzYxLTMzLjAyOWMtMTAuMTg3LTUuNTgzLTIyLjI5NC0xMC4wMTEtMzMuMDgtMTAuMDExDQoJYy0xNi41OTksMC0zMC4wMjEsNC41OTMtNDAuMTQ5LDEzLjgyNGMtMTAuMTg3LDkuMjMyLTE1LjI4LDIxLjQ4LTE1LjI4LDM2LjdjMCwxOS4zNjMsOC4wODksMzkuNTgzLDI0LjI2OSw2MC43NDcNCglDNzYuNTYyLDQzMS4yODksMTA3LjU0Miw0NjAuMTk5LDE1My4zMjQsNDk2Ljg1NHoiLz4NCjxwYXRoIGZpbGw9IiNBN0E5QUMiIGQ9Ik00NTkuMzI0LDIzNC4wNTRjNDUuNDIyLTM2LjQ3NSw3Ni4yMjItNjUuMzM5LDkyLjQtODYuNTQ5YzE2LjIzOS0yMS4xNjUsMjQuMzI5LTQxLjQ3MywyNC4zMjktNjAuOTI3DQoJYzAtMTUuMjItNS4wOTMtMjcuNDY4LTE1LjI4LTM2LjdjLTEwLjE4Ny05LjIzMS0yMy41NS0xMy44MjQtNDAuMDI4LTEzLjgyNGMtMTAuNzg2LDAtMjIuNzczLDQuNDI4LTMyLjgzOSwxMC4wMTENCgljLTEwLjA2Nyw1LjU4My0xOC41MTYsMjEuNTAxLTI4LjU4MiwzMy4wMjljLTEwLjA2Ny0xMS41MjgtMTguNTc1LTI3LjQ0Ni0yOC43NjItMzMuMDI5cy0yMi4yOTQtMTAuMDExLTMzLjA3OS0xMC4wMTENCgljLTE2LjYsMC0zMC4wMjEsNC41OTMtNDAuMTQ5LDEzLjgyNGMtMTAuMTg3LDkuMjMyLTE1LjI4LDIxLjQ4LTE1LjI4LDM2LjdjMCwxOS4zNjMsOC4wODksMzkuNTgzLDI0LjI3LDYwLjc0Nw0KCUMzODIuNTYyLDE2OC40ODksNDEzLjU0MiwxOTcuMzk5LDQ1OS4zMjQsMjM0LjA1NHoiLz4NCjxwYXRoIGZpbGw9IiNBN0E5QUMiIGQ9Ik00NTkuMzI0LDQ5Ni44NTRjNDUuNDIyLTM2LjQ3NSw3Ni4yMjItNjUuMzM5LDkyLjQtODYuNTQ5YzE2LjIzOS0yMS4xNjUsMjQuMzI5LTQxLjQ3MywyNC4zMjktNjAuOTI3DQoJYzAtMTUuMjItNS4wOTMtMjcuNDY4LTE1LjI4LTM2LjdjLTEwLjE4Ny05LjIzMS0yMy41NS0xMy44MjQtNDAuMDI4LTEzLjgyNGMtMTAuNzg2LDAtMjIuNzczLDQuNDI4LTMyLjgzOSwxMC4wMTENCgljLTEwLjA2Nyw1LjU4My0xOC41MTYsMjEuNTAxLTI4LjU4MiwzMy4wMjljLTEwLjA2Ny0xMS41MjgtMTguNTc1LTI3LjQ0Ni0yOC43NjItMzMuMDI5cy0yMi4yOTQtMTAuMDExLTMzLjA3OS0xMC4wMTENCgljLTE2LjYsMC0zMC4wMjEsNC41OTMtNDAuMTQ5LDEzLjgyNGMtMTAuMTg3LDkuMjMyLTE1LjI4LDIxLjQ4LTE1LjI4LDM2LjdjMCwxOS4zNjMsOC4wODksMzkuNTgzLDI0LjI3LDYwLjc0Nw0KCUMzODIuNTYyLDQzMS4yODksNDEzLjU0Miw0NjAuMTk5LDQ1OS4zMjQsNDk2Ljg1NHoiLz4NCjxwYXRoIGZpbGw9IiNBN0E5QUMiIGQ9Ik0xNTMuMzI0LDc1Ni4wNTRjNDUuNDIyLTM2LjQ3NSw3Ni4yMjItNjUuMzM5LDkyLjQwMi04Ni41NDljMTYuMjM4LTIxLjE2NSwyNC4zMjgtNDEuNDczLDI0LjMyOC02MC45MjcNCgljMC0xNS4yMi01LjA5My0yNy40NjgtMTUuMjgxLTM2LjdjLTEwLjE4Ni05LjIzLTIzLjU0OS0xMy44MjQtNDAuMDI4LTEzLjgyNGMtMTAuNzg2LDAtMjIuNzczLDQuNDI5LTMyLjgzOSwxMC4wMTINCgljLTEwLjA2Nyw1LjU4My0xOC41MTUsMjEuNTAxLTI4LjU4MiwzMy4wMjhjLTEwLjA2Ny0xMS41MjctMTguNTc1LTI3LjQ0NS0yOC43NjEtMzMuMDI4Yy0xMC4xODctNS41ODMtMjIuMjk0LTEwLjAxMi0zMy4wOC0xMC4wMTINCgljLTE2LjU5OSwwLTMwLjAyMSw0LjU5NC00MC4xNDksMTMuODI0Yy0xMC4xODcsOS4yMzItMTUuMjgsMjEuNDgtMTUuMjgsMzYuN2MwLDE5LjM2Myw4LjA4OSwzOS41ODMsMjQuMjY5LDYwLjc0Nw0KCUM3Ni41NjIsNjkwLjQ4OSwxMDcuNTQyLDcxOS4zOTksMTUzLjMyNCw3NTYuMDU0eiIvPg0KPHBhdGggZmlsbD0iI0E3QTlBQyIgZD0iTTQ1OS4zMjQsNzU2LjA1NGM0NS40MjItMzYuNDc1LDc2LjIyMi02NS4zMzksOTIuNC04Ni41NDljMTYuMjM5LTIxLjE2NSwyNC4zMjktNDEuNDczLDI0LjMyOS02MC45MjcNCgljMC0xNS4yMi01LjA5My0yNy40NjgtMTUuMjgtMzYuN2MtMTAuMTg3LTkuMjMtMjMuNTUtMTMuODI0LTQwLjAyOC0xMy44MjRjLTEwLjc4NiwwLTIyLjc3Myw0LjQyOS0zMi44MzksMTAuMDEyDQoJYy0xMC4wNjcsNS41ODMtMTguNTE2LDIxLjUwMS0yOC41ODIsMzMuMDI4Yy0xMC4wNjctMTEuNTI3LTE4LjU3NS0yNy40NDUtMjguNzYyLTMzLjAyOHMtMjIuMjk0LTEwLjAxMi0zMy4wNzktMTAuMDEyDQoJYy0xNi42LDAtMzAuMDIxLDQuNTk0LTQwLjE0OSwxMy44MjRjLTEwLjE4Nyw5LjIzMi0xNS4yOCwyMS40OC0xNS4yOCwzNi43YzAsMTkuMzYzLDguMDg5LDM5LjU4MywyNC4yNyw2MC43NDcNCglDMzgyLjU2Miw2OTAuNDg5LDQxMy41NDIsNzE5LjM5OSw0NTkuMzI0LDc1Ni4wNTR6Ii8+DQo8L3N2Zz4NCg==";
 
-            fabric.loadSVGFromURL(b,function(objects,options) {               
-                var loadedObjects = new fabric.Group(group);     
-                canvas.orignalBackgroundImage = loadedObjects;                      
-                canvas.setBackgroundImage(loadedObjects, canvas.renderAll.bind(canvas));
+            fabric.loadSVGFromURL(b,function(objects,options) {      
+                var loadedObjects = new fabric.Group(group);
+                var templateWidth = options.viewBoxWidth;
+                var templateHeight = options.viewBoxHeight;      
+                canvas.setDimensions({width: templateWidth, height: templateHeight});
+                //canvas.orignalBackgroundImage = loadedObjects;                      
+                canvas.setBackgroundImage(loadedObjects,canvas.renderAll.bind(canvas));
                 canvas.renderAll();
+                loadedObjects.setCoords();
                
             },function(item, object) {
                     object.set('id',item.getAttribute('id'));
@@ -66,29 +83,105 @@
 
     function initUIEvents()
     {
-        $repeatDesign.on("click",function(e){
-            var txt = $(e.currentTarget).find(".active").text();
-            if(txt == "ON"){
-                var canvasSVGLogo = canvas.backgroundImage._objects[0];
-                if(!canvasSVGLogo)
-                {alert("No logo found in SVG template");}
-           
-                canvasSVGLogo.scaleToWidth(canvas.width/1.5);
-                canvas.setBackgroundImage(canvasSVGLogo, canvas.renderAll.bind(canvas));
-                canvas.renderAll();
-                
-            }
-            else {
-            debugger;
-            canvas.setBackgroundImage(canvas.orignalBackgroundImage, canvas.renderAll.bind(canvas));
-                canvas.renderAll();
-              
-                
-            }
+        $repeatImageCtrl.hide();
+        $canvasPrev.parent().hide();
+        $btnRepeatDesign.on("click",function(e){
+            openRepeatDesignPreview(e);
         })
 
+        $btnCancelRepeatDesign.on("click",function(e){
+            //$("#repeatdesign .toggle-on").removeClass("active");
+            //$("#repeatdesign .toggle-off").addClass("active");
+            closeRepeatDesignPreview();
+            //closeRepeatDesignPreview();
+        })
+
+        $btnApplyRepeatDesign.on("click",function(e){
+          
+            var dataURL = canvasPrev.toDataURL({
+                format: "png",
+                left: 0,
+                top: 0,
+                width: canvas.width ,
+                height: canvas.height ,
+            });
+           
+            
+                var logos = canvas.backgroundImage._objects; 
+                fabric.Image.fromURL(dataURL, (img) => {
+                    canvas.clear();
+                   // var img = canvasPrev._objects[0];
+                    for(var i=0;i<logos.length;i++)
+                    {
+                      var logo = logos[i]; 
+                      
+                      var object = fabric.util.object.clone(img);
+                      object.scaleToWidth(object.width/2)
+                      object.set("top", logo.pathOffset.y -logo.height/2);
+                      object.set("left",  logo.pathOffset.x -logo.width/2);
+                    
+                    
+                       canvas.add(object).renderAll();
+                      
+                    }
+                    closeRepeatDesignPreview();
+                });
+                 
+
+        })
        
        
+    }
+
+    function closeRepeatDesignPreview(){
+        $repeatImageCtrl.hide();         
+        $clientMainCanvas.parent().fadeIn();
+        $canvasPrev.parent().fadeOut();  
+    }
+
+    function openRepeatDesignPreview(e){
+     
+        
+        var txt = $(e.currentTarget).find(".active").text();
+        
+        if(txt == "ON"){
+            var canvasSVGLogo = canvas.backgroundImage._objects[0];
+         //   canvasSVGLogo.scaleToWidth(canvasPrev.width);
+            if(!canvasSVGLogo || canvas._objects.length == 0)
+            {
+                alert("No logo found in SVG template");
+            return; }
+           
+            $repeatImageCtrl.show();
+            $clientMainCanvas.parent().fadeOut();
+            $canvasPrev.parent().fadeIn();
+
+            // var object = fabric.util.object.clone(canvasSVGLogo);
+           
+           
+            //     canvasPrev.setBackgroundImage(object,canvasPrev.renderAll.bind(canvasPrev));
+            // canvasPrev.renderAll();
+
+           //canvasSVGLogo.scaleToWidth(canvas.width/1.5);
+            canvasPrev.loadFromJSON(JSON.stringify(canvas), function(o){
+                var object = fabric.util.object.clone(canvasSVGLogo);
+                object.scaleToWidth(object.width*2)
+                canvasPrev.setDimensions({
+                    width:object.width - object.left,
+                    height:object.height - object.top})
+
+                // let scale = object.width;
+
+              
+
+                canvasPrev.setBackgroundImage(object,canvasPrev.renderAll.bind(canvasPrev));
+                canvasPrev.renderAll();
+              
+            });
+        }
+        else {
+            closeRepeatDesignPreview();
+        }
     }
   
 
@@ -97,10 +190,19 @@
         canvas.on("object:added",(o)=>{
             o.target.id = `obj${canvas._objects.length}`;
             o.target.index = canvas._objects.length-1;
-            addLayer(o);
+            onObjectAdded(o);
         })
     }
 
+    function onObjectAdded(o)
+    {
+        addLayer(o);
+        enabledRepeatDesignButton(o);
+    }
+
+    function enabledRepeatDesignButton(o){
+        $btnRepeatDesign.find(".disabled").removeClass("disabled");
+    }
 
     // Layers: 
     function addLayer(o){
@@ -155,17 +257,16 @@
     // UI events:
     $btnDownloadPDF.on("click",()=>{
         alert("worked");
-        var pdf = new jsPDF("p", "pt", "letter");              
-              //width = pdf.internal.pageSize.getWidth();
-              //height = pdf.internal.pageSize.getHeight();
+        var pdf = null;   
+
+        var pdf = new jsPDF("p", "mm", "letter");              
               var width = canvas.width; 
               var height = canvas.height;
-              var pdf = null;   
-              pdf = new jsPDF('p', 'pt',[width, height]);
+             // pdf = new jsPDF('p', 'pt',[width, height]);
               width = pdf.internal.pageSize.getWidth();
               height = pdf.internal.pageSize.getHeight();
-              var imgData = canvas.toDataURL('image/svg+xml');
-              pdf.addImage(imgData, 'svg+xml', 0, 0, width, height);
+              var imgData = canvas.toDataURL('image/png');
+              pdf.addImage(imgData, 'PNG', 0, 0, width, height);
               //var dataURL = canvas.toDataURL();
               //pdf.addImage(dataURL, 'SVG', 0, 0);
               pdf.save("download.pdf");
@@ -176,8 +277,10 @@
     })
 
     $btnUploadImageHidden.on("change",(e)=>{
+
         if (e.target.files.length === 0) return;
-        processFiles(e.target.files)
+        processFiles(e.target.files);
+        $btnUploadImageHidden.val('');
     })
 
     
@@ -193,10 +296,27 @@
           //if (file.type === 'image/svg+xml') {
             reader.onload = (e) => {
                 fabric.Image.fromURL(e.target.result, (img) => {
-                    img.scaleToHeight(300);
-                   img.globalCompositeOperation = 'source-atop';
-                   canvas.add(img).renderAll();
-                  //canvaspreview.item(0).cloneObject = canvas.item(1);
+                  img.scaleToHeight(300);
+                  img.globalCompositeOperation = 'source-atop';
+                  canvas.add(img);
+                //  var logos = canvas.backgroundImage._objects; 
+                 
+
+            //       for(var i=0;i<logos.length;i++)
+            //       {
+            //         var logo = logos[i]; 
+            //        // img.left = logo.pathOffset.x; 
+            //    //    // img.top = logo.pathOffset.y; 
+            //       // canvas.add(img);
+            //         var object = fabric.util.object.clone(img);
+            //         object.set("top", logo.pathOffset.y -100);
+            //         object.set("left",  logo.pathOffset.x -100);
+            //         object.set("width", 600);
+            //         object.set("height", 600);
+            //          canvas.add(object).renderAll();
+
+            //       }
+                 // canvas
                  })
             }
             reader.readAsDataURL(file)

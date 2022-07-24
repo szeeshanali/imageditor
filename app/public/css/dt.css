@@ -1,7 +1,7 @@
 .workarea{
     width: 100%;
     height: 100%;
-    background-image: url('/images/transbg.png');
+    background-image: url('/images/grid-trans.png');
 
 }
 .admin-template-designer-bg{
@@ -267,3 +267,30 @@ overflow: hidden;
 
         margin: 0px -15px 0px 15px;
      }
+
+     #repeat-image-ctrl .apply{
+        background-color: #494699;
+        color: white;
+        padding: 5px 15px;
+        border-radius: 50px;
+        font-size: 12px;
+        line-height: 1px;
+     }
+     #repeat-image-ctrl .apply:hover{
+        background-color: #6461b1;
+        
+     }
+
+     #repeat-image-ctrl .cancel{
+        background-color: #999;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 50px;
+    font-size: 12px;
+    line-height: 1px;
+    }
+
+    #repeat-image-ctrl .cancel:hover{
+        background-color: #c5c5c5;
+    
+    }
