@@ -42,12 +42,15 @@ router.get('/api/templates', async (req,res)=>{
 router.get('/api/svg-templates/:id', async (req,res)=>{
     const itemid = req.params["id"]; 
     var result = null; 
-    if(itemid == "default2"){
+    if(itemid == "default"){
         result = await uploads.findOne({
             type:'template', uploaded_by:"admin", active:true, default:true });    
+    }else{
+
+        result = await uploads.findOne({
+            type:'template', uploaded_by:"admin", active:true, code:itemid });  
     }
-    console.log("========================>",result)
-    res.send("");
+    res.send(result);
     //var items = await uploads.find({type:'templates',uploaded_by:"admin",active:true});    
     //var svg = req.params.id;   
     //res.sendFile(path.resolve(`../app/public/images/${svg}.svg`));
