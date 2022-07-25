@@ -31,6 +31,10 @@
     $btnCancelRepeatDesign =  $("#repeat-image-ctrl .cancel");
     $btnApplyRepeatDesign =  $("#repeat-image-ctrl .apply");
     $templatepanel              =   $("#templatepanel");
+    $btnTextMenu = $("#btnTextMenu");
+    $textarea = $("#textarea");
+    $btnAddText =  $("#btnAddText");
+    $btnTextSize = $("#btnTextSize")
 
 
     fabric.Object.prototype.transparentCorners = false;
@@ -48,7 +52,7 @@
         preserveObjectStacking:true
     });
 
-  
+    var enabledTextMode = false; 
 
    
     // Events: 
@@ -67,7 +71,7 @@
             //canvas.setDimensions({width: letterPageSize.width, height: letterPageSize.height});
             //canvasPrev.setDimensions({width: letterPageSize.width, height: letterPageSize.height});
             //svgBase64 = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iNjEycHgiIGhlaWdodD0iNzkycHgiIHZpZXdCb3g9IjAgMCA2MTIgNzkyIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA2MTIgNzkyIiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxwYXRoIGZpbGw9IiNBN0E5QUMiIGQ9Ik0xNTMuMzI0LDIzNC4wNTRjNDUuNDIyLTM2LjQ3NSw3Ni4yMjItNjUuMzM5LDkyLjQwMi04Ni41NDljMTYuMjM4LTIxLjE2NSwyNC4zMjgtNDEuNDczLDI0LjMyOC02MC45MjcNCgljMC0xNS4yMi01LjA5My0yNy40NjgtMTUuMjgxLTM2LjdjLTEwLjE4Ni05LjIzMS0yMy41NDktMTMuODI0LTQwLjAyOC0xMy44MjRjLTEwLjc4NiwwLTIyLjc3Myw0LjQyOC0zMi44MzksMTAuMDExDQoJYy0xMC4wNjcsNS41ODMtMTguNTE1LDIxLjUwMS0yOC41ODIsMzMuMDI5Yy0xMC4wNjctMTEuNTI4LTE4LjU3NS0yNy40NDYtMjguNzYxLTMzLjAyOWMtMTAuMTg3LTUuNTgzLTIyLjI5NC0xMC4wMTEtMzMuMDgtMTAuMDExDQoJYy0xNi41OTksMC0zMC4wMjEsNC41OTMtNDAuMTQ5LDEzLjgyNGMtMTAuMTg3LDkuMjMyLTE1LjI4LDIxLjQ4LTE1LjI4LDM2LjdjMCwxOS4zNjMsOC4wODksMzkuNTgzLDI0LjI2OSw2MC43NDcNCglDNzYuNTYyLDE2OC40ODksMTA3LjU0MiwxOTcuMzk5LDE1My4zMjQsMjM0LjA1NHoiLz4NCjxwYXRoIGZpbGw9IiNBN0E5QUMiIGQ9Ik0xNTMuMzI0LDQ5Ni44NTRjNDUuNDIyLTM2LjQ3NSw3Ni4yMjItNjUuMzM5LDkyLjQwMi04Ni41NDljMTYuMjM4LTIxLjE2NSwyNC4zMjgtNDEuNDczLDI0LjMyOC02MC45MjcNCgljMC0xNS4yMi01LjA5My0yNy40NjgtMTUuMjgxLTM2LjdjLTEwLjE4Ni05LjIzMS0yMy41NDktMTMuODI0LTQwLjAyOC0xMy44MjRjLTEwLjc4NiwwLTIyLjc3Myw0LjQyOC0zMi44MzksMTAuMDExDQoJYy0xMC4wNjcsNS41ODMtMTguNTE1LDIxLjUwMS0yOC41ODIsMzMuMDI5Yy0xMC4wNjctMTEuNTI4LTE4LjU3NS0yNy40NDYtMjguNzYxLTMzLjAyOWMtMTAuMTg3LTUuNTgzLTIyLjI5NC0xMC4wMTEtMzMuMDgtMTAuMDExDQoJYy0xNi41OTksMC0zMC4wMjEsNC41OTMtNDAuMTQ5LDEzLjgyNGMtMTAuMTg3LDkuMjMyLTE1LjI4LDIxLjQ4LTE1LjI4LDM2LjdjMCwxOS4zNjMsOC4wODksMzkuNTgzLDI0LjI2OSw2MC43NDcNCglDNzYuNTYyLDQzMS4yODksMTA3LjU0Miw0NjAuMTk5LDE1My4zMjQsNDk2Ljg1NHoiLz4NCjxwYXRoIGZpbGw9IiNBN0E5QUMiIGQ9Ik00NTkuMzI0LDIzNC4wNTRjNDUuNDIyLTM2LjQ3NSw3Ni4yMjItNjUuMzM5LDkyLjQtODYuNTQ5YzE2LjIzOS0yMS4xNjUsMjQuMzI5LTQxLjQ3MywyNC4zMjktNjAuOTI3DQoJYzAtMTUuMjItNS4wOTMtMjcuNDY4LTE1LjI4LTM2LjdjLTEwLjE4Ny05LjIzMS0yMy41NS0xMy44MjQtNDAuMDI4LTEzLjgyNGMtMTAuNzg2LDAtMjIuNzczLDQuNDI4LTMyLjgzOSwxMC4wMTENCgljLTEwLjA2Nyw1LjU4My0xOC41MTYsMjEuNTAxLTI4LjU4MiwzMy4wMjljLTEwLjA2Ny0xMS41MjgtMTguNTc1LTI3LjQ0Ni0yOC43NjItMzMuMDI5cy0yMi4yOTQtMTAuMDExLTMzLjA3OS0xMC4wMTENCgljLTE2LjYsMC0zMC4wMjEsNC41OTMtNDAuMTQ5LDEzLjgyNGMtMTAuMTg3LDkuMjMyLTE1LjI4LDIxLjQ4LTE1LjI4LDM2LjdjMCwxOS4zNjMsOC4wODksMzkuNTgzLDI0LjI3LDYwLjc0Nw0KCUMzODIuNTYyLDE2OC40ODksNDEzLjU0MiwxOTcuMzk5LDQ1OS4zMjQsMjM0LjA1NHoiLz4NCjxwYXRoIGZpbGw9IiNBN0E5QUMiIGQ9Ik00NTkuMzI0LDQ5Ni44NTRjNDUuNDIyLTM2LjQ3NSw3Ni4yMjItNjUuMzM5LDkyLjQtODYuNTQ5YzE2LjIzOS0yMS4xNjUsMjQuMzI5LTQxLjQ3MywyNC4zMjktNjAuOTI3DQoJYzAtMTUuMjItNS4wOTMtMjcuNDY4LTE1LjI4LTM2LjdjLTEwLjE4Ny05LjIzMS0yMy41NS0xMy44MjQtNDAuMDI4LTEzLjgyNGMtMTAuNzg2LDAtMjIuNzczLDQuNDI4LTMyLjgzOSwxMC4wMTENCgljLTEwLjA2Nyw1LjU4My0xOC41MTYsMjEuNTAxLTI4LjU4MiwzMy4wMjljLTEwLjA2Ny0xMS41MjgtMTguNTc1LTI3LjQ0Ni0yOC43NjItMzMuMDI5cy0yMi4yOTQtMTAuMDExLTMzLjA3OS0xMC4wMTENCgljLTE2LjYsMC0zMC4wMjEsNC41OTMtNDAuMTQ5LDEzLjgyNGMtMTAuMTg3LDkuMjMyLTE1LjI4LDIxLjQ4LTE1LjI4LDM2LjdjMCwxOS4zNjMsOC4wODksMzkuNTgzLDI0LjI3LDYwLjc0Nw0KCUMzODIuNTYyLDQzMS4yODksNDEzLjU0Miw0NjAuMTk5LDQ1OS4zMjQsNDk2Ljg1NHoiLz4NCjxwYXRoIGZpbGw9IiNBN0E5QUMiIGQ9Ik0xNTMuMzI0LDc1Ni4wNTRjNDUuNDIyLTM2LjQ3NSw3Ni4yMjItNjUuMzM5LDkyLjQwMi04Ni41NDljMTYuMjM4LTIxLjE2NSwyNC4zMjgtNDEuNDczLDI0LjMyOC02MC45MjcNCgljMC0xNS4yMi01LjA5My0yNy40NjgtMTUuMjgxLTM2LjdjLTEwLjE4Ni05LjIzLTIzLjU0OS0xMy44MjQtNDAuMDI4LTEzLjgyNGMtMTAuNzg2LDAtMjIuNzczLDQuNDI5LTMyLjgzOSwxMC4wMTINCgljLTEwLjA2Nyw1LjU4My0xOC41MTUsMjEuNTAxLTI4LjU4MiwzMy4wMjhjLTEwLjA2Ny0xMS41MjctMTguNTc1LTI3LjQ0NS0yOC43NjEtMzMuMDI4Yy0xMC4xODctNS41ODMtMjIuMjk0LTEwLjAxMi0zMy4wOC0xMC4wMTINCgljLTE2LjU5OSwwLTMwLjAyMSw0LjU5NC00MC4xNDksMTMuODI0Yy0xMC4xODcsOS4yMzItMTUuMjgsMjEuNDgtMTUuMjgsMzYuN2MwLDE5LjM2Myw4LjA4OSwzOS41ODMsMjQuMjY5LDYwLjc0Nw0KCUM3Ni41NjIsNjkwLjQ4OSwxMDcuNTQyLDcxOS4zOTksMTUzLjMyNCw3NTYuMDU0eiIvPg0KPHBhdGggZmlsbD0iI0E3QTlBQyIgZD0iTTQ1OS4zMjQsNzU2LjA1NGM0NS40MjItMzYuNDc1LDc2LjIyMi02NS4zMzksOTIuNC04Ni41NDljMTYuMjM5LTIxLjE2NSwyNC4zMjktNDEuNDczLDI0LjMyOS02MC45MjcNCgljMC0xNS4yMi01LjA5My0yNy40NjgtMTUuMjgtMzYuN2MtMTAuMTg3LTkuMjMtMjMuNTUtMTMuODI0LTQwLjAyOC0xMy44MjRjLTEwLjc4NiwwLTIyLjc3Myw0LjQyOS0zMi44MzksMTAuMDEyDQoJYy0xMC4wNjcsNS41ODMtMTguNTE2LDIxLjUwMS0yOC41ODIsMzMuMDI4Yy0xMC4wNjctMTEuNTI3LTE4LjU3NS0yNy40NDUtMjguNzYyLTMzLjAyOHMtMjIuMjk0LTEwLjAxMi0zMy4wNzktMTAuMDEyDQoJYy0xNi42LDAtMzAuMDIxLDQuNTk0LTQwLjE0OSwxMy44MjRjLTEwLjE4Nyw5LjIzMi0xNS4yOCwyMS40OC0xNS4yOCwzNi43YzAsMTkuMzYzLDguMDg5LDM5LjU4MywyNC4yNyw2MC43NDcNCglDMzgyLjU2Miw2OTAuNDg5LDQxMy41NDIsNzE5LjM5OSw0NTkuMzI0LDc1Ni4wNTR6Ii8+DQo8L3N2Zz4NCg==";
-canvas.clear();
+            canvas.clear();
             fabric.loadSVGFromURL(svgBase64,function(objects,options) {      
                 var loadedObjects = new fabric.Group(group);
                 var templateWidth = options.viewBoxWidth;
@@ -76,7 +80,7 @@ canvas.clear();
                 //canvas.orignalBackgroundImage = loadedObjects;                      
                 canvas.setBackgroundImage(loadedObjects,canvas.renderAll.bind(canvas));
                 canvas.renderAll();
-                loadedObjects.setCoords();
+                loadedObjects.center().setCoords();
                
             },function(item, object) {
                     object.set('id',item.getAttribute('id'));
@@ -88,6 +92,11 @@ canvas.clear();
 
     function initUIEvents()
     {
+        $btnTextMenu.on("click",function(e){
+            enabledTextMode = true; 
+        })
+
+      
         $repeatImageCtrl.hide();
         $canvasPrev.parent().hide();
         $btnRepeatDesign.on("click",function(e){
@@ -102,10 +111,9 @@ canvas.clear();
         })
 
         $("#templatepanel .template").on("click",(e)=>{
-            alert(1);
+            enabledTextMode = false; 
             var id = e.currentTarget.id;
              canvas.clear();
-             debugger;
              loadSVGTemplate(id);
         //     canvas.globalCompositeOperation          = 'source-atop';
         // //  //   canvas.setDimensions({width:531.2, height:704});
@@ -133,6 +141,8 @@ canvas.clear();
            
             
                 var logos = canvas.backgroundImage._objects; 
+
+                
                 fabric.Image.fromURL(dataURL, (img) => {
                     canvas.clear();
                    // var img = canvasPrev._objects[0];
@@ -141,9 +151,14 @@ canvas.clear();
                       var logo = logos[i]; 
                       
                       var object = fabric.util.object.clone(img);
+
+                     var left = logo.left + logo.group.left + logo.group.width /2 ;
+                     var top = logo.top + logo.group.top + logo.group.height /2 ;
+
+
                       object.scaleToWidth(object.width/2)
-                      object.set("top", logo.pathOffset.y -logo.height/2);
-                      object.set("left",  logo.pathOffset.x -logo.width/2);
+                      object.set("top", top);
+                      object.set("left",  left);
                     
                     
                        canvas.add(object).renderAll();
@@ -165,10 +180,8 @@ canvas.clear();
     }
 
     function openRepeatDesignPreview(e){
-     
-        
         var txt = $(e.currentTarget).find(".active").text();
-        
+        var factor = 2; 
         if(txt == "ON"){
             var canvasSVGLogo = canvas.backgroundImage._objects[0];
          //   canvasSVGLogo.scaleToWidth(canvasPrev.width);
@@ -190,7 +203,7 @@ canvas.clear();
            //canvasSVGLogo.scaleToWidth(canvas.width/1.5);
             canvasPrev.loadFromJSON(JSON.stringify(canvas), function(o){
                 var object = fabric.util.object.clone(canvasSVGLogo);
-                object.scaleToWidth(object.width*2)
+                object.scaleToWidth(object.width * factor)
                 canvasPrev.setDimensions({
                     width:object.width - object.left,
                     height:object.height - object.top})
@@ -211,12 +224,15 @@ canvas.clear();
   
 
     function initCanvasEvents(){
+    
         canvas.selectedLayerId = null; 
         canvas.on("object:added",(o)=>{
             o.target.id = `obj${canvas._objects.length}`;
             o.target.index = canvas._objects.length-1;
             onObjectAdded(o);
         })
+
+        initCanvasTextEvents();    
     }
 
     function onObjectAdded(o)
@@ -232,11 +248,16 @@ canvas.clear();
     // Layers: 
     function addLayer(o){
         var temp = layerHtml; 
-        var obj = o.target;        
+        var obj = o.target;
+        var src = obj._element?.currentSrc;
+        if(obj.text) {
+            src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAABHNJREFUeJzt3LurHGUcx+FvcqKiJohGBBGjRPHyB4imE0u72Akix1bsBAsriyiKokQ7CQoKaiGKCpGAjSI2golXhIR4v3USbzExicViiCHndy55d95zdp4H3iYLM7+d3c+emd0hCQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABJsq73AFOyMckVmd3ntxp9n+T33kNQ25hkV5IjSU5Yg64jSZ5NcuGirxJdrEuyJ/3fKGNfu+Mv96p0W/q/OazJurV+qdaO9b0HaOiW3gNw0rbeA7QyS4Fc0HsATjqv9wCtzFIg0JxAoCAQKGzoPcAqcSDJd0mON9zmukx+rLy+4TbP5MskP2by7VEr65NcmeTahtuksx1Z/teRLyW5YcpzbUtycAWzLbb2J7lpyrPfmOSVFcz20JTnYgWWE8ixJHcPONvWTG7DaBXHoSRbBpz/nkyO2egCGes1yANJXhhwfweTvNhwe88n+bbh9payvwcH3N+qMcZAvkqys8N+9zbc1r6G21qqJzNslKvCGAPZmeSfDvs90nBbRxtuazn7fKbDfrsaWyCHkjzXe4g1bFeSP3oPMaSxBbIryW+9h1jDfs3IPmDGFMjxjPAUYQqeTtvfXFa1MQXyepKvew8xAw4keav3EEMZUyBP9R5ghozmWI4lkA+TfNB7iBnybvp81Ty4WQrkcPHY4xnRefMATiR5onj8z6EGmbZZCuSjBf79nSSvDjnISLyc5L0FHlvotaCjczK5s/XUe4L2Jtncc6hTzKfdvVh3DTv6gi5L8mn+P9tnSeZ6DsXCrkvyfia3kzya1fVf0Mxn9gJJkk2ZnMJ+k8lfFLfIsyLzmc1AZtosXYNAcwKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIZDhzDbfldRuIAz2crQ23dXXDbUF3c0n2JznRaH0eH27MkPvTLo7/1n2DPgOYkvkkx9I+kKNJ7hzuaUA7m5LckWR32odx+nozyfYkGwd5ZrBCV2Vy2rMnyd+Zfhinr8NJ3k5yb5ItU36usKi5JNuSPJLkkwwfxGLr4yQ7ktwcF/QM6KIkjyX5Jf0jWOr6OcnDmZz6wdRck+Rg+r/hV7r2Z3IqCM2dm+SL9H+Tn+3al2RD42MD2Z7+b+5W6/bGx2ZmuXhbukt6D9DQ5t4DMHsuzeRit/en/9muH5Jc3PjYQJLJRfobmfyK3fuNvtx1NMlrcaPjsqzrPcAadX6Sy7N2TlGPJ/kpyV+9BwEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM7kX8fwvIWqet/rAAAAAElFTkSuQmCC';
+        }
+        
          temp = temp.replace("{id}",obj.id)
-         .replace("{src}",obj._element?.currentSrc)
+         .replace("{src}",src)
          .replace("{_id}",obj.id)
-         .replace("{index}", obj.index);
+         .replace("{index}", obj.index+1);
          $layers.prepend(temp);
          onLayerAdded($(`#${obj.id}`),o);
         
@@ -353,9 +374,43 @@ canvas.clear();
 
 
 
+
+      // Text: 
+    
+    function Addtext() { 
+        
+    }
+
+
+        function initCanvasTextEvents(){
+            let isDrawingText = false;
+             var textLeft = 50; 
+             var textTop = 100;
+             $btnAddText.on("click",function(){
+                var text = $textarea.val(); 
+                canvas.add(new fabric.IText(text, { 
+                    left: (textLeft += 20),
+                    top: (textTop += 20),
+                    fontFamily: 'arial black',
+                    fill: '#333',
+                    fontSize: 18
+                }));
+            })
+
+            $btnTextSize.on("change",function(){
+                canvas.getActiveObject().set("fontSize", this.value);
+                canvas.renderAll();
+            })
+
+        }
+       
+
       initUIEvents();
       initCanvasEvents();
       loadSVGTemplate('default');
+
+
+
 
 })($);
 

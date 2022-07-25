@@ -266,7 +266,7 @@ body {
   background: #ccc;
   transition: 0.3s;
 }
-
+/* 
 .toolpanel .input-container {
   display: flex;
   align-items: center;
@@ -276,16 +276,16 @@ body {
 
 .toolpanel .input-container label {
   width: 50%;
-}
-
+} */
+/* 
 .toolpanel .input-container select {
   width: 50%;
   height: 29px;
   border: 1px solid #ccc;
   border-radius: 5px;
   outline: none;
-}
-
+} */
+/* 
 .toolpanel .input-container .sp-replacer {
   width: 50%;
 }
@@ -332,7 +332,7 @@ body {
 /* Firefox */
 .toolpanel .input-container .custom-number-input input[type=number] {
   -moz-appearance: textfield;
-}
+} */
 
 .tab-container .tabs {
   padding-top: 20px;
