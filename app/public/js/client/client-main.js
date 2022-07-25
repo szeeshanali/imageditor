@@ -31,6 +31,7 @@
     $btnCancelRepeatDesign =  $("#repeat-image-ctrl .cancel");
     $btnApplyRepeatDesign =  $("#repeat-image-ctrl .apply");
     $templatepanel              =   $("#templatepanel");
+    $clipartPanel               = $("#clipartmenu");
     $btnTextMenu = $("#btnTextMenu");
     $textarea = $("#textarea");
     $btnAddText =  $("#btnAddText");
@@ -127,6 +128,18 @@
         // // //     canvaspreview.setBackgroundImage(o, canvaspreview.renderAll.bind(canvaspreview));
         // // //     canvaspreview.renderAll();           
         // // });
+    });
+
+    $("#clipartmenu .clipart img").on("click",(e)=>{
+        enabledTextMode = false; 
+        var id = e.currentTarget.src;
+        fabric.Image.fromURL(id, function(img) {
+            var img1 = img.set({ left: 0, top: 0});
+            img1.globalCompositeOperation = 'source-atop';
+
+            canvas.add(img1); 
+            });
+
     });
 
         $btnApplyRepeatDesign.on("click",function(e){
@@ -302,9 +315,7 @@
 
     // UI events:
     $btnDownloadPDF.on("click",()=>{
-        alert("worked");
         var pdf = null;   
-
         var pdf = new jsPDF("p", "mm", "letter");              
               var width = canvas.width; 
               var height = canvas.height;
@@ -323,7 +334,6 @@
     })
 
     $btnUploadImageHidden.on("change",(e)=>{
-
         if (e.target.files.length === 0) return;
         processFiles(e.target.files);
         $btnUploadImageHidden.val('');
@@ -345,24 +355,7 @@
                   img.scaleToHeight(300);
                   img.globalCompositeOperation = 'source-atop';
                   canvas.add(img);
-                //  var logos = canvas.backgroundImage._objects; 
-                 
-
-            //       for(var i=0;i<logos.length;i++)
-            //       {
-            //         var logo = logos[i]; 
-            //        // img.left = logo.pathOffset.x; 
-            //    //    // img.top = logo.pathOffset.y; 
-            //       // canvas.add(img);
-            //         var object = fabric.util.object.clone(img);
-            //         object.set("top", logo.pathOffset.y -100);
-            //         object.set("left",  logo.pathOffset.x -100);
-            //         object.set("width", 600);
-            //         object.set("height", 600);
-            //          canvas.add(object).renderAll();
-
-            //       }
-                 // canvas
+                
                  })
             }
             reader.readAsDataURL(file)

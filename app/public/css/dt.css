@@ -254,6 +254,11 @@ overflow: hidden;
      .svg-templates{
         flex-wrap: wrap;
      }
+
+     .cliparts{
+        flex-wrap: wrap;
+     }
+
      .svg-templates > div{
         border: dashed 1px #ccc;
         padding: 10px;
@@ -265,6 +270,19 @@ overflow: hidden;
         padding: 10px;
         cursor: pointer;
      }
+
+     .cliparts > div{
+        border: dashed 1px #ccc;
+        padding: 10px;
+        cursor: pointer;
+        max-width: 120px ;
+     }
+     .cliparts > div:hover{
+        border: dashed 1px #494699;
+        padding: 10px;
+        cursor: pointer;
+     }
+
      #template-container{
 
         margin: 0px -15px 0px 15px;
