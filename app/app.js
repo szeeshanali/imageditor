@@ -2,11 +2,11 @@ const express               = require('express')
 const app                   = express()
 var expressLayouts          = require('express-ejs-layouts');
 
-const port                  = 3000 
-const mongoose              = require('mongoose');
-const bodyParser            = require('body-parser');
-const session               = require('express-session');
-const flash                 = require('connect-flash');
+const port                 = 4000 
+const mongoose             = require('mongoose');
+const bodyParser           = require('body-parser');
+const session              = require('express-session');
+const flash                = require('connect-flash');
 const adminroutes          = require("../app/routes/admin/adminroutes");
 const clientroutes         = require("../app/routes/client/clientroutes");
 const authroutes           = require("../app/routes/authroutes");
@@ -45,8 +45,8 @@ app.use(passport.session());
    //res.locals.categories    = await commonService.categoryService.getCategoriesAsync();
    res.locals.user          = req.user;
    res.locals.pagetitle     = req.pagetitle;
-   //res.locals.templates     = await commonService.uploadService.getTemplatesAsync();
-   res.locals.templates = [];
+   res.locals.templates     = await commonService.uploadService.getTemplatesAsync();
+   //res.locals.templates = [];
   next();
  })
 

@@ -43,9 +43,8 @@ router.get('/api/svg-templates/:id', async (req,res)=>{
     const itemid = req.params["id"]; 
     var result = null; 
     if(itemid == "default"){
-        // result = await uploads.findOne({
-        //     type:'template', uploaded_by:"admin", active:true, default:true });    
-        result = [];
+        result = await uploads.findOne({
+            type:'template', uploaded_by:"admin", active:true, default:true });    
     }else{
 
         result = await uploads.findOne({
