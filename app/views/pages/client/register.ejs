@@ -1,0 +1,73 @@
+<html lang="en">
+    <head><%- include('../../partials/client/head'); %>
+    </head>
+    <body data-new-gr-c-s-check-loaded="14.1063.0" data-gr-ext-installed="">
+        <div class="am-signup-wrapper">
+            <%- include('../../partials/client/topbar',{user:null}); %>
+            <form method="POST">
+                <div class="am-signup-box">
+                    <div class="row no-gutters">
+                        <div class="col-lg-5">
+                            <div>
+                                <h2>KakePrints</h2>
+                                <p>Join the thousands designing their own icing today.</p>
+                                <p>Please complete the following form to create new account on KakePrints ImageEditing Software.</p>
+                                <hr>
+                                    <p>Already have an account?
+                                        <br>
+                                            <a href="/app/login">Sign In</a>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-7">
+                                    <h5 class="tx-gray-800 mg-b-25">Signin to Your Account</h5>
+                                    <%- include ('../../partials/client/messages') %>
+                                    <div class="form-group">
+                                        <label class="form-control-label">Email:</label>
+                                        <input type="email" name="email" class="form-control" placeholder="Type email address"></div>
+                                        <div class="row row-xs">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label class="form-control-label">Firstname:</label>
+                                                    <input type="fname" name="fname" class="form-control" placeholder="Type fname"></div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="form-group">
+                                                        <label class="form-control-label">Lastname:</label>
+                                                        <input type="text" name="lname" class="form-control" placeholder="Type lname"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="row row-xs">
+                                                    <div class="col">
+                                                        <div class="form-group">
+                                                            <label class="form-control-label">Password:</label>
+                                                            <input type="password" name="password" class="form-control" placeholder="Type password"></div>
+                                                        </div>
+                                                        <div class="col">
+                                                            <div class="form-group">
+                                                                <label class="form-control-label">Confirm Password:</label>
+                                                                <input type="password" name="password2" class="form-control" placeholder="Retype password"></div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="form-control-label">Company Name:</label>
+                                                            <input type="text" name="company_name" class="form-control" placeholder="Type company name"></div>
+                                                            <div class="form-group mg-b-20 tx-12">By clicking Sign Up button below you agree to our
+                                                                <a href="">Terms of Use</a>
+                                                                and our
+                                                                <a href="">Privacy Policy</a>
+                                                            </div>
+                                                            <button type="submit" class="btn btn-block">Sign Up</button>
+                                                        </div>
+                                                    </div>
+                                                    <p class="tx-center tx-white-5 tx-12 mg-t-15"></p>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <script src="../lib/jquery/jquery.js"></script>
+                                        <script src="../lib/popper.js/popper.js"></script>
+                                        <script src="../lib/bootstrap/bootstrap.js"></script>
+                                        <script src="../lib/perfect-scrollbar/js/perfect-scrollbar.jquery.js"></script>
+                                        <script src="../js/amanda.js"></script>
+                                    </body>
+                                </html>

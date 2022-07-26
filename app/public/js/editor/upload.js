@@ -7,6 +7,7 @@
   var upload = function (canvas) {
     const _self = this;
 
+    
     $('.drag-drop-input').click(function () {
 
       console.log('click drag drop')
@@ -113,31 +114,20 @@
 
         // handle image, read file, add to canvas
         reader.onload = (f) => {
-          
+          $("#uploadpanel").removeClass("active");
+          $("#mainMenu").addClass("active");
           fabric.Image.fromURL(f.target.result, (img) => {
-            // img.set({
-            //   left: 0,
-            //   top: 0
-            // })
-             img.scaleToHeight(300)
-             img.scaleToWidth(300)
+           
+             var w = canvas.backgroundImage._objects[0].width; //img.width > canvas.width ? canvas.width/2 : img.width;
+             var h = canvas.backgroundImage._objects[0].height; //img.height > canvas.height ? canvas.height/2 : img.height;           
+             //img.scaleToWidth(w);
+             img.scaleToHeight(h);
+             img.id = `item${canvas._objects.length}`; 
+             img.index = canvas._objects.length;
             //
-
-            // var clipPath = new fabric.Circle(
-            //   { 
-            //     radius: 200, 
-            //     fill: '#f55',
-            //     top: 122,
-            //     left: 17 ,
-            //     selectable: false,
-            //     stroke: "red",
-            //     });
-
-            // canvas.clipPath = clipPath;
-            canvas.add(img)
-
-            canvas.renderAll()
-            canvas.trigger('object:modified')
+          img.globalCompositeOperation = 'source-atop';
+            canvas.add(img).renderAll();
+           //canvaspreview.item(0).cloneObject = canvas.item(1);
           })
         }
 

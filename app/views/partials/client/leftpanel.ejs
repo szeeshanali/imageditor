@@ -1,0 +1,110 @@
+<div class="am-sideleft" id="toolbar">
+    <!-- <%- include('../../partials/client/toolbar'); %> -->
+    <div class="d-flex flex-column flex-shrink-0 bg-light sidebar " >
+       
+        <ul class="nav nav-pills nav-flush flex-column mb-auto text-center main-buttons am-sideleft-tab">
+          <li class="nav-item">
+            <a href="#uploadpanel" class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+                <i class="ion-images tx-24 tx-white"></i>
+                <div class="visually-hidden tx-12 tx-white">Images</div>
+            </a>
+          </li>
+          <li>
+            <a href="#templatepanel" class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+                <i class="ion-ios-keypad-outline tx-24 tx-white"></i>
+                <div class="visually-hidden tx-12 tx-white">Templates</div>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+                <i class="ion-ios-keypad tx-24 tx-white"></i>
+                <div class="visually-hidden tx-12 tx-white">Pre-Designed</div>
+            </a>
+          </li>
+          <li>
+            <a href="#textmenu" id="btnTextMenu" class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+                <i class="ion-social-tumblr tx-24 tx-white"></i>
+                <div class="visually-hidden tx-12 tx-white">Text</div>
+            </a>
+          </li>
+          <li>
+            <a href="#clipartmenu" class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+                <i class="ion-ios-paw tx-24 tx-white"></i>
+                <div class="visually-hidden tx-12 tx-white">Clipart</div>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+                <i class="ion-ios-bookmarks tx-24 tx-white"></i>
+                <div class="visually-hidden tx-12 tx-white my-proj">My Projects <sup class="tag">0</sup></div>
+            </a>
+          </li>
+         
+        </ul>
+        <div class="dropdown border-top">
+          <a href="#" class="d-flex align-items-center justify-content-center p-3 link-dark text-decoration-none dropdown-toggle" id="dropdownUser3" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="https://github.com/mdo.png" alt="mdo" width="24" height="24" class="rounded-circle">
+          </a>
+          <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3">
+            <li><a class="dropdown-item" href="#">New project...</a></li>
+            <li><a class="dropdown-item" href="#">Settings</a></li>
+            <li><a class="dropdown-item" href="#">Profile</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Sign out</a></li>
+          </ul>
+        </div>
+       
+      </div>
+     
+    <div class="tab-content">
+        <div id="mainMenu" class="tab-pane " >
+            <!-- <%- include('../../partials/client/canvas'); %>  -->
+            <!-- <%- include('../../partials/client/layers'); %> -->
+        </div>
+        <div id="templatepanel" class="tab-pane pd-15" >
+           <div class="d-flex svg-templates tx-center" >
+            <%for(var i=0; i<templates.length;i++){%>
+              <div id="<%=templates[i].code %>" class="template"> 
+                <img src="<%=templates[i].base64 %>" style="width:100px"> 
+                <div class="tx-12 tx-bold pd-y-5"><%=templates[i].title %></div>
+            </div>
+          <%}%>
+               
+                <!-- <div id="FSHEART6" class="template"> 
+                    <img src="/images/FSHEART6.svg" style="width:100px"> 
+                    <div class="tx-12 tx-bold pd-y-5">A4: 6 Hearts</div>
+                </div>
+                <div id="FS1875X20C" class="template"> 
+                    <img src="/images/FS1875X20C.svg" style="width:100px"> 
+                    <div class="tx-12 tx-bold pd-y-5">A4: 18 Circles</div>
+                </div>
+                <div id="FS15CIRX30" class="template"> <img src="/images/FS15CIRX30.svg" style="width:100px">
+                    <div class="tx-12 tx-bold pd-y-5">A4: 18 Circles</div>
+                </div> -->
+          </div>
+        </div>
+        <div id="uploadpanel" class="tab-pane active" >
+            <%- include('../../partials/client/imgupload'); %>
+            <%- include('../../partials/client/layers'); %>
+        </div>
+        <div id="clipartmenu" class="tab-pane" >
+            <%- include('../../partials/client/clipart'); %>
+        </div>
+        <!-- #mainMenu -->
+        <div id="templatemenu" class="tab-pane" >
+            <%- include('../../partials/client/templates'); %>
+        </div>
+        <!-- #emailMenu -->
+        <div id="textmenu" class="tab-pane">
+            <%- include('../../partials/client/typo'); %>
+           
+        </div>
+         <!-- #chatMenu -->
+         <div id="settingMenu" class="tab-pane">
+          <!-- <%- include('../../partials/client/imgupload'); %> -->
+      </div>
+        <!-- #settingMenu -->
+    </div>
+    <!-- tab-content -->
+</div>
+

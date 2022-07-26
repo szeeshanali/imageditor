@@ -1,0 +1,20 @@
+<div class="pd-15" id="select-panel">
+    <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Layers</h6>
+    <div id="layers"></div>
+</div>
+
+
+<script type="text/template" id="layerItems">
+    <div class="media d-block d-flex layer-item object-options" id='{id}'  >
+        <div class="d-block mg-sm-r-10 img"> <img src="{src}" class="wd-40" alt="Image" ></div>
+        <small class="d-sm-flex layer-label">Layer {index}</small>
+        <div class="d-sm-flex layers-controls" style="display:none !important">
+        <i class='ion-ios-copy-outline duplicate main-tool-button'  id='duplicate' title='duplicate' ></i>
+        <i class='ion-ios-upload-outline bring-fwd' title="move up" id="bring-fwd" ></i>
+        <i class='ion-ios-download-outline bring-back' title="move down" id="bring-back" ></i>
+        <i class='ion-ios-arrow-thin-up' title="top" ></i>
+        <i class='ion-ios-arrow-thin-down' title="down" ></i>
+        <i class='ion-ios-trash-outline delete main-tool-button' id='delete' title='delete' ></i>
+        </div>
+    </div>
+</script>

@@ -44,6 +44,7 @@
      * @param {String} id tool id
      */
     this.setActiveTool = (id) => {
+      
       this.activeTool = id;
      // $(`${containerSelector} .toolpanel`).removeClass('visible');
       if (id !== 'select' || (id == 'select' && this.activeSelection)) {
@@ -54,10 +55,12 @@
         }
       }
 
+      
+
       if (id !== 'select') {
-        this.canvas.discardActiveObject();
-        this.canvas.renderAll();
-        this.activeSelection = null;
+        //this.canvas.discardActiveObject();
+        //this.canvas.renderAll();
+        //this.activeSelection = null;
       }
 
       this.canvas.isDrawingLineMode = false;

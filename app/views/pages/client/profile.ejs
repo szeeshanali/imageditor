@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<!-- saved from url=(0075)http://themepixels.me/demo/amanda/app/index.html?storefront=envato-elements -->
+<html lang="en">
+    <head><%- include('../../partials/client/head'); %> </head>
+    <body>
+     <div id="image-editor-container">
+         <div class="main-panel">
+        <%- include('../../partials/client/topbar', {user:user}); %>
+        <%- include('../../partials/client/leftusermenu'); %>
+
+        <div class="am-mainpanel" style="position: relative;">
+            <div class="am-pagetitle">
+                <h5 class="am-title">Profile</h5>
+            </div>
+            <div class="am-pagebody">
+                <div class="row row-sm ">
+                    <!-- col-4 -->
+                    <div class="col-lg-12">
+                        <div class="card pd-20 pd-sm-40">
+                            <%- include ('../../partials/client/messages') %>
+                            <h6 class="card-body-title">Hello, <%= user.fname %> <%= user.lname %> </h6>
+                            <p class="mg-b-20 mg-sm-b-30">Review or edit your profile.</p>
+                  
+                            <form method="post" accept="/app/profile" >
+
+                                <div class="form-layout">
+                                    <div class="row mg-b-25">
+                                      <div class="col-lg-4">
+                                        <div class="form-group">
+                                          <label class="form-control-label">Firstname: <span class="tx-danger">*</span></label>
+                                          <input class="form-control" type="text" name="fname" value="<%= user.fname %>" placeholder="Enter firstname">
+                                        </div>
+                                      </div><!-- col-4 -->
+                                      <div class="col-lg-4">
+                                        <div class="form-group">
+                                          <label class="form-control-label">Lastname: <span class="tx-danger">*</span></label>
+                                          <input class="form-control" type="text" name="lname" value="<%= user.lname %>" placeholder="Enter lastname">
+                                        </div>
+                                      </div><!-- col-4 -->
+                                      <div class="col-lg-4">
+                                        <div class="form-group">
+                                          <label class="form-control-label">Email address: <span class="tx-danger">*</span></label>
+                                          <input class="form-control" type="text" name="email" value="<%= user.email %>" placeholder="Enter email address">
+                                        </div>
+                                      </div><!-- col-4 -->
+                                      <div class="col-lg-8">
+                                        <div class="form-group mg-b-10-force">
+                                          <label class="form-control-label">Mail Address: <span class="tx-danger">*</span></label>
+                                          <input class="form-control" type="text" name="address" value="<%= user.address %>" placeholder="Enter address">
+                                        </div>
+                                      </div><!-- col-8 -->
+                                      <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Company: <span class="tx-danger"></span></label>
+                                            <input class="form-control" type="text" name="company_name" value="<%= user.company_name %>" placeholder="Enter Company name">
+                                          </div>
+  
+                                      </div><!-- col-4 -->
+                                    </div><!-- row -->
+                        
+                                    <div class="form-layout-footer">
+                                      <button class="btn btn-info mg-r-5">Edit Profile</button>
+                                      <button class="btn btn-secondary">Cancel</button>
+                                    </div><!-- form-layout-footer -->
+                                  </div><!-- form-layout -->
+                            </form>
+                       
+                          </div>
+                        <!-- card -->
+                    </div>
+                    <!-- col-8 -->
+
+                </div>
+                <!-- row -->
+
+            </div>
+            <!-- am-pagebody -->
+           
+            <div class="resize-sensor" style="position: absolute; inset: 0px; overflow: hidden; z-index: -1; visibility: hidden;">
+                <div class="resize-sensor-expand" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; z-index: -1; visibility: hidden;">
+                    <div style="position: absolute; left: 0px; top: 0px; transition: all 0s ease 0s; width: 100000px; height: 100000px;"></div>
+                </div>
+                <div class="resize-sensor-shrink" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; z-index: -1; visibility: hidden;">
+                    <div style="position: absolute; left: 0; top: 0; transition: 0s; width: 200%; height: 200%"></div>
+                </div>
+            </div>
+        </div>
+        <!-- am-mainpanel -->
+
+        
+        <%- include('../../partials/client/footer'); %>
+    </div>
+</div>
+    </body>
+
+</html>

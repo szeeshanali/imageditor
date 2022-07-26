@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+        <title>Digitrendz</title>
+        <link href="/css/ionicons.css" rel="stylesheet">
+        <link href="/css/perfect-scrollbar.css" rel="stylesheet">
+        <link href="/css/toggles-full.css" rel="stylesheet">
+        <link href="/css/rickshaw.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/css/amanda.css">
+        <link rel="stylesheet" href="/css/dt.css">
+        <link href="/css/font-awesome.css" rel="stylesheet">
+    </head>
+    <body>
+        <div id="image-editor-container">
+            <div class="main-panel">
+                <div class="am-header">
+                    <div class="am-header-left">
+                        <a id="naviconLeft" href="/app" class="am-navicon d-none d-lg-flex">
+                            <i class="icon ion-navicon-round"></i>
+                        </a>
+                        <a href="/app" class="am-logo">KakePrints</a>
+                    </div>
+                </div>
+                <div class="" style="position: relative;">
+                    <div class="am-pagebody">
+                        <div class="ht-100v d-flex align-items-center justify-content-center">
+                            <div class="wd-lg-70p wd-xl-50p tx-center pd-x-40">
+
+                                <h5 class="tx-xs-24 tx-normal tx-orange mg-b-30 lh-5">An Online Edible Image Software.</h5>
+                                <p class="tx-16 mg-b-30">Simple online designer. Print within seconds. Empower your customers.
+                                </p>
+                                <div class="d-flex justify-content-center">
+                                    <div class="d-flex">
+                                        <button class="btn btn-outline-primary btn-block" data-toggle="modal" data-target="#canvassettings">
+                                            <i class="fa fa-send mg-r-10"></i>
+                                            Create Pattern
+                                        </button>
+                                        </div>
+                                        <div>
+                                        <button class="btn btn-outline-primary btn-block" data-toggle="modal" data-target="#templatesettings">
+                                            <i class="fa fa-send mg-r-10"></i>
+                                            Create Template
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- d-flex -->
+
+                                <div class="tx-center mg-t-20">... or get into your account.
+                                    <a href="/app/login" class="tx-orange hover-info">Login</a>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="resize-sensor" style="position: absolute; inset: 0px; overflow: hidden; z-index: -1; visibility: hidden;">
+                        <div class="resize-sensor-expand" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; z-index: -1; visibility: hidden;">
+                            <div style="position: absolute; left: 0px; top: 0px; transition: all 0s ease 0s; width: 100000px; height: 100000px;"></div>
+                        </div>
+                        <div class="resize-sensor-shrink" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; z-index: -1; visibility: hidden;">
+                            <div style="position: absolute; left: 0; top: 0; transition: 0s; width: 200%; height: 200%"></div>
+                        </div>
+                    </div>
+                    <%- include('../../partials/admin/popups/templatesettings'); %>
+                    <%- include('../../partials/admin/popups/canvassettings'); %>
+
+                    <script src="/js/jquery.min.js"></script>
+                    <script src="/js/jquery.js"></script>
+                    <script src="/js/popper.js"></script>
+                    <script src="/js/bootstrap.js"></script>
+                    <script src="/js/perfect-scrollbar.jquery.js"></script>
+                    <script src="/js/toggles.min.js"></script>
+                    <script src="/js/d3.js"></script>
+                    <script src="/js/amanda.js"></script>
+                    <script src="/js/ResizeSensor.js"></script>
+                    <script src="/js/dt.js"></script>
+
+
+                </div>
+            </div>
+        </body>
+    </body>
+</html>
