@@ -72,7 +72,7 @@ router.get("/app/templates",  isLoggedIn, async (req, res) => {
     res.locals.pagetitle ="Templates";
     res.render(PATH_TEMPLATES,{user:req.user});
 }); 
-router.get("/app/workspace/:id?",   async (req, res) => {
+router.get("/app/workspace/:id?",  isLoggedIn, async (req, res) => {
     res.locals.pagetitle ="Workspace";
     var templateId = req.params.id;
     var template = {};
@@ -81,7 +81,7 @@ router.get("/app/workspace/:id?",   async (req, res) => {
         template = await commonService.uploadService.getTemplateAsync(templateId);
         meta = JSON.parse(template.meta);
     }
-    var templates = [];//await commonService.uploadService.getTemplatesAsync();
+    var templates = await commonService.uploadService.getTemplatesAsync();
     console.log(templates);
     res.render(PATH_WORKSPACE,{
         user:req.user,
