@@ -2,11 +2,11 @@ const express               = require('express')
 const app                   = express()
 var expressLayouts          = require('express-ejs-layouts');
 
-const port                  = 4000 
-const mongoose              = require('mongoose');
-const bodyParser            = require('body-parser');
-const session               = require('express-session');
-const flash                 = require('connect-flash');
+const port                 = 4000 
+const mongoose             = require('mongoose');
+const bodyParser           = require('body-parser');
+const session              = require('express-session');
+const flash                = require('connect-flash');
 const adminroutes          = require("../app/routes/admin/adminroutes");
 const clientroutes         = require("../app/routes/client/clientroutes");
 const authroutes           = require("../app/routes/authroutes");
