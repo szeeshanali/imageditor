@@ -89,7 +89,6 @@ router.get('/app/admin/',  isAdmin, async (req, res) => {
   }else{
     
     //var base64Data = blob.replace(/^data:image\/png;base64,/, "");
-    console.log(json.src);
     var ticks = new Date().getTime();
     var objectId = mongoose.Types.ObjectId();
     

@@ -253,9 +253,18 @@ overflow: hidden;
      .svg-templates{
         flex-wrap: wrap;
      }
-
+     .svg-templates{
+        flex-wrap: wrap;
+     }
      .cliparts{
         flex-wrap: wrap;
+     }
+     .svg-template-txt {
+        max-width: 50px;
+        max-height: 22px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
      }
 
      .svg-templates > div{
@@ -313,6 +322,35 @@ overflow: hidden;
         background-color: #c5c5c5;
     
     }
+
+
+    #save-image-ctrl .apply{
+        background-color: #494699;
+        color: white;
+        padding: 5px 15px;
+        border-radius: 50px;
+        font-size: 12px;
+        line-height: 1px;
+     }
+     #save-image-ctrl .apply:hover{
+        background-color: #6461b1;
+        
+     }
+
+     #save-image-ctrl .cancel{
+        background-color: #999;
+    color: white;
+    padding: 5px 30px;
+    border-radius: 50px;
+    font-size: 12px;
+    line-height: 1px;
+    }
+
+    #save-image-ctrl .cancel:hover{
+        background-color: #c5c5c5;
+    
+    }
+
 .upload-icon{
     color: #494698;
     border: dashed 1px;

@@ -58,7 +58,6 @@
 
     fabricCanvas.on('mouse:up', () => {
       if (!isDrawingText) return;
-
       isDrawingText = false;
 
       // get final rect coords and replace it with textbox

@@ -1,4 +1,9 @@
 (()=>{
+  
+  var canvas = new fabric.Canvas("admin-main-canvas",{
+    preserveObjectStacking:true
+})
+
  $adminImageUpload      =   $("#admin-image-upload");
  $btnImageUploadHidden  =   $(`#admin-image-upload-hidden`);
  $templateContainer     =   $("#template-container"); 
@@ -13,6 +18,7 @@
  var $inputRows = $("#inputRows");
  var $inputColumns = $("#inputColumns");
  var $templateTitle = $("#templateTitle");
+ var $btnUploadTemplate = $("#btn-upload-template");
  
  var templateBase64     = null;
 
@@ -23,6 +29,7 @@
  })
 
  $adminImageUpload.on("click",function () {
+  alert(1)
     $btnImageUploadHidden.click();
   })
 
@@ -102,6 +109,8 @@
         }
         reader.readAsDataURL(file)
         continue
+      }else{
+        alert("Please Upload SVG File!")
       }
 
     }

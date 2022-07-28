@@ -50186,7 +50186,9 @@ a.hover-white-8:hover, a.hover-white-8:focus {
 .wd-100 {
   width: 100px;
 }
-
+.wd-110 {
+  width: 110px;
+}
 .wd-100p {
   width: 100%;
 }

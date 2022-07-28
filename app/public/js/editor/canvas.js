@@ -153,7 +153,7 @@
         //$(`#${obj.cacheKey}`).remove();
       })
 
-      const savedCanvas = saveInBrowser.load('canvasEditor');
+      const savedCanvas = saveInBrowser.load('kp-editor');
       if (savedCanvas) {
         fabricCanvas.loadFromJSON(savedCanvas, fabricCanvas.renderAll.bind(fabricCanvas));
       }
