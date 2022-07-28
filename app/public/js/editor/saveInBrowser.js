@@ -7,13 +7,11 @@ window.saveInBrowser = {
     if (value instanceof Object) {
       value = JSON.stringify(value);
     }
-
     localStorage.setItem(name, value);
   },
   load: (name) => {
     let value = localStorage.getItem(name);
     value = JSON.parse(value);
-
     return value;
   },
   remove: (name) => {

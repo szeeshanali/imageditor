@@ -4,6 +4,7 @@
         width:(8.5 * dpi),
         height:(11 * dpi)
     }
+    const enabledSaveInBrowser = true; 
 
     const layerHtml = `<div class="media d-block d-flex layer-item object-options" id='{id}'  >
     <div class="d-block mg-sm-r-10 img"> <img src="{src}" class="wd-40" alt="Image" ></div>
@@ -35,7 +36,9 @@
     $btnTextMenu = $("#btnTextMenu");
     $textarea = $("#textarea");
     $btnAddText =  $("#btnAddText");
-    $btnTextSize = $("#btnTextSize")
+    $btnTextSize = $("#btnTextSize");
+    $saveBrowserTxt = $("#save-browser-txt");
+    $rotateObj = $("#rotateObj");
   
 
 
@@ -57,6 +60,7 @@
     });
 
     var enabledTextMode = false; 
+
 
    
     // Events: 
@@ -97,13 +101,12 @@
 
     function initUIEvents()
     {
-        $btnTextMenu.on("click",function(e){
-            enabledTextMode = true; 
-        })
+        $btnTextMenu.on("click",function(e)
+        { enabledTextMode = true; })
 
-      
         $repeatImageCtrl.hide();
         $canvasPrev.parent().hide();
+
         $btnRepeatDesign.on("click",function(e){
             openRepeatDesignPreview(e);
         })
@@ -119,20 +122,8 @@
             enabledTextMode = false; 
             var id = e.currentTarget.id;
              canvas.clear();
-             debugger;
              loadSVGTemplate(id);
-        //     canvas.globalCompositeOperation          = 'source-atop';
-        // //  //   canvas.setDimensions({width:531.2, height:704});
-        // // //    var templateBase64 = $(`#${id} img`)[0].src;
-        // //     fabric.loadSVGFromURL(templateBase64,function(objects,options){
-        // // /     svg = fabric.util.groupSVGElements(objects,options);
-        // // //     svg.scaleToHeight(canvas.height);
-        // // //     canvas.setBackgroundImage(svg, canvas.renderAll.bind(canvas));
-        // // //     svg.center();
-        // // //     canvas.renderAll();       
-        // // //     canvaspreview.setBackgroundImage(o, canvaspreview.renderAll.bind(canvaspreview));
-        // // //     canvaspreview.renderAll();           
-        // // });
+        
         });
 
         $("#clipartmenu .clipart img").on("click",(e)=>{
@@ -186,6 +177,13 @@
                 });
                  
 
+        })
+
+        $rotateObj.on("click",function(){
+
+            var a = 10; 
+
+            alert(a);
         })
        
         
@@ -249,8 +247,27 @@
             o.target.index = canvas._objects.length-1;
             onObjectAdded(o);
         })
+        canvas.on("object:modified",(o)=>{
+            onCanvasModified(o);
+        })
 
         initCanvasTextEvents();    
+    }
+
+    function onCanvasModified(o)
+    {
+        if(!enabledSaveInBrowser)
+        {return;}
+
+        setTimeout(function(){
+           
+            saveInBrowser.save('kp-editor', canvas.toJSON());
+            $saveBrowserTxt.fadeIn();
+            setTimeout(function(){
+                $saveBrowserTxt.fadeOut("slow");
+            },2000)
+        },2000)
+
     }
 
     function onObjectAdded(o)
@@ -378,9 +395,6 @@
 
       // Text: 
     
-    function Addtext() { 
-        
-    }
 
 
         function initCanvasTextEvents(){
@@ -427,11 +441,16 @@
         //$moveBottomItem.on("click",function(){});
 
       }
+
+      
       initUIEvents();
       initCanvasEvents();
       loadSVGTemplate('default');
 
-
+    //   const savedCanvas = saveInBrowser.load('kp-editor');
+    //   if (savedCanvas) {
+    //     canvas.loadFromJSON(savedCanvas, canvas.renderAll.bind(canvas));
+    //   }
 
 
 })($);

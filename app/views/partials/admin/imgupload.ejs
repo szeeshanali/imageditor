@@ -1,9 +1,52 @@
-<div class="pd-15" id="admin-image-upload">
-    <div class="pd-15 text-center drag-drop-input">
+<div id="admin-image-upload">
+    <div class="pd-t-15 text-center drag-drop-input">
         <h1 class="ion-ios-cloud-upload icon-imgupload"></h1>
         <br>
             <p class="tx-12 "><%= locals.uploadmessage %></p>
-            </div>
+        </div>
 </div>
-<input id="admin-image-upload-hidden" type="file" accept="image/*" multiple="multiple" hidden="hidden">
+    <input id="admin-image-upload-hidden" type="file" accept="image/*" multiple="multiple" hidden="hidden">
+        <div class="pd-10 tx-center admin-design-ctrl">
 
+
+            <div class="wd-110 mg-auto pd-y-10">
+                <div class="d-flex">
+
+
+                    <div class="d-r-5">
+                        <small class="pd-y-10">Active</small>
+                        <div class="toggle toggle-light primary mg-auto disabled" style="height: 22px; width: 50px;">
+                            <div class="toggle-slide">
+                                <div class="toggle-inner" style="width: 78px; margin-left: -28px;">
+                                    <div class="toggle-on" style="height: 22px; width: 39px; text-indent: -7.33333px; line-height: 22px;">ON</div>
+                                    <div class="toggle-blob" style="height: 22px; width: 22px; margin-left: -11px;"></div>
+                                    <div class="toggle-off active" style="height: 22px; width: 39px; margin-left: -11px; text-indent: 7.33333px; line-height: 22px;">OFF</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="pd-l-5">
+                        <small class="pd-y-10">Default</small>
+                        <div class="toggle toggle-light primary mg-auto disabled" style="height: 22px; width: 50px;">
+                            <div class="toggle-slide">
+                                <div class="toggle-inner" style="width: 78px; margin-left: -28px;">
+                                    <div class="toggle-on" style="height: 22px; width: 39px; text-indent: -7.33333px; line-height: 22px;">ON</div>
+                                    <div class="toggle-blob" style="height: 22px; width: 22px; margin-left: -11px;"></div>
+                                    <div class="toggle-off active" style="height: 22px; width: 39px; margin-left: -11px; text-indent: 7.33333px; line-height: 22px;">OFF</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="pd-b-10">
+            <textarea rows="2" class="form-control" id="admin-design-title" placeholder="Enter title"></textarea>
+        </div>
+            <div id="save-image-ctrl">
+                <a href="#" class="apply" id="save-design">Save Design</a>
+                <a href="#" class="cancel" id="cancel-design">Cancel</a>
+            </div>
+        </div>

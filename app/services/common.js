@@ -17,10 +17,10 @@ const commonService = (function() {
 
     this.getTemplatesAsync = async ()=>
     { 
-        console.log("Called: CommonService> getTemplatesAsync");
-        if(cached_templates == null || cached_templates.length == 0)
-        { cached_templates = await uploads.find({active:true,type:'template',uploaded_by:'admin'}); }
-        return cached_templates; 
+        // console.log("Called: CommonService> getTemplatesAsync");
+        // if(cached_templates == null || cached_templates.length == 0)
+        // { cached_templates = await uploads.find({active:true,type:'template',uploaded_by:'admin'}); }
+        // return cached_templates; 
 
         return  await uploads.find({active:true,type:'template',uploaded_by:'admin'});
     },
