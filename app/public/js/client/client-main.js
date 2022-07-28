@@ -38,7 +38,7 @@
     $btnAddText =  $("#btnAddText");
     $btnTextSize = $("#btnTextSize");
     $saveBrowserTxt = $("#save-browser-txt");
-    $rotateObj = $("#rotateObj")
+    $rotateObj = $("#rotateObj");
   
 
 
@@ -101,13 +101,12 @@
 
     function initUIEvents()
     {
-        $btnTextMenu.on("click",function(e){
-            enabledTextMode = true; 
-        })
+        $btnTextMenu.on("click",function(e)
+        { enabledTextMode = true; })
 
-      
         $repeatImageCtrl.hide();
         $canvasPrev.parent().hide();
+
         $btnRepeatDesign.on("click",function(e){
             openRepeatDesignPreview(e);
         })
@@ -123,7 +122,6 @@
             enabledTextMode = false; 
             var id = e.currentTarget.id;
              canvas.clear();
-             debugger;
              loadSVGTemplate(id);
         
         });
