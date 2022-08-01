@@ -8,6 +8,7 @@
  $btnImageUploadHidden          =   $(`#admin-image-upload-hidden`);
  $templateContainer             =   $("#template-container"); 
  $btnSaveDesign                 =   $("#save-design"); 
+ $cancelDesign                 =   $("#cancel-design"); 
 
  var $dropdownTemplateSize      = $("#dropdownTemplateSize");
  var $dropdownCanvasShape       = $("#dropdownCanvasShape");
@@ -22,16 +23,50 @@
  var $adminDesignCtrl           = $(".admin-design-ctrl");
  var $pageTitle                 = $(".am-pagetitle");
  
+
+  // Template Upload: 
+  $inputDesignName    =       $("#admin-design-name");
+  $inputThumbnailName =       $("#admin-design-title");
+  $btnActiveDesign    =       $("#design-active");
+  $btnDefaultDesign   =       $("#design-default");
+  $inputFileName      =       $("#admin-file-name");
+  $inputDesignLink    =       $("#admin-design-link");
+  $inputOrderNo       =       $("#admin-display-order");
+  $selectPageSize     =       $("#admin-page-size");
+  $inputLogoPerPage   =       $("#admin-logo-count");
+
  var selectedDesign  = {};
+ var designFlags = {active:false, default:false, submitted:false}; 
  
  const dpi = 72; 
 
  
  function InitUIEvents()
  {
+  $btnActiveDesign.on("click",(e)=>{
+    if(!selectedDesign.base64) return; 
+    setTimeout(function(){
+      var txt = $(e.currentTarget).find(".active").text();
+      designFlags.active = (txt == "ON");  
+    },500);
+   
+  })
+  $cancelDesign.on("click",(e)=>{
+    onDesignReload();
+   })
+  $btnDefaultDesign.on("click",(e)=>{
+    if(!selectedDesign.base64) return; 
+    setTimeout(function(){
+      var txt = $(e.currentTarget).find(".active").text();
+      designFlags.default = (txt == "ON");
+    },500)
+   
+  })
+  
   $btnSaveDesign.on("click",function(){
+   
     if(!selectedDesign.base64)
-    {  toast("Error: Please upload template!"); return; }
+    {  toast("Error: Please upload a Template"); return; }
       onSaveTemplate();
    })
   
@@ -49,14 +84,54 @@
   $adminDesignCtrl.find(".disabled").removeClass("disabled");
 }
 
+
+function onDesignReload(o){
+  location.reload();
+
+}
  function onDesignLoaded(o)
  {  
     enabledDesignCtrl({});
-    var msg = `Sheet size: Width: ${o.width/dpi}", Height: ${o.height/dpi}", Logo size: Width: ${o.logoWidth/dpi}, Height: ${o.logoHeight/dpi}, Total Logos: ${o.logoCount}`;
+    var msg = `Sheet size: Width: ${(o.width/dpi).toFixed(2)}", Height: ${(o.height/dpi).toFixed(2)}", Logo size: Width: ${(o.logoWidth/dpi).toFixed(2)}", Height: ${(o.logoHeight/dpi).toFixed(2)}", Total Logos: ${o.logoCount}`;
     $pageTitle.html(msg);    
  }
 
   function onSaveTemplate(){
+    if(designFlags.submitted ){
+
+      $.ajax({
+        type: "POST",
+        url: "/app/admin/save-template",
+        data: {  
+            
+            desc      : "",
+            meta      : JSON.stringify(meta) ,
+            title     : $inputThumbnailName.val(),
+            name      : $inputDesignName.val(),
+            file_name : $inputFileName.val(),
+            file_ext  : ".svg",
+            order_no  : $inputOrderNo.val(),
+            active    : designFlags.active,
+            base64    : dataUrl,
+            type      : "template",
+            by_admin  : true,
+            default   : designFlags.default,
+            link      : $inputDesignLink.val(),
+            logos     : $inputLogoPerPage.val(), 
+        },
+        success:function(res){
+          designFlags.submitted = true; 
+          toast("Template has been successfully uploaded.");
+        },
+        error:function(res){
+          designFlags.submitted = false; 
+          toast("Error while uploading template.");
+        }
+    })
+    
+     // toast("Design has already been submitted. Please upload new design.");
+      return; 
+    }
     var m = selectedDesign.meta;
     var meta = {
         width: m.width, 
@@ -64,7 +139,8 @@
         objects: m.logoCount, 
         objectWidth: m.logoWidth,
         objectWidth: m.logoHeight,
-        title: $templateTitle.val()
+        title: $templateTitle.val(),
+        pageSize: $selectPageSize.val(),
     }; 
 
 
@@ -75,26 +151,41 @@
       }
     
     var MIME_TYPE = "image/png";
-    var imgURL = selectedDesign.base64;    
+    var dataUrl = selectedDesign.base64;    
     $.ajax({
         type: "POST",
         url: "/app/admin/save-template",
         data: {  
-            imgBase64: imgURL,
-            desc:$("#admin-design-title").val() || "N/A",
-            meta: JSON.stringify(meta) }
-    }).done(function(o) 
-    {  
-      
-      toast("Template has been successfully saved.");
-    
-  
-  });
-
-      }
+            
+            desc      : "",
+            meta      : JSON.stringify(meta) ,
+            title     : $inputThumbnailName.val(),
+            name      : $inputDesignName.val(),
+            file_name : $inputFileName.val(),
+            file_ext  : ".svg",
+            order_no  : $inputOrderNo.val(),
+            active    : designFlags.active,
+            base64    : dataUrl,
+            type      : "template",
+            by_admin  : true,
+            default   : designFlags.default,
+            link      : $inputDesignLink.val(),
+            logos     : $inputLogoPerPage.val(), 
+        },
+        success:function(res){
+          designFlags.submitted = true; 
+          toast("Template has been successfully uploaded.");
+        },
+        error:function(res){
+          designFlags.submitted = false; 
+          toast("Error while uploading template.");
+        }
+    })
+  }
   
   const processFiles = (files) => {
     if (files.length === 0) return;
+    designFlags.submitted = false; 
     const allowedTypes = ['image/jpeg', 'image/png', 'image/svg+xml']
 
     for (let file of files) {
@@ -151,6 +242,8 @@
 
     }
   }
+
+
   
  InitUIEvents();
 

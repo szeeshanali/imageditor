@@ -1,1 +1,27 @@
-No Recent Projects.
+ <%if(projects.length == 0) {%>
+ <div class="ht-100v d-flex align-items-center justify-content-center">
+    <div class="wd-lg-70p wd-xl-50p tx-center pd-x-40">
+      <h1 class="tx-100 tx-xs-140 tx-normal tx-gray-800 mg-b-0">404!</h1>
+      <h5 class="tx-xs-24 tx-normal tx-orange mg-b-30 lh-5">You Haven't saved any project yet.</h5>
+      <p class="tx-16 mg-b-30">You can customized and save upto 5 projects and reuse them in the future.</p>
+    </div>
+  </div>
+  <%}else{%> 
+  <div class="row">
+    <div class="col-lg-12">
+        <div class="workarea">
+            <div  id="canvas-holder">
+                <div class="content tx-center">
+                    <canvas id="client-main-canvas"  ></canvas>
+                    <canvas id="client-main-canvas-logo"  ></canvas>                    
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <%}%>
+  <script>
+    $(".tab-content .tab-pane").each((i,e)=>
+    { $(e).removeClass("active"); })
+   $("#myprojects").addClass("active");
+</script>

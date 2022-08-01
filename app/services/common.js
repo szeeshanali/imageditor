@@ -9,31 +9,31 @@ const commonService = (function() {
     this.cached_templates = [];
     this.getCategoriesAsync = async ()=>
     { 
-        console.log("Called: CommonService>CategoryService.");
         if(cached_categories == null)
         { cached_categories = await categoryModel.find({}); }
         return cached_categories; 
     },
 
     this.getTemplatesAsync = async ()=>
-    { 
-        // console.log("Called: CommonService> getTemplatesAsync");
-        // if(cached_templates == null || cached_templates.length == 0)
-        // { cached_templates = await uploads.find({active:true,type:'template',uploaded_by:'admin'}); }
-        // return cached_templates; 
+    { return  await uploads.find({active:true,type:'template', by_admin:true}).sort({order_no:1}); },
 
-        return  await uploads.find({active:true,type:'template',uploaded_by:'admin'});
-    },
+    this.getUserDesignsAsync = async (userId)=>
+    { 
+        return  await uploads.find({active:true, 
+            type:'project', 
+            by_admin:false, 
+            uploaded_by: userId,
+            active:true });
+    }
 
     this.getTemplateAsync = async (templateId)=>
     { 
-        console.log("Called: CommonService> getTemplateAsync");
-        return await uploads.findOne({active:true,type:'template',uploaded_by:'admin', code:templateId}); 
+
+        return await uploads.findOne({active:true, type:'template', by_admin:true, code:templateId}); 
     },
 
     this.deleteTemplatesAsync = async (id)=>
     { 
-        console.log("Called: CommonService > DeleteTemplatesAsync");
        var d = await uploads.deleteOne({code: id, active:true,type:'template',uploaded_by:'admin'});
        cached_templates = null; 
     },
@@ -63,7 +63,6 @@ const commonService = (function() {
 
 
     this.getCustomerReport = async()=> { 
-        console.log("called: commonService:getCustomerReport");
         var customers = await appuserModel.find({is_admin:{$ne:true}});
         var report = {
             todayCustomer:0,
@@ -80,11 +79,8 @@ const commonService = (function() {
         var today = new Date();
         report.todayCustomers      = customers.filter(function(value){ 
             return value.date >= new Date(today.getFullYear(), today.getMonth(), today.getDate()-1);}).length || 0;
-        console.log("today customers: ", report.todayCustomers);
         report.thisWeekCustomers   = customers.filter(function(value){ return value.date >= new Date(today.getFullYear(), today.getMonth(), today.getDate()-7);}).length || 0;
-        console.log("this week customers: ", report.thisWeekCustomers);
         report.thisMonthCustomers  = customers.filter(function(value){ return value.date >= new Date(today.getFullYear(), today.getMonth(), today.getDate()-30);}).length || 0;
-        console.log("today month: ", report.thisMonthCustomers);
         report.totalCustomers      = customers.length; 
 
         return report; 
@@ -107,15 +103,18 @@ const commonService = (function() {
         return report; 
 
     }
-    this.upload = (uploadModel)=>{
+    this.upload = (uploadModel, result)=>{
 
         var ticks = new Date().getTime();
         var objectId = mongoose.Types.ObjectId();
         var upload = new uploads(uploadModel);
         upload.save()
         .then((value)=>{
+            result(false,value);
            // res.redirect(ROUTE_ADMIN_HOME);
-        }).catch(value=> console.log(value));
+        }).catch(value=> {
+            result(true,value);
+        });
        }
        this.clearUploads = ()=> {
         this.cached_templates = null;
@@ -126,6 +125,8 @@ const commonService = (function() {
         this.cached_categories = [];
         this.cached_categoryItems = [];
     }
+
+
 
     return {
         categoryService: {
@@ -138,12 +139,15 @@ const commonService = (function() {
             getTemplateAsync   :   this.getTemplateAsync,
             deleteTemplatesAsync:   this.deleteTemplatesAsync, 
             getSVGtemplatesAsync     :   this.getSVGTemplatesAsync, 
+            getUserDesignsAsync        :       this.getUserDesignsAsync,
             clear               :   this.clearUploads
         },
         reportingService: {
             getCustomerReport   :   this.getCustomerReport,
             getSummaryReport    :   this.getSummaryReport,  
         },
+
+      
 
        
         clearCache: clearCache

@@ -68,9 +68,7 @@ router.get('/app/admin/',  isAdmin, async (req, res) => {
     res.render(PATH_ADMIN_HOME,cached_layout_data);          
 });
 
-  
-
-  router.post(ROUTE_ADMIN_SAVEDESIGN,  isAdmin,  (req,res)=>{
+router.post(ROUTE_ADMIN_SAVEDESIGN,  isAdmin,  (req,res)=>{
     const {title,description,categoryId,json,base64} = req.body;
     let errors = [];
 
@@ -109,9 +107,7 @@ router.get('/app/admin/',  isAdmin, async (req, res) => {
     upload.save()
     .then((value)=>{
       
-      console.log("canvas json uploaded successfully..");
-      console.log("updating category items"); 
-      console.log(categoryId);
+ 
       categories.findOneAndUpdate(
         {"_id" : categoryId},
         { $push: {items: objectId }},
@@ -160,38 +156,45 @@ router.delete('/app/admin/delete-template/:id', isAdmin, async (req,res)=>{
   res.send();  
 }) 
 router.post('/app/admin/save-template', function(req, res) {
-  const {imgBase64, desc, meta} = req.body; 
-  //var base64Data = imgBase64.replace(/^data:image\/png;base64,/, "");
+  const {desc, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, code} = req.body; 
  
+            
   var _id = mongoose.Types.ObjectId();
   var uploadModel = {
-    title           :   desc || " ",
-    desc            :   desc || " ",
+    title           :   title,
+    name            :   name,
+    desc            :   desc,
+    file_name       :   file_name,
+    file_ext        :   file_ext,
+    order_no        :   order_no,
     code            :   _id,
-    active          :   true,
+    active          :   active,
     blob            :   null,
-    json            :   "",
-    base64          :   imgBase64,
+    json            :   null,
+    base64          :   base64,
     editable        :   false,
     paid            :   false,
     category        :   null,
-    type            :   "template",
-    uploaded_by     :   "admin",
-    meta            :   meta
+    link            :   link,
+    path            :   null,
+    meta            :   meta,
+    default         :   req.body.default,
+    by_admin        :   by_admin,
+    type            :   type,
   };
-
   var templatename = `../app/uploads/admin/templates/t-${_id}.png`;
-  require("fs").writeFile(templatename, imgBase64, 'base64', function(err) {
-      if(err){
-         console.log(err); 
-       }
-       commonService.uploadService.upload(uploadModel);
+    require("fs").writeFile(templatename, base64, 'base64', function(err) {
+      if(err){ console.log(err); }
+       commonService.uploadService.upload(uploadModel,(err,msg)=>{
+        if(!err)
+        {res.status(200).send({message:`Success`, error: msg}); }
+        res.status(400).send({message:`Unable to upload file.`, error: msg}); 
 
-       //response.redirect('/app/admin/template-designer');
+        
+       })
   });
-  commonService.uploadService.clear();
-  
-  res.redirect('/app/admin/template-designer');
+ // commonService.uploadService.clear();
+ // res.redirect('/app/admin/template-designer');
 })
 
 module.exports = router;

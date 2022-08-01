@@ -239,6 +239,7 @@ overflow: hidden;
      .image-tools i {
         font-size: 24px;
     color: #494699;
+    cursor: pointer;
      }
 
      .image-tools > div {
@@ -397,6 +398,10 @@ overflow: hidden;
     cursor: pointer;
   }
 
+  .border-dash{
+    border: dashed 1px #a4a2db;
+    margin-top: -1px;
+  }
 
 
 /**/

@@ -16,7 +16,8 @@ const commonService        = require('../app/services/common');
 require("../app/config/passport")(passport);
 
 //mongoose
-mongoose.connect('mongodb+srv://dtimageeditor:Xcccccc123@cluster0.gte2f0n.mongodb.net/dtimageeditor',{useNewUrlParser: true, useUnifiedTopology : true})
+mongoose.connect('mongodb+srv://dtimageeditor:Xcccccc123@cluster0.gte2f0n.mongodb.net/dtimageeditor',
+{useNewUrlParser: true, useUnifiedTopology : true})
 .then(() => console.log('connected,,'))
 .catch((err)=> console.log(err));
 app.use(expressLayouts);
@@ -30,7 +31,9 @@ app.use(express.urlencoded({limit: '25mb'}));
 app.use(session(
   {   secret            : 'secret',
       resave            : true,
-      saveUninitialized : true
+      saveUninitialized : true,
+      cookie: { maxAge: 60 * 60 * 1000 } // 1 hour
+
  }));
 
 app.use(passport.initialize());
@@ -45,7 +48,7 @@ app.use(passport.session());
    //res.locals.categories    = await commonService.categoryService.getCategoriesAsync();
    res.locals.user          = req.user;
    res.locals.pagetitle     = req.pagetitle;
-   res.locals.templates     = await commonService.uploadService.getTemplatesAsync();
+   res.locals.templates     = [];//await commonService.uploadService.getTemplatesAsync();
    //res.locals.templates = [];
   next();
  })
