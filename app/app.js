@@ -2,7 +2,7 @@ const express               = require('express')
 const app                   = express()
 var expressLayouts          = require('express-ejs-layouts');
 
-const port                 = 4000 
+const port                 = 5001 
 const mongoose             = require('mongoose');
 const bodyParser           = require('body-parser');
 const session              = require('express-session');
