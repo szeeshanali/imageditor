@@ -1,4 +1,4 @@
-(($)=>{
+
     const dpi = 72;
     const letterPageSize = {
         width:(8.5 * dpi),
@@ -43,7 +43,10 @@
     $rotateObj          =   $("#rotateObj");
     $previewSaveDesign  =   $("#prevesavdesign");
     $pageTitle          =   $("#page-title");
-    $loader = $("#loader")
+    $loader = $("#loader");
+    $btnTemplate            = $("#btnTemplate");
+    $btnMyProject =          $("#btnMyProject");
+    
    
 
 
@@ -68,7 +71,31 @@
    
     // Events: 
 
-    
+    function loadProject(id){
+        debugger;
+        var group = [];
+        $.get(`/api/project/${id}`, function (data) {
+         
+            const json = data.json;
+           
+
+            if(!json)
+            {
+                alert("Error loading Project");
+                return;}
+                var object = JSON.parse(json); 
+                canvas.clear();
+                canvas.loadFromJSON(json, function() {
+                    canvas.setWidth(8.5*dpi);
+                    canvas.setHeight(11*dpi);
+                    canvas.renderAll.bind(canvas);
+
+                   
+                 },function(o,object){
+                    console.log(o,object)
+                 })
+        })
+    }
 
     function loadSVGTemplate(id)
     {
@@ -103,6 +130,17 @@
 
     function initUIEvents()
     {
+        $btnTemplate.on("click",function(e)
+        { 
+            $loader.removeClass("hidden")
+            window.location.href = '/app/workspace';        
+        })
+        $btnMyProject.on("click",function(e)
+        { 
+            $loader.removeClass("hidden")
+            window.location.href = '/app/projects';        
+        })
+
         $btnTextMenu.on("click",function(e)
         { enabledTextMode = true; })
 
@@ -370,8 +408,8 @@
              // pdf = new jsPDF('p', 'pt',[width, height]);
               width = pdf.internal.pageSize.getWidth();
               height = pdf.internal.pageSize.getHeight();
-              canvas.setBackgroundImage(null);
               canvas.renderAll.bind(canvas)();
+              debugger;
               var imgData = canvas.toDataURL('image/png');
               pdf.addImage(imgData, 'PNG', 0, 0, width, height);
               //var dataURL = canvas.toDataURL();
@@ -473,21 +511,20 @@
         //$moveBottomItem.on("click",function(){});
 
       }
-
+        
       function showloader(show){
         if(show)
-        { $loader.removeClass("hidden"); }
+        { }
       }
       initUIEvents();
       initCanvasEvents();
-      loadSVGTemplate('default');
+      
 
     //   const savedCanvas = saveInBrowser.load('kp-editor');
     //   if (savedCanvas) {
     //     canvas.loadFromJSON(savedCanvas, canvas.renderAll.bind(canvas));
     //   }
+      
 
-
-})($);
 
 

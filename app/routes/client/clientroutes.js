@@ -72,6 +72,15 @@ router.get("/app/projects", isLoggedIn,  async (req, res) => {
     res.render(PATH_USER_PROJECTS, {user:req.user});
 });
 
+router.get("/api/project/:id?", isLoggedIn,  async (req, res) => {
+    var id = req.params.id; 
+    try{
+        var data  = await commonService.uploadService.getUserDesignsAsync(req.user._id,id);
+        res.status(200).send(data);
+    }catch{
+        res.status(500).send();
+    }
+});
 router.get("/app/templates",  isLoggedIn, async (req, res) => {
     res.locals.pagetitle ="Templates";
     res.render(PATH_TEMPLATES,{user:req.user});
