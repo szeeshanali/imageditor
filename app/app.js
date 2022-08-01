@@ -30,7 +30,9 @@ app.use(express.urlencoded({limit: '25mb'}));
 app.use(session(
   {   secret            : 'secret',
       resave            : true,
-      saveUninitialized : true
+      saveUninitialized : true,
+      cookie: { maxAge: 60 * 60 * 1000 } // 1 hour
+
  }));
 
 app.use(passport.initialize());

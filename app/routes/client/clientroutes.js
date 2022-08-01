@@ -4,9 +4,10 @@ const {isLoggedIn,isAdmin}  = require('../../config/auth');
 const categories            = require('../../models/categories');
 const uploads = require('../../models/uploads');
 const commonService = require('../../services/common');
-PATH_USER_HOME              = 'pages/client/myprojects';
+PATH_USER_PROJECTS              = 'pages/client/myprojects';
 PATH_TEMPLATES              = 'pages/client/templates';
 PATH_WORKSPACE              = 'pages/client/workspace';
+const { default: mongoose, mongo } = require('mongoose');
 
 PATH_USER_PROFILE           = 'pages/client/profile';
 ROUTE_USER_HOME             = '/app'
@@ -15,8 +16,9 @@ const cached_layout_data    = {};
 
 
 // layout. 
-router.use((req, res, next) => {
+router.use( async (req, res, next) => {
     req.app.set('layout', 'pages/client/layout');
+    //res.locals.projects = await commonService.uploadService.getUserDesignsAsync(req.user._id);
     next();
 });
 
@@ -52,7 +54,7 @@ router.post(ROUTE_USER_PROFILE, isLoggedIn, (req,res)=>{
           $set: {address: address},
      }, {upsert: true}, function(err,doc) {
       if (err) { throw err; }
-      else { console.log("Updated"); }
+      else {  }
     });
     req.flash('success_msg','Profile updated');
         res.redirect("/app",{user:req.user})  
@@ -66,12 +68,41 @@ router.get(ROUTE_USER_HOME,  async (req, res) => {
 
 router.get("/app/projects", isLoggedIn,  async (req, res) => {
     res.locals.pagetitle ="My Projects";
-    res.render(PATH_USER_HOME, {user:req.user});
+    res.locals.projects = await commonService.uploadService.getUserDesignsAsync(req.user._id) || [];
+    res.render(PATH_USER_PROJECTS, {user:req.user});
 });
+
 router.get("/app/templates",  isLoggedIn, async (req, res) => {
     res.locals.pagetitle ="Templates";
     res.render(PATH_TEMPLATES,{user:req.user});
 }); 
+
+router.post('/app/client/save-design', isLoggedIn, function(req, res) {
+
+    const {json,base64} = req.body; 
+    var _id = mongoose.Types.ObjectId();
+    var uploadModel = {
+      title           :   "project1",
+      name            :   "project1",
+      order_no        :   1,
+      code            :   _id,
+      active          :   true,
+      json            :   json,
+      base64          :   base64,
+      default         :   false,
+      by_admin        :   false,
+      type            :   "project",
+      uploaded_by     :    req.user._id   
+    };
+    commonService.uploadService.upload(uploadModel,(err,msg)=>{
+        if(!err)
+            {res.status(200).send({message:`Success`, error: msg}); }
+            else{res.status(400).send({message:`Unable to upload file.`, error: msg});  }
+            
+        })
+
+  })
+
 router.get("/app/workspace/:id?",  isLoggedIn, async (req, res) => {
     res.locals.pagetitle ="Workspace";
     var templateId = req.params.id;
@@ -82,12 +113,15 @@ router.get("/app/workspace/:id?",  isLoggedIn, async (req, res) => {
         meta = JSON.parse(template.meta);
     }
     var templates = await commonService.uploadService.getTemplatesAsync();
-    console.log(templates);
+    var projects = await commonService.uploadService.getUserDesignsAsync(req.user._id);
+    console.log("userId: =====>");
+    console.log(req.user._id);
     res.render(PATH_WORKSPACE,{
         user:req.user,
         template:template,
         templateMeta:meta,
-        templates: templates
+        templates: templates,
+        projects: projects
     });
 });
 

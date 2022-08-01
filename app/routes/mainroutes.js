@@ -34,9 +34,27 @@ router.get('/api/categoryitem/:id', async (req,res)=>{
 
 router.get('/api/templates', async (req,res)=>{
 
-    var items = await uploads.find({type:'templates',uploaded_by:"admin",active:true});    
+    var items = await uploads.find({type:'template',uploaded_by:"admin",active:true}).sort({order_no:1});    
     if(!items)
     {console.log(`category items not found against ${itemid}`)}
+    res.send(items);
+})
+
+router.put('/api/design/:id', async (req,res)=>{
+    const {code, desc, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link} = req.body; 
+
+    var item = await uploads.findOne({code:code});    
+    if(!items)
+    {console.log(`category items not found against ${itemid}`)}
+
+    let errors = [];
+
+    dbo.collection("customers").updateOne({code:code}, {code, desc, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link}, function(err, res) {
+        if (err) throw err;
+        console.log("1 document updated");
+        db.close();
+      });
+
     res.send(items);
 })
 router.get('/api/svg-templates/:id', async (req,res)=>{
@@ -44,11 +62,11 @@ router.get('/api/svg-templates/:id', async (req,res)=>{
     var result = null; 
     if(itemid == "default"){
         result = await uploads.findOne({
-            type:'template', uploaded_by:"admin", active:true, default:true });    
+            type:'template', by_admin:true, active:true, default:true });    
     }else{
 
         result = await uploads.findOne({
-            type:'template', uploaded_by:"admin", active:true, code:itemid });  
+            type:'template', by_admin:true, active:true, code:itemid });  
     }
     res.send(result);
     //var items = await uploads.find({type:'templates',uploaded_by:"admin",active:true});    
