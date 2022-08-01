@@ -24,4 +24,8 @@
     $(".tab-content .tab-pane").each((i,e)=>
     { $(e).removeClass("active"); })
    $("#myprojects").addClass("active");
+
+   window.onload=function(){
+    loadProject('default');
+   }
 </script>

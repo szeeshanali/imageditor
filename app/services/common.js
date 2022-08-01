@@ -17,13 +17,34 @@ const commonService = (function() {
     this.getTemplatesAsync = async ()=>
     { return  await uploads.find({active:true,type:'template', by_admin:true}).sort({order_no:1}); },
 
-    this.getUserDesignsAsync = async (userId)=>
+    this.getUserDesignsAsync = async (userId, designId)=>
     { 
-        return  await uploads.find({active:true, 
+        var designs = [];
+     
+       
+        if(!designId)
+        { designs = await uploads.find({active:true, 
+            type:'project', 
+            by_admin:false, 
+            uploaded_by: userId,
+            active:true }); 
+        }else if(designId == "default")
+        {
+            designs = await uploads.findOne({active:true, 
             type:'project', 
             by_admin:false, 
             uploaded_by: userId,
             active:true });
+
+        }else{
+            designs = await uploads.findOne({active:true, 
+                type:'project', 
+                by_admin:false, 
+                code: designId,
+                uploaded_by: userId,
+                active:true });
+        }
+        return  designs;
     }
 
     this.getTemplateAsync = async (templateId)=>
