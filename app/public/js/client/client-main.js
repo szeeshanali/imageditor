@@ -46,6 +46,12 @@
     $loader = $("#loader");
     $btnTemplate            = $("#btnTemplate");
     $btnMyProject =          $("#btnMyProject");
+
+
+
+    /**maintool */
+    $btnRotate = $("#rotate");
+    /** */
     
    
 
@@ -72,17 +78,11 @@
     // Events: 
 
     function loadProject(id){
-        debugger;
         var group = [];
         $.get(`/api/project/${id}`, function (data) {
-         
             const json = data.json;
-           
-
             if(!json)
-            {
-                alert("Error loading Project");
-                return;}
+            { return;}
                 var object = JSON.parse(json); 
                 canvas.clear();
                 canvas.loadFromJSON(json, function() {
@@ -92,7 +92,7 @@
 
                    
                  },function(o,object){
-                    console.log(o,object)
+                  //  console.log(o,object)
                  })
         })
     }
@@ -130,6 +130,19 @@
 
     function initUIEvents()
     {
+        $btnRotate.on("click",function(){
+            var selectedObj = canvas.getActiveObject();
+            if(!selectedObj)
+            {
+                toast("Please select an object.");
+                return; 
+            }
+            var curAngle = selectedObj.angle;
+            selectedObj.rotate(curAngle+15);
+            canvas.renderAll();
+
+        })
+
         $btnTemplate.on("click",function(e)
         { 
             $loader.removeClass("hidden")
@@ -390,7 +403,15 @@
             url: "/app/client/save-design",
 
             data: {   
-                base64  : canvas.toDataURL(),  
+                thumbBase64  : canvas.toDataURL(
+                    {
+                    format: "png",
+                    left: 0,
+                    top: 0,
+                    width: canvas.width/4,
+                    height: canvas.height/4,
+                    }
+                ),  
                 json    : JSON.stringify(canvas.toJSON()) },
             success:function(res){
               toast("Design has been Saved.");
@@ -460,6 +481,7 @@
       // Text: 
     
       function toast(message) {
+
         var $toast = $("#snackbar").addClass("show");
         $toast.text(message);
         setTimeout(function(){ 

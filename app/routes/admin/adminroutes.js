@@ -115,7 +115,7 @@ router.post(ROUTE_ADMIN_SAVEDESIGN,  isAdmin,  (req,res)=>{
           if (err) {
             console.log(err);
           } else {
-            console.log(result);
+           // console.log(result);
           }}
           );
  
@@ -143,10 +143,15 @@ router.get('/app/admin/template-designer', isAdmin, (req,res)=>{
 })
 router.get('/app/admin/templates', isAdmin, async (req,res)=>{
   const  {width, height, title} = req.body;
-  res.locals.pagetitle ="Templates";
-  var templates = await commonService.uploadService.getTemplatesAsync();
-  res.locals.templates = templates;
-  res.render("pages/admin/templates",{user:req.user});
+  res.locals.pagetitle ="Edit Template";
+  var templates = await uploads.find({type:'template', by_admin:true , },
+  { code:1, base64:1, title:1, created_dt:1 }).sort({order_no:1}); 
+
+  res.render("pages/admin/templates",{
+    user      : req.user,
+    templates : templates
+  });
+
 })
 router.delete('/app/admin/delete-template/:id', isAdmin, async (req,res)=>{
   const  templateid = req.params["id"];
@@ -195,6 +200,21 @@ router.post('/app/admin/save-template', function(req, res) {
   });
  // commonService.uploadService.clear();
  // res.redirect('/app/admin/template-designer');
+})
+
+router.get('/api/admin/svg-templates/:id', isAdmin, async (req,res)=>{
+  const itemid = req.params["id"]; 
+  var result = null; 
+  if(itemid == "default"){
+      result = await uploads.findOne({
+          type:'template', by_admin:true,  default:true });    
+  }else{
+
+      result = await uploads.findOne({
+          type:'template', by_admin:true,  code:itemid });  
+  }
+  res.send(result);
+  
 })
 
 module.exports = router;

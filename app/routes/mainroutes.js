@@ -72,9 +72,7 @@ router.get('/api/svg-templates/:id', async (req,res)=>{
             type:'template', by_admin:true, active:true, code:itemid });  
     }
     res.send(result);
-    //var items = await uploads.find({type:'templates',uploaded_by:"admin",active:true});    
-    //var svg = req.params.id;   
-    //res.sendFile(path.resolve(`../app/public/images/${svg}.svg`));
+    
 })
 
 router.get('/app/404',(req,res)=>{
