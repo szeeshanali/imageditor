@@ -27,6 +27,7 @@ const schema  = new mongoose.Schema({
     type            :   {   type    :   String  },
     uploaded_by     :   {   type    :   mongoose.ObjectId  },
     modified_dt     :   {   type    :   Date    },
+    ref_code        :   {   type    :   String    },
     copyright_flag  :   {   type    :   Boolean}});
 
 const uploads   = mongoose.model('uploads',schema);

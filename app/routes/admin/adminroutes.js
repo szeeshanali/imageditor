@@ -195,7 +195,7 @@ router.delete('/app/admin/delete-template/:id', isAdmin, async (req,res)=>{
   res.send();  
 }) 
 router.post('/app/admin/save-template', function(req, res) {
-  const {desc, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, code} = req.body; 
+  const {desc, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, code, ref_code} = req.body; 
  
             
   var _id = mongoose.Types.ObjectId();
@@ -220,6 +220,8 @@ router.post('/app/admin/save-template', function(req, res) {
     default         :   req.body.default,
     by_admin        :   by_admin,
     type            :   type,
+    ref_code        :   ref_code,
+    
   };
   var templatename = `../app/uploads/admin/templates/t-${_id}.png`;
     require("fs").writeFile(templatename, base64, 'base64', function(err) {
