@@ -17,7 +17,7 @@ const commonService = (function() {
     this.getTemplatesAsync = async (active)=>
     { 
      
-        return  await uploads.find({type:'template', by_admin:true , },
+        return  await uploads.find({type:'template', active:true, by_admin:true , },
     {
         code:1,
         base64:1,

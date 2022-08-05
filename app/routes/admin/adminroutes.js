@@ -145,7 +145,7 @@ router.get('/app/admin/templates', isAdmin, async (req,res)=>{
   const  {width, height, title} = req.body;
   res.locals.pagetitle ="Edit Template";
   var templates = await uploads.find({type:'template', by_admin:true , },
-  { code:1, base64:1, title:1, created_dt:1 }).sort({order_no:1}); 
+  { code:1, base64:1, title:1, created_dt:1, active:1 }).sort({order_no:1}); 
 
   res.render("pages/admin/templates",{
     user      : req.user,

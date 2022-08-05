@@ -25,7 +25,8 @@ const schema  = new mongoose.Schema({
     by_admin        :   {   type    :   Boolean },
     type            :   {   type    :   String  },
     uploaded_by     :   {   type    :   mongoose.ObjectId  },
-    modified_dt     :   {   type    :   Date    }});
+    modified_dt     :   {   type    :   Date    },
+    copyright_flag  :   {   type    :   Boolean}});
 
 const uploads   = mongoose.model('uploads',schema);
 module.exports  = uploads;
