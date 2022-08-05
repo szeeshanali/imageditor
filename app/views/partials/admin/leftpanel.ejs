@@ -73,7 +73,7 @@
              <%for(var i=0; i<templates.length;i++){%>
                    
                 <div id="<%=templates[i].code %>" class="template">    
-                    <small class="tx-danger tx-bold"><%=templates[i].active?"":"Disabled" %></small>                      
+                    <small class="<%=templates[i].active?'':'disable-badge' %>" ><%=templates[i].active?"":"Disabled" %></small>                      
                  <img src="<%=templates[i].base64 %>" style="width:100px"> 
                  <div class="tx-12 tx-bold pd-y-5"><%=templates[i].title %></div>
                 
