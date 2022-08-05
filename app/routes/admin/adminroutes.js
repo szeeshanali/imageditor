@@ -48,15 +48,49 @@ router.get('/app/admin/category/:categoryid/', isAdmin, async (req,res)=>{
 
 router.get(ROUTE_ADMIN_DASHBOARD, isAdmin, async (req,res)=>{
   res.locals.pagetitle ="Dashboard";
-  var customerReport = await commonService.reportingService.getCustomerReport(); 
-  var summaryReport  = await commonService.reportingService.getSummaryReport(); 
-
-  res.locals.reports = {
-    customerReport  : customerReport,
-    summaryReport   : summaryReport,   
-  } ;
+  //var customerReport = await commonService.reportingService.getCustomerReport(); 
+ // var summaryReport  = await commonService.reportingService.getSummaryReport(); 
+  // res.locals.reports = {
+  //   customerReport  : customerReport,
+  //   summaryReport   : summaryReport,   
+  // } ;
   res.render(PATH_ADMIN_DASHBOARD,{categories:[]});
 })
+
+
+router.get("/app/admin/user-management", isAdmin, async (req,res)=>{
+  res.locals.pagetitle ="User Management"; 
+  res.render("pages/admin/user-management");
+})
+
+router.get("/app/admin/reporting", isAdmin, async (req,res)=>{
+  res.locals.pagetitle ="Reporting"; 
+  res.render("pages/admin/reporting");
+})
+router.get("/app/admin/privacy", isAdmin, async (req,res)=>{
+  res.locals.pagetitle ="Privacy & Policy"; 
+  res.render("pages/admin/privacy");
+})
+
+router.get("/app/admin/settings", isAdmin, async (req,res)=>{
+  res.locals.pagetitle ="Settings"; 
+  res.render("pages/admin/settings");
+})
+
+
+router.get("/app/admin/terms", isAdmin, async (req,res)=>{
+  res.locals.pagetitle ="Terms & Conditions"; 
+  res.render("pages/admin/terms");
+})
+
+router.get("/app/admin/faq", isAdmin, async (req,res)=>{
+  res.locals.pagetitle ="FAQs"; 
+  res.render("pages/admin/faq");
+})
+
+
+
+
 router.get('/app/admin/',  isAdmin, async (req, res) => {
 
     cached_layout_data.user = req.user;
@@ -65,7 +99,7 @@ router.get('/app/admin/',  isAdmin, async (req, res) => {
     //{ 
       cached_layout_data.categories = await categories.find({});
    //}    
-    res.render(PATH_ADMIN_HOME,cached_layout_data);          
+    res.render(PATH_ADMIN_DASHBOARD,cached_layout_data);          
 });
 
 router.post(ROUTE_ADMIN_SAVEDESIGN,  isAdmin,  (req,res)=>{
@@ -161,7 +195,7 @@ router.delete('/app/admin/delete-template/:id', isAdmin, async (req,res)=>{
   res.send();  
 }) 
 router.post('/app/admin/save-template', function(req, res) {
-  const {desc, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, code} = req.body; 
+  const {desc, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, code, ref_code} = req.body; 
  
             
   var _id = mongoose.Types.ObjectId();
@@ -186,6 +220,8 @@ router.post('/app/admin/save-template', function(req, res) {
     default         :   req.body.default,
     by_admin        :   by_admin,
     type            :   type,
+    ref_code        :   ref_code,
+    
   };
   var templatename = `../app/uploads/admin/templates/t-${_id}.png`;
     require("fs").writeFile(templatename, base64, 'base64', function(err) {

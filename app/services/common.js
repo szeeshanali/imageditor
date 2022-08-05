@@ -60,9 +60,13 @@ const commonService = (function() {
 
     this.deleteTemplatesAsync = async (id)=>
     { 
-       var d = await uploads.deleteOne({code: id, active:true,type:'template',uploaded_by:'admin'});
+       var d = await uploads.deleteOne({code: id, active:true, type:'template',uploaded_by:'admin'});
        cached_templates = null; 
     },
+
+    this.deleteUploadAsync = async(id, type, ownerId)=>{
+        await uploads.updateOne({code: id, type:type, uploaded_by:ownerId},{deleted:true});
+    }
     this.getSVGTemplatesAsync = async (id)=>
     { 
         return res.sendFile(`/images/${id}.svg`);
@@ -160,12 +164,13 @@ const commonService = (function() {
             getCategoryAsync    :   this.getCategoryAsync
         },
         uploadService:{
-            upload              :   this.upload,
-            getTemplatesAsync   :   this.getTemplatesAsync,
-            getTemplateAsync   :   this.getTemplateAsync,
-            deleteTemplatesAsync:   this.deleteTemplatesAsync, 
-            getSVGtemplatesAsync     :   this.getSVGTemplatesAsync, 
-            getUserDesignsAsync        :       this.getUserDesignsAsync,
+            upload                  :   this.upload,
+            getTemplatesAsync       :   this.getTemplatesAsync,
+            getTemplateAsync        :   this.getTemplateAsync,
+            deleteTemplatesAsync    :   this.deleteTemplatesAsync, 
+            getSVGtemplatesAsync    :   this.getSVGTemplatesAsync, 
+            getUserDesignsAsync     :   this.getUserDesignsAsync,
+            deleteUploadAsync       :   this.deleteUploadAsync, 
             clear               :   this.clearUploads
         },
         reportingService: {

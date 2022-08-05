@@ -86,6 +86,20 @@
    
     // Events: 
 
+    function deleteMyProject(id)
+    {
+        $.ajax({
+            type: "DELETE",
+            url: `/api/client/project/${id}`,           
+            success:function(res){
+              toast("Deleted successfully!");
+            },
+            error:function(res){
+              toast("Error whiel deleting.");
+            }
+        })
+    }
+
     function loadProject(id){
         var group = [];
         $.get(`/api/project/${id}`, function (data) {
@@ -252,6 +266,7 @@
         })
 
         $("#templatepanel .template").on("click",(e)=>{
+            alert(1);
             enabledTextMode = false; 
             var id = e.currentTarget.id;
              canvas.clear();
@@ -259,14 +274,28 @@
         
         });
 
+        // $(`#templatepanel #del{}`).on("click",(e)=>{
+        //     e.stopPropagation();
+        //     enabledTextMode = false; 
+        //     var id = e.currentTarget.id;
+        //     if(id) {
+        //         id = id.replace("del","");
+        //     }
+        //      canvas.clear();
+            
+        
+        // });
+
+
         $("#myprojects .template").on("click",(e)=>{
+          
+            e.stopPropagation();
             enabledTextMode = false; 
             var id = e.currentTarget.id;
              canvas.clear();
              loadProject(id);
         
         });
-
 
         $("#clipartmenu .clipart img").on("click",(e)=>{
         enabledTextMode = false; 

@@ -1,0 +1,14 @@
+<div class="wd-lg-70p wd-xl-50p tx-center pd-x-40" style="margin:auto">
+    <h1 class="tx-100 tx-xs-140 tx-normal tx-gray-800 mg-b-0">404!</h1>
+    <h5 class="tx-xs-24 tx-normal tx-orange mg-b-30 lh-5">The content your are looking for has not been found.</h5>
+    <div class="d-flex justify-content-center">
+        <div class="tx-center mg-t-20">... or back to
+            <a href="/app/admin/dashboard" class="tx-orange hover-info">home</a>
+        </div>
+    </div>
+</div>
+<script>
+    $(".tab-content .tab-pane").each((i,e)=>
+    { $(e).removeClass("active"); })    
+   $("#dashboard-panel").addClass("active");
+</script>

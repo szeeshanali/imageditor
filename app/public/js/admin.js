@@ -25,6 +25,8 @@
  
 
   // Template Upload: 
+
+  $kopykakePartNo    =       $("#admin-kopykake-part");
   $inputDesignName    =       $("#admin-design-name");
   $inputThumbnailName =       $("#admin-design-title");
   $btnActiveDesign    =       $("#design-active");
@@ -182,6 +184,7 @@ function onDesignReload(o){
             default   : designFlags.default,
             link      : $inputDesignLink.val(),
             logos     : $inputLogoPerPage.val(), 
+            ref_code  : $kopykakePartNo.val() 
         },
         success:function(res){
           designFlags.submitted = true; 

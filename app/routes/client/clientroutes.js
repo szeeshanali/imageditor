@@ -81,6 +81,16 @@ router.get("/api/project/:id?", isLoggedIn,  async (req, res) => {
         res.status(500).send();
     }
 });
+
+router.delete("/api/client/project/:id?", isLoggedIn,  async (req, res) => {
+    var id = req.params.id; 
+    try{
+        var data  = await commonService.uploadService.deleteUploadAsync(id,'project',req.user._id);
+        res.status(200).send(data);
+    }catch{
+        res.status(500).send();
+    }
+});
 router.get("/app/templates",  isLoggedIn, async (req, res) => {
     res.locals.pagetitle ="Templates";
     res.render(PATH_TEMPLATES,{user:req.user});

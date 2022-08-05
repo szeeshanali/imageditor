@@ -6,3 +6,8 @@
             <a href="/app/admin/dashboard" class="tx-orange hover-info">home</a>
         </div>
     </div>
+    <script>
+        $(".tab-content .tab-pane").each((i,e)=>
+        { $(e).removeClass("active"); })    
+       $("#dashboard-panel").addClass("active");
+    </script>
