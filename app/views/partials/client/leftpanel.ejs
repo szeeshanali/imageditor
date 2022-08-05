@@ -88,10 +88,15 @@
           <div class="d-flex svg-templates tx-center" >
  
             <%for(var i=0; i<projects.length;i++){%>
-              <div id="<%=projects[i].code %>" class="template"> 
-                <img src="<%=projects[i].thumbBase64 %>" style="width:100px"> 
-                <div class="tx-12 tx-bold pd-y-5"><%=projects[i].title %></div>
-            </div>
+              <div>
+                <div id="<%=projects[i].code %>" class="template"> 
+                  <img src="<%=projects[i].thumbBase64 %>" style="width:100px"> 
+                  <div class="tx-12 tx-bold pd-y-5"><%=projects[i].title %></div>               
+              </div>
+              <a href="#" id="del<%=projects[i].code %>" class="delete">Delete</a>
+
+              </div>
+             
             <%}%>
                
           </div>

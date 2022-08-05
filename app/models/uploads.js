@@ -10,6 +10,7 @@ const schema  = new mongoose.Schema({
     order_no        :   {   type    :   Number    },
     code            :   {   type    :   mongoose.ObjectId,  required   :   true },
     active          :   {   type    :   Boolean,            default    :   true },
+    deleted         :   {   type    :   Boolean,            default    :   false },
     blob            :   {   type    :   Buffer    },
     json            :   {   type    :   String   },
     base64          :   {   type    :   String    },
