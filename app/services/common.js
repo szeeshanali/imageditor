@@ -14,20 +14,25 @@ const commonService = (function() {
         return cached_categories; 
     },
 
-    this.getTemplatesAsync = async ()=>
-    { return  await uploads.find({active:true,type:'template', by_admin:true}).sort({order_no:1}); },
+    this.getTemplatesAsync = async (active)=>
+    { 
+     
+        return  await uploads.find({type:'template', active:true, by_admin:true , },
+    {
+        code:1,
+        base64:1,
+        title:1
+    }).sort({order_no:1}); },
 
     this.getUserDesignsAsync = async (userId, designId)=>
     { 
         var designs = [];
-     
-       
         if(!designId)
         { designs = await uploads.find({active:true, 
             type:'project', 
             by_admin:false, 
             uploaded_by: userId,
-            active:true }); 
+            active:true },{code:1,thumbBase64:1,title:1}); 
         }else if(designId == "default")
         {
             designs = await uploads.findOne({active:true, 
@@ -55,9 +60,13 @@ const commonService = (function() {
 
     this.deleteTemplatesAsync = async (id)=>
     { 
-       var d = await uploads.deleteOne({code: id, active:true,type:'template',uploaded_by:'admin'});
+       var d = await uploads.deleteOne({code: id, active:true, type:'template',uploaded_by:'admin'});
        cached_templates = null; 
     },
+
+    this.deleteUploadAsync = async(id, type, ownerId)=>{
+        await uploads.updateOne({code: id, type:type, uploaded_by:ownerId},{deleted:true});
+    }
     this.getSVGTemplatesAsync = async (id)=>
     { 
         return res.sendFile(`/images/${id}.svg`);
@@ -155,12 +164,13 @@ const commonService = (function() {
             getCategoryAsync    :   this.getCategoryAsync
         },
         uploadService:{
-            upload              :   this.upload,
-            getTemplatesAsync   :   this.getTemplatesAsync,
-            getTemplateAsync   :   this.getTemplateAsync,
-            deleteTemplatesAsync:   this.deleteTemplatesAsync, 
-            getSVGtemplatesAsync     :   this.getSVGTemplatesAsync, 
-            getUserDesignsAsync        :       this.getUserDesignsAsync,
+            upload                  :   this.upload,
+            getTemplatesAsync       :   this.getTemplatesAsync,
+            getTemplateAsync        :   this.getTemplateAsync,
+            deleteTemplatesAsync    :   this.deleteTemplatesAsync, 
+            getSVGtemplatesAsync    :   this.getSVGTemplatesAsync, 
+            getUserDesignsAsync     :   this.getUserDesignsAsync,
+            deleteUploadAsync       :   this.deleteUploadAsync, 
             clear               :   this.clearUploads
         },
         reportingService: {

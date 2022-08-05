@@ -48,8 +48,8 @@ app.use(passport.session());
    //res.locals.categories    = await commonService.categoryService.getCategoriesAsync();
    res.locals.user          = req.user;
    res.locals.pagetitle     = req.pagetitle;
-   res.locals.templates     = await commonService.uploadService.getTemplatesAsync();
-   //res.locals.templates = [];
+   //res.locals.templates     = await commonService.uploadService.getTemplatesAsync();
+   res.locals.templates = [];
   next();
  })
 

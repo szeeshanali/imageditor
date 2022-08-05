@@ -1,11 +1,4 @@
-<div id="admin-image-upload">
-    <div class="pd-t-15 text-center drag-drop-input border-dash">
-        <h1 class="ion-ios-cloud-upload icon-imgupload"></h1>
-        <br>
-            <p class="tx-12 "><%= locals.uploadmessage %></p>
-        </div>
-</div>
-    <input id="admin-image-upload-hidden" type="file" accept="image/*" multiple="multiple" hidden="hidden">
+
         <div class="pd-10 tx-center admin-design-ctrl border-dash">
 
 
@@ -44,10 +37,10 @@
             </div>
             <div class="pd-b-10">
                 <div class="mg-y-5">
-                    <input class="form-control" placeholder="Design name" id="admin-design-name" type="text">
+                    <input class="form-control" placeholder="Design name" id="editTemplateDesignName" type="text">
                 </div>
                 <div class="mg-y-5">
-                    <input class="form-control" placeholder="Thumbnail name" id="admin-design-title" type="text">
+                    <input class="form-control" placeholder="Thumbnail name"  id="editTemplateThumbName" type="text">
                 </div>
                 <div class="mg-y-5">
                     <input class="form-control" placeholder="File name" id="admin-file-name" type="text">
@@ -75,13 +68,11 @@
                 <div class="mg-y-5">
                     <input class="form-control"  placeholder="KopyKake Webstore Link" id="admin-design-link" type="text">
                 </div>
-                <div class="mg-y-5">
-                    <input class="form-control" id="admin-kopykake-part"  placeholder="KopyKake Part #" id="admin-design-link" type="text">
-                </div>
+              
         </div>
             <div id="save-image-ctrl">
                 <div class="btn-group" role="group" >
-                    <button type="button" id="save-design" class="btn btn-primary  pd-x-25 active ">Save Design</button>
+                    <button type="button" id="save-design" class="btn btn-primary  pd-x-25 active ">Update</button>
                     <button type="button" id="cancel-design" class="btn btn-secondary pd-x-25 ">Cancel</button>
                   </div>
             </div>

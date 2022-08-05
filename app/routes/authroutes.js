@@ -29,7 +29,7 @@ router.get(ROUTE_SIGNOUT,(req,res)=>{
   });
 
   router.get(ROUTE_USER_PROFILE,(req,res)=>{    
-      console.log(req);
+     // console.log(req);
    res.redirect(PATH_PROFILE);
   });
 
@@ -53,7 +53,7 @@ router.get(ROUTE_USER_REGISTER, (req, res) => {
 
 router.get(ROUTE_LOGIN, (req, res) => {
     res.render(PATH_LOGIN, {layout: false});
-    console.log( req );
+  //  console.log( req );
 });
 
 router.post(ROUTE_LOGIN, (req, res, next) => { 

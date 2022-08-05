@@ -81,6 +81,16 @@ router.get("/api/project/:id?", isLoggedIn,  async (req, res) => {
         res.status(500).send();
     }
 });
+
+router.delete("/api/client/project/:id?", isLoggedIn,  async (req, res) => {
+    var id = req.params.id; 
+    try{
+        var data  = await commonService.uploadService.deleteUploadAsync(id,'project',req.user._id);
+        res.status(200).send(data);
+    }catch{
+        res.status(500).send();
+    }
+});
 router.get("/app/templates",  isLoggedIn, async (req, res) => {
     res.locals.pagetitle ="Templates";
     res.render(PATH_TEMPLATES,{user:req.user});
@@ -88,7 +98,7 @@ router.get("/app/templates",  isLoggedIn, async (req, res) => {
 
 router.post('/app/client/save-design', isLoggedIn, function(req, res) {
 
-    const {json,base64} = req.body; 
+    const {json,thumbBase64} = req.body; 
     var _id = mongoose.Types.ObjectId();
     var uploadModel = {
       title           :   "project1",
@@ -97,7 +107,7 @@ router.post('/app/client/save-design', isLoggedIn, function(req, res) {
       code            :   _id,
       active          :   true,
       json            :   json,
-      base64          :   base64,
+      thumbBase64     :   thumbBase64,
       default         :   false,
       by_admin        :   false,
       type            :   "project",

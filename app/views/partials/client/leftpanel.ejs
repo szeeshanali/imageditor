@@ -34,7 +34,7 @@
             </a>
           </li>
           <li>
-            <a href="#" id="btnMyProject" class="pd-y-10 lh-1  border-bottom"  title="" ">
+            <a href="#" id="btnMyProject" class="pd-y-10 lh-1  border-bottom"  title="" >
                 <i class="ion-ios-bookmarks tx-24 tx-white"></i>
                 <div class="visually-hidden tx-12 tx-white my-proj">My Projects <sup class="tag"><%=projects.length %></sup></div>
             </a>
@@ -80,7 +80,7 @@
          <!-- #chatMenu -->
          <div id="myprojects" class="tab-pane">
           <%if(projects.length == 0){%>
-            <div class="template"> 
+            <div class="thumb"> 
               <img src="" style="width:100px"> 
               <div class="tx-12 tx-bold pd-15">No projects.</div>
           </div>
@@ -88,10 +88,15 @@
           <div class="d-flex svg-templates tx-center" >
  
             <%for(var i=0; i<projects.length;i++){%>
-              <div id="<%=projects[i].code %>" class="template"> 
-                <img src="<%=projects[i].base64 %>" style="width:100px"> 
-                <div class="tx-12 tx-bold pd-y-5"><%=projects[i].title %></div>
-            </div>
+              <div>
+                <div id="<%=projects[i].code %>" class="template"> 
+                  <img src="<%=projects[i].thumbBase64 %>" style="width:100px"> 
+                  <div class="tx-12 tx-bold pd-y-5"><%=projects[i].title %></div>               
+              </div>
+              <a href="#" id="del<%=projects[i].code %>" class="delete">Delete</a>
+
+              </div>
+             
             <%}%>
                
           </div>
