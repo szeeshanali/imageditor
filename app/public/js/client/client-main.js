@@ -266,7 +266,6 @@
         })
 
         $("#templatepanel .template").on("click",(e)=>{
-            alert(1);
             enabledTextMode = false; 
             var id = e.currentTarget.id;
              canvas.clear();
