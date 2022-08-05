@@ -60,12 +60,16 @@
             <hr>
         </div>
         <div id="template-designer" class="tab-pane pd-15" >
+            <%if(pagetitle == "Template Designer"){%>
             <%- include('../../partials/admin/imgupload'); %>
             <hr>
+            <%}%>
         </div>
         <div id="edit-template" class="tab-pane pd-15" >
+            <%if(pagetitle == "Edit Template"){%>
             <%- include('../../partials/admin/edit-template'); %>
             <hr>
+            <%}%>
         </div>
         <div id="templatepanel" class="tab-pane pd-15" >
             <div class="d-flex svg-templates tx-center" >
@@ -73,9 +77,11 @@
              <%for(var i=0; i<templates.length;i++){%>
                    
                 <div id="<%=templates[i].code %>" class="template">    
-                    <small class="<%=templates[i].active?'':'disable-badge' %>" ><%=templates[i].active?"":"Disabled" %></small>                      
-                 <img src="<%=templates[i].base64 %>" style="width:100px"> 
-                 <div class="tx-12 tx-bold pd-y-5"><%=templates[i].title %></div>
+                    <small class="<%=templates[i].active?'':'disable-badge' %>" ><%=templates[i].active?"":"Disabled" %></small>      
+                    <small class="<%=templates[i].default?'default-badge':'' %>" ><%=templates[i].default?"Default":"" %></small>      
+
+                    <img src="<%=templates[i].base64 %>" style="width:100px"> 
+                 <div class="tx-12 tx-bold pd-y-5"><%=templates[i].title %> </div>
                 
              </div>
              <%}%>                

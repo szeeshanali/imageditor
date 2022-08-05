@@ -452,6 +452,14 @@ overflow: hidden;
 /*admin*/
 .disable-badge {
     font-weight: bold;
+    background-color: #ed8383;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 10px;
+}
+
+.default-badge {
+    font-weight: bold;
     background-color: #fba200;
     color: white;
     padding: 3px 10px;
