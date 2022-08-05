@@ -14,20 +14,25 @@ const commonService = (function() {
         return cached_categories; 
     },
 
-    this.getTemplatesAsync = async ()=>
-    { return  await uploads.find({active:true,type:'template', by_admin:true}).sort({order_no:1}); },
+    this.getTemplatesAsync = async (active)=>
+    { 
+     
+        return  await uploads.find({type:'template', active:true, by_admin:true , },
+    {
+        code:1,
+        base64:1,
+        title:1
+    }).sort({order_no:1}); },
 
     this.getUserDesignsAsync = async (userId, designId)=>
     { 
         var designs = [];
-     
-       
         if(!designId)
         { designs = await uploads.find({active:true, 
             type:'project', 
             by_admin:false, 
             uploaded_by: userId,
-            active:true }); 
+            active:true },{code:1,thumbBase64:1,title:1}); 
         }else if(designId == "default")
         {
             designs = await uploads.findOne({active:true, 

@@ -34,6 +34,10 @@
   $inputOrderNo       =       $("#admin-display-order");
   $selectPageSize     =       $("#admin-page-size");
   $inputLogoPerPage   =       $("#admin-logo-count");
+  $templateThumb      =       $("#templatepanel .template")
+
+  $editTemplateDesignName   =       $("#editTemplateDesignName");
+  $editTemplateThumbName    =       $("#editTemplateThumbName");
 
  var selectedDesign  = {};
  var designFlags = {active:false, default:false, submitted:false}; 
@@ -43,6 +47,16 @@
  
  function InitUIEvents()
  {
+
+  $templateThumb.on("click",(e)=>{
+    var templateId = e.currentTarget.id; 
+    if(templateId){
+      loadSVGTemplate(templateId);
+    }else{
+      toast(`Can't load Template.`)
+    }
+  })
+
   $btnActiveDesign.on("click",(e)=>{
     if(!selectedDesign.base64) return; 
     setTimeout(function(){
@@ -82,6 +96,56 @@
  }
  function enabledDesignCtrl(o){
   $adminDesignCtrl.find(".disabled").removeClass("disabled");
+}
+
+function loadSVGTemplate(id)
+{
+    var group = [];
+    $.get(`/api/admin/svg-templates/${id}`, function (data) {
+        const svgBase64 = data.base64;
+        if(!svgBase64)
+        {
+            alert("Error loading Template");
+            return;}
+
+        //canvas.setDimensions({width: letterPageSize.width, height: letterPageSize.height});
+        //canvasPrev.setDimensions({width: letterPageSize.width, height: letterPageSize.height});
+        canvas.clear();
+        fabric.loadSVGFromURL(svgBase64,function(objects,options) {      
+            var loadedObjects = new fabric.Group(group);
+            var templateWidth = options.viewBoxWidth;
+            var templateHeight = options.viewBoxHeight;      
+            canvas.setDimensions({width: templateWidth, height: templateHeight});
+            //canvas.orignalBackgroundImage = loadedObjects;                      
+            canvas.setBackgroundImage(loadedObjects,canvas.renderAll.bind(canvas));
+            canvas.renderAll();
+            loadedObjects.center().setCoords();
+           $("#upload-template-splash").remove();
+           $(".tab-content .tab-pane").each((i,e)=>
+           { $(e).removeClass("active"); })    
+          $("#edit-template").addClass("active");
+        },function(item, object) {
+                object.set('id',item.getAttribute('id'));
+                group.push(object);
+        });
+
+        loadTemplateInfo(data);
+    })
+
+}
+
+function loadTemplateInfo(template)
+{
+  $editTemplateDesignName.val(template.name);
+  $editTemplateThumbName.val(template.title);
+  //$btnActiveDesign    =       $("#design-active");
+  // $btnDefaultDesign   =       $("#design-default");
+  // $inputFileName      =       $("#admin-file-name");
+  // $inputDesignLink    =       $("#admin-design-link");
+  // $inputOrderNo       =       $("#admin-display-order");
+  // $selectPageSize     =       $("#admin-page-size");
+  // $inputLogoPerPage   =       $("#admin-logo-count");
+  // $templateThumb      = $("#templatepanel .template")
 }
 
 
@@ -128,7 +192,7 @@ function onDesignReload(o){
           toast("Error while uploading template.");
         }
     })
-    
+
      // toast("Design has already been submitted. Please upload new design.");
       return; 
     }
@@ -195,6 +259,7 @@ function onDesignReload(o){
       // handle svg
       if (file.type === 'image/svg+xml') {
         reader.onload = (f) => {
+          
             var svgBase64 = f.srcElement.result;
             selectedDesign.base64 = svgBase64; 
             canvas.clear();
@@ -218,6 +283,7 @@ function onDesignReload(o){
              // canvas.add(loadedObjects);
               canvas.renderAll();
               onDesignLoaded(selectedDesign.meta);
+              $("#upload-template-splash").remove();
              // loadedObjects.center().setCoords();
              
           },function(item, object) {

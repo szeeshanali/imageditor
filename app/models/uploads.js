@@ -10,9 +10,10 @@ const schema  = new mongoose.Schema({
     order_no        :   {   type    :   Number    },
     code            :   {   type    :   mongoose.ObjectId,  required   :   true },
     active          :   {   type    :   Boolean,            default    :   true },
-    blob            :   {   type    :   Buffer,  required   :  false    },
-    json            :   {   type    :   String,  required   :  false    },
-    base64          :   {   type    :   String,  required   :  false    },
+    blob            :   {   type    :   Buffer    },
+    json            :   {   type    :   String   },
+    base64          :   {   type    :   String    },
+    thumbBase64     :   {   type    :   String   },
     editable        :   {   type    :   Boolean, default    :  false    },
     paid            :   {   type    :   Boolean, default    :  false    },
     category        :   {   type    :   Buffer,  required   :  false    },
@@ -24,7 +25,8 @@ const schema  = new mongoose.Schema({
     by_admin        :   {   type    :   Boolean },
     type            :   {   type    :   String  },
     uploaded_by     :   {   type    :   mongoose.ObjectId  },
-    modified_dt     :   {   type    :   Date    }});
+    modified_dt     :   {   type    :   Date    },
+    copyright_flag  :   {   type    :   Boolean}});
 
 const uploads   = mongoose.model('uploads',schema);
 module.exports  = uploads;

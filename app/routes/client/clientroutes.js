@@ -88,7 +88,7 @@ router.get("/app/templates",  isLoggedIn, async (req, res) => {
 
 router.post('/app/client/save-design', isLoggedIn, function(req, res) {
 
-    const {json,base64} = req.body; 
+    const {json,thumbBase64} = req.body; 
     var _id = mongoose.Types.ObjectId();
     var uploadModel = {
       title           :   "project1",
@@ -97,7 +97,7 @@ router.post('/app/client/save-design', isLoggedIn, function(req, res) {
       code            :   _id,
       active          :   true,
       json            :   json,
-      base64          :   base64,
+      thumbBase64     :   thumbBase64,
       default         :   false,
       by_admin        :   false,
       type            :   "project",

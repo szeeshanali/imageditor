@@ -456,7 +456,7 @@ $saveTemplate.on("click",()=>{
             canvas.loadFromJSON(data.json, function() {
                 canvas.renderAll(); 
             },function(o,object){
-                console.log(o,object)
+               // console.log(o,object)
             })    
         })    
     }

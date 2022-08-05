@@ -1,18 +1,20 @@
-
-<div id="templatecontainer" class="d-flex">
-    <%if(templates == null || templates.length == 0){%>
-        <p>No Template Found.</p>
-    <%}%>
-    <% for(var i=0; i< templates.length; i++) {  %>
-
-        <div class="card bd-0 wd-xs-150 mg-10 pd-10 " id="t<%= templates[i].code %>">
-            <img class="card-img-top img-fluid" src="<%= templates[i].base64 %> " alt="Image">
-            <div class="card-body">
-              <h6 class="mg-b-3"><a href="" class="tx-dark"><%= templates[i].title %> </a></h6>
-              <span class="tx-12"><%= templates[i].created_dt.toLocaleDateString() %></span>
-              <i class="ion-ios-trash-outline tx-20 delete-template" title="delete" id="<%= templates[i].code %>" ></i>
-            </div>
-          </div>
- 
-    <%} %>
+<div class="admin-template-designer-bg" style="min-height: 1050px">
+  <div class="ht-100v d-flex align-items-center justify-content-center" id="upload-template-splash">
+      <div class="wd-lg-70p wd-xl-50p tx-center pd-x-40">
+          <i class="ion-ios-keypad-outline" style="font-size:200px"></i>
+        <h5 class="tx-xs-24 tx-normal tx-orange lh-5">Please select a template to Edit.</h5>
+        <p class="tx-16 mg-b-30">Please select a template to upload a template information.</p>
+      </div>
+    </div>
+    
+  
+  <div class="ht-100v tx-center" id="template-container">
+      <canvas id="admin-main-canvas"></canvas>
+  </div>
 </div>
+
+<script>
+  $(".tab-content .tab-pane").each((i,e)=>
+  { $(e).removeClass("active"); })    
+ $("#templatepanel").addClass("active");
+</script>

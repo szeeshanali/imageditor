@@ -10,12 +10,12 @@
     <div class="d-block mg-sm-r-10 img"> <img src="{src}" class="wd-40" alt="Image" ></div>
     <small class="d-sm-flex layer-label">Layer {index}</small>
     <div class="d-sm-flex layers-controls" style="display:none !important">
-    <i class='ion-ios-copy-outline duplicate main-tool-button'  id='duplicate' title='duplicate' ></i>
+    <i class='ion-ios-copy-outline duplicate main-tool-button'   title='duplicate' ></i>
     <i class='ion-ios-upload-outline bring-fwd' title="move up" id="bring-fwd" ></i>
     <i class='ion-ios-download-outline bring-back' title="move down" id="bring-back" ></i>
     <i class='ion-ios-arrow-thin-up' title="top" ></i>
     <i class='ion-ios-arrow-thin-down' title="down" ></i>
-    <i class='ion-ios-trash-outline delete main-tool-button' id='delete' title='delete' ></i>
+    <i class='ion-ios-trash-outline delete main-tool-button' title='delete' ></i>
     </div>
 </div>` 
 
@@ -46,8 +46,18 @@
     $loader = $("#loader");
     $btnTemplate            = $("#btnTemplate");
     $btnMyProject =          $("#btnMyProject");
+
+
+    /**maintool */
+    $btnRotate = $("#rotate");
+    $btnFlipX = $("#btnFlipX");
+    $btnFlipY = $("#btnFlipY");
+    $btnGrayScale = $("#btnGrayScale");
+    $btnUndo = $("#btnUndo");
+    $btnRedo = $("#btnRedo");
+    /** */
     
-   
+    
 
 
     fabric.Object.prototype.transparentCorners = false;
@@ -67,32 +77,29 @@
 
     var enabledTextMode = false; 
 
+    var filters = ['grayscale', 'invert', 'remove-color', 'sepia', 'brownie',
+    'brightness', 'contrast', 'saturation', 'vibrance', 'noise', 'vintage',
+    'pixelate', 'blur', 'sharpen', 'emboss', 'technicolor',
+    'polaroid', 'blend-color', 'gamma', 'kodachrome',
+    'blackwhite', 'blend-image', 'hue', 'resize'];
 
    
     // Events: 
 
     function loadProject(id){
-        debugger;
         var group = [];
         $.get(`/api/project/${id}`, function (data) {
-         
             const json = data.json;
-           
-
             if(!json)
-            {
-                alert("Error loading Project");
-                return;}
+            { return;}
                 var object = JSON.parse(json); 
                 canvas.clear();
                 canvas.loadFromJSON(json, function() {
                     canvas.setWidth(8.5*dpi);
                     canvas.setHeight(11*dpi);
                     canvas.renderAll.bind(canvas);
-
-                   
-                 },function(o,object){
-                    console.log(o,object)
+                },function(o,object){
+                  //  console.log(o,object)
                  })
         })
     }
@@ -128,15 +135,101 @@
 
     }
 
+    function applyFilter(index, filter) {
+       
+        var obj = canvas.getActiveObject();
+         if(!obj.filterIndex && obj.filterIndex != 0)
+         {
+            obj.filters[index] = true && filter;
+            obj.filterIndex = index;
+         }else{
+            obj.filters[index] = false && filter;
+            obj.filterIndex = null;
+         }
+           
+      
+        obj.applyFilters();     
+        canvas.renderAll();
+      }
+
+      function applyFilterValue(index, prop, value) {
+        var obj = canvas.getActiveObject();
+        if (obj.filters[index]) {
+          obj.filters[index][prop] = value;
+          obj.applyFilters();
+          canvas.renderAll();
+        }
+      }
+
     function initUIEvents()
     {
+
+        $btnGrayScale.on("click", ()=>{
+
+            applyFilter(0, new fabric.Image.filters.Grayscale());         
+            applyFilterValue(0, 'mode', 'average');
+            
+        })
+
+        $btnUndo.on("click", ()=>{
+
+            // try {
+            //     let undoList = this.history.getValues().undo;
+            //     if (undoList.length) {
+            //       let current = undoList[undoList.length - 1];
+            //       this.history.undo();
+            //       current && this.canvas.loadFromJSON(JSON.parse(current), this.canvas.renderAll.bind(this.canvas))
+            //     }
+            //   } catch (_) {
+            //     console.error("undo failed")
+            //   }
+            
+        })
+
+        $btnRedo.on("click", ()=>{
+
+            // alert("undo"); 
+            // canvas.redo();
+            
+        })
+
+
+        $btnFlipX.on("click", () => {
+            var selectedObj = canvas.getActiveObject(); 
+            selectedObj.set('flipX', !selectedObj.flipX);
+            canvas.renderAll();
+          });
+
+        //   $btnFlipY.click(() => {
+        //     canvas.activeSelection.set('flipY', !canvas.activeSelection.flipY);
+        //     this.canvas.renderAll();
+        //   });
+
+        $btnRotate.on("click",function(){
+            var selectedObj = canvas.getActiveObject();
+            if(!selectedObj)
+            {
+                toast("Please select an object.");
+                return; 
+            }
+            var curAngle = selectedObj.angle;
+            selectedObj.rotate(curAngle+90);
+            canvas.renderAll();
+
+        })
+
         $btnTemplate.on("click",function(e)
         { 
             $loader.removeClass("hidden")
             window.location.href = '/app/workspace';        
         })
+
         $btnMyProject.on("click",function(e)
         { 
+           
+       
+
+            // $.get("",)
             $loader.removeClass("hidden")
             window.location.href = '/app/projects';        
         })
@@ -165,6 +258,15 @@
              loadSVGTemplate(id);
         
         });
+
+        $("#myprojects .template").on("click",(e)=>{
+            enabledTextMode = false; 
+            var id = e.currentTarget.id;
+             canvas.clear();
+             loadProject(id);
+        
+        });
+
 
         $("#clipartmenu .clipart img").on("click",(e)=>{
         enabledTextMode = false; 
@@ -219,13 +321,9 @@
 
         })
 
-        $rotateObj.on("click",function(){
-
-            var a = 10; 
-
-            alert(a);
-        })
        
+       
+        this.configUndoRedoStack();
         
     }
 
@@ -281,6 +379,8 @@
 
     function initCanvasEvents(){
     
+
+       
         canvas.selectedLayerId = null; 
         canvas.on("object:added",(o)=>{
             o.target.id = `obj${canvas._objects.length}`;
@@ -331,7 +431,7 @@
             src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAABHNJREFUeJzt3LurHGUcx+FvcqKiJohGBBGjRPHyB4imE0u72Akix1bsBAsriyiKokQ7CQoKaiGKCpGAjSI2golXhIR4v3USbzExicViiCHndy55d95zdp4H3iYLM7+d3c+emd0hCQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABJsq73AFOyMckVmd3ntxp9n+T33kNQ25hkV5IjSU5Yg64jSZ5NcuGirxJdrEuyJ/3fKGNfu+Mv96p0W/q/OazJurV+qdaO9b0HaOiW3gNw0rbeA7QyS4Fc0HsATjqv9wCtzFIg0JxAoCAQKGzoPcAqcSDJd0mON9zmukx+rLy+4TbP5MskP2by7VEr65NcmeTahtuksx1Z/teRLyW5YcpzbUtycAWzLbb2J7lpyrPfmOSVFcz20JTnYgWWE8ixJHcPONvWTG7DaBXHoSRbBpz/nkyO2egCGes1yANJXhhwfweTvNhwe88n+bbh9payvwcH3N+qMcZAvkqys8N+9zbc1r6G21qqJzNslKvCGAPZmeSfDvs90nBbRxtuazn7fKbDfrsaWyCHkjzXe4g1bFeSP3oPMaSxBbIryW+9h1jDfs3IPmDGFMjxjPAUYQqeTtvfXFa1MQXyepKvew8xAw4keav3EEMZUyBP9R5ghozmWI4lkA+TfNB7iBnybvp81Ty4WQrkcPHY4xnRefMATiR5onj8z6EGmbZZCuSjBf79nSSvDjnISLyc5L0FHlvotaCjczK5s/XUe4L2Jtncc6hTzKfdvVh3DTv6gi5L8mn+P9tnSeZ6DsXCrkvyfia3kzya1fVf0Mxn9gJJkk2ZnMJ+k8lfFLfIsyLzmc1AZtosXYNAcwKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIZDhzDbfldRuIAz2crQ23dXXDbUF3c0n2JznRaH0eH27MkPvTLo7/1n2DPgOYkvkkx9I+kKNJ7hzuaUA7m5LckWR32odx+nozyfYkGwd5ZrBCV2Vy2rMnyd+Zfhinr8NJ3k5yb5ItU36usKi5JNuSPJLkkwwfxGLr4yQ7ktwcF/QM6KIkjyX5Jf0jWOr6OcnDmZz6wdRck+Rg+r/hV7r2Z3IqCM2dm+SL9H+Tn+3al2RD42MD2Z7+b+5W6/bGx2ZmuXhbukt6D9DQ5t4DMHsuzeRit/en/9muH5Jc3PjYQJLJRfobmfyK3fuNvtx1NMlrcaPjsqzrPcAadX6Sy7N2TlGPJ/kpyV+9BwEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM7kX8fwvIWqet/rAAAAAElFTkSuQmCC';
         }
         
-         temp = temp.replace("{id}",obj.id)
+         temp = temp.replace(/{id}/ig,obj.id)
          .replace("{src}",src)
          .replace("{_id}",obj.id)
          .replace("{index}", obj.index+1);
@@ -344,6 +444,7 @@
 
     function onLayerAdded($elem, obj){
         $elem.on("click",function($event){
+            $event.stopPropagation();
             onLayerSelected($elem, obj);
         })
     }
@@ -390,7 +491,12 @@
             url: "/app/client/save-design",
 
             data: {   
-                base64  : canvas.toDataURL(),  
+                thumbBase64  : canvas.toDataURL(
+                    {
+                        format: 'jpg',
+                        quality: 0.8
+                    }
+                ),  
                 json    : JSON.stringify(canvas.toJSON()) },
             success:function(res){
               toast("Design has been Saved.");
@@ -409,7 +515,6 @@
               width = pdf.internal.pageSize.getWidth();
               height = pdf.internal.pageSize.getHeight();
               canvas.renderAll.bind(canvas)();
-              debugger;
               var imgData = canvas.toDataURL('image/png');
               pdf.addImage(imgData, 'PNG', 0, 0, width, height);
               //var dataURL = canvas.toDataURL();
@@ -460,6 +565,7 @@
       // Text: 
     
       function toast(message) {
+
         var $toast = $("#snackbar").addClass("show");
         $toast.text(message);
         setTimeout(function(){ 
@@ -491,26 +597,50 @@
        
 
      function initLayerEvents($elem, obj) {
-        $deleteItem = $("#layers .delete"); 
-        $duplicateItem = $("#layers .duplicate"); 
+        $deleteItem = $(`#${obj.target.id} .delete`); 
+        $duplicateItem = $(`#${obj.target.id} .duplicate`); 
         $moveUpItem = $("#layers .bring-fwd"); 
         $moveDownItem = $("#layers .bring-back"); 
+
+      
+
 
         $deleteItem.on("click",function(){
             //$(this).parent().parent().remove();
             var selectedObj = canvas.selectedObj.target;
             canvas.remove(selectedObj).renderAll();
-            $(`#${selectedObj.id}`).remove();
-
-           
+            $(`#${selectedObj.id}`).remove();           
         });
-        $duplicateItem.on("click",function(){});
+
+
+        $duplicateItem.on("click",function(){
+            var object = fabric.util.object.clone(canvas.getActiveObject());
+            object.set("top", object.top+5);
+            object.set("left", object.left+5);
+        
+            canvas.add(object);
+
+        });
         $moveUpItem.on("click",function(){});
         $moveDownItem.on("click",function(){});
         //$moveTopItem.on("click",function(){});
         //$moveBottomItem.on("click",function(){});
 
       }
+
+      this.configUndoRedoStack = () => {
+        this.history = window.UndoRedoStack();
+        const ctrZY = (e) => {
+          const key = e.which || e.keyCode;
+  
+          if (e.ctrlKey && document.querySelectorAll('textarea:focus, input:focus').length === 0) {
+            if (key === 90) this.undo()
+            if (key === 89) this.redo()
+          }
+        }
+        document.addEventListener('keydown', ctrZY)
+      }
+      
         
       function showloader(show){
         if(show)

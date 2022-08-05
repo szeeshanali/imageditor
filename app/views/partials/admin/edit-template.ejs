@@ -1,0 +1,79 @@
+
+        <div class="pd-10 tx-center admin-design-ctrl border-dash">
+
+
+            <div class="wd-110 mg-auto pd-y-10">
+                <div class="d-flex">
+
+
+                    <div class="d-r-5">
+                        <small class="pd-y-10">Active</small>
+                        <div class="toggle toggle-light primary mg-auto disabled" id="design-active" style="height: 22px; width: 50px;">
+                            <div class="toggle-slide">
+                                <div class="toggle-inner" style="width: 78px; margin-left: -28px;">
+                                    <div class="toggle-on" style="height: 22px; width: 39px; text-indent: -7.33333px; line-height: 22px;">ON</div>
+                                    <div class="toggle-blob" style="height: 22px; width: 22px; margin-left: -11px;"></div>
+                                    <div class="toggle-off active" style="height: 22px; width: 39px; margin-left: -11px; text-indent: 7.33333px; line-height: 22px;">OFF</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="pd-l-5">
+                        <small class="pd-y-10">Default</small>
+                        <div class="toggle toggle-light primary mg-auto disabled" id="design-default" style="height: 22px; width: 50px;">
+                            <div class="toggle-slide">
+                                <div class="toggle-inner" style="width: 78px; margin-left: -28px;">
+                                    <div class="toggle-on" style="height: 22px; width: 39px; text-indent: -7.33333px; line-height: 22px;">ON</div>
+                                    <div class="toggle-blob" style="height: 22px; width: 22px; margin-left: -11px;"></div>
+                                    <div class="toggle-off active" style="height: 22px; width: 39px; margin-left: -11px; text-indent: 7.33333px; line-height: 22px;">OFF</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="pd-b-10">
+                <div class="mg-y-5">
+                    <input class="form-control" placeholder="Design name" id="editTemplateDesignName" type="text">
+                </div>
+                <div class="mg-y-5">
+                    <input class="form-control" placeholder="Thumbnail name"  id="editTemplateThumbName" type="text">
+                </div>
+                <div class="mg-y-5">
+                    <input class="form-control" placeholder="File name" id="admin-file-name" type="text">
+                </div>
+                <div class="tx-left mg-y-5">
+                    <select id="admin-page-size" class="form-control  select2 select2-hidden-accessible" data-placeholder="Choose one" tabindex="-1" aria-hidden="true">
+                        <option label="Page Size"></option>
+                        <option value="8.5”x11”">8.5”x11”</option>
+                        <option value="11”x17”">11”x17”</option>
+                        <option value="A4">A4</option>
+                        <option value="A3">A3</option>
+                      </select>
+                    </div>
+                <div class="d-flex tx-left">
+                    <div class="mg-y-5 mg-r-10">
+                        <small>Logos per page:</small>
+                        <input class="form-control"  id="admin-logo-count" type="text">
+                    </div>
+                    <div class="mg-y-5" >
+                        <small>Display order:</small>
+                        <input class="form-control"  id="admin-display-order" type="number">
+
+                    </div>
+                </div>
+                <div class="mg-y-5">
+                    <input class="form-control"  placeholder="KopyKake Webstore Link" id="admin-design-link" type="text">
+                </div>
+              
+        </div>
+            <div id="save-image-ctrl">
+                <div class="btn-group" role="group" >
+                    <button type="button" id="save-design" class="btn btn-primary  pd-x-25 active ">Update</button>
+                    <button type="button" id="cancel-design" class="btn btn-secondary pd-x-25 ">Cancel</button>
+                  </div>
+            </div>
+        </div>
