@@ -2,34 +2,19 @@
         <div class="pd-10 tx-center admin-design-ctrl border-dash">
 
 
-            <div class="wd-110 mg-auto pd-y-10">
+            <div class=" mg-auto">
                 <div class="d-flex">
 
 
                     <div class="d-r-5">
-                        <small class="pd-y-10">Active</small>
-                        <div class="toggle toggle-light primary mg-auto disabled" id="design-active" style="height: 22px; width: 50px;">
-                            <div class="toggle-slide">
-                                <div class="toggle-inner" style="width: 78px; margin-left: -28px;">
-                                    <div class="toggle-on" style="height: 22px; width: 39px; text-indent: -7.33333px; line-height: 22px;">ON</div>
-                                    <div class="toggle-blob" style="height: 22px; width: 22px; margin-left: -11px;"></div>
-                                    <div class="toggle-off active" style="height: 22px; width: 39px; margin-left: -11px; text-indent: 7.33333px; line-height: 22px;">OFF</div>
-                                </div>
-                            </div>
-                        </div>
-
+                        <label class="ckbox">
+                            <input type="checkbox" id="editTemplateActive" ><span>Active</span>
+                          </label>
                     </div>
-                    <div class="pd-l-5">
-                        <small class="pd-y-10">Default</small>
-                        <div class="toggle toggle-light primary mg-auto disabled" id="design-default" style="height: 22px; width: 50px;">
-                            <div class="toggle-slide">
-                                <div class="toggle-inner" style="width: 78px; margin-left: -28px;">
-                                    <div class="toggle-on" style="height: 22px; width: 39px; text-indent: -7.33333px; line-height: 22px;">ON</div>
-                                    <div class="toggle-blob" style="height: 22px; width: 22px; margin-left: -11px;"></div>
-                                    <div class="toggle-off active" style="height: 22px; width: 39px; margin-left: -11px; text-indent: 7.33333px; line-height: 22px;">OFF</div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="pd-l-5 pd-x-10">
+                        <label class="ckbox">
+                            <input type="checkbox" id="editTemplateDefault" ><span>Default</span>
+                          </label>
 
                     </div>
                 </div>
@@ -37,10 +22,10 @@
             </div>
             <div class="pd-b-10">
                 <div class="mg-y-5">
-                    <input class="form-control" placeholder="Design name" id="editTemplateDesignName" type="text">
+                    <input class="form-control" placeholder="Design name" id="admin-design-name" type="text">
                 </div>
                 <div class="mg-y-5">
-                    <input class="form-control" placeholder="Thumbnail name"  id="editTemplateThumbName" type="text">
+                    <input class="form-control" placeholder="Thumbnail name" id="admin-design-title" type="text">
                 </div>
                 <div class="mg-y-5">
                     <input class="form-control" placeholder="File name" id="admin-file-name" type="text">
@@ -68,11 +53,14 @@
                 <div class="mg-y-5">
                     <input class="form-control"  placeholder="KopyKake Webstore Link" id="admin-design-link" type="text">
                 </div>
-              
+                <div class="mg-y-5">
+                    <input class="form-control" id="admin-kopykake-part"  placeholder="KopyKake Part #" id="admin-design-link" type="text">
+                </div>
+                <input class="form-control" id="edit-template-id" value=""  type="hidden">
         </div>
             <div id="save-image-ctrl">
                 <div class="btn-group" role="group" >
-                    <button type="button" id="save-design" class="btn btn-primary  pd-x-25 active ">Update</button>
+                    <button type="button" id="btnUpdateDesign" class="btn btn-primary  pd-x-25 active ">Update</button>
                     <button type="button" id="cancel-design" class="btn btn-secondary pd-x-25 ">Cancel</button>
                   </div>
             </div>

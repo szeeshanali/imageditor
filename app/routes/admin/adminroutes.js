@@ -172,14 +172,18 @@ router.get('/app/admin/workspace',(req,res)=>{
 router.get('/app/admin/template-designer', isAdmin, (req,res)=>{
   const  {width, height, title} = req.body;
   res.locals.pagetitle = "Template Designer"; 
+  res.locals.pageid = "template_designer";
   res.locals.uploadmessage = "Upload SVG Templates.";
   res.render("pages/admin/templatedesigner",{user:req.user});
 })
+
+
+/** Template */
+/**---------------------------- */
 router.get('/app/admin/templates', isAdmin, async (req,res)=>{
   const  {width, height, title} = req.body;
   res.locals.pagetitle ="Edit Template";
-  var templates = await uploads.find({type:'template', by_admin:true , },
-  { code:1, base64:1, title:1, created_dt:1, active:1 }).sort({order_no:1}); 
+  var templates = await uploads.find({type:'template', by_admin:true , }).sort({order_no:1}); 
 
   res.render("pages/admin/templates",{
     user      : req.user,
@@ -187,6 +191,20 @@ router.get('/app/admin/templates', isAdmin, async (req,res)=>{
   });
 
 })
+
+router.put('/api/admin/template/:id?', isAdmin, async (req,res)=>{
+  var id = req.params["id"]; 
+  if(!id){
+    return res.status(400).send({"status":400,"message":"Can't Update. Id is missing."});
+  }
+  await uploads.updateMany({type:'template', by_admin:true }, {$set: {default: false} });
+  await uploads.findOneAndUpdate({type:'template', by_admin:true, code:id }, req.body); 
+
+   return res.status(200).send({"status":400,"message":`Updated successfully, Id:${id}`});
+
+})
+
+
 router.delete('/app/admin/delete-template/:id', isAdmin, async (req,res)=>{
   const  templateid = req.params["id"];
   var templates = await commonService.uploadService.deleteTemplatesAsync(templateid);
@@ -194,6 +212,9 @@ router.delete('/app/admin/delete-template/:id', isAdmin, async (req,res)=>{
   commonService.uploadService.clear();
   res.send();  
 }) 
+
+
+
 router.post('/app/admin/save-template', function(req, res) {
   const {desc, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, code, ref_code} = req.body; 
  

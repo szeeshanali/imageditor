@@ -36,7 +36,8 @@
   $inputOrderNo       =       $("#admin-display-order");
   $selectPageSize     =       $("#admin-page-size");
   $inputLogoPerPage   =       $("#admin-logo-count");
-  $templateThumb      =       $("#templatepanel .template")
+  $templateThumb      =       $("#templatepanel .template");
+  $btnUpdateDesign = $("#btnUpdateDesign")
 
   $editTemplateDesignName   =       $("#editTemplateDesignName");
   $editTemplateThumbName    =       $("#editTemplateThumbName");
@@ -79,6 +80,38 @@
    
   })
   
+  $btnUpdateDesign.on("click",function(){
+    var data = {  
+          
+      title     : $inputThumbnailName.val(),
+      name      : $inputDesignName.val(),
+      file_name : $inputFileName.val(),
+      order_no  : $inputOrderNo.val(),
+      active    : designFlags.active,
+      default   : designFlags.default,
+      link      : $inputDesignLink.val(),
+      logos     : $inputLogoPerPage.val(), 
+      ref_code  : $kopykakePartNo.val(),
+  
+  }
+  if(!data.title || !data.name)
+  { toast("Template mandatory information is missing. ")
+    return; 
+  }
+      $.ajax({
+        type: "PUT",
+        url: `/api/admin/template/${selectedDesign.data.code}`,
+        data: data,
+        success:function(res){
+          designFlags.submitted = true; 
+          toast("Template information saved successfully!");
+        },
+        error:function(res){
+          designFlags.submitted = false; 
+          toast("Error while updating template.");
+        }
+    })
+  })
   $btnSaveDesign.on("click",function(){
    
     if(!selectedDesign.base64)
@@ -136,10 +169,35 @@ function loadSVGTemplate(id)
 
 }
 
-function loadTemplateInfo(template)
+function loadTemplateInfo(data)
 {
-  $editTemplateDesignName.val(template.name);
-  $editTemplateThumbName.val(template.title);
+
+  selectedDesign.data = data; 
+  $("#edit-template-id").val(data.code);
+  $inputThumbnailName.val(data.title);
+   $inputDesignName.val(data.name);
+  $inputFileName.val(data.file_name);
+  $inputOrderNo.val(data.order_no);
+  designFlags.active = data.active;
+  designFlags.default = data.default;
+  $inputDesignLink.val(data.link);
+   $inputLogoPerPage.val(data.logos);
+   $kopykakePartNo.val(data.ref_code);
+
+  if(data.active)
+   { $("#editTemplateActive").attr("checked",true); }
+
+  if(data.default)
+  {  $("#editTemplateDefault").attr("checked",true); }
+
+  $("#editTemplateActive").on("click",function(e)
+  { designFlags.active = e.target.checked; })
+
+  
+  $("#editTemplateDefault").on("click",function(e){
+    designFlags.default = e.target.checked;    
+  })
+ 
   //$btnActiveDesign    =       $("#design-active");
   // $btnDefaultDesign   =       $("#design-default");
   // $inputFileName      =       $("#admin-file-name");
@@ -162,8 +220,30 @@ function onDesignReload(o){
     $pageTitle.html(msg);    
  }
 
+
+
   function onSaveTemplate(){
     if(designFlags.submitted ){
+      toast("Already submitted, please choose new design.");
+    return ; 
+    }
+    var m = selectedDesign.meta;
+    var meta = {
+        width: m.width, 
+        height: m.height,
+        objects: m.logoCount, 
+        objectWidth: m.logoWidth,
+        objectWidth: m.logoHeight,
+        title: $templateTitle.val(),
+        pageSize: $selectPageSize.val(),
+    }
+    if(!meta.title || meta.title.length > 100) 
+    { 
+      toast("Error: Please Enter Title!");
+      return; 
+    }
+    var MIME_TYPE = "image/png";
+    var dataUrl = selectedDesign.base64;  
 
       $.ajax({
         type: "POST",
@@ -194,61 +274,17 @@ function onDesignReload(o){
           designFlags.submitted = false; 
           toast("Error while uploading template.");
         }
-    })
-
-     // toast("Design has already been submitted. Please upload new design.");
-      return; 
+      })
     }
-    var m = selectedDesign.meta;
-    var meta = {
-        width: m.width, 
-        height: m.height,
-        objects: m.logoCount, 
-        objectWidth: m.logoWidth,
-        objectWidth: m.logoHeight,
-        title: $templateTitle.val(),
-        pageSize: $selectPageSize.val(),
-    }; 
+
+   
 
 
-    if(!meta.title || meta.title.length > 100) 
-      { 
-        toast("Error: Please Enter Title!")
-        return; 
-      }
+  
     
-    var MIME_TYPE = "image/png";
-    var dataUrl = selectedDesign.base64;    
-    $.ajax({
-        type: "POST",
-        url: "/app/admin/save-template",
-        data: {  
-            
-            desc      : "",
-            meta      : JSON.stringify(meta) ,
-            title     : $inputThumbnailName.val(),
-            name      : $inputDesignName.val(),
-            file_name : $inputFileName.val(),
-            file_ext  : ".svg",
-            order_no  : $inputOrderNo.val(),
-            active    : designFlags.active,
-            base64    : dataUrl,
-            type      : "template",
-            by_admin  : true,
-            default   : designFlags.default,
-            link      : $inputDesignLink.val(),
-            logos     : $inputLogoPerPage.val(), 
-        },
-        success:function(res){
-          designFlags.submitted = true; 
-          toast("Template has been successfully uploaded.");
-        },
-        error:function(res){
-          designFlags.submitted = false; 
-          toast("Error while uploading template.");
-        }
-    })
-  }
+      
+    
+  
   
   const processFiles = (files) => {
     if (files.length === 0) return;
