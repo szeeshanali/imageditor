@@ -1,9 +1,11 @@
 (()=>{
   
-  var canvas = new fabric.StaticCanvas("admin-main-canvas",{
+  var canvas = new fabric.Canvas("admin-main-canvas",{
     preserveObjectStacking:true
-})
+ })
 
+
+ $layers = $("#layers");
  $adminImageUpload              =   $("#admin-image-upload");
  $btnImageUploadHidden          =   $(`#admin-image-upload-hidden`);
  $templateContainer             =   $("#template-container"); 
@@ -23,7 +25,18 @@
  var $adminDesignCtrl           = $(".admin-design-ctrl");
  var $pageTitle                 = $(".am-pagetitle");
  
-
+ const layerHtml = `<div class="media d-block d-flex layer-item object-options" data-index='{index}' id='{id}'  >
+ <div class="d-block mg-sm-r-10 img"> <img src="{src}" class="wd-40" alt="Image" ></div>
+ <small class="d-sm-flex layer-label">Layer {index}</small>
+ <div class="d-sm-flex layers-controls" style="display:none !important">
+ <i class='ion-ios-copy-outline duplicate main-tool-button'   title='duplicate' ></i>
+ <i class='ion-ios-upload-outline bring-fwd' title="move up" id="bring-fwd" ></i>
+ <i class='ion-ios-download-outline bring-back' title="move down" id="bring-back" ></i>
+ <i class='ion-ios-arrow-thin-up' title="top" ></i>
+ <i class='ion-ios-arrow-thin-down' title="down" ></i>
+ <i class='ion-ios-trash-outline delete main-tool-button' title='delete' ></i>
+ </div>
+</div>`; 
   // Template Upload: 
 
   $kopykakePartNo    =       $("#admin-kopykake-part");
@@ -120,12 +133,14 @@
    })
   
    $adminImageUpload.on("click",function () {
+  
       $btnImageUploadHidden.click();
     })
   
     $btnImageUploadHidden.on('change', function (e) {
       if (e.target.files.length === 0) return;
-      processFiles(e.target.files)
+      var pageid = $(this).attr("data-page-id");
+      processFiles(e.target.files, pageid)
     })
    
  }
@@ -277,19 +292,11 @@ function onDesignReload(o){
       })
     }
 
-   
 
-
-  
-    
-      
-    
-  
-  
-  const processFiles = (files) => {
+  const processFiles = (files, pageid) => {
     if (files.length === 0) return;
     designFlags.submitted = false; 
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/svg+xml']
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/svg+xml','image/gif']
 
     for (let file of files) {
       // check type
@@ -298,7 +305,6 @@ function onDesignReload(o){
       // handle svg
       if (file.type === 'image/svg+xml') {
         reader.onload = (f) => {
-          
             var svgBase64 = f.srcElement.result;
             selectedDesign.base64 = svgBase64; 
             canvas.clear();
@@ -310,20 +316,15 @@ function onDesignReload(o){
                 logoCount : objects.length,
                 logoWidth : objects[0].width, 
                 logoHeight: objects[0].height
-
-
-              }
+            }
               var loadedObjects = new fabric.Group(group);
               var templateWidth = 612;
               var templateHeight = 792;      
               canvas.setDimensions({top:0, width: templateWidth, height: templateHeight});
-              //canvas.orignalBackgroundImage = loadedObjects;                      
               canvas.setBackgroundImage(loadedObjects,canvas.renderAll.bind(canvas));
-             // canvas.add(loadedObjects);
               canvas.renderAll();
               onDesignLoaded(selectedDesign.meta);
               $("#upload-template-splash").remove();
-             // loadedObjects.center().setCoords();
              
           },function(item, object) {
                   object.set('id',item.getAttribute('id'));
@@ -342,15 +343,158 @@ function onDesignReload(o){
         reader.readAsDataURL(file);
         continue;
       }else{
-        alert("Error: Please Upload SVG File!")
+        if( pageid != "__template-designer")
+        {
+          reader.onload = (f) => {
+            fabric.Image.fromURL(f.target.result, (img) => {
+                img.scaleToWidth(300);
+              canvas.add(img).renderAll();
+            })
+          }
+          reader.readAsDataURL(file);
+        }
+        else
+        { toast("Error: Please Upload SVG File!"); }        
       }
 
     }
   }
 
 
-  
+function onObjectAdded(o)
+    {
+       // $pageTitle.addClass("hidden");
+       // $("#maintools > .image-tools").removeClass("hidden");
+        addLayer();
+       // enabledRepeatDesignButton(o);
+}
+
+  function addLayer(){
+    var temp = layerHtml;    
+    $layers.html();
+    var layers = "";
+    for(var i=0;i<canvas._objects.length; i++)
+    {
+      var obj = canvas._objects[i];
+      var src = obj._element?.currentSrc;
+      if(obj.text) {
+          src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAABHNJREFUeJzt3LurHGUcx+FvcqKiJohGBBGjRPHyB4imE0u72Akix1bsBAsriyiKokQ7CQoKaiGKCpGAjSI2golXhIR4v3USbzExicViiCHndy55d95zdp4H3iYLM7+d3c+emd0hCQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABJsq73AFOyMckVmd3ntxp9n+T33kNQ25hkV5IjSU5Yg64jSZ5NcuGirxJdrEuyJ/3fKGNfu+Mv96p0W/q/OazJurV+qdaO9b0HaOiW3gNw0rbeA7QyS4Fc0HsATjqv9wCtzFIg0JxAoCAQKGzoPcAqcSDJd0mON9zmukx+rLy+4TbP5MskP2by7VEr65NcmeTahtuksx1Z/teRLyW5YcpzbUtycAWzLbb2J7lpyrPfmOSVFcz20JTnYgWWE8ixJHcPONvWTG7DaBXHoSRbBpz/nkyO2egCGes1yANJXhhwfweTvNhwe88n+bbh9payvwcH3N+qMcZAvkqys8N+9zbc1r6G21qqJzNslKvCGAPZmeSfDvs90nBbRxtuazn7fKbDfrsaWyCHkjzXe4g1bFeSP3oPMaSxBbIryW+9h1jDfs3IPmDGFMjxjPAUYQqeTtvfXFa1MQXyepKvew8xAw4keav3EEMZUyBP9R5ghozmWI4lkA+TfNB7iBnybvp81Ty4WQrkcPHY4xnRefMATiR5onj8z6EGmbZZCuSjBf79nSSvDjnISLyc5L0FHlvotaCjczK5s/XUe4L2Jtncc6hTzKfdvVh3DTv6gi5L8mn+P9tnSeZ6DsXCrkvyfia3kzya1fVf0Mxn9gJJkk2ZnMJ+k8lfFLfIsyLzmc1AZtosXYNAcwKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIZDhzDbfldRuIAz2crQ23dXXDbUF3c0n2JznRaH0eH27MkPvTLo7/1n2DPgOYkvkkx9I+kKNJ7hzuaUA7m5LckWR32odx+nozyfYkGwd5ZrBCV2Vy2rMnyd+Zfhinr8NJ3k5yb5ItU36usKi5JNuSPJLkkwwfxGLr4yQ7ktwcF/QM6KIkjyX5Jf0jWOr6OcnDmZz6wdRck+Rg+r/hV7r2Z3IqCM2dm+SL9H+Tn+3al2RD42MD2Z7+b+5W6/bGx2ZmuXhbukt6D9DQ5t4DMHsuzeRit/en/9muH5Jc3PjYQJLJRfobmfyK3fuNvtx1NMlrcaPjsqzrPcAadX6Sy7N2TlGPJ/kpyV+9BwEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM7kX8fwvIWqet/rAAAAAElFTkSuQmCC';
+      }
+      layers += temp.replace(/{id}/ig,obj.id)
+      .replace("{src}",src)
+      .replace("{_id}",obj.id)
+      .replace(/{index}/ig, i+1);
+    }
+    $layers.html(layers);
+    $("#layers .layer-item").on("click",function() {
+      layerSelectEventHandler(this, false);
+    })
+
+}
+
+function layerSelectEventHandler($elem, selected)
+{
+      showLayerControls($elem,selected);
+}
+
+function initCanvasEvents(){
+    
+
+       
+  canvas.selectedLayerId = null; 
+  canvas.on("object:added",(o)=>{
+      o.target.id = `obj${canvas._objects.length}`;
+      o.target.index = canvas._objects.length-1;
+      onObjectAdded(o);
+  })
+  canvas.on("selection:created",(o)=>{
+    const id = o.selected[0].id; 
+    var elem = $(`#${id}`)[0];
+    layerSelectEventHandler(elem,true);
+  })
+  canvas.on("object:modified",(o)=>{
+    //  onCanvasModified(o);
+  })
+
+  //initCanvasTextEvents();    
+}
+
+
+
+function showLayerControls($elem, selected)
+    {
+      debugger;
+        var target = $elem;
+        var index = parseInt($elem.getAttribute("data-index"))-1;        
+        var preObj = canvas.selectedObj?.target;
+        if(preObj?.id != target.id)
+        { 
+            $(`#${target.id} .layers-controls`).show();
+            $(`#${target.id}`).addClass("selected-layer");
+           
+            canvas.discardActiveObject();
+            canvas.requestRenderAll();
+            canvas.setActiveObject(canvas.item(index));
+            if(preObj)
+            {
+                $(`#${preObj.id} .layers-controls`)
+                .attr("style","display:none !important");
+                $(`#${preObj.id}`).removeClass("selected-layer");                
+            }
+            canvas.selectedObj = canvas.item(index);
+            
+        }
+
+        initLayerEvents($elem)
+       
+}
+
+function initLayerEvents($elem) {
+var id = $elem.id;
+
+  $(`#${id} .delete`).on("click",function(e){
+    e.stopPropagation();
+     canvas.remove(canvas.selectedObj).renderAll();
+     addLayer();
+  })
+
+  $(`#${id} .duplicate`).on("click",function(e){
+    e.stopPropagation();
+    var object = fabric.util.object.clone(canvas.getActiveObject());
+    canvas.add(object);
+  })
+
+
+      // $deleteItem = $(`#${obj.id} .delete`); 
+      // $duplicateItem = $(`#${obj.id} .duplicate`); 
+      // $moveUpItem = $("#layers .bring-fwd"); 
+      // $moveDownItem = $("#layers .bring-back"); 
+
+      // $deleteItem.on("click",function(){
+      //     //$(this).parent().parent().remove();
+      //     var selectedObj = canvas.selectedObj.target;
+      //     canvas.remove(selectedObj).renderAll();
+      //     $(`#${selectedObj.id}`).remove();           
+      // });
+
+
+      // $duplicateItem.on("click",function(){
+      //     var object = fabric.util.object.clone(canvas.getActiveObject());
+      //     object.set("top", object.top+5);
+      //     object.set("left", object.left+5);
+      
+      //     canvas.add(object);
+
+      // });
+      // $moveUpItem.on("click",function(){});
+      // $moveDownItem.on("click",function(){});
+      //$moveTopItem.on("click",function(){});
+      //$moveBottomItem.on("click",function(){});
+
+}
+
  InitUIEvents();
+ initCanvasEvents();
 
   function toast(message) {
     var $toast = $("#snackbar").addClass("show");

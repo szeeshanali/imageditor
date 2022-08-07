@@ -1,0 +1,21 @@
+<div class="row">
+    <div class="col-lg-9 pd-r-0">
+        <div class="workarea" style="height:800px">
+            <div  id="canvas-holder">
+                <div class="content tx-center">
+                    <canvas id="admin-main-canvas" width="612" height="792" ></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 pd-x-0 mg-t-1">
+        <div class="card pd-20 ">
+            <%- include('../../partials/admin/layers'); %>
+          </div>
+    </div>
+    </div>
+<script>
+    $(".tab-content .tab-pane").each((i,e)=>
+    { $(e).removeClass("active"); })    
+   $("#clipartmenu").addClass("active");
+</script>
