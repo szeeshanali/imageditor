@@ -229,7 +229,6 @@
             var curAngle = selectedObj.angle;
             selectedObj.rotate(curAngle+90);
             canvas.renderAll();
-
         })
 
         $btnTemplate.on("click",function(e)

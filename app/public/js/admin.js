@@ -59,10 +59,216 @@
  var designFlags = {active:false, default:false, submitted:false}; 
  
  const dpi = 72; 
-
  
+ var filters = ['grayscale', 'invert', 'remove-color', 'sepia', 'brownie',
+ 'brightness', 'contrast', 'saturation', 'vibrance', 'noise', 'vintage',
+ 'pixelate', 'blur', 'sharpen', 'emboss', 'technicolor',
+ 'polaroid', 'blend-color', 'gamma', 'kodachrome',
+ 'blackwhite', 'blend-image', 'hue', 'resize'];
+ function applyFilter(index, filter) {
+       
+  var obj = canvas.getActiveObject();
+   if(!obj.filterIndex && obj.filterIndex != 0)
+   {
+      obj.filters[index] = true && filter;
+      obj.filterIndex = index;
+   }else{
+      obj.filters[index] = false && filter;
+      obj.filterIndex = null;
+   }
+     
+
+  obj.applyFilters();     
+  canvas.renderAll();
+}
+
+function applyFilterValue(index, prop, value) {
+  var obj = canvas.getActiveObject();
+  if (obj.filters[index]) {
+    obj.filters[index][prop] = value;
+    obj.applyFilters();
+    canvas.renderAll();
+  }
+}
+
+ function flipXYObject()
+ {
+
+  $("#flipW").on("click", () => {
+    var selectedObj = canvas.getActiveObject(); 
+    if(!selectedObj)
+    {
+        toast("Please select an object.");
+        return; 
+    }
+    selectedObj.set('flipX', !selectedObj.flipX);
+    canvas.renderAll();
+  });
+
+
+
+  $("#flipH").click(() => {
+    var selectedObj = canvas.getActiveObject(); 
+    if(!selectedObj)
+    {
+        toast("Please select an object.");
+        return; 
+    }
+    selectedObj.set('flipY', !selectedObj.flipY);
+    canvas.renderAll();
+
+  });
+
+
+
+      // $deleteItem = $(`#${obj.id} .delete`); 
+      // $duplicateItem = $(`#${obj.id} .duplicate`); 
+      // $moveUpItem = $("#layers .bring-fwd"); 
+      // $moveDownItem = $("#layers .bring-back"); 
+
+      // $deleteItem.on("click",function(){
+      //     //$(this).parent().parent().remove();
+      //     var selectedObj = canvas.selectedObj.target;
+      //     canvas.remove(selectedObj).renderAll();
+      //     $(`#${selectedObj.id}`).remove();           
+      // });
+
+
+      // $duplicateItem.on("click",function(){
+      //     var object = fabric.util.object.clone(canvas.getActiveObject());
+      //     object.set("top", object.top+5);
+      //     object.set("left", object.left+5);
+      
+      //     canvas.add(object);
+
+      // });
+      // $moveUpItem.on("click",function(){});
+      // $moveDownItem.on("click",function(){});
+      //$moveTopItem.on("click",function(){});
+      //$moveBottomItem.on("click",function(){});
+ }
+function rotateObject()
+{
+  $(`#rotate`).on("click",function(e){
+    var selectedObj = canvas.getActiveObject();
+    if(!selectedObj)
+    {
+        toast("Please select an object.");
+        return; 
+    }
+    var curAngle = selectedObj.angle + 90;
+    selectedObj.rotate(curAngle);
+    if(curAngle > 270)
+    { selectedObj.angle = 0; }
+    canvas.renderAll();
+  })
+}
+function cropObject(){
+  // $(`#crop`).on("click",function(e){
+  //   var selectedObj = canvas.getActiveObject();
+  //     if(!selectedObj)
+  //     {
+  //         toast("Please select an object.");
+  //         return; 
+  //     }
+
+
+  //     var pos = [0, 0];
+  //     var c = document.getElementById('admin-main-canvas');
+  //     var r = c.getBoundingClientRect();
+  //     pos[0] = r.left;
+  //     pos[1] = r.top;
+      
+  //     var mousex = 0;
+  //     var mousey = 0;
+  //     var crop = false;
+  //     var disabled = false;
+      
+  //     //console.log(pos);
+      
+  //     var el = new fabric.Rect({
+  //         //left: 100,
+  //         //top: 100,
+  //         fill: 'transparent',
+  //         originX: 'left',
+  //         originY: 'top',
+  //         stroke: '#ccc',
+  //         strokeDashArray: [2, 2],
+  //         opacity: 1,
+  //         width: 1,
+  //         height: 1
+  //     });
+      
+  //     el.visible = false;
+  //     canvas.add(el);
+  //     var object;
+    
+      
+  //     canvas.on("mouse:down", function (event) {
+  //         if (disabled) return;
+  //         el.left = event.e.pageX - pos[0];
+  //         el.top = event.e.pageY - pos[1];
+  //         //el.selectable = false;
+  //         el.visible = true;
+  //         mousex = event.e.pageX;
+  //         mousey = event.e.pageY;
+  //         crop = true;
+  //         canvas.bringToFront(el);
+  //     });
+      
+  //     canvas.on("mouse:move", function (event) {
+  //         //console.log(event);
+  //         if (crop && !disabled) {
+  //             if (event.e.pageX - mousex > 0) {
+  //                 el.width = event.e.pageX - mousex;
+  //             }
+      
+  //             if (event.e.pageY - mousey > 0) {
+  //                 el.height = event.e.pageY - mousey;
+  //             }
+  //         }
+  //     });
+      
+  //     canvas.on("mouse:up", function (event) {
+  //         crop = false;
+  //    });
+
+
+
+
+
+  // })
+
+}
+
+
+function grayscaleObject()
+{
+  $("#btnGrayscale").on("click", ()=>{
+    applyFilter(0, new fabric.Image.filters.Grayscale());         
+    applyFilterValue(0, 'mode', 'average');
+    
+})
+}
+
+function brightnessObject()
+{
+  
+  
+  $('#brightness-value').on("input", function() {
+    applyFilterValue(5, 'brightness', parseFloat(this.value));
+  });
+}
+
  function InitUIEvents()
  {
+  rotateObject(); 
+  cropObject();
+  flipXYObject();
+  grayscaleObject();
+  brightnessObject();
+ 
+
 
   $templateThumb.on("click",(e)=>{
     var templateId = e.currentTarget.id; 
@@ -140,7 +346,8 @@
     $btnImageUploadHidden.on('change', function (e) {
       if (e.target.files.length === 0) return;
       var pageid = $(this).attr("data-page-id");
-      processFiles(e.target.files, pageid)
+      processFiles(e.target.files, pageid);
+      $btnImageUploadHidden.val('');
     })
    
  }
@@ -373,7 +580,7 @@ function onObjectAdded(o)
     var temp = layerHtml;    
     $layers.html();
     var layers = "";
-    for(var i=0;i<canvas._objects.length; i++)
+    for(var i=canvas._objects.length-1;i>=0; i--)
     {
       var obj = canvas._objects[i];
       var src = obj._element?.currentSrc;
@@ -385,10 +592,16 @@ function onObjectAdded(o)
       .replace("{_id}",obj.id)
       .replace(/{index}/ig, i+1);
     }
-    $layers.html(layers);
-    $("#layers .layer-item").on("click",function() {
-      layerSelectEventHandler(this, false);
-    })
+    if(layers != "")
+    {
+      $layers.html(layers);  
+      $("#layers .layer-item").on("click",function() {
+        layerSelectEventHandler(this, false);
+      })
+    }
+    else{ $layers.html("Empty! please upload an image.");}
+   
+   
 
 }
 
@@ -398,7 +611,13 @@ function layerSelectEventHandler($elem, selected)
 }
 
 function initCanvasEvents(){
-    
+  fabric.Object.prototype.transparentCorners = false;
+  fabric.Object.prototype.cornerStyle = 'circle';
+  fabric.Object.prototype.borderColor = '#000';
+  fabric.Object.prototype.cornerColor = '#494699';
+  fabric.Object.prototype.cornerStrokeColor = '#000';
+  fabric.Object.prototype.cornerSize = 5;
+  fabric.Object.prototype.padding = 0;
 
        
   canvas.selectedLayerId = null; 
@@ -407,10 +626,24 @@ function initCanvasEvents(){
       o.target.index = canvas._objects.length-1;
       onObjectAdded(o);
   })
+  canvas.on("selection:updated",(o)=>{
+    const id = o.selected[0].id; 
+    var elem = $(`#${id}`)[0];
+    clearLayerSelection();
+    $(`#${id} .layers-controls`).show();
+    $(`#${id}`).addClass("selected-layer");
+
+    //layerSelectEventHandler(elem,true);
+  })
+  
   canvas.on("selection:created",(o)=>{
     const id = o.selected[0].id; 
     var elem = $(`#${id}`)[0];
-    layerSelectEventHandler(elem,true);
+    clearLayerSelection();
+    $(`#${id} .layers-controls`).show();
+    $(`#${id}`).addClass("selected-layer");
+
+    //layerSelectEventHandler(elem,true);
   })
   canvas.on("object:modified",(o)=>{
     //  onCanvasModified(o);
@@ -419,11 +652,19 @@ function initCanvasEvents(){
   //initCanvasTextEvents();    
 }
 
-
+function clearLayerSelection()
+{
+  for(var i =0;i<canvas._objects.length;i++)
+  {
+    var id = canvas._objects[i].id;
+    $(`#${id} .layers-controls`).attr("style","display:none !important");
+    $(`#${id}`).removeClass("selected-layer");
+  }
+ 
+}
 
 function showLayerControls($elem, selected)
     {
-      debugger;
         var target = $elem;
         var index = parseInt($elem.getAttribute("data-index"))-1;        
         var preObj = canvas.selectedObj?.target;
@@ -461,35 +702,22 @@ var id = $elem.id;
   $(`#${id} .duplicate`).on("click",function(e){
     e.stopPropagation();
     var object = fabric.util.object.clone(canvas.getActiveObject());
+    object.set("top", object.top+5);
+    object.set("left", object.left+5);
     canvas.add(object);
   })
 
+  $(`#${id} .bring-fwd`).on("click",function(e){
+    e.stopPropagation();
+    var obj = canvas.getActiveObject();
+   
+    canvas.bringForward(obj)
+    canvas.renderAll();
+    var elem = $(`#${id}`);
+    elem.prev().insertAfter(elem);
+  })
 
-      // $deleteItem = $(`#${obj.id} .delete`); 
-      // $duplicateItem = $(`#${obj.id} .duplicate`); 
-      // $moveUpItem = $("#layers .bring-fwd"); 
-      // $moveDownItem = $("#layers .bring-back"); 
-
-      // $deleteItem.on("click",function(){
-      //     //$(this).parent().parent().remove();
-      //     var selectedObj = canvas.selectedObj.target;
-      //     canvas.remove(selectedObj).renderAll();
-      //     $(`#${selectedObj.id}`).remove();           
-      // });
-
-
-      // $duplicateItem.on("click",function(){
-      //     var object = fabric.util.object.clone(canvas.getActiveObject());
-      //     object.set("top", object.top+5);
-      //     object.set("left", object.left+5);
-      
-      //     canvas.add(object);
-
-      // });
-      // $moveUpItem.on("click",function(){});
-      // $moveDownItem.on("click",function(){});
-      //$moveTopItem.on("click",function(){});
-      //$moveBottomItem.on("click",function(){});
+  
 
 }
 

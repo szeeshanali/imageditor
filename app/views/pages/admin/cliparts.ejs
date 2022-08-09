@@ -9,9 +9,54 @@
         </div>
     </div>
     <div class="col-lg-3 pd-x-0 mg-t-1">
-        <div class="card pd-20 ">
+        <div class="card pd-20 mg-b-1">
             <%- include('../../partials/admin/layers'); %>
-          </div>
+        </div>
+        <div class="card pd-20 mg-b-1">
+            <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Size</h6>
+            <div class="d-flex mg-b-10">
+                <div class="bd-r pd-r-10">
+                  <label class="tx-12 ">Crop</label>
+                  <p class="tx-center tx-22">
+                    <i class="ion-crop" id="crop"></i>
+                  </p>
+                  
+                </div>
+                <div class="bd-r pd-x-10">
+                  <label class="tx-12 " >Rotate</label>
+                  <p class="tx-center tx-22">
+                    <i class="ion-loop " id="rotate"></i>
+                  </p>                
+                </div>
+               
+                <div class="pd-x-10 bd-r">
+                    <label class="tx-12" >FlipX</label>
+                    <p class="tx-center tx-22">
+                      <i class="ion-arrow-swap" id="flipW"></i>
+                    </p>
+                  </div>
+                  <div class="pd-l-10">
+                    <label class="tx-12" >FlipY</label>
+                    <p class="tx-center tx-22" style="transform:rotate(90deg)">
+                        <i class="ion-arrow-swap" id="flipH" ></i>
+                    </p>
+                  </div>
+              </div>
+            
+        </div>
+        <div class="card pd-20 ">
+            <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Color & Brightness</h6>
+            
+            <div class="tx-12" >
+                <div ><b>Brightness</b></div>
+                <input type="range" min="1" max="100" value="50" class="slider " style="width:100%;height:2px" id="brightness-value">
+                <div><b>Contrast</b></div>
+                <input type="range" min="1" max="100" value="50" class="slider" style="width:100%;height:2px" id="slider-font-spacing">
+              
+                <b class="ion-record tx-22" id="btnGrayscale"></b> &nbsp; Grayscale
+            </div>
+
+        </div>
     </div>
     </div>
 <script>
