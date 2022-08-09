@@ -57,6 +57,7 @@ router.get(ROUTE_LOGIN, (req, res) => {
 });
 
 router.post(ROUTE_LOGIN, (req, res, next) => { 
+    
     passport.authenticate('local',{
       successRedirect : ROUTE_USER_WORKSPACE,
       failureRedirect : ROUTE_LOGIN,

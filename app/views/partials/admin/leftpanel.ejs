@@ -43,9 +43,9 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="#settings" class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+                <a href="#library" class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
                     <i class="icon ion-ios-gear-outline tx-24 tx-white"></i>
-                    <div class="visually-hidden tx-12 tx-white">Settings</div>
+                    <div class="visually-hidden tx-12 tx-white">Shared Library</div>
                 </a>
             </li>
         </ul>
@@ -74,36 +74,27 @@
             <div id="templatepanel" class="tab-pane pd-15">
                 <div class="d-flex svg-templates tx-center">
                     <%for(var i=0; i<templates.length;i++){%>
-
                         <div id="<%=templates[i].code %>" class="template">
                             <small class="<%=templates[i].active?'':'disable-badge' %>"><%=templates[i].active?"":"Disabled" %></small>
                             <small class="<%=templates[i].default?'default-badge':'' %>"><%=templates[i].default?"Default":"" %></small>
-
                             <img src="<%=templates[i].base64 %>" style="width:100px">
-                                <div class="tx-12 tx-bold pd-y-5"><%=templates[i].title %>
-                                </div>
-
-                            </div>
-                        <%}%>
-                    </div>
+                                <div class="tx-12 tx-bold pd-y-5"><%=templates[i].title %></div>
+                        </div>
+                    <%}%>
+                </div>
                 </div>
 
-                <%if(locals.page.id == "__clipart"){%>
-                    <div id="clipartmenu" class="tab-pane">
-                        <%- include('../../partials/admin/clipart-panel'); %>
+                <%if(locals.page.id == "__pre-designed"){%>
+                    <div id="pre-designed-panel" class="tab-pane">
+                        <%- include('../../partials/admin/pre-designed-panel'); %>
                     </div>
                 <%}%>
 
-            
                 <div id="textmenu" class="tab-pane">
                     <%- include('../../partials/client/typo'); %>
-
                 </div>
-                <!-- #chatMenu -->
                 <div
                     id="settingMenu" class="tab-pane"><!-- <%- include('../../partials/client/imgupload'); %> -->
                 </div>
-                <!-- #settingMenu -->
             </div>
-            <!-- tab-content -->
         </div>

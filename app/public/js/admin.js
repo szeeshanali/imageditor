@@ -24,6 +24,7 @@
  var $btnUploadTemplate         = $("#btn-upload-template");
  var $adminDesignCtrl           = $(".admin-design-ctrl");
  var $pageTitle                 = $(".am-pagetitle");
+ var $btnSavePreDesign          = $("#btnSavePreDesign");
  
  const layerHtml = `<div class="media d-block d-flex layer-item object-options" data-index='{index}' id='{id}'  >
  <div class="d-block mg-sm-r-10 img"> <img src="{src}" class="wd-40" alt="Image" ></div>
@@ -50,7 +51,7 @@
   $selectPageSize     =       $("#admin-page-size");
   $inputLogoPerPage   =       $("#admin-logo-count");
   $templateThumb      =       $("#templatepanel .template");
-  $btnUpdateDesign = $("#btnUpdateDesign")
+  $btnUpdateDesign    =       $("#btnUpdateDesign");
 
   $editTemplateDesignName   =       $("#editTemplateDesignName");
   $editTemplateThumbName    =       $("#editTemplateThumbName");
@@ -68,6 +69,8 @@
  function applyFilter(index, filter) {
        
   var obj = canvas.getActiveObject();
+  if(!obj) return; 
+
    if(!obj.filterIndex && obj.filterIndex != 0)
    {
       obj.filters[index] = true && filter;
@@ -84,6 +87,7 @@
 
 function applyFilterValue(index, prop, value) {
   var obj = canvas.getActiveObject();
+  if(!obj) return; 
   if (obj.filters[index]) {
     obj.filters[index][prop] = value;
     obj.applyFilters();
@@ -253,22 +257,49 @@ function grayscaleObject()
 
 function brightnessObject()
 {
-  $("#brightnessVal").text(`(0%)`);
-  
+  $("#brightnessVal").text(`(0%)`);  
   $('#brightness-value').on("click",function(){
     applyFilter(5,    new fabric.Image.filters.Brightness({
       brightness: parseFloat($('#brightness-value').val())
-    }))
+    }));
   })
 
-  $('#brightness-value').on("input", function() {
-   
+  $('#brightness-value').on("input", function() {   
     var val = this.value; 
     $("#brightnessVal").text(`(${parseInt(val*100)}%)`);
     applyFilterValue(5, 'brightness', parseFloat(val));
   });
 }
 
+
+window.addEventListener("paste",pasteImage);
+
+function pasteImage(event) {
+debugger;
+    // get the raw clipboardData
+    var cbData=event.clipboardData;
+
+    for(var i=0;i<cbData.items.length;i++){
+
+        // get the clipboard item
+        var cbDataItem = cbData.items[i];
+        var type = cbDataItem.type;
+
+        // warning: most browsers don't support image data type
+        if (type.indexOf("image")!=-1) {
+            // grab the imageData (as a blob)
+            var imageData = cbDataItem.getAsFile();
+            // format the imageData into a URL
+            var imageURL=window.webkitURL.createObjectURL(imageData);
+            fabric.Image.fromURL(imageURL, (img) => {
+              //img.scaleToWidth(300);
+                canvas.add(img).renderAll();
+              })
+            // We've got an imageURL, add code to use it as needed
+            // the imageURL can be used as src for an Image object
+        }
+    }
+}
 function contrastObject()
 {
   $("#contrastVal").text(`(0%)`);
@@ -285,6 +316,10 @@ function contrastObject()
     $("#contrastVal").text(`(${parseInt(val*100)}%)`);
     applyFilterValue(6, 'contrast', parseFloat(val));
   });
+}
+
+function initImageEvents(){
+
 }
 
  function InitUIEvents()
@@ -364,10 +399,9 @@ function contrastObject()
     if(!selectedDesign.base64)
     {  toast("Error: Please upload a Template"); return; }
       onSaveTemplate();
-   })
+    });
   
    $adminImageUpload.on("click",function () {
-  
       $btnImageUploadHidden.click();
     })
   
@@ -470,7 +504,41 @@ function onDesignReload(o){
     $pageTitle.html(msg);    
  }
 
+ $btnSavePreDesign.on("click",()=>{
+  $.ajax({
+      type: "POST",
+      url: "/api/admin/save-pre-design",
 
+      data: {   
+
+        desc      : "",
+        title     : $inputThumbnailName.val(),
+        name      : $inputDesignName.val(),
+        file_name : $inputFileName.val(),
+        file_ext  : ".json",
+        order_no  : $inputOrderNo.val(),
+        active    : designFlags.active,
+        type      : "pre-designed",
+        by_admin  : true,
+        default   : designFlags.default,
+        link      : $inputDesignLink.val(),
+        logos     : $inputLogoPerPage.val(), 
+        ref_code  : $kopykakePartNo.val() ,
+        thumbBase64  : canvas.toDataURL(
+              {
+                  format: 'jpg',
+                  quality: 0.8
+              }
+          ),  
+          json    : JSON.stringify(canvas.toJSON()) },
+      success:function(res){
+        toast("Design has been Saved.");
+      },
+      error:function(res){
+        toast("Error while saving design.");
+      }
+  })
+})
 
   function onSaveTemplate(){
     if(designFlags.submitted ){
@@ -556,10 +624,14 @@ function onDesignReload(o){
               var templateWidth = 612;
               var templateHeight = 792;      
               canvas.setDimensions({top:0, width: templateWidth, height: templateHeight});
-              canvas.setBackgroundImage(loadedObjects,canvas.renderAll.bind(canvas));
+              if( pageid === "__template-designer"){
+                canvas.setBackgroundImage(loadedObjects,canvas.renderAll.bind(canvas));
+                $("#upload-template-splash").remove();
+              }else{
+                canvas.add(loadedObjects);
+              }
               canvas.renderAll();
               onDesignLoaded(selectedDesign.meta);
-              $("#upload-template-splash").remove();
              
           },function(item, object) {
                   object.set('id',item.getAttribute('id'));

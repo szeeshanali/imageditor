@@ -223,24 +223,58 @@ router.get('/app/admin/cliparts', isAdmin, async (req,res)=>{
   { user  : req.user });
 })
 
+router.post('/api/admin/save-pre-design', isAdmin, function(req, res) {
+
+  const {desc, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link,json, thumbBase64, code, ref_code} = req.body; 
+  var _id = mongoose.Types.ObjectId();
+  var uploadModel = {
+    title           :   title,
+    name            :   name,
+    order_no        :   1,
+    code            :   _id,
+    active          :   true,
+    json            :   json,
+    thumbBase64     :   thumbBase64,
+    default         :   false,
+    by_admin        :   true,
+    type            :   "pre-designed",
+    uploaded_by     :    req.user._id  ,
+    ref_code        :   ref_code, 
+    link :              link
+
+
+  };
+  commonService.uploadService.upload(uploadModel,(err,msg)=>{
+      if(!err)
+          {res.status(200).send({message:`Success`, error: msg}); }
+          else{res.status(400).send({message:`Unable to upload file.`, error: msg});  }
+          
+      })
+
+})
+
 router.get('/app/admin/pre-designed', isAdmin, async (req,res)=>{
-  const  {width, height, title} = req.body;
-  res.locals.pagetitle ="Custom Design";
-  res.render("pages/admin/templates",
-  {
-    user      : req.user 
+  res.locals.page = {
+    id: "__pre-designed",
+    title: "Custom Design",
+    user: req.user
+  }
+  res.render("pages/admin/pre-designed",
+  { user      : req.user 
   });
 
 })
 router.put('/api/admin/template/:id?', isAdmin, async (req,res)=>{
   var id = req.params["id"]; 
+  
   if(!id){
     return res.status(400).send({"status":400,"message":"Can't Update. Id is missing."});
   }
+  
   await uploads.updateMany({type:'template', by_admin:true }, {$set: {default: false} });
   await uploads.findOneAndUpdate({type:'template', by_admin:true, code:id }, req.body); 
-
-   return res.status(200).send({"status":400,"message":`Updated successfully, Id:${id}`});
+  
+  return res.status(200).send({"status":400,"message":`Updated successfully, Id:${id}`});
 
 })
 
