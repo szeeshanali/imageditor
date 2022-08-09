@@ -253,10 +253,37 @@ function grayscaleObject()
 
 function brightnessObject()
 {
+  $("#brightnessVal").text(`(0%)`);
   
-  
+  $('#brightness-value').on("click",function(){
+    applyFilter(5,    new fabric.Image.filters.Brightness({
+      brightness: parseFloat($('#brightness-value').val())
+    }))
+  })
+
   $('#brightness-value').on("input", function() {
-    applyFilterValue(5, 'brightness', parseFloat(this.value));
+   
+    var val = this.value; 
+    $("#brightnessVal").text(`(${parseInt(val*100)}%)`);
+    applyFilterValue(5, 'brightness', parseFloat(val));
+  });
+}
+
+function contrastObject()
+{
+  $("#contrastVal").text(`(0%)`);
+
+  $('#contrast-value').on("click", function() {
+  applyFilter(6,    new fabric.Image.filters.Contrast({
+    contrast: parseFloat($('#contrast-value').val())
+  }))
+})
+
+  $('#contrast-value').on("input", function() {
+    
+    var val = this.value; 
+    $("#contrastVal").text(`(${parseInt(val*100)}%)`);
+    applyFilterValue(6, 'contrast', parseFloat(val));
   });
 }
 
@@ -267,6 +294,7 @@ function brightnessObject()
   flipXYObject();
   grayscaleObject();
   brightnessObject();
+  contrastObject();
  
 
 
@@ -630,6 +658,7 @@ function initCanvasEvents(){
     const id = o.selected[0].id; 
     var elem = $(`#${id}`)[0];
     clearLayerSelection();
+    addFiltersOnSelection();
     $(`#${id} .layers-controls`).show();
     $(`#${id}`).addClass("selected-layer");
 
@@ -640,6 +669,7 @@ function initCanvasEvents(){
     const id = o.selected[0].id; 
     var elem = $(`#${id}`)[0];
     clearLayerSelection();
+    addFiltersOnSelection();
     $(`#${id} .layers-controls`).show();
     $(`#${id}`).addClass("selected-layer");
 
@@ -650,6 +680,11 @@ function initCanvasEvents(){
   })
 
   //initCanvasTextEvents();    
+}
+
+function addFiltersOnSelection(){
+ 
+  
 }
 
 function clearLayerSelection()
