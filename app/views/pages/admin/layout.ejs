@@ -9,7 +9,7 @@
         <%- include('../../partials/admin/leftpanel'); %>
         <div class="am-mainpanel" style="position: relative;">
             <div class="am-pagetitle">
-             <%= pagetitle %>
+             <%= locals.page.title %>
             </div>
             <div class="am-pagebody">
             <%-body-%>
@@ -30,7 +30,6 @@
         <%- include('../../partials/client/popups/previewdesign'); %>
         <%- include('../../partials/client/popups/categoryitems'); %>
         <%- include('../../partials/client/popups/templates'); %>
-
         <%- include('../../partials/admin/footer'); %>
 
     </div>

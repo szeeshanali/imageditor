@@ -46,16 +46,7 @@ router.get('/app/admin/category/:categoryid/', isAdmin, async (req,res)=>{
 })
 
 
-router.get(ROUTE_ADMIN_DASHBOARD, isAdmin, async (req,res)=>{
-  res.locals.pagetitle ="Dashboard";
-  //var customerReport = await commonService.reportingService.getCustomerReport(); 
- // var summaryReport  = await commonService.reportingService.getSummaryReport(); 
-  // res.locals.reports = {
-  //   customerReport  : customerReport,
-  //   summaryReport   : summaryReport,   
-  // } ;
-  res.render(PATH_ADMIN_DASHBOARD,{categories:[]});
-})
+
 
 
 router.get("/app/admin/user-management", isAdmin, async (req,res)=>{
@@ -169,22 +160,40 @@ router.get('/app/admin/workspace',(req,res)=>{
   res.render("pages/admin/index",);``
 })
 
-router.get('/app/admin/template-designer', isAdmin, (req,res)=>{
-  const  {width, height, title} = req.body;
-  res.locals.pagetitle = "Template Designer"; 
-  res.locals.pageid = "template_designer";
-  res.locals.uploadmessage = "Upload SVG Templates.";
-  res.render("pages/admin/templatedesigner",{user:req.user});
+/** Dashboard */
+
+router.get(ROUTE_ADMIN_DASHBOARD, isAdmin, async (req,res)=>{
+  res.locals.page = {
+   title  : "Dashboard",
+   id     : "__dashboard",
+   user   : req.user
+  } ;
+  res.render(PATH_ADMIN_DASHBOARD,{categories:[]});
 })
 
 
+/** End */
 /** Template */
 /**---------------------------- */
-router.get('/app/admin/templates', isAdmin, async (req,res)=>{
-  const  {width, height, title} = req.body;
-  res.locals.pagetitle ="Edit Template";
-  var templates = await uploads.find({type:'template', by_admin:true , }).sort({order_no:1}); 
 
+router.get('/app/admin/template-designer', isAdmin, (req,res)=>{ 
+  res.locals.page = {
+    user  : req.user,
+    id    : "__template-designer",
+    title : "Template Designer", 
+    upload_text: "Upload SVG Templates." 
+  }
+
+  res.render("pages/admin/templatedesigner",{user:req.user});
+})
+
+router.get('/app/admin/templates', isAdmin, async (req,res)=>{
+  res.locals.page = {
+    id: "__edit-template",
+    title: "Edit Template",
+    user : req.user,
+  }
+  var templates = await uploads.find({type:'template', by_admin:true , }).sort({order_no:1}); 
   res.render("pages/admin/templates",{
     user      : req.user,
     templates : templates
@@ -192,15 +201,80 @@ router.get('/app/admin/templates', isAdmin, async (req,res)=>{
 
 })
 
+router.get('/app/admin/categories', isAdmin, async (req,res)=>{
+  const  {width, height, title} = req.body;
+  res.locals.pagetitle ="Categories";
+  res.render("pages/admin/templates",{
+    user      : req.user });
+})
+/** End Template */
+
+
+
+
+router.get('/app/admin/cliparts', isAdmin, async (req,res)=>{
+
+  res.locals.page = {
+    id: "__clipart",
+    title: "Clipart",
+    user: req.user
+  }
+  res.render("pages/admin/cliparts",
+  { user  : req.user });
+})
+
+router.post('/api/admin/save-pre-design', isAdmin, function(req, res) {
+
+  const {desc, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link,json, thumbBase64, code, ref_code} = req.body; 
+  var _id = mongoose.Types.ObjectId();
+  var uploadModel = {
+    title           :   title,
+    name            :   name,
+    order_no        :   1,
+    code            :   _id,
+    active          :   true,
+    json            :   json,
+    thumbBase64     :   thumbBase64,
+    default         :   false,
+    by_admin        :   true,
+    type            :   "pre-designed",
+    uploaded_by     :    req.user._id  ,
+    ref_code        :   ref_code, 
+    link :              link
+
+
+  };
+  commonService.uploadService.upload(uploadModel,(err,msg)=>{
+      if(!err)
+          {res.status(200).send({message:`Success`, error: msg}); }
+          else{res.status(400).send({message:`Unable to upload file.`, error: msg});  }
+          
+      })
+
+})
+
+router.get('/app/admin/pre-designed', isAdmin, async (req,res)=>{
+  res.locals.page = {
+    id: "__pre-designed",
+    title: "Custom Design",
+    user: req.user
+  }
+  res.render("pages/admin/pre-designed",
+  { user      : req.user 
+  });
+
+})
 router.put('/api/admin/template/:id?', isAdmin, async (req,res)=>{
   var id = req.params["id"]; 
+  
   if(!id){
     return res.status(400).send({"status":400,"message":"Can't Update. Id is missing."});
   }
+  
   await uploads.updateMany({type:'template', by_admin:true }, {$set: {default: false} });
   await uploads.findOneAndUpdate({type:'template', by_admin:true, code:id }, req.body); 
-
-   return res.status(200).send({"status":400,"message":`Updated successfully, Id:${id}`});
+  
+  return res.status(200).send({"status":400,"message":`Updated successfully, Id:${id}`});
 
 })
 
