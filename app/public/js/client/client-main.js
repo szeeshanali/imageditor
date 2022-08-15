@@ -333,7 +333,6 @@
 
         $btnApplyRepeatDesign.on("click",function(e){
           
-            canvasPrev = canvasPrev.setBackgroundImage(null);
             var dataURL = canvasPrev.toDataURL({
                 format: "png",
                 left: 0,
