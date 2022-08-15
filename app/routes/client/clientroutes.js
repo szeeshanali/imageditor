@@ -24,6 +24,8 @@ router.use( async (req, res, next) => {
 
 
 router.get(ROUTE_USER_PROFILE, isLoggedIn, (req,res)=>{    
+    
+
     res.render(PATH_USER_PROFILE,{
         user:req.user,
         categories:cached_layout_data.categories
@@ -67,7 +69,12 @@ router.get(ROUTE_USER_HOME,  async (req, res) => {
 });
 
 router.get("/app/projects", isLoggedIn,  async (req, res) => {
-    res.locals.pagetitle ="My Projects";
+    res.locals.page = {
+        id: "__my-projects",
+        title: "My projects",
+        user: req.user
+      }
+
     res.locals.projects = await commonService.uploadService.getUserDesignsAsync(req.user._id) || [];
     res.render(PATH_USER_PROJECTS, {user:req.user});
 });
@@ -84,8 +91,9 @@ router.get("/api/project/:id?", isLoggedIn,  async (req, res) => {
 
 router.delete("/api/client/project/:id?", isLoggedIn,  async (req, res) => {
     var id = req.params.id; 
+    console.log("Deleted Id: ", id)
     try{
-        var data  = await commonService.uploadService.deleteUploadAsync(id,'project',req.user._id);
+        var data  = await commonService.uploadService.deleteUploadAsync(id, 'project' ,req.user._id);
         res.status(200).send(data);
     }catch{
         res.status(500).send();
@@ -122,8 +130,32 @@ router.post('/app/client/save-design', isLoggedIn, function(req, res) {
 
   })
 
+  
+router.get("/app/pre-designed/:id?",  isLoggedIn, async (req, res) => {
+
+    res.locals.page = {
+        id: "__pre-designed",
+        title: "Custom Designs",
+        user: req.user,
+        
+      }
+
+    var predesigned = await commonService.uploadService.getPreDesigned(req.user._id);
+    console.log("userId: =====>");
+    console.log(req.user._id);
+    res.render("pages/client/pre-designed",{
+        user:req.user, 
+        predesigned: predesigned});
+});
+
 router.get("/app/workspace/:id?",  isLoggedIn, async (req, res) => {
-    res.locals.pagetitle ="Workspace";
+
+    res.locals.page = {
+        id: "__workspace",
+        title: "Workspace",
+        user: req.user
+      }
+
     var templateId = req.params.id;
     var template = {};
     var meta = {};
@@ -132,15 +164,14 @@ router.get("/app/workspace/:id?",  isLoggedIn, async (req, res) => {
         meta = JSON.parse(template.meta);
     }
     var templates = await commonService.uploadService.getTemplatesAsync();
-    var projects = await commonService.uploadService.getUserDesignsAsync(req.user._id);
+   // var projects = await commonService.uploadService.getUserDesignsAsync(req.user._id);
     console.log("userId: =====>");
     console.log(req.user._id);
     res.render(PATH_WORKSPACE,{
         user:req.user,
         template:template,
         templateMeta:meta,
-        templates: templates,
-        projects: projects
+        templates: templates
     });
 });
 
