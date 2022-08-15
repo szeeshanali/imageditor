@@ -3,7 +3,7 @@
 <html lang="en">
     <head><%- include('../../partials/client/head'); %> </head>
     <body>
-
+        <div id="snackbar"></div>
         <div class="overlay hidden" id="loader" >
             <div class="overlay__inner">
                 <div class="overlay__content"><span class="spinner"></span></div>
@@ -16,8 +16,17 @@
         <%- include('../../partials/client/leftpanel'); %>
 
         <div class="am-mainpanel" style="position: relative;">
-            <div class="am-pagetitle">
-             <%- include('../../partials/client/maintools'); %> 
+            <div class="am-pagetitle pd-r-0"> <%= locals.page.title %>
+            <div class="pull-right">
+                <!-- <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" id="btn-download-pdf" class="btn btn-secondary pd-x-25">Download PDF</button>
+                    <button type="button" id="btn-save-design" class="btn btn-primary pd-x-25">Save Project</button>
+                  </div> -->
+                  <div class="pd-r-20 tx-30">
+                    <span><i id="btn-download-pdf" class="ion-android-download  bd-l bd-r pd-x-10" style="cursor:pointer" title="download PDF"></i></span>
+                    <span><i id="btn-save-design" class="ion-android-checkmark-circle text-success pd-x-10" style="cursor:pointer" title="Save Project"></i></span>
+                  </div>
+            </div>
             </div>
             <div class="am-pagebody">
             <%-body-%>
@@ -40,7 +49,7 @@
         <%- include('../../partials/client/popups/templates'); %>
         <%- include('../../partials/client/popups/savedesign'); %>
         <%- include('../../partials/client/footer'); %>
-        <div id="snackbar"></div>
+       
 
       
     </div>
