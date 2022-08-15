@@ -17,22 +17,51 @@ const commonService = (function() {
     this.getTemplatesAsync = async (active)=>
     { 
      
-        return  await uploads.find({type:'template', active:true, by_admin:true , },
+        return  await uploads.find({type:'template', active:true, by_admin:true  },
     {
         code:1,
         base64:1,
         title:1
     }).sort({order_no:1}); },
 
-    this.getUserDesignsAsync = async (userId, designId)=>
+    this.getPreDesigned = async (userId, designId)=>
     { 
         var designs = [];
         if(!designId)
         { designs = await uploads.find({active:true, 
+            type:'pre-designed', 
+            by_admin:true },{code:1,thumbBase64:1,title:1 }); 
+
+        }else if(designId == "default")
+        {
+            designs = await uploads.findOne({active:true, 
+            type:'pre-designed', 
+            by_admin:true, 
+             });
+
+        }else{
+            designs = await uploads.findOne({active:true, 
+                type:'pre-designed', 
+                by_admin:true, 
+                code: designId
+            });
+        }
+        return  designs;
+    }
+
+
+    this.getUserDesignsAsync = async (userId, designId)=>
+    { 
+        var designs = [];
+        if(!designId)
+        { designs = await uploads.find({
+            active:true, 
             type:'project', 
             by_admin:false, 
             uploaded_by: userId,
-            active:true },{code:1,thumbBase64:1,title:1}); 
+            active:true,
+            deleted:false
+        },{code:1,thumbBase64:1,title:1}); 
         }else if(designId == "default")
         {
             designs = await uploads.findOne({active:true, 
@@ -65,7 +94,7 @@ const commonService = (function() {
     },
 
     this.deleteUploadAsync = async(id, type, ownerId)=>{
-        await uploads.updateOne({code: id, type:type, uploaded_by:ownerId},{deleted:true});
+        await uploads.updateOne({code: id, type:type, uploaded_by:ownerId}, {deleted:true});
     }
     this.getSVGTemplatesAsync = async (id)=>
     { 
@@ -166,6 +195,7 @@ const commonService = (function() {
         uploadService:{
             upload                  :   this.upload,
             getTemplatesAsync       :   this.getTemplatesAsync,
+            getPreDesigned          :   this.getPreDesigned,
             getTemplateAsync        :   this.getTemplateAsync,
             deleteTemplatesAsync    :   this.deleteTemplatesAsync, 
             getSVGtemplatesAsync    :   this.getSVGTemplatesAsync, 
