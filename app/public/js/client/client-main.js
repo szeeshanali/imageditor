@@ -17,7 +17,7 @@
     <i class='ion-ios-arrow-thin-down' title="down" ></i>
     <i class='ion-ios-trash-outline delete main-tool-button' title='delete' ></i>
     </div>
-</div>` 
+</div>`; 
 
 
     //vars 
@@ -229,7 +229,6 @@
             var curAngle = selectedObj.angle;
             selectedObj.rotate(curAngle+90);
             canvas.renderAll();
-
         })
 
         $btnTemplate.on("click",function(e)

@@ -12283,6 +12283,8 @@ textarea.parsley-success:focus {
   /* background-color: #2d3a50; */
   background-color: white;
   transition: all 0.2s ease-in-out;
+  color:#494699;
+  font-weight: bold;
 }
 @media (min-width: 992px) {
   .am-pagetitle {
