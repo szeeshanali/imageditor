@@ -65,10 +65,6 @@ app.use("/",  authroutes);
 app.use("/",  mainroutes);  
 
 app.listen(port, () => {
-<<<<<<< HEAD
   console.log(`Example app listening on port ${port}`)
 })
-=======
-  console.log(`Example app listening on port ${port}`);
-})
->>>>>>> 7dad337f43f9e3d05b794b2d3d093d4acedf6d4f
+
