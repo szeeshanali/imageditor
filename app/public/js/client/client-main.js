@@ -138,7 +138,6 @@
             //canvas.setDimensions({width: letterPageSize.width, height: letterPageSize.height});
             //canvasPrev.setDimensions({width: letterPageSize.width, height: letterPageSize.height});
             canvas.clear();
-            $layers.html("Empty! please upload an image.");
             fabric.loadSVGFromURL(svgBase64,function(objects,options) {      
                 var loadedObjects = new fabric.Group(group);
                 var templateWidth = options.viewBoxWidth;
@@ -308,9 +307,7 @@
          // MyProject Delete 
         $("#myprojects .delete").on("click",(e)=>{
           
-            
             e.stopPropagation();
-            alert("worked");
             enabledTextMode = false; 
             var id = e.currentTarget.id;
              canvas.clear();
@@ -344,6 +341,8 @@
            
             
                 var logos = canvas.backgroundImage._objects; 
+
+                
                 fabric.Image.fromURL(dataURL, (img) => {
                     canvas.clear();
                    // var img = canvasPrev._objects[0];

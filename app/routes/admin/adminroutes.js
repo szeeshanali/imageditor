@@ -278,13 +278,18 @@ router.put('/api/admin/template/:id?', isAdmin, async (req,res)=>{
 
 })
 
-
-router.delete('/app/admin/delete-template/:id', isAdmin, async (req,res)=>{
-  const  templateid = req.params["id"];
-  var templates = await commonService.uploadService.deleteTemplatesAsync(templateid);
-  res.locals.templates = templates; 
-  commonService.uploadService.clear();
-  res.send();  
+// per
+router.delete('/api/admin/template/:id', isAdmin, async (req,res)=>{
+  var id = req.params["id"]; 
+  if(!id){
+    return res.status(400).send({"status":400,"message":"Can't Update. Id is missing."});
+  }  
+  try{
+    await uploads.findOneAndDelete({type:'template', by_admin:true, code:id }); 
+    return res.status(200).send({"status":400,"message":`Deleted successfully, Id:${id}`});
+  }catch(e)
+  { return res.status(400).send({"status":400,"message":"Can't Update. Id is missing."}); }
+ 
 }) 
 
 
