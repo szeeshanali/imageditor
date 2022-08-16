@@ -307,9 +307,7 @@
          // MyProject Delete 
         $("#myprojects .delete").on("click",(e)=>{
           
-            
             e.stopPropagation();
-            alert("worked");
             enabledTextMode = false; 
             var id = e.currentTarget.id;
              canvas.clear();
