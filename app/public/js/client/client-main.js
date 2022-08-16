@@ -138,6 +138,12 @@
             {
                 alert("Error loading Template");
                 return;}
+
+                var meta = {};
+                if(data.meta)
+                {
+                  meta = JSON.parse(data.meta); 
+                }
   
             canvas.clear();
             fabric.loadSVGFromURL(svgBase64,function(objects,options) {      
@@ -148,7 +154,19 @@
                 canvas.setBackgroundImage(loadedObjects,canvas.renderAll.bind(canvas));
                 canvas.renderAll();
                 loadedObjects.center().setCoords();
-               
+
+                $("#template-info-panel .template-name").text(data.name);
+                $("#template-info-panel .page-size").text(meta.pageSize);
+                $("#template-info-panel .logo-size").text((meta.objectWidth/72).toFixed(1) + "''");
+                $("#template-info-panel .total-logos").text(meta.objects);
+                $("#template-info-panel .page-title").text(data.title);
+                $(".kk-part-no").text(data.ref_code || "N/A");
+                $(".kk-part-link").text(data.link || "N/A");
+              
+                    $("#use-template").unbind().click(function(){
+                       window.location.href = `/app/workspace/${data.code}`;
+                    })
+
             },function(item, object) {
                     object.set('id',item.getAttribute('id'));
                     group.push(object);
@@ -934,7 +952,6 @@ function brightnessObject()
 window.addEventListener("paste",pasteImage);
 
 function pasteImage(event) {
-debugger;
     // get the raw clipboardData
     var cbData=event.clipboardData;
 
