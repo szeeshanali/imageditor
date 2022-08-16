@@ -5,6 +5,9 @@
         height:(11 * dpi)
     }
     const enabledSaveInBrowser = true; 
+    var state = {
+        isPreviewCanvas:false
+    }
 
     const layerHtml = `<div class="media d-block d-flex layer-item object-options" data-index='{index}' id='{id}'  >
     <div class="d-block mg-sm-r-10 img"> <img src="{src}" class="wd-40" alt="Image" ></div>
@@ -128,6 +131,7 @@
     function loadSVGTemplate(id)
     {
         var group = [];
+        state.isPreviewCanvas = false; 
         $.get(`/api/svg-templates/${id}`, function (data) {
             const svgBase64 = data.base64;
             if(!svgBase64)
@@ -135,15 +139,12 @@
                 alert("Error loading Template");
                 return;}
   
-            //canvas.setDimensions({width: letterPageSize.width, height: letterPageSize.height});
-            //canvasPrev.setDimensions({width: letterPageSize.width, height: letterPageSize.height});
             canvas.clear();
             fabric.loadSVGFromURL(svgBase64,function(objects,options) {      
                 var loadedObjects = new fabric.Group(group);
                 var templateWidth = options.viewBoxWidth;
                 var templateHeight = options.viewBoxHeight;      
                 canvas.setDimensions({width: templateWidth, height: templateHeight});
-                //canvas.orignalBackgroundImage = loadedObjects;                      
                 canvas.setBackgroundImage(loadedObjects,canvas.renderAll.bind(canvas));
                 canvas.renderAll();
                 loadedObjects.center().setCoords();
@@ -344,7 +345,9 @@
 
                 
                 fabric.Image.fromURL(dataURL, (img) => {
-                    canvas.clear();
+                    canvas.remove(...canvas.getObjects());
+
+                  //  canvas.clear();
                    // var img = canvasPrev._objects[0];
                     for(var i=0;i<logos.length;i++)
                     {
@@ -352,8 +355,8 @@
                       
                       var object = fabric.util.object.clone(img);
 
-                     var left = logo.left + logo.group.left + logo.group.width /2 ;
-                     var top = logo.top + logo.group.top + logo.group.height /2 ;
+                     var left = logo.left + logo.group.left/2 + logo.group.width /2 ;
+                     var top = logo.top + logo.group.top/2 + logo.group.height /2 ;
 
 
                       object.scaleToWidth(object.width/2)
@@ -386,6 +389,7 @@
         var txt = $(e.currentTarget).find(".active").text();
         var factor = 2; 
         if(txt == "ON"){
+            state.isPreviewCanvas = true; 
             var canvasSVGLogo = canvas.backgroundImage._objects[0];
          //   canvasSVGLogo.scaleToWidth(canvasPrev.width);
             if(!canvasSVGLogo || canvas._objects.length == 0)
@@ -396,25 +400,12 @@
             $repeatImageCtrl.show();
             $clientMainCanvas.parent().fadeOut();
             $canvasPrev.parent().fadeIn();
-
-            // var object = fabric.util.object.clone(canvasSVGLogo);
-           
-           
-            //     canvasPrev.setBackgroundImage(object,canvasPrev.renderAll.bind(canvasPrev));
-            // canvasPrev.renderAll();
-
-           //canvasSVGLogo.scaleToWidth(canvas.width/1.5);
             canvasPrev.loadFromJSON(JSON.stringify(canvas), function(o){
                 var object = fabric.util.object.clone(canvasSVGLogo);
                 object.scaleToWidth(object.width * factor)
                 canvasPrev.setDimensions({
                     width:object.width - object.left,
                     height:object.height - object.top})
-
-                // let scale = object.width;
-
-              
-
                 canvasPrev.setBackgroundImage(object,canvasPrev.renderAll.bind(canvasPrev));
                 canvasPrev.renderAll();
               
@@ -663,7 +654,13 @@
                   img.scaleToHeight(300);
                   img.set({left:150,top:150})
                   img.globalCompositeOperation = 'source-atop';
-                  canvas.add(img);       
+                    if(state.isPreviewCanvas)
+                    {
+                        canvasPrev.add(img); 
+                    }else{
+                        canvas.add(img); 
+                    }
+                        
                   $imgCtrl.each(function(){
                     $(this).removeClass("hidden");
                   })
