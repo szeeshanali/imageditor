@@ -475,3 +475,18 @@ color:#0900fd;
     border-radius: 10px;
 }
 /**/
+
+.start-over{
+    background-color: #ffbc00;
+    padding: 6px 30px;
+    border-radius: 50px;
+    color: white;
+    font-size: 14px;
+}
+.start-over:hover{
+    background-color: #ffcb38;
+    padding: 6px 30px;
+    border-radius: 50px;
+    color: white;
+    font-size: 14px;
+}

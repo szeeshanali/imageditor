@@ -322,6 +322,24 @@ function initImageEvents(){
 
 }
 
+function deleteTemplate(id)
+{
+  var templateId = $("#edit-template-id").val(); 
+    $.ajax({
+        type: "DELETE",
+        url: `/api/admin/template/${templateId}`,           
+        success:function(res){
+          toast("Deleted successfully!");
+          setTimeout(function(){
+            window.location.reload();
+          },1000)
+        },
+        error:function(res){
+          toast("Error whiel deleting.");
+        }
+    })
+}
+
  function InitUIEvents()
  {
   rotateObject(); 
@@ -330,6 +348,11 @@ function initImageEvents(){
   grayscaleObject();
   brightnessObject();
   contrastObject();
+ 
+
+  $("#admin-delete-template").on("click",function(e){
+    deleteTemplate();
+  })
  
 
 
@@ -353,6 +376,7 @@ function initImageEvents(){
   $cancelDesign.on("click",(e)=>{
     onDesignReload();
    })
+
   $btnDefaultDesign.on("click",(e)=>{
     if(!selectedDesign.base64) return; 
     setTimeout(function(){
@@ -361,6 +385,8 @@ function initImageEvents(){
     },500)
    
   })
+
+
   
   $btnUpdateDesign.on("click",function(){
     var data = {  
