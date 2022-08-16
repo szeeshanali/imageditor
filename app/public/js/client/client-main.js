@@ -331,7 +331,7 @@
         
 
         $btnApplyRepeatDesign.on("click",function(e){
-          
+          state.isPreviewCanvas = false; 
             var dataURL = canvasPrev.toDataURL({
                 format: "png",
                 left: 0,
