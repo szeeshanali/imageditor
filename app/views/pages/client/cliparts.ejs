@@ -1,0 +1,53 @@
+
+<div class="row">
+  <div class="col-lg-9 pd-r-0">
+      <div class="workarea">
+          <div  id="canvas-holder">
+              <div class="content tx-center">
+                  <canvas id="client-main-canvas"  ></canvas>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="col-lg-3 pd-x-0 mg-t-1" id="workspace-right-panel">
+      <div class="card pd-t-20 mg-b-1 tx-center">
+          <p class="tx-12" ><a href="#" id="use-template" class="start-over bg-primary">Use this Clipart</a></p>
+      </div>
+
+     
+      <div class="card pd-20" id="template-info-panel">
+        <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15 template-name"  ></h6>
+        <div class="d-flex mg-b-10 tx-center">
+          <div class="bd-r pd-r-10 ">
+            <label class="tx-12 ">Page Size</label>
+            <p class="tx-lato tx-inverse tx-bold page-size">-</p>
+          </div>
+          <div class="bd-r pd-x-10">
+            <label class="tx-12 ">Logo Size</label>
+            <p class="tx-lato tx-inverse tx-bold logo-size">-</p>
+          </div>
+          <div class="pd-l-10">
+            <label class="tx-12 ">Total Logos</label>
+            <p class="tx-lato tx-inverse tx-bold total-logos">-</p>
+          </div>
+        </div><!-- d-flex -->
+      
+        <p class="tx-12 mg-b-0 page-title">-</p>
+      
+      </div>
+      <div class="card pd-20 mg-t-1" >
+        <div class="tx-12">KopyKake Part #:  <span class="kk-part-no"></span></div>
+        <div class="tx-12">KopyKake Link:  <span class="kk-part-link"></span></div>
+      </div>
+    
+  </div>
+  </div>
+  <script> 
+   $(".tab-content .tab-pane").each((i,e)=>
+      { $(e).removeClass("active"); })
+     $("#uploadpanel").addClass("active");
+  window.onload = function()
+  {loadSVGTemplate('default');}
+   </script>
+  
+  
