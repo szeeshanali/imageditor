@@ -12,7 +12,7 @@
 </div>
 <div class="col-lg-3 pd-x-0 mg-t-1" id="workspace-right-panel">
     <div class="card pd-t-20 mg-b-1 tx-center">
-        <p class="tx-12" ><a href="/app/workspace" class="start-over bg-warning">Start Over</a></p>
+        <p class="tx-12" ><a href="/app/workspace" class="start-over bg-primary">Start Over </a></p>
         
     </div>
     <div class="card pd-x-20 pd-y-10 mg-b-1 ">
@@ -67,6 +67,9 @@
     { $(e).removeClass("active"); })
    $("#uploadpanel").addClass("active");
 window.onload = function()
-{loadSVGTemplate('default');}
+{
+   var code = '<%=template.code%>' || 'default'
+    loadSVGTemplate(code);
+}
  </script>
 
