@@ -17,6 +17,8 @@
 
         <div class="am-mainpanel" style="position: relative;">
             <div class="am-pagetitle pd-r-0"> <%= locals.page.title %>
+                <%if(locals.page.id == "__workspace"){%>
+                  
             <div class="pull-right">
                 <!-- <div class="btn-group" role="group" aria-label="Basic example">
                     <button type="button" id="btn-download-pdf" class="btn btn-secondary pd-x-25">Download PDF</button>
@@ -27,6 +29,7 @@
                     <span><i id="btn-save-design" class="ion-android-checkmark-circle text-success pd-x-10" style="cursor:pointer" title="Save Project"></i></span>
                   </div>
             </div>
+            <%}%>
             </div>
             <div class="am-pagebody">
             <%-body-%>

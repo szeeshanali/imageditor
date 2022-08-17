@@ -100,8 +100,15 @@ router.delete("/api/client/project/:id?", isLoggedIn,  async (req, res) => {
     }
 });
 router.get("/app/templates",  isLoggedIn, async (req, res) => {
-    res.locals.pagetitle ="Templates";
-    res.render(PATH_TEMPLATES,{user:req.user});
+    var templates = await commonService.uploadService.getTemplatesAsync();
+
+    res.locals.page = {
+        id: "__templates",
+        title: "Templates",
+        user: req.user,
+        templates: templates
+      }
+    res.render(PATH_TEMPLATES,res.locals.page);
 }); 
 
 router.post('/app/client/save-design', isLoggedIn, function(req, res) {
