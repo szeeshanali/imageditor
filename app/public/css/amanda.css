@@ -8550,19 +8550,20 @@ a.text-dark:focus, a.text-dark:hover {
 }
 .accordion .card-header a {
   display: block;
-  padding: 15px 20px;
+  padding: 10px 20px;
   font-size: 14px;
 }
 .accordion .card-header a, .accordion .card-header a:hover, .accordion .card-header a:focus {
-  background-color: #17a2b8;
-  color: #fff;
+  background-color: #cbcae5;
+    color: #494699;
+    margin-top: 1px;
 }
 .accordion .card-header a.collapsed {
-  background-color: #e9ecef;
+  background-color: #cbcae5;
   color: #868e96;
 }
 .accordion .card-header a.collapsed:hover, .accordion .card-header a.collapsed:focus {
-  background-color: #dee2e6;
+  background-color: #cbcae5;
   color: #343a40;
 }
 .accordion .card-body {
@@ -12066,9 +12067,11 @@ textarea.parsley-success:focus {
 .am-sideleft {
   position: fixed;
   top: 40px;
-  left: -350px;
+  /* left: -350px; */
+  left: -400px;
   bottom: 0;
-  width: 350px;
+  /* width: 350px; */
+  width: 400px;
   /* background-color: #fff;
   transition: all 0.2s ease-in-out; */
 }
@@ -12085,7 +12088,7 @@ textarea.parsley-success:focus {
   left: 72px;
   right: 0;
   overflow-y: auto;
-  padding-top: 10px;
+  /* padding-top: 10px; */
   padding-bottom: 10px;
   background: #f0f0f0;
 }
@@ -12265,7 +12268,8 @@ textarea.parsley-success:focus {
 }
 @media (min-width: 992px) {
   .am-mainpanel {
-    margin-left: 335px;
+    /* margin-left: 335px; */
+    margin-left: 400px;
   }
 }
 
@@ -12275,7 +12279,7 @@ textarea.parsley-success:focus {
   top: 40px;
   left: 0;
   right: 0;
-  padding: 0 20px;
+  padding: 0 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -12288,7 +12292,7 @@ textarea.parsley-success:focus {
 }
 @media (min-width: 992px) {
   .am-pagetitle {
-    left: 350px;
+    left: 400px;
   }
 }
 .am-pagetitle .search-bar {
@@ -12335,7 +12339,7 @@ textarea.parsley-success:focus {
 }
 
 .am-pagebody {
-  padding: 0px 15px;
+  padding: 0px 8px;
 }
 @media (min-width: 576px) {
   .am-pagebody {

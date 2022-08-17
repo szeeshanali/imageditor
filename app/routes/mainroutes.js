@@ -60,20 +60,20 @@ router.put('/api/design/:id', async (req,res)=>{
 
 
 
-router.get('/api/svg-templates/:id', async (req,res)=>{
-    const itemid = req.params["id"]; 
-    var result = null; 
-    if(itemid == "default"){
-        result = await uploads.findOne({
-            type:'template', by_admin:true, active:true, default:true });    
-    }else{
+// router.get('/api/svg-templates/:id',  async (req,res)=>{
+//     const itemid = req.params["id"]; 
+//     var result = null; 
+//     if(itemid == "default"){
+//         result = await uploads.findOne({
+//             type:'template', by_admin:true, active:true, default:true });    
+//     }else{
 
-        result = await uploads.findOne({
-            type:'template', by_admin:true, active:true, code:itemid });  
-    }
-    res.send(result);
+//         result = await uploads.findOne({
+//             type:'template', by_admin:true, active:true, code:itemid });  
+//     }
+//     res.send(result);
     
-})
+// })
 
 router.get('/app/404',(req,res)=>{
     res.redirect("pages/admin/404.ejs")

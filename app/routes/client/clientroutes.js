@@ -99,6 +99,36 @@ router.delete("/api/client/project/:id?", isLoggedIn,  async (req, res) => {
         res.status(500).send();
     }
 });
+
+router.get('/api/svg-templates/:id', isLoggedIn,  async (req,res)=>{
+    const itemid = req.params["id"]; 
+    var result = null; 
+    if(itemid == "default"){
+        result = await uploads.findOne({
+            type:'template', by_admin:true, active:true, default:true });    
+    }else{
+
+        result = await uploads.findOne({
+            type:'template', by_admin:true, active:true, code:itemid });  
+    }
+    res.send(result);
+    
+})
+
+
+router.get('/app/cliparts/', isLoggedIn,  async (req,res)=>{
+    var templates = await commonService.uploadService.getTemplatesAsync();
+
+    res.locals.page = {
+        id: "__cliparts",
+        title: "Cliparts",
+        user: req.user,
+        templates: templates
+      }
+    res.render("pages/client/cliparts",res.locals.page);
+    
+})
+
 router.get("/app/templates",  isLoggedIn, async (req, res) => {
     var templates = await commonService.uploadService.getTemplatesAsync();
 
@@ -157,6 +187,7 @@ router.get("/app/pre-designed/:id?",  isLoggedIn, async (req, res) => {
 
 router.get("/app/workspace/:id?",  isLoggedIn, async (req, res) => {
 
+    
     res.locals.page = {
         id: "__workspace",
         title: "Workspace",

@@ -1,5 +1,6 @@
 <div class="am-sideleft" id="toolbar">
     <!-- <%- include('../../partials/client/toolbar'); %> -->
+
     <div class="d-flex flex-column flex-shrink-0 bg-light sidebar " >
        
         <ul class="nav nav-pills nav-flush flex-column mb-auto text-center main-buttons am-sideleft-tab">
@@ -9,17 +10,18 @@
                 <div class="visually-hidden tx-12 tx-white ">Start Designing </sup></div>
             </a>
           </li>
+
+          <%if(locals.page.id == "__workspace"){ %>
         <li class="nav-item">
-            <a href="/app/templates" class="pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+            <a href="#uploadpanel" class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
                 <i class="ion-ios-keypad-outline tx-24 tx-white"></i>
                 <div class="visually-hidden tx-12 tx-white my-proj">Templates <sup class="tag"><%=templates.length || 0 %></div>
             </a>
           </li>
-       
           <li>
-            <a href="/app/pre-designed" class=" pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
-                <i class="ion-ios-keypad tx-24 tx-white"></i>
-                <div class="visually-hidden tx-12 tx-white">Pre-Designed</div>
+            <a href="#clipartmenu" class="nav-link  pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+                <i class="ion-ios-paw tx-24 tx-white"></i>
+                <div class="visually-hidden tx-12 tx-white">Clipart</div>
             </a>
           </li>
           <li>
@@ -28,12 +30,29 @@
                 <div class="visually-hidden tx-12 tx-white">Text</div>
             </a>
           </li>
+<%}else{%>
+  <li class="nav-item">
+    <a href="/app/templates" class="pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+        <i class="ion-ios-keypad-outline tx-24 tx-white"></i>
+        <div class="visually-hidden tx-12 tx-white my-proj">Templates <sup class="tag"><%=templates.length || 0 %></div>
+    </a>
+  </li>
+<li>
+  <a href="/app/cliparts" class="pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+      <i class="ion-ios-paw tx-24 tx-white"></i>
+      <div class="visually-hidden tx-12 tx-white">Clipart</div>
+  </a>
+</li>
+  <%}%>
+
           <li>
-            <a href="#clipartmenu" class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
-                <i class="ion-ios-paw tx-24 tx-white"></i>
-                <div class="visually-hidden tx-12 tx-white">Clipart</div>
+            <a href="/app/pre-designed" class=" pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+                <i class="ion-ios-keypad tx-24 tx-white"></i>
+                <div class="visually-hidden tx-12 tx-white">Pre-Designed</div>
             </a>
           </li>
+        
+         
           <li>
             <a href="#" id="btnMyProject" class="pd-y-10 lh-1  border-bottom"  title="" >
                 <i class="ion-ios-bookmarks tx-24 tx-white"></i>
@@ -45,36 +64,58 @@
     
        
       </div>
+      <div style="position:absolute;left:72px;z-index:100;top:0;width:328px">
+
      
+      <%- include('../../partials/client/imgupload'); %>
+    </div>
     <div class="tab-content">
         <div id="mainMenu" class="tab-pane " >
             <!-- <%- include('../../partials/client/canvas'); %>  -->
             <!-- <%- include('../../partials/client/layers'); %> -->
         </div>
       
-        <%if(locals.page.id == "__workspace" || locals.page.id == "__templates"){ %>
-        <div id="uploadpanel" class="tab-pane active" >
-          <%if(locals.page.id == "__workspace"){ %>
-            <%- include('../../partials/client/imgupload'); %>
-            <%}%>     
-            <div id="templatepanel" class="d-flex svg-templates tx-center pd-l-20" >
+        <%if(locals.page.id == "__workspace"){ %>
+        <div id="uploadpanel" class="tab-pane active" style="top:128px" >
+
+            <div id="templatepanel"  >
+              <div class="pd-x-10 tx-12 pd-y-5"><b>Templates</b> <span class="pull-right"><a href="/app/templates">View (<%=templates.length %>)</a></span></div>
+             <div class="d-flex svg-templates tx-center">
               <%for(var i=0; i<templates.length; i++){ %>
-                <div id="<%=templates[i].code %>" class="template"> 
-                  <img src="<%=templates[i].base64 %>" style="width:100px"> 
-                  <div class="tx-12 tx-bold pd-y-5"><%=templates[i].title %></div>
+                <div id="<%=templates[i].code %>" class="template template-small" > 
+                  <img src="<%=templates[i].base64 %>" style="width:93px"> 
+                  <div class="tx-12 tx-bold pd-y-5 lh-1"><%=templates[i].title %></div>
               </div>
-              <%}%>               
+              <%}%> 
             </div>
+            
+           </div>
+               
+          
+            <%if(locals.page.id == "__templates"){ %>
+              <div id="templatepanel" class="d-flex svg-templates tx-center pd-l-20" >
+            <%for(var i=0; i<templates.length; i++){ %>
+              <div id="<%=templates[i].code %>" class="template"> 
+                <img src="<%=templates[i].base64 %>" style="width:100px"> 
+                <div class="tx-12 tx-bold pd-y-5"><%=templates[i].title %></div>
+            </div>
+            <%}%>  
+          </div>
+            <%}%>    
         </div>
-   
+
+        <div id="clipartmenu" class="tab-pane" style="top:128px" >
+          <div class="pd-x-10 tx-12 pd-y-5"><b>Cliparts</b> <span class="pull-right"><a href="/app/cliparts">View (0)</a></span></div>
+
+          <%- include('../../partials/client/clipart'); %>
+        </div>
+        
         <%}%>
 
-        <div id="clipartmenu" class="tab-pane" >
-            <%- include('../../partials/client/clipart'); %>
-        </div>
+        
       
         <!-- #emailMenu -->
-        <div id="textmenu" class="tab-pane">
+        <div id="textmenu" class="tab-pane" style="top:128px">
             <%- include('../../partials/client/typo'); %>           
         </div>
          <!-- #chatMenu -->
@@ -131,6 +172,8 @@
   <%}%>
         <!-- #settingMenu -->
     </div>
+   
+
     <!-- tab-content -->
 </div>
 
