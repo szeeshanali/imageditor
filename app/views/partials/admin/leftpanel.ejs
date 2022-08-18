@@ -12,22 +12,30 @@
             </li>
             <li>
                 <a href="/app/admin/template-designer" id="btn-upload-template" class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
-                    <i class="ion-ios-keypad-outline tx-24 tx-white"></i>
-                    <div class="visually-hidden tx-12 tx-white my-proj">Upload Template
+                    <i class="ion-ios-cloud-upload-outline tx-24 tx-white"></i>
+                    <div class="visually-hidden tx-12 tx-white my-proj">Upload Templates
                     </div>
                 </a>
             </li>
             <li>
                 <a href="/app/admin/templates" id="btn-upload-template" class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
                     <i class="ion-ios-keypad-outline tx-24 tx-white"></i>
-                    <div class="visually-hidden tx-12 tx-white my-proj">Templates<sup class="tag"><%= templates.length %></sup>
+                    <div class="visually-hidden tx-12 tx-white my-proj">View/Edit Templates
                     </div>
                 </a>
             </li>
             <li>
+                <a href="/app/admin/cliparts" class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+                    <i class="ion-ios-paw tx-24 tx-white"></i>
+                    <div class="visually-hidden tx-12 tx-white">Upload Cliparts</div>
+                </a>
+            </li>
+           
+          
+            <li>
                 <a href="/app/admin/pre-designed" class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
                     <i class="ion-ios-keypad tx-24 tx-white"></i>
-                    <div class="visually-hidden tx-12 tx-white">Pre-Designed</div>
+                    <div class="visually-hidden tx-12 tx-white">Custom Designs</div>
                 </a>
             </li>
             <li>
@@ -36,12 +44,7 @@
                     <div class="visually-hidden tx-12 tx-white">Text</div>
                 </a>
             </li>
-            <li>
-                <a href="/app/admin/cliparts" class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
-                    <i class="ion-ios-paw tx-24 tx-white"></i>
-                    <div class="visually-hidden tx-12 tx-white">Upload Clipart</div>
-                </a>
-            </li>
+           
             <li class="nav-item">
                 <a href="#library" class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
                     <i class="icon ion-ios-gear-outline tx-24 tx-white"></i>
@@ -56,12 +59,12 @@
     <div class="tab-content">
         <div id="mainMenu" class="tab-pane "></div>
         <%if(locals.page.id == "__dashboard"){%>
-            <div id="dashboard-panel" class="tab-pane pd-15">
+            <div id="dashboard-panel" class="tab-pane">
                 <%- include('../../partials/admin/dashboard-panel'); %>
             </div>
         <%}%>
         <%if(locals.page.id == "__template-designer"){%>
-            <div id="template-designer" class="tab-pane pd-15">
+            <div id="template-designer" class="tab-pane">
                 <%- include('../../partials/admin/imgupload'); %>
                 <hr></div>
             <%}%>
@@ -87,6 +90,14 @@
                 <%if(locals.page.id == "__pre-designed"){%>
                     <div id="pre-designed-panel" class="tab-pane">
                         <%- include('../../partials/admin/pre-designed-panel'); %>
+                    </div>
+                <%}%>
+
+
+                
+                <%if(locals.page.id == "__cliparts"){%>
+                    <div id="clipartpanel" class="tab-pane">
+                        <%- include('../../partials/admin/clipart-panel'); %>
                     </div>
                 <%}%>
 

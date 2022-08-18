@@ -58,6 +58,11 @@ router.get("/app/admin/reporting", isAdmin, async (req,res)=>{
   res.locals.pagetitle ="Reporting"; 
   res.render("pages/admin/reporting");
 })
+
+router.get("/app/admin/", isAdmin, async (req,res)=>{
+  res.redirect("/app/admin/dashboard");
+})
+
 router.get("/app/admin/privacy", isAdmin, async (req,res)=>{
   res.locals.pagetitle ="Privacy & Policy"; 
   res.render("pages/admin/privacy");
@@ -94,7 +99,7 @@ router.get('/app/admin/',  isAdmin, async (req, res) => {
 });
 
 router.post(ROUTE_ADMIN_SAVEDESIGN,  isAdmin,  (req,res)=>{
-    const {title,description,categoryId,json,base64} = req.body;
+    const {title,description,category,json,base64} = req.body;
     let errors = [];
 
     if(!title || !description  ) {
@@ -107,7 +112,7 @@ router.post(ROUTE_ADMIN_SAVEDESIGN,  isAdmin,  (req,res)=>{
       errors  : errors,
       title   : title,
       desc   : description,
-      category   : categoryId});
+      category   : category});
 
   }else{
     
@@ -214,13 +219,16 @@ router.get('/app/admin/categories', isAdmin, async (req,res)=>{
 
 router.get('/app/admin/cliparts', isAdmin, async (req,res)=>{
 
+  var categories = await commonService.categoryService.getCategoriesAsync(); 
+  console.log
   res.locals.page = {
-    id: "__clipart",
-    title: "Clipart",
-    user: req.user
+    id: "__cliparts",
+    title: "Upload Cliparts",
+    user: req.user, 
+    categories: categories
   }
   res.render("pages/admin/cliparts",
-  { user  : req.user });
+  res.locals.page);
 })
 
 router.post('/api/admin/save-pre-design', isAdmin, function(req, res) {

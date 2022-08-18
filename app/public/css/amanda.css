@@ -1500,15 +1500,14 @@ pre code {
 .form-control, .dataTables_filter input {
   display: block;
   width: 100%;
-  padding: 0.65rem 0.75rem;
-  font-size: 0.875rem;
-  line-height: 1.25;
+  padding: 7px 10px ;
+  font-size: 14px;
   color: #495057;
-  background-color: #fff;
+  background-color: #e1e0f5;
   background-image: none;
   background-clip: padding-box;
   border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 2px;
+  border-radius: 3px;
   transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
 }
 .form-control::-ms-expand, .dataTables_filter input::-ms-expand {
@@ -1902,7 +1901,8 @@ textarea.custom-file-input.parsley-error:focus {
   vertical-align: middle;
   user-select: none;
   border: 1px solid transparent;
-  padding: 0.65rem 0.75rem;
+  padding: 7px 10px;
+  margin-right: 2px;
   font-size: 0.875rem;
   line-height: 1.25;
   border-radius: 2px;
@@ -8188,7 +8188,7 @@ a.text-dark:focus, a.text-dark:hover {
 /* ############### Buttons ############### */
 /* --------------------------------------- */
 .btn, .sp-container button {
-  border-radius: 0;
+  border-radius: 3px;
 }
 .btn.rounded-circle, .sp-container button.rounded-circle {
   border-radius: 100%;
@@ -9147,7 +9147,7 @@ p {
 /* ############### Forms ############### */
 /* ------------------------------------- */
 .form-control, .dataTables_filter input {
-  border-radius: 0;
+  border-radius: 3px;
   background-color: #f8f9fa;
 }
 .form-control:focus, .dataTables_filter input:focus, .form-control:active, .dataTables_filter input:active {

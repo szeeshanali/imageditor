@@ -9,15 +9,13 @@ const commonService = (function() {
     this.cached_templates = [];
     this.getCategoriesAsync = async ()=>
     { 
-        if(cached_categories == null)
-        { cached_categories = await categoryModel.find({}); }
-        return cached_categories; 
+        return await categoryModel.find({});
     },
 
     this.getTemplatesAsync = async (active)=>
     { 
      
-        return  await uploads.find({type:'template', active:true, by_admin:true  },
+        return  await uploads.find({type: 'template', active:true, by_admin:true  },
     {
         code:1,
         base64:1,
