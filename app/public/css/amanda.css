@@ -1500,15 +1500,14 @@ pre code {
 .form-control, .dataTables_filter input {
   display: block;
   width: 100%;
-  padding: 0.65rem 0.75rem;
-  font-size: 0.875rem;
-  line-height: 1.25;
+  padding: 7px 10px ;
+  font-size: 14px;
   color: #495057;
-  background-color: #fff;
+  background-color: #e1e0f5;
   background-image: none;
   background-clip: padding-box;
   border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 2px;
+  border-radius: 3px;
   transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
 }
 .form-control::-ms-expand, .dataTables_filter input::-ms-expand {
@@ -1902,7 +1901,8 @@ textarea.custom-file-input.parsley-error:focus {
   vertical-align: middle;
   user-select: none;
   border: 1px solid transparent;
-  padding: 0.65rem 0.75rem;
+  padding: 7px 10px;
+  margin-right: 2px;
   font-size: 0.875rem;
   line-height: 1.25;
   border-radius: 2px;
@@ -8188,7 +8188,7 @@ a.text-dark:focus, a.text-dark:hover {
 /* ############### Buttons ############### */
 /* --------------------------------------- */
 .btn, .sp-container button {
-  border-radius: 0;
+  border-radius: 3px;
 }
 .btn.rounded-circle, .sp-container button.rounded-circle {
   border-radius: 100%;
@@ -8550,19 +8550,20 @@ a.text-dark:focus, a.text-dark:hover {
 }
 .accordion .card-header a {
   display: block;
-  padding: 15px 20px;
+  padding: 10px 20px;
   font-size: 14px;
 }
 .accordion .card-header a, .accordion .card-header a:hover, .accordion .card-header a:focus {
-  background-color: #17a2b8;
-  color: #fff;
+  background-color: #cbcae5;
+    color: #494699;
+    margin-top: 1px;
 }
 .accordion .card-header a.collapsed {
-  background-color: #e9ecef;
+  background-color: #cbcae5;
   color: #868e96;
 }
 .accordion .card-header a.collapsed:hover, .accordion .card-header a.collapsed:focus {
-  background-color: #dee2e6;
+  background-color: #cbcae5;
   color: #343a40;
 }
 .accordion .card-body {
@@ -9146,7 +9147,7 @@ p {
 /* ############### Forms ############### */
 /* ------------------------------------- */
 .form-control, .dataTables_filter input {
-  border-radius: 0;
+  border-radius: 3px;
   background-color: #f8f9fa;
 }
 .form-control:focus, .dataTables_filter input:focus, .form-control:active, .dataTables_filter input:active {
@@ -12066,9 +12067,11 @@ textarea.parsley-success:focus {
 .am-sideleft {
   position: fixed;
   top: 40px;
-  left: -350px;
+  /* left: -350px; */
+  left: -400px;
   bottom: 0;
-  width: 350px;
+  /* width: 350px; */
+  width: 400px;
   /* background-color: #fff;
   transition: all 0.2s ease-in-out; */
 }
@@ -12085,7 +12088,7 @@ textarea.parsley-success:focus {
   left: 72px;
   right: 0;
   overflow-y: auto;
-  padding-top: 10px;
+  /* padding-top: 10px; */
   padding-bottom: 10px;
   background: #f0f0f0;
 }
@@ -12265,7 +12268,8 @@ textarea.parsley-success:focus {
 }
 @media (min-width: 992px) {
   .am-mainpanel {
-    margin-left: 335px;
+    /* margin-left: 335px; */
+    margin-left: 400px;
   }
 }
 
@@ -12275,7 +12279,7 @@ textarea.parsley-success:focus {
   top: 40px;
   left: 0;
   right: 0;
-  padding: 0 20px;
+  padding: 0 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -12288,7 +12292,7 @@ textarea.parsley-success:focus {
 }
 @media (min-width: 992px) {
   .am-pagetitle {
-    left: 350px;
+    left: 400px;
   }
 }
 .am-pagetitle .search-bar {
@@ -12335,7 +12339,7 @@ textarea.parsley-success:focus {
 }
 
 .am-pagebody {
-  padding: 0px 15px;
+  padding: 0px 8px;
 }
 @media (min-width: 576px) {
   .am-pagebody {

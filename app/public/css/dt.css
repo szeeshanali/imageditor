@@ -283,21 +283,23 @@ color:#0900fd;
         cursor: pointer;
         max-width: 120px;
      }
-     .svg-templates > div:hover{
+     .svg-templates > div:hover , .svg-templates > div:focus{
         border: dashed 1px #494699;
         padding: 10px;
         cursor: pointer;
      }
 
      .cliparts > div{
-        border: dashed 1px #ccc;
-        padding: 10px;
+        border: dashed 1px #494699;
         cursor: pointer;
-        max-width: 120px ;
+        max-width: 80px ;
+        max-height: 80px;
+        overflow: hidden;
+        border-radius: 8px;
+        margin:1px;
      }
      .cliparts > div:hover{
         border: dashed 1px #494699;
-        padding: 10px;
         cursor: pointer;
      }
 
@@ -373,6 +375,20 @@ color:#0900fd;
 }
 .upload-icon:hover{
     background-color: #d4d4db;
+}
+
+
+.btn-upload{
+    background-color: #494698;
+    border:0px;
+    color:white;
+    margin: auto;
+    border-radius: 30px;
+    padding:5px 50px;
+}
+.btn-upload:hover{
+    background-color: #d4d4db;
+      border:0px;
 }
 
 /*client text area: */
@@ -489,4 +505,10 @@ color:#0900fd;
     border-radius: 50px;
     color: white;
     font-size: 14px;
+}
+
+.template-small{
+    padding:5px !important;
+     max-width: 105px !important;
+       overflow: hidden !important;
 }
