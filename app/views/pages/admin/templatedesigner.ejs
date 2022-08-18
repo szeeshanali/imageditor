@@ -1,16 +1,41 @@
-<div class="admin-template-designer-bg" style="min-height: 1050px">
-    <div class="ht-100v d-flex align-items-center justify-content-center" id="upload-template-splash">
-        <div class="wd-lg-70p wd-xl-50p tx-center pd-x-40">
-            <i class="ion-ios-keypad-outline" style="font-size:200px"></i>
-          <h5 class="tx-xs-24 tx-normal tx-orange lh-5">Please upload SVG Templates.</h5>
-          <p class="tx-16 mg-b-30">Upload SVG template with following information.</p>
+
+
+
+<div class="row">
+  <div class="col-lg-9 pd-r-0">
+    <div class="admin-template-designer-bg" style="min-height: 1050px">
+      <div class="ht-100v d-flex align-items-center justify-content-center" id="upload-template-splash">
+          <div class="wd-lg-70p wd-xl-50p tx-center pd-x-40">
+            <h5 class="tx-xs-24 tx-normal tx-orange lh-5">Please upload SVG Templates.</h5>
+            <p class="tx-16 mg-b-30">Upload SVG template with following information.</p>
+          </div>
         </div>
+      <div class="ht-100v tx-center" id="template-container">
+          <canvas id="admin-main-canvas"></canvas>
       </div>
+  </div>
+  </div>
+  <div class="col-lg-3 pd-x-0 mg-t-1" >
+    <div class="card pd-20" id="template-info-panel">
+        <h6 class="tx-12 tx-uppercase tx-inverse tx-bold"  >Template Meta</h6>
+        <div class="d-flex mg-b-10 ">
+          <div class="bd-r pd-r-10 ">
+            <label class="tx-12 ">Size</label>
+            <p class="tx-lato tx-inverse tx-bold page-size">-</p>
+          </div>
+          <div class="bd-r pd-x-10">
+            <label class="tx-12 ">Logo Size</label>
+            <p class="tx-lato tx-inverse tx-bold logo-size">-</p>
+          </div>
+          <div class="pd-l-10">
+            <label class="tx-12 ">Total Logos</label>
+            <p class="tx-lato tx-inverse tx-bold total-logos">-</p>
+          </div>
+        </div><!-- d-flex -->
       
-    
-    <div class="ht-100v tx-center" id="template-container">
-        <canvas id="admin-main-canvas"></canvas>
-    </div>
+      
+  </div>
+  </div>
 </div>
 
 <script>

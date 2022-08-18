@@ -1500,9 +1500,9 @@ pre code {
 .form-control, .dataTables_filter input {
   display: block;
   width: 100%;
-  padding: 0.65rem 0.75rem;
-  font-size: 0.875rem;
-  line-height: 1.25;
+  /* padding: 0.65rem 0.75rem; */
+  font-size:14px;
+  line-height: .5px;
   color: #495057;
   background-color: #fff;
   background-image: none;

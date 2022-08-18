@@ -57,7 +57,7 @@
   $editTemplateThumbName    =       $("#editTemplateThumbName");
 
  var selectedDesign  = {};
- var designFlags = {active:false, default:false, submitted:false}; 
+ var designFlags = {active:true, default:false, submitted:false}; 
  
  const dpi = 72; 
  
@@ -275,7 +275,6 @@ function brightnessObject()
 window.addEventListener("paste",pasteImage);
 
 function pasteImage(event) {
-debugger;
     // get the raw clipboardData
     var cbData=event.clipboardData;
 
@@ -366,11 +365,19 @@ function deleteTemplate(id)
   })
 
   $btnActiveDesign.on("click",(e)=>{
-    if(!selectedDesign.base64) return; 
-    setTimeout(function(){
-      var txt = $(e.currentTarget).find(".active").text();
-      designFlags.active = (txt == "ON");  
-    },500);
+    alert("worked");
+    if(!selectedDesign.base64) {
+      toast("Please upload template.");
+      e.currentTarget.checked =false; 
+      return; 
+    }
+    designFlags.active = e.currentTarget.checked;
+ 
+
+    // setTimeout(function(){
+    //   var txt = $(e.currentTarget).find(".active").text();
+    //   designFlags.active = (txt == "ON");  
+    // },500);
    
   })
   $cancelDesign.on("click",(e)=>{
@@ -378,11 +385,19 @@ function deleteTemplate(id)
    })
 
   $btnDefaultDesign.on("click",(e)=>{
-    if(!selectedDesign.base64) return; 
-    setTimeout(function(){
-      var txt = $(e.currentTarget).find(".active").text();
-      designFlags.default = (txt == "ON");
-    },500)
+   
+    if(!selectedDesign.base64)  {
+      toast("Please upload template.");
+      e.currentTarget.checked =false; 
+    return; 
+  }
+   
+
+  designFlags.default = e.currentTarget.checked;
+    // setTimeout(function(){
+    //   var txt = $(e.currentTarget).find(".active").text();
+    //   designFlags.default = (txt == "ON");
+    // },500)
    
   })
 
@@ -465,6 +480,10 @@ function loadSVGTemplate(id)
             canvas.setBackgroundImage(loadedObjects,canvas.renderAll.bind(canvas));
             canvas.renderAll();
             loadedObjects.center().setCoords();
+        
+
+
+
            $("#upload-template-splash").remove();
            $(".tab-content .tab-pane").each((i,e)=>
            { $(e).removeClass("active"); })    
@@ -526,8 +545,20 @@ function onDesignReload(o){
  function onDesignLoaded(o)
  {  
     enabledDesignCtrl({});
-    var msg = `Sheet size: Width: ${(o.width/dpi).toFixed(2)}", Height: ${(o.height/dpi).toFixed(2)}", Logo size: Width: ${(o.logoWidth/dpi).toFixed(2)}", Height: ${(o.logoHeight/dpi).toFixed(2)}", Total Logos: ${o.logoCount}`;
-    $pageTitle.html(msg);    
+    // var msg = `Sheet size: Width: ${(o.width/dpi).toFixed(2)}", Height: ${(o.height/dpi).toFixed(2)}", Logo size: Width: ${(o.logoWidth/dpi).toFixed(2)}", Height: ${(o.logoHeight/dpi).toFixed(2)}", Total Logos: ${o.logoCount}`;
+    // $pageTitle.html(msg);    
+    var pageHeightInInches = (o.height/72).toFixed(1);
+    var pageWidthInInches = (o.width/72).toFixed(1);
+    var pageSize = `${pageWidthInInches}x${pageHeightInInches}''`;
+
+    var logoHeightInInches = (o.height/72).toFixed(1);
+    var logoWidthInInches = (o.logoWidth/72).toFixed(1);
+    var logoSize = `${logoWidthInInches}''`;
+
+    $("#template-info-panel .page-size").text(pageSize);
+    $("#template-info-panel .logo-size").text(logoSize);
+    $("#template-info-panel .total-logos").text(o.logoCount);
+
  }
 
  $btnSavePreDesign.on("click",()=>{
@@ -588,7 +619,7 @@ function onDesignReload(o){
     }
     var MIME_TYPE = "image/png";
     var dataUrl = selectedDesign.base64;  
-
+debugger;
       $.ajax({
         type: "POST",
         url: "/app/admin/save-template",
@@ -603,12 +634,13 @@ function onDesignReload(o){
             order_no  : $inputOrderNo.val(),
             active    : designFlags.active,
             base64    : dataUrl,
-            type      : "template",
+            type      : $("#design-type").val(),
             by_admin  : true,
             default   : designFlags.default,
             link      : $inputDesignLink.val(),
             logos     : $inputLogoPerPage.val(), 
-            ref_code  : $kopykakePartNo.val() 
+            ref_code  : $kopykakePartNo.val(),
+            category  : $("#admin-categories").val() 
         },
         success:function(res){
           designFlags.submitted = true; 
@@ -663,15 +695,7 @@ function onDesignReload(o){
                   object.set('id',item.getAttribute('id'));
                   group.push(object);
           });
-            //$templateContainer.html(`<img src=${svgBase64} '/>`); 
-           // 
-            // $("#template-info-panel").removeClass("hidden");
-            // $('#ruler-area').ruler({
-            //     vRuleSize: 18,
-            //     hRuleSize: 18,
-            //     showCrosshair : false,
-            //     showMousePos: true
-            // });    
+         
         }
         reader.readAsDataURL(file);
         continue;
@@ -680,6 +704,12 @@ function onDesignReload(o){
         {
           reader.onload = (f) => {
             fabric.Image.fromURL(f.target.result, (img) => {
+              selectedDesign.base64 = f.target.result; 
+              selectedDesign.meta = {
+                width     : img.width, 
+                height    : img.height
+            }
+
                 img.scaleToWidth(300);
               canvas.add(img).renderAll();
             })
