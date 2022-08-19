@@ -92,18 +92,9 @@
            </div>
                
           
-            <%if(locals.page.id == "__templates"){ %>
-              <div id="templatepanel" class="d-flex svg-templates tx-center pd-l-20" >
-            <%for(var i=0; i<templates.length; i++){ %>
-              <div id="<%=templates[i].code %>" class="template"> 
-                <img src="<%=templates[i].base64 %>" style="width:100px"> 
-                <div class="tx-12 tx-bold pd-y-5"><%=templates[i].title %></div>
-            </div>
-            <%}%>  
-          </div>
-            <%}%>    
+          
         </div>
-
+    
         <div id="clipartmenu" class="tab-pane" style="top:128px" >
           <div class="pd-x-10 tx-12 pd-y-5"><b>Cliparts</b> <span class="pull-right"><a href="/app/cliparts">View (0)</a></span></div>
 
@@ -118,9 +109,13 @@
         <div id="textmenu" class="tab-pane" style="top:128px">
             <%- include('../../partials/client/typo'); %>           
         </div>
+    
+
          <!-- #chatMenu -->
          <%if(locals.page.id == "__my-projects"){ %>
-            <div id="myprojects" class="tab-pane">
+            <div id="myprojects" class="tab-pane" style="top:128px">
+              <div class="pd-x-10 tx-12 pd-y-5"><b>Projects</b>&nbsp;<span class="text-danger">(You have max (<%=user.project_limit %>) projects quota.)</span><span class="pull-right"><a href="#">Total (<%=projects.length %>)</a></span></div>
+
               <%if(projects.length == 0){%>
                 <div class="thumb"> 
                   <img src="" style="width:100px"> 
@@ -131,8 +126,8 @@
     
                 <%for(var i=0; i<projects.length;i++){%>
                   <div>
-                    <div id="<%=projects[i].code %>" class="template"> 
-                      <img src="<%=projects[i].thumbBase64 %>" style="width:100px"> 
+                    <div id="<%=projects[i].code %>" class="template template-small"> 
+                      <img src="<%=projects[i].thumbBase64 %>" > 
                       <div class="tx-12 tx-bold pd-y-5"><%=projects[i].title %></div>               
                   </div>
                   <a href="#" id="del<%=projects[i].code %>" class="delete">Delete</a>
@@ -153,12 +148,12 @@
               <div class="tx-12 tx-bold pd-15">No Items.</div>
           </div>
           <%}%>
-          <div class="d-flex svg-templates tx-center" >
+          <div class="d-flex svg-templates tx-center " >
 
             <%for(var i=0; i<predesigned.length;i++){%>
               <div>
-                <div id="<%=predesigned[i].code %>" class="template"> 
-                  <img src="<%=predesigned[i].thumbBase64 %>" style="width:100px"> 
+                <div id="<%=predesigned[i].code %>" class="template template-small"> 
+                  <img src="<%=predesigned[i].thumbBase64 %>" > 
                   <div class="tx-12 tx-bold pd-y-5"><%=predesigned[i].title %></div>               
               </div>
               <a href="#" id="del<%=predesigned[i].code %>" class="delete">Delete</a>
@@ -170,6 +165,17 @@
       </div>
   </div>
   <%}%>
+
+  <%if(locals.page.id == "__templates"){ %>
+    <div id="templatepanel" class="tab-pane d-flex svg-templates tx-center" style="top:128px;" >
+  <%for(var i=0; i<templates.length; i++){ %>
+    <div id="<%=templates[i].code %>" class="template template-small" > 
+      <img src="<%=templates[i].base64 %>" > 
+      <div class="tx-12 tx-bold pd-y-5"><%=templates[i].title %></div>
+  </div>
+  <%}%>  
+</div>
+  <%}%> 
         <!-- #settingMenu -->
     </div>
    

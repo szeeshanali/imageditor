@@ -20,14 +20,12 @@
                 <%if(locals.page.id == "__workspace"){%>
                   
             <div class="pull-right">
-                <!-- <div class="btn-group" role="group" aria-label="Basic example">
-                    <button type="button" id="btn-download-pdf" class="btn btn-secondary pd-x-25">Download PDF</button>
-                    <button type="button" id="btn-save-design" class="btn btn-primary pd-x-25">Save Project</button>
-                  </div> -->
-                  <div class="pd-r-20 tx-30">
+                  <!-- <div class="pd-r-20 tx-30">
                     <span><i id="btn-download-pdf" class="ion-android-download  bd-l bd-r pd-x-10" style="cursor:pointer" title="download PDF"></i></span>
                     <span><i id="btn-save-design" class="ion-android-checkmark-circle text-success pd-x-10" style="cursor:pointer" title="Save Project"></i></span>
-                  </div>
+                  </div> -->
+                  <div class="tx-32 tx-normal pd-x-10" ><a href="/app/workspace" title="Start Over" class="ion-ios-refresh-outline tx-primary"> </a></div>  
+
             </div>
             <%}%>
             </div>
@@ -54,7 +52,7 @@
         <%- include('../../partials/client/footer'); %>
        
 
-      
+      <canvas id="tempCanvas" style="display:none"></canvas>
     </div>
 </div>
     </body>
