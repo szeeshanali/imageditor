@@ -512,3 +512,6 @@ color:#0900fd;
      max-width: 105px !important;
        overflow: hidden !important;
 }
+.template-small > img{
+    width: 93px !important;
+}

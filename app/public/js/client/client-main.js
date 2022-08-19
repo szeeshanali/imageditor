@@ -95,7 +95,6 @@
 
     function deleteMyProject(id)
     {
-        alert("delete")
         $.ajax({
             type: "DELETE",
             url: `/api/client/project/${id}`,           
@@ -147,6 +146,11 @@
                 }
   
             canvas.clear();
+            $layers.html("Empty! please upload an image.");
+            $imgCtrl.each(function(){
+                $(this).addClass("hidden");
+              })
+
             fabric.loadSVGFromURL(svgBase64,function(objects,options) {      
                 var loadedObjects = new fabric.Group(group);
                 var templateWidth = options.viewBoxWidth;
@@ -607,7 +611,6 @@
 
 
     $btnSaveDesign.on("click",()=>{
-       
         $.ajax({
             type: "POST",
             url: "/app/client/save-design",
@@ -624,35 +627,78 @@
               toast("Design has been Saved.");
             },
             error:function(res){
-              toast("Error while saving design.");
+               if(res.status === 401)
+               {toast(`${res.statusText}:${res.responseJSON.message}`);}else{
+
+               }
+              
             }
         })
     })
-    $btnDownloadPDF.on("click",()=>{
-        var pdf = null;   
-        var pdf = new jsPDF("p", "mm", "letter");              
-              var width = canvas.width; 
-              var height = canvas.height;
-              width = pdf.internal.pageSize.getWidth();
-              height = pdf.internal.pageSize.getHeight();
-              canvas.clone(function(clonedCanvas) {
-                var bg = clonedCanvas.backgroundImage;
-                clonedCanvas.backgroundImage = false; 
-                let canvasJSON = clonedCanvas.toJSON();
-                for(var i =0;i<clonedCanvas._objects.length;i++)
-                { clonedCanvas._objects[i].globalCompositeOperation = null;
-                canvas.renderAll.bind(clonedCanvas)
-                }
-                bg.globalCompositeOperation = "destination-in";
-                clonedCanvas.add(bg);
-                clonedCanvas.renderAll()
-  
-                var imgData = clonedCanvas.toDataURL('image/png');
-                pdf.addImage(imgData, 'PNG', 0, 0, width, height);
-                pdf.save("download.pdf");
 
-                
-             });
+    function addWaterMark(doc) {
+        var totalPages = doc.internal.getNumberOfPages();
+      
+        for (i = 1; i <= totalPages; i++) {
+          doc.setPage(i);
+          //doc.addImage(imgData, 'PNG', 40, 40, 75, 75);
+          doc.setTextColor(150);
+          doc.text(50, doc.internal.pageSize.height - 30, 'Watermark');
+        }
+      
+        return doc;
+      }
+
+    $btnDownloadPDF.on("click",()=>{
+        $.ajax({
+            type: "GET",
+            url: `/api/client/download/`,           
+            success:function(res){
+                const {watermark, download} = res.data;
+
+                if(!download){
+                    throw "You are not eligible to download. please contact admin";
+                }
+
+                var pdf = null;   
+                var pdf = new jsPDF("p", "mm", "letter");              
+                      var width = canvas.width; 
+                      var height = canvas.height;
+                      width = pdf.internal.pageSize.getWidth();
+                      height = pdf.internal.pageSize.getHeight();
+                      canvas.clone(function(clonedCanvas) {
+                        var bg = clonedCanvas.backgroundImage;
+                        clonedCanvas.backgroundImage = false; 
+                        let canvasJSON = clonedCanvas.toJSON();
+                        for(var i =0;i<clonedCanvas._objects.length;i++)
+                        { clonedCanvas._objects[i].globalCompositeOperation = null;
+                        canvas.renderAll.bind(clonedCanvas)
+                        }
+                        bg.globalCompositeOperation = "destination-in";
+                        clonedCanvas.add(bg);
+                        clonedCanvas.renderAll()
+          
+                        var imgData = clonedCanvas.toDataURL('image/png');
+                        pdf.addImage(imgData, 'PNG', 0, 0, width, height);
+                       if(res.data.watermark)
+                       {
+                        var watermark="data:image/png;base64,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";
+                        pdf.addImage(watermark,'PNG',0,0,  150, 150)
+                       }
+                       
+                        //pdf = addWaterMark(pdf);
+                        pdf.save("download.pdf");
+        
+                        
+                     });
+
+
+            },
+            error:function(res){
+              toast("Error while downloading.");
+            }
+        })
+        
 
 
             //   for(var i =0;i<canvas._objects.length;i++)

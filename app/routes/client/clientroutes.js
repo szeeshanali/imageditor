@@ -69,14 +69,15 @@ router.get(ROUTE_USER_HOME,  async (req, res) => {
 });
 
 router.get("/app/projects", isLoggedIn,  async (req, res) => {
+    var myProjects = await commonService.uploadService.getUserDesignsAsync(req.user._id) || [];
     res.locals.page = {
         id: "__my-projects",
         title: "My projects",
-        user: req.user
+        user: req.user,
+        projects: myProjects
       }
 
-    res.locals.projects = await commonService.uploadService.getUserDesignsAsync(req.user._id) || [];
-    res.render(PATH_USER_PROJECTS, {user:req.user});
+    res.render(PATH_USER_PROJECTS, res.locals.page);
 });
 
 router.get("/api/project/:id?", isLoggedIn,  async (req, res) => {
@@ -146,8 +147,15 @@ router.get("/app/templates",  isLoggedIn, async (req, res) => {
     res.render(PATH_TEMPLATES,res.locals.page);
 }); 
 
-router.post('/app/client/save-design', isLoggedIn, function(req, res) {
+router.post('/app/client/save-design', isLoggedIn, async function(req, res) {
 
+    if(req.user != null)
+    {
+        var totalProjects = await uploads.find({uploaded_by:req.user._id, is_admin:false, deleted:false,active:true}).count(); 
+        if(totalProjects>req.user.project_limit){
+            res.status(401).send({message:`You have exceeded the limit of project quota.`, error: 'You have exceeded the limit of project quota.'});
+        }
+    }
     const {json,thumbBase64} = req.body; 
     var _id = mongoose.Types.ObjectId();
     var uploadModel = {
@@ -188,6 +196,13 @@ router.get("/app/pre-designed/:id?",  isLoggedIn, async (req, res) => {
     res.render("pages/client/pre-designed",{
         user:req.user, 
         predesigned: predesigned});
+});
+
+router.get("/api/client/download",  isLoggedIn, async (req, res) => {
+
+    var watermark = req.user.watermark;
+    var enableDownload = true; 
+    res.status(200).send({data:{watermark:watermark,download:enableDownload}});
 });
 
 router.get("/app/workspace/:id?",  isLoggedIn, async (req, res) => {

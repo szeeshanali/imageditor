@@ -14,7 +14,7 @@ const UserSchema  = new mongoose.Schema({
     date            :   {   type    :   Date,   default : Date.now },
     active          :   {   type    :   Boolean,   default : true },
     watermark       :   {   type    :   Boolean,   default : false },
-    limit_projects  :   {   type    :   Number,   default : 5 },
+    project_limit   :   {   type    :   Number,   default : 5 },
     created_dt      :   {   type    :   Date,   default : Date.now }});
 
 const appusers   = mongoose.model('appusers',UserSchema);
