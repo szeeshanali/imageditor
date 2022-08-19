@@ -105,7 +105,12 @@ router.get('/api/svg-templates/:id', isLoggedIn,  async (req,res)=>{
     var result = null; 
     if(itemid == "default"){
         result = await uploads.findOne({
-            type:'template', by_admin:true, active:true, default:true });    
+            type:'template', by_admin:true, active:true, default:true });  
+            if(result == null)
+            {
+                result = await uploads.findOne({
+                    type:'template', by_admin:true, active:true }).sort({order:-1}); 
+            }  
     }else{
 
         result = await uploads.findOne({
