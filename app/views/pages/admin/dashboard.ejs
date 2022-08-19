@@ -1,12 +1,81 @@
-<div class="wd-lg-70p wd-xl-50p tx-center pd-x-40" style="margin:auto">
-    <h1 class="tx-100 tx-xs-140 tx-normal tx-gray-800 mg-b-0">404!</h1>
-    <h5 class="tx-xs-24 tx-normal tx-orange mg-b-30 lh-5">The content your are looking for has not been found.</h5>
-    <div class="d-flex justify-content-center">
-        <div class="tx-center mg-t-20">... or back to
-            <a href="/app/admin/dashboard" class="tx-orange hover-info">home</a>
-        </div>
-    </div>
-</div>
+<div class="row pd-t-15 pd-10">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-header bg-transparent pd-20">
+          <h6 class="card-title tx-uppercase tx-12 mg-b-0">User History</h6>
+        </div><!-- card-header -->
+        <div class="table-responsive">
+          <table class="table table-white mg-b-0 tx-12">
+            <tbody>
+                <%for(var i=0;i<users.length;i++){%>
+              <tr>
+                <td class="pd-l-20 tx-center">
+                  <i class="ion-ios-person-outline tx-30"></i>
+                </td>
+                <td>
+                  <a href="" class="tx-inverse tx-14 tx-medium d-block"><%=users[i].fname %>&nbsp;<%=users[i].lname %></a>
+                  <span class="tx-11 d-block"><%=users[i].email %></span>
+                </td>
+                <td>
+                    <a href="" class="tx-inverse tx-medium d-block"><%=(users[i].is_admin == true)?"Admin":"User" %></a>
+                  </td>
+                <td class="tx-12">
+                  <span  class="square-8 <%=(users[i].active)?'bg-success':'bg-danger' %> mg-r-5 rounded-circle"></span> <%=(users[i].active)?"Active":"Disabled" %>
+                </td>
+                <td><%=users[i].date.toLocaleString() %></td>
+                <td class="tx-20" id="user-ctrl">
+                    <i class="ion-edit pd-x-5 edit" data-meta="<%= JSON.stringify(users[i]) %>" data-target="#edituser" data-toggle="modal" title="Edit" id="edit<%=users[i]._id %>"></i>
+                    <i class="ion-trash-a pd-x-5 delete" id="delete<%=users[i]._id %>" title="Delete"></i>
+                    <i class="ion-eye<%=users[i].active?'-disabled':'' %> pd-x-5 active" id="active<%=users[i]._id %>" title="<%=users[i].active?'Disable':'Enable' %>" data-meta="<%= users[i].active %>"></i></td>
+              </tr>
+          <%}%>
+            </tbody>
+          </table>
+        </div><!-- table-responsive -->
+        <div class="card-footer tx-12 pd-y-15 bg-transparent bd-t bd-gray-200">
+          <a href=""><i class="fa fa-angle-down mg-r-5"></i>View All Users</a>
+        </div><!-- card-footer -->
+      </div><!-- card -->
+    </div><!-- col-8 -->
+    <div class="col-lg-4 mg-t-15 mg-sm-t-20 mg-lg-t-0">
+      <div class="card pd-20">
+        <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Customer Report</h6>
+        <div class="d-flex mg-b-10">
+          <div class="bd-r pd-r-10">
+            <label class="tx-12 wd-60">Today</label>
+            <div class="tx-lato tx-inverse tx-bold"><%=report.todayUsers %></div>
+          </div>
+          <div class="bd-r pd-x-10">
+            <label class="tx-12 wd-60">This Week</label>
+            <div class="tx-lato tx-inverse tx-bold"><%=report.thisWeekUsers %></div>
+          </div>
+          <div class="pd-l-10">
+            <label class="tx-12 wd-60">This Month</label>
+            <div class="tx-lato tx-inverse tx-bold"><%=report.thisMonthUsers %></div>
+          </div>
+          
+        </div><!-- d-flex -->
+        <div class="d-flex mg-b-10">
+            <div class="bd-r pd-r-10">
+              <label class="tx-12 wd-60">Active</label>
+              <div class="tx-lato tx-inverse tx-bold"><%=report.activeUsers %></div>
+            </div>
+            <div class="bd-r pd-x-10">
+              <label class="tx-12 wd-60">Admin</label>
+              <div class="tx-lato tx-inverse tx-bold"><%=report.adminUsers %></div>
+            </div>
+            
+            
+          </div><!-- d-flex -->
+
+      </div><!-- card -->
+
+   
+    </div><!-- col-4 -->
+  </div>
+  <%- include('../../partials/admin/popups/edit-user'); %>
+
+
 <script>
     $(".tab-content .tab-pane").each((i,e)=>
     { $(e).removeClass("active"); })    
