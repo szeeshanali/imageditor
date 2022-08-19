@@ -334,7 +334,7 @@ function deleteTemplate(id)
           },1000)
         },
         error:function(res){
-          toast("Error whiel deleting.");
+          toast("Error while deleting.");
         }
     })
 }
@@ -348,6 +348,118 @@ function deleteTemplate(id)
   brightnessObject();
   contrastObject();
  
+
+  $("#user-ctrl .edit").on("click", function(e){
+    var userId = e.currentTarget.id.replace("edit","");
+      var meta = $(e.currentTarget).attr("data-meta");
+      meta = JSON.parse(meta); 
+      loadUserInfo(meta);
+      // $.ajax({
+      //     type: "PUT",
+      //     url: `/api/admin/user/${userId}`,     
+      //     data:{
+      //       active:isActive
+      //     },      
+      //     success:function(res){
+      //       toast("Updated successfully!");
+      //       setTimeout(function(){
+      //         window.location.reload();
+      //       },1000)
+      //     },
+      //     error:function(res){
+      //       toast("Error while Updating.");
+      //     }
+      // })
+  });
+  var selectedUser = {};
+  function loadUserInfo(meta){
+    selectedUser = meta; 
+    $("#edit-user-container .fname").val(meta.fname);
+    $("#edit-user-container .lname").val(meta.lname);
+    $("#edit-user-container .email").val(meta.email);
+    $("#edit-user-container .company").val(meta.company_name);
+    $("#edit-user-container .project_lmt").val(meta.project_limit);
+    $("#edit-user-container .created_dt").val(meta.date);
+    $( "#edit-user-container .is_admin" ).prop( "checked", meta.is_admin );
+    $( "#edit-user-container .is_active" ).prop( "checked", meta.active );
+    $( "#edit-user-container .watermark" ).prop( "checked", meta.watermark );
+  }
+
+  
+
+  $("#btnEditUser").on("click",function(e)
+  {
+    if(confirm("Do you want to save this user changes?")){
+      var userId = selectedUser?._id;
+if(!userId)
+{ toast("Something went wrong!");
+  return; }
+
+      selectedUser.is_admin = $( "#edit-user-container .is_admin" ).prop("checked");
+      selectedUser.active = $( "#edit-user-container .is_active" ).prop("checked");
+      selectedUser.watermark = $( "#edit-user-container .watermark" ).prop("checked");
+      selectedUser.project_limit = parseInt($("#edit-user-container .project_lmt").val()) ;
+     
+      $.ajax({
+          type: "PUT",
+          url: `/api/admin/user/${userId}`,     
+          data:selectedUser,      
+          success:function(res){
+            toast("Updated successfully!");
+            setTimeout(function(){
+              window.location.reload();
+            },1000)
+          },
+          error:function(res){
+            toast("Error while Updating.");
+          }
+      })
+    }
+  });
+  
+  $("#user-ctrl .delete").on("click", function(e){
+    if(confirm("do you want to delete this user?")){
+      var userId = e.currentTarget.id.replace("delete","");
+      $.ajax({
+        type: "DELETE",
+        url: `/api/admin/user/${userId}`,           
+        success:function(res){
+          toast("Deleted successfully!");
+          setTimeout(function(){
+            window.location.reload();
+          },1000)
+        },
+        error:function(res){
+          toast("Error while deleting.");
+        }
+    })
+    }
+  });
+
+  
+  $("#user-ctrl .active").on("click", function(e){
+    if(confirm("do you want to disable this user?")){
+      var userId = e.currentTarget.id.replace("active","");
+      var isActive = $(e.currentTarget).attr("data-meta");
+      isActive = !(isActive == "true");
+      $.ajax({
+          type: "PUT",
+          url: `/api/admin/user-active/${userId}`,     
+          data:{
+            active:isActive
+          },      
+          success:function(res){
+            toast("Updated successfully!");
+            setTimeout(function(){
+              window.location.reload();
+            },1000)
+          },
+          error:function(res){
+            toast("Error while Updating.");
+          }
+      })
+    }
+  });
 
   $("#admin-delete-template").on("click",function(e){
     deleteTemplate();
@@ -619,8 +731,9 @@ function onDesignReload(o){
     }
     var MIME_TYPE = "image/png";
     var dataUrl = selectedDesign.base64;  
-debugger;
-      $.ajax({
+var category = $("#admin-categories").val() ; 
+
+    $.ajax({
         type: "POST",
         url: "/app/admin/save-template",
         data: {  
@@ -640,7 +753,7 @@ debugger;
             link      : $inputDesignLink.val(),
             logos     : $inputLogoPerPage.val(), 
             ref_code  : $kopykakePartNo.val(),
-            category  : $("#admin-categories").val() 
+            category  : category
         },
         success:function(res){
           designFlags.submitted = true; 

@@ -73,6 +73,7 @@
     fabric.Object.prototype.cornerStrokeColor = '#000';
     fabric.Object.prototype.cornerSize = 5;
     fabric.Object.prototype.padding = 0;
+   
 
     var canvas = new fabric.Canvas("client-main-canvas",{
         preserveObjectStacking:true
@@ -102,7 +103,7 @@
               toast("Deleted successfully!");
             },
             error:function(res){
-              toast("Error whiel deleting.");
+              toast("Error while deleting.");
             }
         })
     }
@@ -350,46 +351,43 @@
 
         $btnApplyRepeatDesign.on("click",function(e){
           state.isPreviewCanvas = false; 
-            var dataURL = canvasPrev.toDataURL({
+
+
+          canvasPrev.clone(function(clonedCanvas) {
+            var bg = clonedCanvas.backgroundImage;
+            clonedCanvas.backgroundImage = false; 
+            for(var i =0;i<clonedCanvas._objects.length;i++)
+            { clonedCanvas._objects[i].globalCompositeOperation = null;
+                canvasPrev.renderAll.bind(clonedCanvas)
+            }
+            clonedCanvas.renderAll()
+
+            var dataURL = clonedCanvas.toDataURL({
                 format: "png",
                 left: 0,
                 top: 0,
                 width: canvas.width ,
                 height: canvas.height ,
             });
-           
-            
-                var logos = canvas.backgroundImage._objects; 
-
-                
-                fabric.Image.fromURL(dataURL, (img) => {
-                    canvas.remove(...canvas.getObjects());
-
-                  //  canvas.clear();
-                   // var img = canvasPrev._objects[0];
-                    for(var i=0;i<logos.length;i++)
-                    {
-                      var logo = logos[i]; 
-                      
-                      var object = fabric.util.object.clone(img);
-
-                     var left = logo.left + logo.group.left/2 + logo.group.width /2 ;
-                     var top = logo.top + logo.group.top/2 + logo.group.height /2 ;
-
-
-                      object.scaleToWidth(object.width/2)
-                      object.set("top", top);
-                      object.set("left",  left);
-                    
-                    
-                       canvas.add(object).renderAll();
-                      
-                    }
-                    closeRepeatDesignPreview();
-                });
-                 
-
-        })
+            var logos = canvas.backgroundImage._objects; 
+            fabric.Image.fromURL(dataURL, (img) => {
+            canvas.remove(...canvas.getObjects());
+                for(var i=0;i<logos.length;i++)
+                {
+                    var logo = logos[i]; 
+                    var object = fabric.util.object.clone(img);
+                    var left = logo.left + logo.group.left/2 + logo.group.width /2 ;
+                    var top = logo.top + logo.group.top/2 + logo.group.height /2 ;
+                    object.scaleToWidth(object.width/2)
+                    object.set("top", top);
+                    object.set("left",  left);  
+                    object.globalCompositeOperation = "source-atop"  ;            
+                    canvas.add(object).renderAll();
+                }
+                closeRepeatDesignPreview();
+            });
+         });
+        });
 
        
        
@@ -635,15 +633,47 @@
         var pdf = new jsPDF("p", "mm", "letter");              
               var width = canvas.width; 
               var height = canvas.height;
-             // pdf = new jsPDF('p', 'pt',[width, height]);
               width = pdf.internal.pageSize.getWidth();
               height = pdf.internal.pageSize.getHeight();
-              canvas.renderAll.bind(canvas)();
-              var imgData = canvas.toDataURL('image/png');
-              pdf.addImage(imgData, 'PNG', 0, 0, width, height);
-              //var dataURL = canvas.toDataURL();
-              //pdf.addImage(dataURL, 'SVG', 0, 0);
-              pdf.save("download.pdf");
+              canvas.clone(function(clonedCanvas) {
+                var bg = clonedCanvas.backgroundImage;
+                clonedCanvas.backgroundImage = false; 
+                let canvasJSON = clonedCanvas.toJSON();
+                for(var i =0;i<clonedCanvas._objects.length;i++)
+                { clonedCanvas._objects[i].globalCompositeOperation = null;
+                canvas.renderAll.bind(clonedCanvas)
+                }
+                bg.globalCompositeOperation = "destination-in";
+                clonedCanvas.add(bg);
+                clonedCanvas.renderAll()
+  
+                var imgData = clonedCanvas.toDataURL('image/png');
+                pdf.addImage(imgData, 'PNG', 0, 0, width, height);
+                pdf.save("download.pdf");
+
+                
+             });
+
+
+            //   for(var i =0;i<canvas._objects.length;i++)
+            //   { canvas._objects[i].globalCompositeOperation = null;
+            //   canvas.renderAll.bind(canvas)
+            //   }
+            //   bg.globalCompositeOperation = "destination-in";
+            //   canvas.add(bg);
+            //   canvas.renderAll()
+
+            //   var imgData = canvas.toDataURL('image/png');
+            //   pdf.addImage(imgData, 'PNG', 0, 0, width, height);
+            //   //var dataURL = canvas.toDataURL();
+            //   //pdf.addImage(dataURL, 'SVG', 0, 0);
+            //   pdf.save("download.pdf");
+
+            //  for(var i =0;i<canvas._objects.length;i++)
+            //  { canvas._objects[i].globalCompositeOperation = 'source-atop'; 
+            // }
+
+            
     }); 
 
     $btnUploadImage.on("click",()=>{
@@ -678,7 +708,6 @@
                     }else{
                         canvas.add(img); 
                     }
-                        
                   $imgCtrl.each(function(){
                     $(this).removeClass("hidden");
                   })

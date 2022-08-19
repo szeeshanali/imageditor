@@ -118,7 +118,16 @@ const commonService = (function() {
         return uploadedItems;
     },
 
+    this.addCategoryItemAsync = async (categoryId, itemCode)=>{
+        var findCategory = await categoryModel.findOne({code:categoryCode});
+    
+        if(!findCategory)
+        { throw `unable to find category : categoryId: ${categoryId}`; }
+        
+        await uploads.updateOne({code: id, type:type, uploaded_by:ownerId}, {deleted:true});
+       await findCategory.updateOne({code:categoryItemIds}, {$push: { items: itemCode }});
 
+    },
     this.getCustomerReport = async()=> { 
         var customers = await appuserModel.find({is_admin:{$ne:true}});
         var report = {
@@ -188,7 +197,8 @@ const commonService = (function() {
     return {
         categoryService: {
             getCategoriesAsync  :   this.getCategoriesAsync,
-            getCategoryAsync    :   this.getCategoryAsync
+            getCategoryAsync    :   this.getCategoryAsync,
+            addCategoryItemAsync     :   this.addCategoryItemAsync
         },
         uploadService:{
             upload                  :   this.upload,
@@ -199,7 +209,7 @@ const commonService = (function() {
             getSVGtemplatesAsync    :   this.getSVGTemplatesAsync, 
             getUserDesignsAsync     :   this.getUserDesignsAsync,
             deleteUploadAsync       :   this.deleteUploadAsync, 
-            clear               :   this.clearUploads
+            clear                   :   this.clearUploads
         },
         reportingService: {
             getCustomerReport   :   this.getCustomerReport,

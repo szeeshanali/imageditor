@@ -92,18 +92,9 @@
            </div>
                
           
-            <%if(locals.page.id == "__templates"){ %>
-              <div id="templatepanel" class="d-flex svg-templates tx-center pd-l-20" >
-            <%for(var i=0; i<templates.length; i++){ %>
-              <div id="<%=templates[i].code %>" class="template"> 
-                <img src="<%=templates[i].base64 %>" style="width:100px"> 
-                <div class="tx-12 tx-bold pd-y-5"><%=templates[i].title %></div>
-            </div>
-            <%}%>  
-          </div>
-            <%}%>    
+          
         </div>
-
+    
         <div id="clipartmenu" class="tab-pane" style="top:128px" >
           <div class="pd-x-10 tx-12 pd-y-5"><b>Cliparts</b> <span class="pull-right"><a href="/app/cliparts">View (0)</a></span></div>
 
@@ -118,6 +109,8 @@
         <div id="textmenu" class="tab-pane" style="top:128px">
             <%- include('../../partials/client/typo'); %>           
         </div>
+    
+
          <!-- #chatMenu -->
          <%if(locals.page.id == "__my-projects"){ %>
             <div id="myprojects" class="tab-pane">
@@ -170,6 +163,17 @@
       </div>
   </div>
   <%}%>
+
+  <%if(locals.page.id == "__templates"){ %>
+    <div id="templatepanel" class="tab-pane d-flex svg-templates tx-center" style="top:128px;" >
+  <%for(var i=0; i<templates.length; i++){ %>
+    <div id="<%=templates[i].code %>" class="template" > 
+      <img src="<%=templates[i].base64 %>" style="width:100px"> 
+      <div class="tx-12 tx-bold pd-y-5"><%=templates[i].title %></div>
+  </div>
+  <%}%>  
+</div>
+  <%}%> 
         <!-- #settingMenu -->
     </div>
    

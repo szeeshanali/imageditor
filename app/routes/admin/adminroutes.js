@@ -5,6 +5,7 @@ const fs                    = require('fs');
 const categories            = require("../../models/categories.js")
 const uploads               = require("../../models/uploads.js")
 const commonService         = require("../../services/common")
+const appusers              = require("../../models/appuser")
 
 const {isLoggedIn,isAdmin}  = require('../../config/auth')
 const passport = require('passport');
@@ -87,19 +88,9 @@ router.get("/app/admin/faq", isAdmin, async (req,res)=>{
 
 
 
-router.get('/app/admin/',  isAdmin, async (req, res) => {
-
-    cached_layout_data.user = req.user;
-    cached_layout_data.pagetitle = "Home";
-    //if(cached_layout_data.categories == null)
-    //{ 
-      cached_layout_data.categories = await categories.find({});
-   //}    
-    res.render(PATH_ADMIN_DASHBOARD,cached_layout_data);          
-});
 
 router.post(ROUTE_ADMIN_SAVEDESIGN,  isAdmin,  (req,res)=>{
-    const {title,description,category,json,base64} = req.body;
+    const {title,description,categoryId,json,base64} = req.body;
     let errors = [];
 
     if(!title || !description  ) {
@@ -112,7 +103,7 @@ router.post(ROUTE_ADMIN_SAVEDESIGN,  isAdmin,  (req,res)=>{
       errors  : errors,
       title   : title,
       desc   : description,
-      category   : category});
+      category   : categoryId});
 
   }else{
     
@@ -168,12 +159,37 @@ router.get('/app/admin/workspace',(req,res)=>{
 /** Dashboard */
 
 router.get(ROUTE_ADMIN_DASHBOARD, isAdmin, async (req,res)=>{
+  var allusers = await appusers
+  .find({deleted:false},{password:0}).sort({date:-1});
+
+  var report = {
+    todayUsers:0,
+    thisWeekUsers:0,
+    thisMonthUsers:0
+} 
+
+var start = new Date();
+start.setHours(0,0,0,0);
+var end = new Date();
+end.setHours(23,59,59,999);
+var today = new Date();
+report.todayUsers      = allusers.filter(function(value){ return value.date >= new Date(today.getFullYear(), today.getMonth(), today.getDate()-1);}).length || 0;
+report.thisWeekUsers   = allusers.filter(function(value){ return value.date >= new Date(today.getFullYear(), today.getMonth(), today.getDate()-7);}).length || 0;
+report.thisMonthUsers  = allusers.filter(function(value){ return value.date >= new Date(today.getFullYear(), today.getMonth(), today.getDate()-30);}).length || 0;
+report.totalUsers      = allusers.length; 
+report.activeUsers = allusers.filter(function(value){ return value.active == true}).length || 0;
+report.adminUsers = allusers.filter(function(value){ return value.is_admin == true}).length || 0;
+
+
   res.locals.page = {
    title  : "Dashboard",
    id     : "__dashboard",
-   user   : req.user
+   user   : req.user,
+   users : allusers,
+   report: report
+
   } ;
-  res.render(PATH_ADMIN_DASHBOARD,{categories:[]});
+  res.render(PATH_ADMIN_DASHBOARD,res.locals.page);
 })
 
 
@@ -290,28 +306,29 @@ router.put('/api/admin/template/:id?', isAdmin, async (req,res)=>{
 router.delete('/api/admin/template/:id', isAdmin, async (req,res)=>{
   var id = req.params["id"]; 
   if(!id){
-    return res.status(400).send({"status":400,"message":"Can't Update. Id is missing."});
+    return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."});
   }  
   try{
     await uploads.findOneAndDelete({type:'template', by_admin:true, code:id }); 
     return res.status(200).send({"status":400,"message":`Deleted successfully, Id:${id}`});
   }catch(e)
-  { return res.status(400).send({"status":400,"message":"Can't Update. Id is missing."}); }
+  { return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."}); }
  
 }) 
 
 
 
 router.post('/app/admin/save-template', function(req, res) {
-  const {desc, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, code, ref_code} = req.body; 
+  const {desc, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, code, ref_code,category} = req.body; 
  
-            
+  var filename = file_name || "na"; 
+  filename = `${filename}-${_id}${file_ext}`;       
   var _id = mongoose.Types.ObjectId();
   var uploadModel = {
     title           :   title,
     name            :   name,
     desc            :   desc,
-    file_name       :   file_name,
+    file_name       :   filename,
     file_ext        :   file_ext,
     order_no        :   order_no,
     code            :   _id,
@@ -321,17 +338,17 @@ router.post('/app/admin/save-template', function(req, res) {
     base64          :   base64,
     editable        :   false,
     paid            :   false,
-    category        :   null,
+    category        :   category,
     link            :   link,
     path            :   null,
     meta            :   meta,
     default         :   req.body.default,
-    by_admin        :   by_admin,
+    by_admin        :   true,
     type            :   type,
     ref_code        :   ref_code,
     
   };
-  var templatename = `../app/uploads/admin/templates/t-${_id}.png`;
+  var templatename = `../app/uploads/admin/${type}/${filename}`;
     require("fs").writeFile(templatename, base64, 'base64', function(err) {
       if(err){ console.log(err); }
        commonService.uploadService.upload(uploadModel,(err,msg)=>{
@@ -340,7 +357,8 @@ router.post('/app/admin/save-template', function(req, res) {
         res.status(400).send({message:`Unable to upload file.`, error: msg}); 
 
         
-       })
+       });
+       
   });
  // commonService.uploadService.clear();
  // res.redirect('/app/admin/template-designer');
@@ -359,6 +377,47 @@ router.get('/api/admin/svg-templates/:id', isAdmin, async (req,res)=>{
   }
   res.send(result);
   
+})
+
+
+/// users 
+
+router.delete('/api/admin/user/:id', isAdmin, async (req,res)=>{
+  var id = req.params["id"]; 
+  if(!id){
+    return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."});
+  }  
+  try{
+    //await appusers.findOneAndDelete({ _id:id }); 
+    await appusers.findOneAndUpdate({ _id:id}, {deleted:true}); 
+    return res.status(200).send({"status":400,"message":`Deleted successfully, Id:${id}`});
+  }catch(e)
+  { return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."}); }
+ 
+}) 
+
+router.put('/api/admin/user-active/:id?', isAdmin, async (req,res)=>{
+  var id = req.params["id"]; 
+  const {active} = req.body; 
+  
+  if(!id){
+    return res.status(400).send({"status":400,"message":"Can't Update. Id is missing."});
+  } 
+  await appusers.findOneAndUpdate({ _id:id}, {active:active}); 
+  return res.status(200).send({"status":400,"message":`Updated successfully, Id:${id}`});
+
+})
+router.put('/api/admin/user/:id?', isAdmin, async (req,res)=>{
+  var id = req.params["id"]; 
+  const {project_limit, active, is_admin,  watermark} = req.body; 
+  
+  if(!id){
+    return res.status(400).send({"status":400,"message":"Can't Update. Id is missing."});
+  } 
+  await appusers.findOneAndUpdate({_id:id}, {active:active,project_limit:project_limit,is_admin:is_admin,watermark:watermark}); 
+  
+  return res.status(200).send({"status":400,"message":`Updated successfully, Id:${id}`});
+
 })
 
 module.exports = router;

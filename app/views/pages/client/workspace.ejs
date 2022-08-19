@@ -11,9 +11,14 @@
     </div>
 </div>
 <div class="col-lg-3 pd-x-0 mg-t-1" id="workspace-right-panel">
-    <div class="card pd-t-20 mg-b-1 tx-center">
-        <p class="tx-12" ><a href="/app/workspace" class="start-over bg-primary">Start Over </a></p>  
-        <div class="pd-10 tx-center repeat-design">
+    <div class="pd-10 mg-b-1 tx-center card img-ctrl hidden"> 
+        <div class="tx-12 tx-normal" >
+            <a href="#" id="btn-download-pdf" class="start-over bg-primary">Download</a>
+            <a href="#" id="btn-download-pdf" class="start-over bg-primary">Save</a>
+        </div>  
+
+    </div>
+        <div class="pd-10 tx-center mg-b-1 card img-ctrl hidden">
 
 
             <div  id="repeatdesign">
@@ -27,7 +32,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="pd-y-10">Same design on each logo.</div>
+                <div class="pd-y-10">Repeat to each logo.</div>
                 
                 
             </div>
@@ -36,7 +41,6 @@
                 <a href="#" class="apply">Apply to All</a>
                 <a href="#" class="cancel">Cancel</a>
             </div>
-        </div>      
     </div>
     <div class="card pd-x-20 pd-y-10 mg-b-1 ">
         <%- include('../../partials/admin/layers'); %>

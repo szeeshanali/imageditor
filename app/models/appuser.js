@@ -11,7 +11,11 @@ const UserSchema  = new mongoose.Schema({
     is_admin        :   {   type    :   Boolean, default    : false },
     modified_by     :   {   type    :   Boolean, default    : false },
     modified_dt     :   {   type    :   Boolean, default    : false },
-    date            :   {   type    :   Date,   default : Date.now }});
+    date            :   {   type    :   Date,   default : Date.now },
+    active          :   {   type    :   Boolean,   default : true },
+    watermark       :   {   type    :   Boolean,   default : false },
+    limit_projects  :   {   type    :   Number,   default : 5 },
+    created_dt      :   {   type    :   Date,   default : Date.now }});
 
 const appusers   = mongoose.model('appusers',UserSchema);
 module.exports  = appusers;

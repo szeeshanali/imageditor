@@ -65,7 +65,7 @@
     box-shadow: rgb(67 64 141) 0px 1px 3px, rgb(72 69 150) 0px 1px 2px;
 }
 .repeat-design {
-    border: dashed 1px #b2b0ef;
+    /* border: dashed 1px #b2b0ef; */
 }
 
 #layers .layer-item .img{
