@@ -5,7 +5,7 @@
        
         <ul class="nav nav-pills nav-flush flex-column mb-auto text-center main-buttons am-sideleft-tab">
           <li>
-            <a href="#" id="btnTemplate" class="pd-y-10 lh-1  border-bottom" aria-current="page" title="" >
+            <a href="/app/workspace"  class="pd-y-10 lh-1  border-bottom" aria-current="page" title="" >
                 <i class="ion-ios-compose tx-24 tx-white"></i>
                 <div class="visually-hidden tx-12 tx-white ">Start Designing </sup></div>
             </a>
@@ -13,7 +13,7 @@
 
           <%if(locals.page.id == "__workspace"){ %>
         <li class="nav-item">
-            <a href="#uploadpanel" class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+            <a href="#uploadpanel" id="btnTemplate" class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
                 <i class="ion-ios-keypad-outline tx-24 tx-white"></i>
                 <div class="visually-hidden tx-12 tx-white my-proj">Templates <sup class="tag"><%=templates.length || 0 %></div>
             </a>
@@ -107,6 +107,8 @@
       
         <!-- #emailMenu -->
         <div id="textmenu" class="tab-pane" style="top:128px">
+          <div class="pd-x-10 tx-12 pd-y-5"><b>Add Text</b></div>
+
             <%- include('../../partials/client/typo'); %>           
         </div>
     

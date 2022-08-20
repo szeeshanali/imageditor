@@ -27,7 +27,7 @@
  var $btnSavePreDesign          = $("#btnSavePreDesign");
  
  const layerHtml = `<div class="media d-block d-flex layer-item object-options" data-index='{index}' id='{id}'  >
- <div class="d-block mg-sm-r-10 img"> <img src="{src}" class="wd-40" alt="Image" ></div>
+ <div class="d-block mg-sm-r-10 img"> <img src="{src}" class="wd-30" alt="Image" ></div>
  <small class="d-sm-flex layer-label">Layer {index}</small>
  <div class="d-sm-flex layers-controls" style="display:none !important">
  <i class='ion-ios-copy-outline duplicate main-tool-button'   title='duplicate' ></i>
