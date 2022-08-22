@@ -1,24 +1,8 @@
     <div class="d-flex cliparts tx-center pd-10ad" >
-       <div id="" class="clipart"> 
-         <img src="/images/cliparts/1.jpg" style="width:100px"> 
-      </div>
-      <div id="" class="clipart"> 
-        <img src="/images/cliparts/2.png" style="width:100px"> 
-     </div>
-     <div id="" class="clipart"> 
-        <img src="/images/cliparts/3.jpg" style="width:100px"> 
-     </div>
-     <div id="" class="clipart"> 
-        <img src="/images/cliparts/4.jpg" style="width:100px"> 
-     </div>
-     <div id="" class="clipart"> 
-        <img src="/images/cliparts/5.jpg" style="width:100px"> 
-     </div>
-     <div id="" class="clipart"> 
-        <img src="/images/cliparts/6.jpg" style="width:100px"> 
-     </div>
-     <div id="" class="clipart"> 
-         <img src="/images/cliparts/7.png" style="width:100px"> 
-      </div>
-        
+      <%cliparts?.forEach(item=>{%>
+         <div id="" class="clipart"> 
+            <img src="<%=item.base64 %>" style="width:100px"> 
+         </div>
+      <%})%>
+      
     </div>

@@ -14,7 +14,7 @@
     <div class="pd-10 mg-b-1 tx-center card main-ctrl hidden"> 
         <div class="tx-12 tx-normal" >
             <a href="#" id="btn-download-pdf" class="start-over bg-primary">Download</a>
-            <a href="#" id="btn-save-design" class="start-over bg-primary">Save</a>
+            <a href="#" data-toggle="modal" data-target="#savedesignmodel" id="btn-save-design" class="start-over bg-primary">Save</a>
         </div>  
 
     </div>
@@ -85,10 +85,10 @@
           </div>        
     </div>
     <div class=" text-section">
-     
-           
-
-    
+       
+             
+  
+      
         <div class="card mg-t-1 pd-x-20 txt-ctrl hidden" id="font-panel">
             <div  class=" pd-y-10 font-style">
                 <i class="fa fa-bold text-decoration" data-value="bold" id="bold" title="bold"></i>
@@ -102,12 +102,33 @@
             </div>
         </div>
         
+        <div class="card mg-t-1 pd-20 txt-ctrl hidden" id="font-panel">
+          <div class="d-flex">
+<div>
+<h6 class="tx-12 tx-uppercase tx-inverse tx-bold">Text Color</h6>   
+<input type="color" value="" id="text-color" size="10"> 
+</div>
 
+
+<div>
+<h6 class="tx-12 tx-uppercase tx-inverse tx-bold">BG Color</h6>   
+<input type="color" value="" id="text-bg-color" size="10"> 
+</div>
+
+<div>
+  <h6 class="tx-12 tx-uppercase tx-inverse tx-bold">Stroke Color</h6>   
+  <input type="color" value="" id="text-stroke-color" size="10"> 
+  </div>
+
+
+</div>
+</div>
+          
+         
       
-
        
         <div class="card mg-t-1 pd-20 txt-ctrl hidden" id="font-panel">
-            <h6 class="tx-12 tx-uppercase tx-inverse tx-bold">Font Styles</h6>        
+            <h6 class="tx-12 tx-uppercase tx-inverse tx-bold">Font Styles </h6>        
 
             <div class="dropdown bd-b pd-5 mg-b-15">
                 <div class="tx-inverse tx-14 fontfamily dropdown-toggle" id="selected-font"  data-toggle="dropdown"  >Arial (sans-serif)</div>
@@ -138,10 +159,16 @@
               </div>
 
             <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Font Size</h6>        
-            <input type="range" min="1" max="100" value="50" class="slider" id="btnTextSize">
+            <input type="range" min="1" max="120" value="" step="1" class="slider" id="btnTextSize">
             
             <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15 pd-t-10">Letter Spacing</h6>        
-            <input type="range" min="1" max="100" value="50" class="slider" id="slider-font-spacing">
+            <input type="range" min="1" max="100" value="50" step="1" class="slider" id="text-letter-spacing">
+
+            <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15 pd-t-10">Stoke Size</h6>        
+            <input type="range"  value="1" min="1" step="1" max="10" class="slider" id="text-stroke-width">
+
+            <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15 pd-t-10">Line Height</h6>        
+            <input type="range"  value="1" min="0.1" max="10" step="0.1" class="slider" id="text-line-height">
           </div>
       
          

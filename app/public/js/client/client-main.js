@@ -80,9 +80,15 @@ fabric.Object.prototype.cornerSize = 5;
 fabric.Object.prototype.padding = 0;
 
 
+
 var canvas = new fabric.Canvas("client-main-canvas", {preserveObjectStacking: true})
 var canvasPrev = new fabric.Canvas("client-main-canvas-logo", {preserveObjectStacking: true});
-
+fabric.util.addListener(canvas.upperCanvasEl, 'dblclick', function (e) {
+    var target = canvas.findTarget(e);
+    ungroup(e); 
+  });
+  
+  
 var enabledTextMode = false;
 
 var filters = [
@@ -230,6 +236,50 @@ function initUIEvents() {
     brightnessObject();
     contrastObject();
 
+    $("#shared-library .custom-design").on("click",function(){
+        var id = $(this).attr("id"); 
+        $loader.removeClass("hidden");
+        $.ajax({
+            type: "GET",
+            url: `/api/pre-designed/${id}`,
+            success: function (res) {
+                const {json} = res.data;
+                if(!json) return; 
+                var obj = JSON.parse(json);
+                var objs = obj.objects;
+             
+                fabric.util.enlivenObjects(objs, function(objects) {
+                    var origRenderOnAddRemove = canvas.renderOnAddRemove;
+                    canvas.renderOnAddRemove = false;
+                    var grp = new fabric.Group(objects,{
+                        top:100,
+                        left:100
+                    });
+                    grp.globalCompositeOperation = "source-atop"
+
+                    if (state.isPreviewCanvas) {
+                        canvasPrev.add(grp);
+                    } else {
+                        canvas.add(grp);
+                    }
+
+                  
+                    canvas.renderOnAddRemove = origRenderOnAddRemove;
+                    canvas.renderAll();
+                    mainControls(true);
+                    $loader.addClass("hidden");
+                  });
+    
+    
+    
+            },
+            error: function (res) {
+                toast("Error while downloading.");
+            }
+        })
+    
+      })
+
     $txtDecorationCtrl.on("click",function(e){
         var value = $(this).attr("data-value");
         var o = canvas.getActiveObject(); 
@@ -271,6 +321,41 @@ function initUIEvents() {
 
        
       })
+
+      
+    $("#text-color").on("change",function() {
+        setSelectedTextStyle("fill",this.value);
+        
+       });
+     $("#text-letter-spacing").on("change",function() {
+      setSelectedTextStyle("charSpacing",this.value);
+      
+     });
+     $("#text-bg-color").on("change",function() {
+      setSelectedTextStyle("backgroundColor",this.value);
+       
+     });
+  
+     $("#text-stroke-color").on("change",function() {
+      setSelectedTextStyle("stroke",this.value);
+      
+     });
+     $("#text-stroke-width").on("change",function() {
+      setSelectedTextStyle("strokeWidth",this.value);
+        
+     });
+  
+  
+   $('#text-line-height').on("change",function() {   
+      setSelectedTextStyle("lineHeight",this.value);
+  });
+          
+  
+  function setSelectedTextStyle(prop,value){
+    canvas.getActiveObject().set(prop,value);
+    canvas.renderAll();
+  
+  }
     
     $btnUndo.on("click", () => {
 
@@ -393,8 +478,11 @@ function initUIEvents() {
     $("#myprojects .delete").on("click", (e) => {
 
         e.stopPropagation();
+        $(this).fadeOut();
         enabledTextMode = false;
         var id = e.currentTarget.id;
+        id = id.replace("del","");
+
         canvas.clear();
         deleteMyProject(id);
 
@@ -406,8 +494,9 @@ function initUIEvents() {
         fabric.Image.fromURL(id, function (img) {
             var img1 = img.set({left: 0, top: 0});
             img1.globalCompositeOperation = 'source-atop';
-
             canvas.add(img1);
+            mainControls(true);
+
         });
 
     });
@@ -501,13 +590,14 @@ function onObjectSelectionCleared(o)
 
 function onObjectSelection(o)
 {
-    if (canvas.getActiveObject().get('type') == "image") {
-        textControls(false);
-        imageControls(true);
-      
-    } else {
+    if (canvas.getActiveObject().get('type') == "i-text") {
+     
         textControls(true);
         imageControls(false);
+      
+    } else {
+        textControls(false);
+        imageControls(true);
     }
     
 
@@ -668,33 +758,43 @@ function initLayerEvents($elem) {
 
 // UI events:
 
+$("#btnSaveDesignPopup").on("click",function(){
 
-$btnSaveDesign.on("click", () => {
+    var projectName = $("#projectname").val();
+    var projectDesc = $("#projectdesc").val();
+    var base64 = canvas.toDataURL({format: 'jpg', quality: 0.8});
+
     $.ajax({
         type: "POST",
         url: "/app/client/save-design",
 
         data: {
-            thumbBase64: canvas.toDataURL(
-                {format: 'jpg', quality: 0.8}
-            ),
+            title : projectName || "N/A",
+            desc :  projectDesc || "N/A",
+            thumbBase64:base64 ,
             json: JSON.stringify(canvas.toJSON())
         },
         success: function (res) {
+            debugger;
             toast("Design has been Saved.");
         },
         error: function (res) {
             if (res.status === 401) {
-                toast(`${
-                    res.statusText
-                }:${
-                    res.responseJSON.message
-                }`);
+                toast(`${res.statusText}:${res.responseJSON.message}`);
             } else {}
 
         }
     })
+
+
 })
+
+$btnSaveDesign.on("click", () => {
+    var base64 = canvas.toDataURL({format: 'jpg', quality: 0.8});
+    $("#prevesavdesign").attr("src",base64);
+})
+
+    
 
 function addWaterMark(doc) {
     var totalPages = doc.internal.getNumberOfPages();
@@ -818,9 +918,7 @@ const processFiles = (files) => {
                     canvas.add(img);
                     canvas.setActiveObject(img);
                 }
-                $mainCtrl.each(function () {
-                    $(this).removeClass("hidden");
-                })
+                mainControls(true);
             })
         } 
         
@@ -840,15 +938,13 @@ function toast(message) {
     $toast.text(message);
     setTimeout(function () {
         $toast.removeClass("show")
-    }, 3000);
+    }, 5000);
 }
 
 function hideWorkspaceControls(){
     $layers.html("Empty! please upload an image.");
-    $mainCtrl.each(function () {
-        $(this).addClass("hidden");
-    })
-   hideObjectControls();
+    mainControls(false);
+    hideObjectControls();
 }
 
 function hideObjectControls(){
@@ -881,18 +977,27 @@ function textControls(show)
         $txtCtrl.each(function () {
             $(this).removeClass("hidden");
         })
-
-      
-      
-      
     }else{
         $txtCtrl.each(function () {
             $(this).addClass("hidden");
         })
-
     }
 }
 
+function mainControls(show)
+{
+    if(show)
+    {
+        $mainCtrl.each(function () {
+            $(this).removeClass("hidden");
+        })
+    }else{
+        $mainCtrl.each(function () {
+            $(this).addClass("hidden");
+        })
+    }
+  
+}
 function initCanvasTextEvents() {
     let isDrawingText = false;
     var textLeft = 50;
@@ -907,9 +1012,15 @@ function initCanvasTextEvents() {
             fill: '#333',
             fontSize: 18
         });
-        canvas.add(item);
-        canvas.setActiveObject(item);
+        
+        if (state.isPreviewCanvas) {
+            canvasPrev.add(item);
+        } else {
+            canvas.add(item);
+        }
 
+        canvas.setActiveObject(item);
+        mainControls(true);
     })
 
     $btnTextSize.on("change", function () {
@@ -1135,7 +1246,6 @@ function brightnessObject() {
     });
 }
 
-
 window.addEventListener("paste", pasteImage);
 
 function pasteImage(event) {
@@ -1182,6 +1292,21 @@ function contrastObject() {
     });
 }
 
+function ungroup(event)
+{
+    var activeObject = canvas.getActiveObject();
+    if(activeObject.type=="group"){
+        var items = activeObject._objects;
+        activeObject._restoreObjectsState();
+        canvas.remove(activeObject);
+        for(var i = 0; i < items.length; i++) {
+            items[i].globalCompositeOperation = "source-atop"
+          canvas.add(items[i]);
+          canvas.item(canvas.size()-1).hasControls = true;
+        }
+        canvas.renderAll();
+    }
+}
 initUIEvents();
 initCanvasEvents();
 

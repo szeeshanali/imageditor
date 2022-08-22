@@ -25,7 +25,8 @@
  var $adminDesignCtrl           = $(".admin-design-ctrl");
  var $pageTitle                 = $(".am-pagetitle");
  var $btnSavePreDesign          = $("#btnSavePreDesign");
- 
+ $btnTextSize = $("#btnTextSize");
+
  const layerHtml = `<div class="media d-block d-flex layer-item object-options" data-index='{index}' id='{id}'  >
  <div class="d-block mg-sm-r-10 img"> <img src="{src}" class="wd-30" alt="Image" ></div>
  <small class="d-sm-flex layer-label">Layer {index}</small>
@@ -51,10 +52,22 @@
   $selectPageSize     =       $("#admin-page-size");
   $inputLogoPerPage   =       $("#admin-logo-count");
   $templateThumb      =       $("#templatepanel .template");
+  $customTemplateThumb      =       $("#customTemplateThumb .template");
+  $clipartThumb           =   $("#add-clipart-panel .clipart img");
+
+
   $btnUpdateDesign    =       $("#btnUpdateDesign");
 
   $editTemplateDesignName   =       $("#editTemplateDesignName");
   $editTemplateThumbName    =       $("#editTemplateThumbName");
+  $btnAddText = $("#btnAddText");
+  $textarea = $("#textarea");
+
+  $imgCtrl = $("#workspace-right-panel .img-ctrl");
+$txtCtrl = $("#workspace-right-panel .txt-ctrl");
+$txtDecorationCtrl = $("#workspace-right-panel .txt-ctrl .text-decoration");
+
+$mainCtrl = $("#workspace-right-panel .main-ctrl");
 
  var selectedDesign  = {};
  var designFlags = {active:true, default:false, submitted:false}; 
@@ -339,6 +352,8 @@ function deleteTemplate(id)
     })
 }
 
+
+
  function InitUIEvents()
  {
   rotateObject(); 
@@ -347,7 +362,109 @@ function deleteTemplate(id)
   grayscaleObject();
   brightnessObject();
   contrastObject();
- 
+
+
+  $txtDecorationCtrl.on("click",function(e){
+    var value = $(this).attr("data-value");
+    var o = canvas.getActiveObject(); 
+    if(o && o.type === 'i-text')
+    {
+       
+        if(value === 'bold')
+        { 
+            var isTrue = o['fontWeight'] === 'bold';
+            o.set({"fontWeight":isTrue?'':'bold'})
+        
+
+        }else if(value === 'italic')
+        { 
+            var isTrue = o['fontStyle'] === 'italic';
+            o.set({"fontStyle":isTrue?'':'italic'})
+          
+        }
+        else if(value === 'underline')
+        { 
+            var isTrue = o['textDecoration'] === 'underline';
+            o.set({"textDecoration":isTrue?'':'underline'})
+           
+        }else if(value === "left" || value === "right" || value === "center" ){
+            o.set({"textAlign":value})
+        }
+       
+        canvas.renderAll();
+    }
+   
+})
+
+$("#font-list-container .fontfamily").on("click",function(e){
+    var value = $(this).attr("data-value");
+    $("#selected-font").html($(this).html())
+
+    canvas.getActiveObject().set("fontFamily", value);
+    canvas.requestRenderAll();
+
+   
+  })
+
+
+
+  var textLeft = 50;
+  var textTop = 100;
+  $btnAddText.on("click", function () {
+
+        var text = $textarea.val();
+    var item = new fabric.IText(text, {
+        left: (textLeft += 20),
+        top: (textTop += 20),
+        fontFamily: 'arial black',
+        fill: '#333',
+        fontSize: 18
+    });
+    
+    canvas.add(item);
+    canvas.setActiveObject(item);
+    mainControls(true);
+})
+ $btnTextSize.on("change", function () {
+  setSelectedTextStyle("fontSize", this.value);
+      
+    })
+
+    $("#text-color").on("change",function() {
+      setSelectedTextStyle("fill",this.value);
+      
+     });
+   $("#text-letter-spacing").on("change",function() {
+    setSelectedTextStyle("charSpacing",this.value);
+    
+   });
+   $("#text-bg-color").on("change",function() {
+    setSelectedTextStyle("backgroundColor",this.value);
+     
+   });
+
+   $("#text-stroke-color").on("change",function() {
+    setSelectedTextStyle("stroke",this.value);
+    
+   });
+   $("#text-stroke-width").on("change",function() {
+    setSelectedTextStyle("strokeWidth",this.value);
+      
+   });
+
+
+ $('#text-line-height').on("change",function() {   
+    setSelectedTextStyle("lineHeight",this.value);
+});
+		
+
+function setSelectedTextStyle(prop,value){
+  canvas.getActiveObject().set(prop,value);
+  canvas.renderAll();
+
+}
+
+   
 
   $("#user-ctrl .edit").on("click", function(e){
     var userId = e.currentTarget.id.replace("edit","");
@@ -476,6 +593,25 @@ if(!userId)
     }
   })
 
+  $customTemplateThumb.on("click",(e)=>{
+    var templateId = e.currentTarget.id; 
+    if(templateId){
+      loadSVGTemplateForCustomDesign(templateId);
+    }else{
+      toast(`Can't load Template.`)
+    }
+  })
+
+  $clipartThumb.on("click", (e) => {
+    var id = e.currentTarget.src;
+    fabric.Image.fromURL(id, function (img) {
+        var img1 = img.set({left: 0, top: 0});
+       // img1.globalCompositeOperation = 'source-atop';
+        canvas.add(img1);
+    });
+
+});
+
   $btnActiveDesign.on("click",(e)=>{
     alert("worked");
     if(!selectedDesign.base64) {
@@ -549,9 +685,9 @@ if(!userId)
   })
   $btnSaveDesign.on("click",function(){
    
-    if(!selectedDesign.base64)
-    {  toast("Error: Please upload a Template"); return; }
-      onSaveTemplate();
+        if(!selectedDesign.base64)
+        {  toast("Error: Please upload a Template"); return; }
+          onSaveTemplate();
     });
   
    $adminImageUpload.on("click",function () {
@@ -609,7 +745,46 @@ function loadSVGTemplate(id)
     })
 
 }
+ 
+	  
+function loadSVGTemplateForCustomDesign(id)
+{
+    var group = [];
+    
+    $.get(`/api/admin/svg-templates/${id}`, function (data) {
+        const svgBase64 = data.base64;
+        if(!svgBase64)
+        {
+            alert("Error loading Template");
+            return;}
 
+        //canvas.setDimensions({width: letterPageSize.width, height: letterPageSize.height});
+        //canvasPrev.setDimensions({width: letterPageSize.width, height: letterPageSize.height});
+        canvas.clear();
+        fabric.loadSVGFromURL(svgBase64,function(objects,options) {      
+            var loadedObjects = new fabric.Group(group);
+            var width = 400;
+            var height = 400;      
+            //canvas.orignalBackgroundImage = loadedObjects;        
+          var logo =            objects[0];   
+           // debugger;
+            //var diff = templateWidth - logo.width;
+          //  var logoWidth = logo.width + diff;
+            logo.scaleToWidth(width);
+            canvas.setDimensions({width: width+100, height: height+100});
+            canvas.setBackgroundImage(logo,canvas.renderAll.bind(canvas));
+            canvas.renderAll();
+            loadedObjects.center().setCoords();
+        
+        },function(item, object) {
+                object.set('id',item.getAttribute('id'));
+                group.push(object);
+        });
+
+        loadTemplateInfo(data);
+    })
+
+}
 function loadTemplateInfo(data)
 {
 
@@ -674,39 +849,61 @@ function onDesignReload(o){
  }
 
  $btnSavePreDesign.on("click",()=>{
+  var objs = canvas._objects; 
+  var grp = new fabric.Group(objs,{
+    width:150,
+    height:150,
+    left:0,
+    top:0
+  });
+  var json =grp.toJSON(); 
+   var m = {};
+   var meta = {
+      width: m.width, 
+      height: m.height,
+      objects: m.logoCount, 
+      objectWidth: m.logoWidth,
+      objectWidth: m.logoHeight,
+      ///title: $templateTitle.val(),
+      //pageSize: $selectPageSize.val(),
+  }
+
+
+var dataUrl = grp.toDataURL( {format: 'png', quality: 0.8});  
+var category = $("#admin-categories").val() ; 
+
   $.ajax({
       type: "POST",
-      url: "/api/admin/save-pre-design",
-
-      data: {   
-
-        desc      : "",
-        title     : $inputThumbnailName.val(),
-        name      : $inputDesignName.val(),
-        file_name : $inputFileName.val(),
-        file_ext  : ".json",
-        order_no  : $inputOrderNo.val(),
-        active    : designFlags.active,
-        type      : "pre-designed",
-        by_admin  : true,
-        default   : designFlags.default,
-        link      : $inputDesignLink.val(),
-        logos     : $inputLogoPerPage.val(), 
-        ref_code  : $kopykakePartNo.val() ,
-        thumbBase64  : canvas.toDataURL(
-              {
-                  format: 'jpg',
-                  quality: 0.8
-              }
-          ),  
-          json    : JSON.stringify(canvas.toJSON()) },
+      url: "/app/admin/save-template",
+      data: {  
+          
+          desc      :  $inputThumbnailName.val(),
+          json      : JSON.stringify(json),
+          meta      : JSON.stringify(meta) ,
+          title     : $inputThumbnailName.val(),
+          name      : $inputDesignName.val(),
+          file_name : $inputFileName.val(),
+          file_ext  : ".json",
+          order_no  : $inputOrderNo.val(),
+          active    : designFlags.active,
+          base64    : dataUrl,
+          type      : "pre-designed",
+          by_admin  : true,
+          default   : designFlags.default,
+          link      : $inputDesignLink.val(),
+          logos     : $inputLogoPerPage.val(), 
+          ref_code  : $kopykakePartNo.val(),
+          category  : category
+      },
       success:function(res){
-        toast("Design has been Saved.");
+        designFlags.submitted = true; 
+        toast("Design has been successfully saved.");
       },
       error:function(res){
-        toast("Error while saving design.");
+        designFlags.submitted = false; 
+        toast("Error while uploading Design.");
       }
-  })
+    })
 })
 
   function onSaveTemplate(){
@@ -822,8 +1019,8 @@ var category = $("#admin-categories").val() ;
                 width     : img.width, 
                 height    : img.height
             }
-
-                img.scaleToWidth(300);
+            //img.globalCompositeOperation = 'source-atop';
+            img.scaleToWidth(300);
               canvas.add(img).renderAll();
             })
           }
@@ -841,7 +1038,36 @@ function onObjectAdded(o){
   addLayer();
 }
 
+function onObjectSelectionCleared(o)
+{
+    hideObjectControls();
+}
 
+function hideObjectControls(){
+  imageControls(false); 
+  textControls(false);
+}
+
+function onObjectSelection(o)
+{
+    if (canvas.getActiveObject().get('type') == "image") {
+        textControls(false);
+        imageControls(true);
+      
+    } else {
+        textControls(true);
+        imageControls(false);
+    }
+    
+
+
+    const id = o.selected[0].id;
+    var elem = $(`#${id}`)[0];
+    clearLayerSelection();
+
+    $(`#${id} .layers-controls`).show();
+    $(`#${id}`).addClass("selected-layer");
+}
 function initCanvasEvents(){
   fabric.Object.prototype.transparentCorners = false;
   fabric.Object.prototype.cornerStyle = 'circle';
@@ -851,7 +1077,12 @@ function initCanvasEvents(){
   fabric.Object.prototype.cornerSize = 5;
   fabric.Object.prototype.padding = 0;
 
-       
+  canvas.on({
+    "selection:updated":onObjectSelection,
+    "selection:created":onObjectSelection,
+    "selection:cleared":onObjectSelectionCleared
+});
+
   canvas.selectedLayerId = null; 
   canvas.on("object:added",(o)=>{
       o.target.id = `obj${canvas._objects.length}`;
@@ -986,11 +1217,57 @@ var id = $elem.id;
   
 
 }
+
+function imageControls(show)
+{
+
+    if(show)
+    {
+        $imgCtrl.each(function () {
+            $(this).removeClass("hidden");
+        }) 
+    }else
+    {
+        $imgCtrl.each(function () {
+            $(this).addClass("hidden");
+        })
+     
+    }
+   
+}
+
+function textControls(show)
+{
+    if(show)
+    {
+        $txtCtrl.each(function () {
+            $(this).removeClass("hidden");
+        })
+    }else{
+        $txtCtrl.each(function () {
+            $(this).addClass("hidden");
+        })
+    }
+}
+
 /** */
 
  InitUIEvents();
  initCanvasEvents();
-
+ function mainControls(show)
+ {
+     if(show)
+     {
+         $mainCtrl.each(function () {
+             $(this).removeClass("hidden");
+         })
+     }else{
+         $mainCtrl.each(function () {
+             $(this).addClass("hidden");
+         })
+     }
+   
+ }
   function toast(message) {
     var $toast = $("#snackbar").addClass("show");
     $toast.text(message);

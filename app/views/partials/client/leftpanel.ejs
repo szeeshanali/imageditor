@@ -21,36 +21,43 @@
           <li>
             <a href="#clipartmenu" class="nav-link  pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
                 <i class="ion-ios-paw tx-24 tx-white"></i>
-                <div class="visually-hidden tx-12 tx-white">Clipart</div>
+                <div class="visually-hidden tx-12 tx-white">Clipart & Symbols</div>
             </a>
           </li>
           <li>
-            <a href="#textmenu" id="btnTextMenu" class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
-                <i class="ion-social-tumblr tx-24 tx-white"></i>
-                <div class="visually-hidden tx-12 tx-white">Text</div>
+            <a href="#textmenu" id="btnTextMenu" class="nav-link pd-y-10 lh-1 tx-20  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+              <i class="fa fa-font  tx-white" aria-hidden="true"></i>
+              <div class="visually-hidden tx-12 tx-white">Add Text</div>
+            </a>
+          </li>
+          <li>
+            <a href="#shared-library" id="sharedlibrary" class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+                <i class="ion-social-dropbox tx-24 tx-white"></i>
+                <div class="visually-hidden tx-12 tx-white">Library</div>
             </a>
           </li>
 <%}else{%>
   <li class="nav-item">
     <a href="/app/templates" class="pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
         <i class="ion-ios-keypad-outline tx-24 tx-white"></i>
-        <div class="visually-hidden tx-12 tx-white my-proj">Templates <sup class="tag"><%=templates.length || 0 %></div>
+        <div class="visually-hidden tx-12 tx-white my-proj">View Templates <sup class="tag"><%=templates.length || 0 %></div>
     </a>
   </li>
 <li>
   <a href="/app/cliparts" class="pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
       <i class="ion-ios-paw tx-24 tx-white"></i>
-      <div class="visually-hidden tx-12 tx-white">Clipart</div>
+      <div class="visually-hidden tx-12 tx-white">View Clip-arts</div>
+  </a>
+</li>
+<li>
+  <a href="/app/pre-designed" class=" pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+      <i class="ion-ios-keypad tx-24 tx-white"></i>
+      <div class="visually-hidden tx-12 tx-white">Pre-Designed</div>
   </a>
 </li>
   <%}%>
 
-          <li>
-            <a href="/app/pre-designed" class=" pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
-                <i class="ion-ios-keypad tx-24 tx-white"></i>
-                <div class="visually-hidden tx-12 tx-white">Pre-Designed</div>
-            </a>
-          </li>
+        
         
          
           <li>
@@ -64,11 +71,13 @@
     
        
       </div>
+      <%if(locals.page.id == "__workspace"){ %>
       <div style="position:absolute;left:72px;z-index:100;top:0;width:328px">
-
+       
+          <%- include('../../partials/client/imgupload'); %>
      
-      <%- include('../../partials/client/imgupload'); %>
     </div>
+    <%}%>
     <div class="tab-content">
         <div id="mainMenu" class="tab-pane " >
             <!-- <%- include('../../partials/client/canvas'); %>  -->
@@ -100,6 +109,12 @@
 
           <%- include('../../partials/client/clipart'); %>
         </div>
+
+
+        <div id="shared-library" class="tab-pane" style="top:128px" >
+
+          <%- include('../../partials/client/sharedlibrary'); %>
+        </div>
         
         <%}%>
 
@@ -115,7 +130,11 @@
 
          <!-- #chatMenu -->
          <%if(locals.page.id == "__my-projects"){ %>
-            <div id="myprojects" class="tab-pane" style="top:128px">
+            <div id="myprojects" class="tab-pane" >
+              <div class="card pd-t-20 mg-b-1 tx-center">
+                <p class="tx-12" ><a href="#" id="use-template" class="start-over bg-primary">Use this Project</a></p>
+            </div>
+
               <div class="pd-x-10 tx-12 pd-y-5"><b>Projects</b>&nbsp;<span class="text-danger">(You have max (<%=user.project_limit %>) projects quota.)</span><span class="pull-right"><a href="#">Total (<%=projects.length %>)</a></span></div>
 
               <%if(projects.length == 0){%>
@@ -169,13 +188,18 @@
   <%}%>
 
   <%if(locals.page.id == "__templates"){ %>
-    <div id="templatepanel" class="tab-pane d-flex svg-templates tx-center" style="top:128px;" >
-  <%for(var i=0; i<templates.length; i++){ %>
-    <div id="<%=templates[i].code %>" class="template template-small" > 
-      <img src="<%=templates[i].base64 %>" > 
-      <div class="tx-12 tx-bold pd-y-5"><%=templates[i].title %></div>
-  </div>
-  <%}%>  
+    <div id="templatepanel" class="tab-pane "  >
+      <div class="pd-x-10 tx-12 pd-y-5"><b>Templates</b><span class="pull-right"><a href="#">Total (<%=templates.length %>)</a></span></div>
+    <div class="d-flex svg-templates tx-center">
+
+
+      <%for(var i=0; i<templates.length; i++){ %>
+        <div id="<%=templates[i].code %>" class="template template-small" > 
+          <img src="<%=templates[i].base64 %>" > 
+          <div class="tx-12 tx-bold pd-y-5"><%=templates[i].title %></div>
+      </div>
+      <%}%>  
+</div>
 </div>
   <%}%> 
         <!-- #settingMenu -->
