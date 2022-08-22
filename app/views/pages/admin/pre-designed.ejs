@@ -8,56 +8,145 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-3 pd-x-0 mg-t-1">
-        <div class="card pd-20 mg-b-1">
-            <%- include('../../partials/admin/layers'); %>
-        </div>
-        <div class="card pd-20 mg-b-1">
-            <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Size</h6>
-            <div class="d-flex mg-b-10">
-                <div class="bd-r pd-r-10">
-                  <label class="tx-12 ">Crop</label>
-                  <p class="tx-center tx-22">
-                    <i class="ion-crop" id="crop"></i>
-                  </p>
-                  
+    <div class="col-lg-3 pd-x-0 mg-t-1" id="workspace-right-panel">
+     
+   
+     
+      <div class="card pd-20 bg-b-1 img-ctrl hidden">
+          <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Color & Brightness</h6>        
+          <div class="tx-12" >
+              <div ><b>Brightness <span id="brightnessVal"></span></b></div>
+              <input type="range" min="-1" max="1" value="0.0" class="slider " step="0.003921" style="width:100%;height:2px" id="brightness-value">
+              <div><b>Contrast <span id="contrastVal"></span></b></div>
+              <input type="range" min="-1" max="1" value="0.0" class="slider" step="0.003921" style="width:100%;height:2px" id="contrast-value">          
+              <b class="ion-record tx-22" id="btnGrayscale"></b> &nbsp; Grayscale
+          </div>
+      </div>
+      <div class="card pd-20 mg-t-1 img-ctrl hidden">
+          <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Size</h6>
+          <div class="d-flex mg-b-10">
+              <div class="bd-r pd-r-10">
+                <label class="tx-12 ">Crop</label>
+                <div class="tx-center tx-22">
+                  <i class="ion-crop" id="crop"></i>
                 </div>
-                <div class="bd-r pd-x-10">
-                  <label class="tx-12 " >Rotate</label>
-                  <p class="tx-center tx-22">
-                    <i class="ion-loop " id="rotate"></i>
-                  </p>                
-                </div>
-               
-                <div class="pd-x-10 bd-r">
-                    <label class="tx-12" >FlipX</label>
-                    <p class="tx-center tx-22">
-                      <i class="ion-arrow-swap" id="flipW"></i>
-                    </p>
-                  </div>
-                  <div class="pd-l-10">
-                    <label class="tx-12" >FlipY</label>
-                    <p class="tx-center tx-22" style="transform:rotate(90deg)">
-                        <i class="ion-arrow-swap" id="flipH" ></i>
-                    </p>
-                  </div>
+                
               </div>
-            
-        </div>
-        <div class="card pd-20 ">
-            <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Color & Brightness</h6>
-            
-            <div class="tx-12" >
-                <div ><b>Brightness <span id="brightnessVal"></span></b></div>
-                <input type="range" min="-1" max="1" value="0.0" class="slider " step="0.003921" style="width:100%;height:2px" id="brightness-value">
-                <div><b>Contrast <span id="contrastVal"></span></b></div>
-                <input type="range" min="-1" max="1" value="0.0" class="slider" step="0.003921" style="width:100%;height:2px" id="contrast-value">
-              
-                <b class="ion-record tx-22" id="btnGrayscale"></b> &nbsp; Grayscale
-            </div>
+              <div class="bd-r pd-x-10">
+                <label class="tx-12 " >Rotate</label>
+                <div class="tx-center tx-22">
+                  <i class="ion-loop " id="rotate"></i>
+                </div>                
+              </div>
+             
+              <div class="pd-x-10 bd-r">
+                  <label class="tx-12" >FlipX</label>
+                  <div class="tx-center tx-22">
+                    <i class="ion-arrow-swap" id="flipW"></i>
+                  </div>
+                </div>
+                <div class="pd-l-10">
+                  <label class="tx-12" >FlipY</label>
+                  <div class="tx-center tx-22" style="transform:rotate(90deg)">
+                      <i class="ion-arrow-swap" id="flipH" ></i>
+                  </div>
+                </div>
+            </div>        
+      </div>
+      <div class=" text-section">
+       
+             
+  
+      
+          <div class="card mg-t-1 pd-x-20 txt-ctrl hidden" id="font-panel">
+              <div  class=" pd-y-10 font-style">
+                  <i class="fa fa-bold text-decoration" data-value="bold" id="bold" title="bold"></i>
+                  <i class="fa fa-italic text-decoration"  data-value="italic" id="italic" title="italic"></i>
+                  <i class="fa fa-underline text-decoration" data-value="underline" id="underline" title="underline"></i>
+                  <i class="fa fa-align-left text-decoration " data-value="left" aria-hidden="true"></i>
+                  <i class="fa fa-align-justify text-decoration" data-value="center" aria-hidden="true"></i>
+  
+                  <i class="fa fa-align-right text-decoration " data-value="right" aria-hidden="true"></i>
+  
+              </div>
+          </div>
+          
+          <div class="card mg-t-1 pd-20 txt-ctrl hidden" id="font-panel">
+            <div class="d-flex">
+<div>
+  <h6 class="tx-12 tx-uppercase tx-inverse tx-bold">Text Color</h6>   
+  <input type="color" value="" id="text-color" size="10"> 
+  </div>
 
-        </div>
+
+<div>
+  <h6 class="tx-12 tx-uppercase tx-inverse tx-bold">BG Color</h6>   
+  <input type="color" value="" id="text-bg-color" size="10"> 
+  </div>
+
+  <div>
+    <h6 class="tx-12 tx-uppercase tx-inverse tx-bold">Stroke Color</h6>   
+    <input type="color" value="" id="text-stroke-color" size="10"> 
     </div>
+
+
+</div>
+</div>
+            
+           
+        
+         
+          <div class="card mg-t-1 pd-20 txt-ctrl hidden" id="font-panel">
+              <h6 class="tx-12 tx-uppercase tx-inverse tx-bold">Font Styles </h6>        
+  
+              <div class="dropdown bd-b pd-5 mg-b-15">
+                  <div class="tx-inverse tx-14 fontfamily dropdown-toggle" id="selected-font"  data-toggle="dropdown"  >Arial (sans-serif)</div>
+  
+                  <span class="caret "></span>
+                  <ul class="dropdown-menu" id="font-list-container">
+                      <li class="list-group-item rounded-bottom-0 pd-x-10 pd-y-5">
+                        <div class="tx-inverse tx-18 fontfamily" data-value="Arial, sans-serif" style="font-family: Arial, sans-serif;">Arial (sans-serif)</div>
+                       </li>
+                      <li class="list-group-item rounded-bottom-0 pd-x-10 pd-y-5">
+                        <div class="tx-inverse tx-16 fontfamily" data-value="Verdana, sans-serif" style=" font-family: Verdana, sans-serif;">Verdana (sans-serif)</div>
+                       </li>
+                      <li class="list-group-item rounded-bottom-0 pd-x-10 pd-y-5">
+                        <div class="tx-inverse tx-18 fontfamily" data-value="Helvetica, sans-serif" style="font-family: Helvetica, sans-serif">Helvetica (sans-serif)</div>
+                       </li>
+                      <li class="list-group-item rounded-bottom-0 pd-x-10 pd-y-5">
+                        <div class="tx-inverse tx-20 fontfamily" data-value="Georgia, serif" style=" font-family: Georgia, serif">Georgia (serif)</div>
+                       </li>
+                    
+                      <li class="list-group-item rounded-bottom-0 pd-x-10 pd-y-5">
+                       <div class="tx-inverse tx-24 fontfamily" data-value="Brush Script MT, cursive" style="font-family: Brush Script MT, cursive">Brush Script MT (cursive)</div>
+                      </li>
+                      <li class="list-group-item rounded-bottom-0 pd-x-10 pd-y-5">
+                        <div class="tx-inverse tx-24 fontfamily" data-value="Segoe Script" style=" font-family: Segoe Script">Segoe Script</div>
+                       </li>
+                      
+                    </ul>
+                </div>
+  
+              <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Font Size</h6>        
+              <input type="range" min="1" max="120" value="" step="1" class="slider" id="btnTextSize">
+              
+              <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15 pd-t-10">Letter Spacing</h6>        
+              <input type="range" min="1" max="100" value="50" step="1" class="slider" id="text-letter-spacing">
+
+              <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15 pd-t-10">Stoke Size</h6>        
+              <input type="range"  value="1" min="1" step="1" max="10" class="slider" id="text-stroke-width">
+
+              <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15 pd-t-10">Line Height</h6>        
+              <input type="range"  value="1" min="0.1" max="10" step="0.1" class="slider" id="text-line-height">
+            </div>
+        
+           
+      </div>
+    
+      <div class="card pd-x-20 pd-y-10 mg-t-1 ">
+          <%- include('../../partials/admin/layers'); %>
+      </div>
+  </div>
     </div>
 <script>
     $(".tab-content .tab-pane").each((i,e)=>

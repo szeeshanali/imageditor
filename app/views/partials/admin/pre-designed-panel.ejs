@@ -4,9 +4,9 @@
         <br>
             <p class="tx-12 "><%= locals.uploadmessage %></p>
         </div>
-</div>
+</div>  -->
     <input id="admin-image-upload-hidden" data-page-id="<%= locals.page.id %>" type="file" accept="image/*" multiple="multiple" hidden="hidden">
-       -->
+     
        <div class="card pd-t-20 pd-0" >
         <button type="button" class="btn-upload" id="admin-image-upload"> Upload Image</button>
         <p class="tx-12 pd-t-20 pd-x-30 tx-center">Upload (SVG,JPG,PNG) Images.</p>
@@ -15,73 +15,110 @@
 
     </div>
     <div class="pd-10 admin-design-ctrl">
-
         <div class="tx-12"><b>Design Info</b><span class="text-danger"> (All fields are mandatory)</span></div>
 
-           
-                <div class="d-flex">
+        
+        <div id="accordion" class="accordion" role="tablist" aria-multiselectable="true">
+            <div class="card">
+              <div class="card-header" role="tab" id="headingOne">
+                <h6 class="mg-b-0">
+                <a data-toggle="collapse" data-parent="#accordion" href="#add-template-panel"
+                    aria-controls="addtemplate" class="tx-gray-800 tx-bold transition">
+                   <strong style="background-color: white; padding:3px 7px; font-size: 12px; margin-right: 10px; border-radius: 50%; ">1</strong>Select Templates 
+                   </a>
+                  <a data-toggle="collapse" data-parent="#accordion" href="#add-clipart-panel"
+                   aria-controls="addclipart" class="tx-gray-800 transition tx-bold">
+                   <strong style="background-color: white; padding:3px 7px; font-size: 12px; margin-right: 10px; border-radius: 50%; ">2</strong>
+                   Add Clipart & Symbols
+                  </a>
+                  <a data-toggle="collapse" data-parent="#accordion" href="#add-text-panel"
+                   aria-controls="add-customtext-panel" class="tx-gray-800 transition tx-bold">
+                   <strong style="background-color: white; padding:3px 7px; font-size: 12px; margin-right: 10px; border-radius: 50%; ">3</strong>
+                   Add Text 
+                  </a>
+                
+                  <a data-toggle="collapse" data-parent="#accordion" href="#save-design-panel"
+                   aria-controls="save-design-panel" class="tx-gray-800 transition tx-bold">
+                   <strong style="background-color: #494699; color:white; padding:3px 7px; font-size: 12px; margin-right: 10px; border-radius: 50%; ">4</strong>
+                   Save Design 
+                  </a>
+                </h6>
+              </div><!-- card-header -->
+              <div id="add-template-panel" class="collapse" role="tabpanel" aria-labelledby="addtemplate">
+                <div class="d-flex svg-templates tx-center" id="customTemplateThumb">
 
 
-                    <div class="d-r-5">
-                        <small class="pd-y-10">Active</small>
-                        <div class="toggle toggle-light primary mg-auto disabled" id="design-active" style="height: 22px; width: 50px;">
-                            <div class="toggle-slide">
-                                <div class="toggle-inner" style="width: 78px; margin-left: -28px;">
-                                    <div class="toggle-on" style="height: 22px; width: 39px; text-indent: -7.33333px; line-height: 22px;">ON</div>
-                                    <div class="toggle-blob" style="height: 22px; width: 22px; margin-left: -11px;"></div>
-                                    <div class="toggle-off active" style="height: 22px; width: 39px; margin-left: -11px; text-indent: 7.33333px; line-height: 22px;">OFF</div>
-                                </div>
-                            </div>
-                        </div>
-
+                    <%for(var i=0; i<templates.length; i++){ %>
+                      <div id="<%=templates[i].code %>" class="template template-small" > 
+                        <img src="<%=templates[i].base64 %>" > 
+                        <div class="tx-12 tx-bold pd-y-5"><%=templates[i].title %></div>
                     </div>
-                    <div class="pd-l-5">
-                        <small class="pd-y-10">Default</small>
-                        <div class="toggle toggle-light primary mg-auto disabled" id="design-default" style="height: 22px; width: 50px;">
-                            <div class="toggle-slide">
-                                <div class="toggle-inner" style="width: 78px; margin-left: -28px;">
-                                    <div class="toggle-on" style="height: 22px; width: 39px; text-indent: -7.33333px; line-height: 22px;">ON</div>
-                                    <div class="toggle-blob" style="height: 22px; width: 22px; margin-left: -11px;"></div>
-                                    <div class="toggle-off active" style="height: 22px; width: 39px; margin-left: -11px; text-indent: 7.33333px; line-height: 22px;">OFF</div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div> -->
-            <div class="pd-b-10">
-                <div class="mg-y-5">
-                    <input class="form-control" placeholder="Design name" id="admin-design-name" type="text">
-                </div>
-                <div class="mg-y-5">
-                    <input class="form-control" placeholder="Thumbnail name" id="admin-design-title" type="text">
-                </div>
-                <div class="mg-y-5">
-                    <input class="form-control" placeholder="File name" id="admin-file-name" type="text">
-                </div>
-
-                <div class="mg-y-5">
-                    <input class="form-control"  placeholder="KopyKake Webstore Link" id="admin-design-link" type="text">
-                </div>
-                <div class="mg-y-5">
-                    <input class="form-control" id="admin-kopykake-part"  placeholder="KopyKake Part #" id="admin-design-link" type="text">
-                </div>
-                <div class="d-flex pd-y-10">
-                    <label class="ckbox">
-                        <input type="checkbox" checked="" id="design-active"><span>Active</span>
-                      </label>
-                      <label class="ckbox mg-l-20">
-                        <input type="checkbox" id="design-default" ><span>Default</span>
-                      </label>
-                  
-                </div>
-        </div>
-            <div id="save-image-ctrl" class="tx-center">
-                <div class="btn-group" role="group" >
-                    <button type="button" id="btnSavePreDesign" class="btn btn-primary  pd-x-25 active ">Save Design</button>
-                    <button type="button" id="cancel-design" class="btn btn-secondary pd-x-25 ">Cancel</button>
-                  </div>
+                    <%}%>  
+              </div>
             </div>
+              <div id="add-customtext-panel" class="collapse" role="tabpanel" aria-labelledby="addcustomtext">
+              </div>
+              <div id="add-clipart-panel" class="collapse" role="tabpanel" aria-labelledby="addclipart">
+                
+                <%for(var i=0; i<cliparts.length; i++){ %>
+                    <div id="<%=cliparts[i].code %>" class="clipart" > 
+                      <img src="<%=cliparts[i].base64 %>" > 
+                      <div class="tx-12 tx-bold pd-y-5"><%=cliparts[i].title %></div>
+                  </div>
+                  <%}%>  
+              </div>
+              <div id="add-text-panel" class="collapse" role="tabpanel" aria-labelledby="addtext">
+                <%- include('../../partials/admin/typo'); %>     
+              </div>
+              <div id="save-design-panel" class="collapse" role="tabpanel" aria-labelledby="savedesign">
+                <div class="card-block pd-20">
+                    <div class="pd-b-10">
+                        <div class="tx-left mg-y-5">
+                            <select id="admin-categories" class="form-control  select2 select2-hidden-accessible" data-placeholder="Choose one" tabindex="-1" aria-hidden="true">
+                                <option label="Categories"></option>
+                                <%for(var i=0; i<categories.length;i++){%>
+                                    <option value="<%=categories[i].code%>"><%=categories[i].name%></option>
+                               <%}%>
+                              </select>
+                            </div>
+        
+                        <div class="mg-y-5">
+                            <input class="form-control" placeholder="Design name" id="admin-design-name" type="text">
+                        </div>
+                        <div class="mg-y-5">
+                            <input class="form-control" placeholder="Thumbnail name" id="admin-design-title" type="text">
+                        </div>
+                        <div class="mg-y-5">
+                            <input class="form-control" placeholder="File name" id="admin-file-name" type="text">
+                        </div>
+        
+                        <div class="mg-y-5">
+                            <input class="form-control"  placeholder="KopyKake Webstore Link" id="admin-design-link" type="text">
+                        </div>
+                        <div class="mg-y-5">
+                            <input class="form-control" id="admin-kopykake-part"  placeholder="KopyKake Part #" id="admin-design-link" type="text">
+                        </div>
+                        <div class="d-flex pd-y-10">
+                            <label class="ckbox">
+                                <input type="checkbox" checked="" id="design-active"><span>Active</span>
+                              </label>
+                              <label class="ckbox mg-l-20">
+                                <input type="checkbox" id="design-default" ><span>Default</span>
+                              </label>
+                          
+                        </div>
+        
+                </div>
+                    <div id="save-image-ctrl" class="tx-center">
+                        <div class="btn-group" role="group" >
+                            <button type="button" id="btnSavePreDesign" class="btn btn-primary  pd-x-25 active ">Save Design</button>
+                            <button type="button" id="cancel-design" class="btn btn-secondary pd-x-25 ">Cancel</button>
+                          </div>
+                    </div>
+                </div>
+              </div>
+            </div><!-- card -->
+            <!-- ADD MORE CARD HERE -->
+          </div><!-- accordion -->
+          
         </div>
