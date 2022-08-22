@@ -1929,13 +1929,13 @@ fieldset[disabled] a.btn {
 
 .btn-primary {
   color: #fff;
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #494699;
+  border-color: #494699;
 }
 .btn-primary:hover {
   color: #fff;
-  background-color: #0069d9;
-  border-color: #0062cc;
+  background-color: #6866af;
+  border-color: #494699;
 }
 .btn-primary:focus, .btn-primary.focus {
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
