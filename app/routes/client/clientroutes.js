@@ -144,15 +144,18 @@ router.get("/app/templates",  isLoggedIn, async (req, res) => {
 }); 
 
 router.post('/app/client/save-design', isLoggedIn, async function(req, res) {
+try{
+
 
     if(req.user != null)
     {
-        var totalProjects = await uploads.find({title, desc, uploaded_by:req.user._id, is_admin:false, deleted:false,active:true}).count(); 
+        var totalProjects = await uploads.find({ uploaded_by:req.user._id, is_admin:false, deleted:false,active:true}).count(); 
         if(totalProjects>req.user.project_limit){
             res.status(401).send({message:`You have exceeded the limit of project quota.`, error: 'You have exceeded the limit of project quota.'});
         }
+        
     }
-    const {json,thumbBase64} = req.body; 
+    const {json,thumbBase64,title, desc} = req.body; 
     var _id = mongoose.Types.ObjectId();
     var uploadModel = {
       title           :   title || `project${_id}`,
@@ -173,8 +176,11 @@ router.post('/app/client/save-design', isLoggedIn, async function(req, res) {
             else{res.status(400).send({message:`Unable to upload file.`, error: msg});  }
             
         })
-
+    }catch{
+        res.status(500).send({message:`Something went wrong!`, error: msg});
+    }
   })
+  
 
   
 router.get("/app/pre-designed/:id?",  isLoggedIn, async (req, res) => {

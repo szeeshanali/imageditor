@@ -51,13 +51,22 @@ router.get('/app/admin/category/:categoryid/', isAdmin, async (req,res)=>{
 
 
 router.get("/app/admin/user-management", isAdmin, async (req,res)=>{
-  res.locals.pagetitle ="User Management"; 
-  res.render("pages/admin/user-management");
+  res.locals.page = {
+    title  : "User Management",
+    id     : "__usermanagement",
+    user   : req.user
+ 
+   } ;
+  res.render("pages/admin/user-management",res.locals.page);
 })
 
 router.get("/app/admin/reporting", isAdmin, async (req,res)=>{
-  res.locals.pagetitle ="Reporting"; 
-  res.render("pages/admin/reporting");
+  res.locals.page = {
+    title  : "Reporting",
+    id     : "__reporting",
+    user   : req.user
+   } ;
+  res.render("pages/admin/reporting",res.locals.page);
 })
 
 router.get("/app/admin/", isAdmin, async (req,res)=>{
@@ -65,24 +74,40 @@ router.get("/app/admin/", isAdmin, async (req,res)=>{
 })
 
 router.get("/app/admin/privacy", isAdmin, async (req,res)=>{
-  res.locals.pagetitle ="Privacy & Policy"; 
-  res.render("pages/admin/privacy");
+  res.locals.page = {
+    title  : "Privacy & Policy",
+    id     : "__privacy",
+    user   : req.user
+   } ;
+  res.render("pages/admin/privacy",res.locals.page );
 })
 
 router.get("/app/admin/settings", isAdmin, async (req,res)=>{
-  res.locals.pagetitle ="Settings"; 
-  res.render("pages/admin/settings");
+  res.locals.page = {
+    title  : "Settings",
+    id     : "__setting",
+    user   : req.user
+   } ;
+  res.render("pages/admin/settings",res.locals.page);
 })
 
 
 router.get("/app/admin/terms", isAdmin, async (req,res)=>{
-  res.locals.pagetitle ="Terms & Conditions"; 
-  res.render("pages/admin/terms");
+  res.locals.page = {
+    title  : "Terms & Conditions",
+    id     : "__terms",
+    user   : req.user
+   } ;
+  res.render("pages/admin/terms",res.locals.page);
 })
 
 router.get("/app/admin/faq", isAdmin, async (req,res)=>{
-  res.locals.pagetitle ="FAQs"; 
-  res.render("pages/admin/faq");
+  res.locals.page = {
+    title  : "FAQs",
+    id     : "__faq",
+    user   : req.user
+   } ;
+  res.render("pages/admin/faq",res.locals.page);
 })
 
 
