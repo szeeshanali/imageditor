@@ -51,13 +51,22 @@ router.get('/app/admin/category/:categoryid/', isAdmin, async (req,res)=>{
 
 
 router.get("/app/admin/user-management", isAdmin, async (req,res)=>{
-  res.locals.pagetitle ="User Management"; 
-  res.render("pages/admin/user-management");
+  res.locals.page = {
+    title  : "User Management",
+    id     : "__usermanagement",
+    user   : req.user
+ 
+   } ;
+  res.render("pages/admin/user-management",res.locals.page);
 })
 
 router.get("/app/admin/reporting", isAdmin, async (req,res)=>{
-  res.locals.pagetitle ="Reporting"; 
-  res.render("pages/admin/reporting");
+  res.locals.page = {
+    title  : "Reporting",
+    id     : "__reporting",
+    user   : req.user
+   } ;
+  res.render("pages/admin/reporting",res.locals.page);
 })
 
 router.get("/app/admin/", isAdmin, async (req,res)=>{
@@ -65,24 +74,40 @@ router.get("/app/admin/", isAdmin, async (req,res)=>{
 })
 
 router.get("/app/admin/privacy", isAdmin, async (req,res)=>{
-  res.locals.pagetitle ="Privacy & Policy"; 
-  res.render("pages/admin/privacy");
+  res.locals.page = {
+    title  : "Privacy & Policy",
+    id     : "__privacy",
+    user   : req.user
+   } ;
+  res.render("pages/admin/privacy",res.locals.page );
 })
 
 router.get("/app/admin/settings", isAdmin, async (req,res)=>{
-  res.locals.pagetitle ="Settings"; 
-  res.render("pages/admin/settings");
+  res.locals.page = {
+    title  : "Settings",
+    id     : "__setting",
+    user   : req.user
+   } ;
+  res.render("pages/admin/settings",res.locals.page);
 })
 
 
 router.get("/app/admin/terms", isAdmin, async (req,res)=>{
-  res.locals.pagetitle ="Terms & Conditions"; 
-  res.render("pages/admin/terms");
+  res.locals.page = {
+    title  : "Terms & Conditions",
+    id     : "__terms",
+    user   : req.user
+   } ;
+  res.render("pages/admin/terms",res.locals.page);
 })
 
 router.get("/app/admin/faq", isAdmin, async (req,res)=>{
-  res.locals.pagetitle ="FAQs"; 
-  res.render("pages/admin/faq");
+  res.locals.page = {
+    title  : "FAQs",
+    id     : "__faq",
+    user   : req.user
+   } ;
+  res.render("pages/admin/faq",res.locals.page);
 })
 
 
@@ -278,14 +303,25 @@ router.post('/api/admin/save-pre-design', isAdmin, function(req, res) {
 })
 
 router.get('/app/admin/pre-designed', isAdmin, async (req,res)=>{
+  var categories = await commonService.categoryService.getCategoriesAsync(); 
+  //var templates  = await commonService.uploadService.getTemplatesAsync();
+  
+  var adminUploadItems = await commonService.uploadService.getUploads('all',true,true); 
+  var templates  =  adminUploadItems.filter(function(item){ return item.type == 'template'});
+  var cliparts =  adminUploadItems.filter(function(item){ return item.type == 'clipart'});
+console.log(templates)
+console.log(cliparts)
+
   res.locals.page = {
     id: "__pre-designed",
     title: "Custom Design",
-    user: req.user
+    user: req.user,
+    categories:categories,
+    templates: templates,
+    cliparts:cliparts
   }
   res.render("pages/admin/pre-designed",
-  { user      : req.user 
-  });
+  res.locals.page);
 
 })
 router.put('/api/admin/template/:id?', isAdmin, async (req,res)=>{
@@ -319,7 +355,7 @@ router.delete('/api/admin/template/:id', isAdmin, async (req,res)=>{
 
 
 router.post('/app/admin/save-template', function(req, res) {
-  const {desc, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, code, ref_code,category} = req.body; 
+  const {desc, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
  
   var filename = file_name || "na"; 
   filename = `${filename}-${_id}${file_ext}`;       
@@ -334,7 +370,7 @@ router.post('/app/admin/save-template', function(req, res) {
     code            :   _id,
     active          :   active,
     blob            :   null,
-    json            :   null,
+    json            :   json,
     base64          :   base64,
     editable        :   false,
     paid            :   false,
@@ -373,7 +409,7 @@ router.get('/api/admin/svg-templates/:id', isAdmin, async (req,res)=>{
   }else{
 
       result = await uploads.findOne({
-          type:'template', by_admin:true,  code:itemid });  
+          type:'template', by_admin:true,  code:itemid, deleted:false });  
   }
   res.send(result);
   

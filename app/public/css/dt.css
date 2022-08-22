@@ -1,3 +1,577 @@
+@font-face{
+    font-family:"Segoe Script";
+    src:url("https://app.topperoo.com/fonts/print/segoescript.eot");
+    src:url("https://app.topperoo.com/fonts/print/segoescript.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/segoescript.woff") format("woff"),url("https://app.topperoo.com/fonts/print/segoescript.ttf") format("truetype");
+    font-weight:normal;
+    font-style:normal
+}
+
+/* 
+@font-face{
+    font-family:"icomoon";
+    src:url("https://app.topperoo.com/fonts/app/icomoon.ttf") format("truetype"),url("https://app.topperoo.com/fonts/app/icomoon.woff") format("woff"),url("https://app.topperoo.com/fonts/app/icomoon.svg#icomoon") format("svg");
+    font-weight:normal;
+    font-style:normal
+}
+@font-face{
+    font-family:"Open Sans";
+    font-style:normal;
+    font-weight:300;
+    src:local("Open Sans Light"),local("OpenSans-Light"),url(https://fonts.gstatic.com/s/opensans/v13/DXI1ORHCpsQm3Vp6mXoaTegdm0LZdjqr5-oayXSOefg.woff2) format("woff2");
+    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000
+}
+@font-face{
+    font-family:"Open Sans";
+    font-style:normal;
+    font-weight:400;
+    src:local("Open Sans"),local("OpenSans"),url(https://fonts.gstatic.com/s/opensans/v13/cJZKeOuBrn4kERxqtaUH3VtXRa8TVwTICgirnJhmVJw.woff2) format("woff2");
+    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000
+}
+@font-face{
+    font-family:"Open Sans";
+    font-style:normal;
+    font-weight:600;
+    src:local("Open Sans Semibold"),local("OpenSans-Semibold"),url(https://fonts.gstatic.com/s/opensans/v13/MTP_ySUJH_bn48VBG8sNSugdm0LZdjqr5-oayXSOefg.woff2) format("woff2");
+    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000
+}
+@font-face{
+    font-family:"Open Sans";
+    font-style:normal;
+    font-weight:700;
+    src:local("Open Sans Bold"),local("OpenSans-Bold"),url(https://fonts.gstatic.com/s/opensans/v13/k3k702ZOKiLJc3WVjuplzOgdm0LZdjqr5-oayXSOefg.woff2) format("woff2");
+    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000
+}
+@font-face{
+    font-family:"Open Sans";
+    font-style:italic;
+    font-weight:400;
+    src:local("Open Sans Italic"),local("OpenSans-Italic"),url(https://fonts.gstatic.com/s/opensans/v13/xjAJXh38I15wypJXxuGMBo4P5ICox8Kq3LLUNMylGO4.woff2) format("woff2");
+    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000
+ }
+@font-face{
+    font-family:"Comic Sans";
+    src:url("https://app.topperoo.com/fonts/print/comicsans.eot");
+    src:url("https://app.topperoo.com/fonts/print/comicsans.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/comicsans.woff") format("woff"),url("https://app.topperoo.com/fonts/print/comicsans.ttf") format("truetype");
+    font-weight:normal;
+    font-style:normal
+}
+@font-face{
+    font-family:"Comic Sans";
+    src:url("https://app.topperoo.com/fonts/print/comicsans_bold.eot");
+    src:url("https://app.topperoo.com/fonts/print/comicsans_bold.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/comicsans_bold.woff") format("woff"),url("https://app.topperoo.com/fonts/print/comicsans_bold.ttf") format("truetype");
+    font-weight:bold;
+    font-style:normal
+}
+@font-face{
+    font-family:"Comic Sans";
+    src:url("https://app.topperoo.com/fonts/print/comicsans_bold_italic.eot");
+    src:url("https://app.topperoo.com/fonts/print/comicsans_bold_italic.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/comicsans_bold_italic.woff") format("woff"),url("https://app.topperoo.com/fonts/print/comicsans_bold_italic.ttf") format("truetype");
+    font-weight:bold;
+    font-style:italic
+}
+@font-face{
+    font-family:"Comic Sans";
+    src:url("https://app.topperoo.com/fonts/print/comicsans_italic.eot");
+    src:url("https://app.topperoo.com/fonts/print/comicsans_italic.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/comicsans_italic.woff") format("woff"),url("https://app.topperoo.com/fonts/print/comicsans_italic.ttf") format("truetype");
+    font-weight:normal;
+    font-style:italic
+}
+@font-face{
+    font-family:"Impact";
+    src:url("https://app.topperoo.com/fonts/print/impact.eot");
+    src:url("https://app.topperoo.com/fonts/print/impact.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/impact.woff") format("woff"),url("https://app.topperoo.com/fonts/print/impact.ttf") format("truetype");
+    font-weight:normal;
+    font-style:normal
+}
+@font-face{
+    font-family:"Impact";
+    src:url("https://app.topperoo.com/fonts/print/impact_bold.eot");
+    src:url("https://app.topperoo.com/fonts/print/impact_bold.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/impact_bold.woff") format("woff"),url("https://app.topperoo.com/fonts/print/impact_bold.ttf") format("truetype");
+    font-weight:bold;
+    font-style:normal
+}
+@font-face{
+    font-family:"Impact";
+    src:url("https://app.topperoo.com/fonts/print/impact_bold_italic.eot");
+    src:url("https://app.topperoo.com/fonts/print/impact_bold_italic.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/impact_bold_italic.woff") format("woff"),url("https://app.topperoo.com/fonts/print/impact_bold_italic.ttf") format("truetype");
+    font-weight:bold;
+    font-style:italic
+}
+@font-face{
+    font-family:"Impact";
+    src:url("https://app.topperoo.com/fonts/print/impact_italic.eot");
+    src:url("https://app.topperoo.com/fonts/print/impact_italic.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/impact_italic.woff") format("woff"),url("https://app.topperoo.com/fonts/print/impact_italic.ttf") format("truetype");
+    font-weight:normal;
+    font-style:italic
+}
+@font-face{
+    font-family:"Times New Roman";
+    src:url("https://app.topperoo.com/fonts/print/timesnewroman.eot");
+    src:url("https://app.topperoo.com/fonts/print/timesnewroman.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/timesnewroman.woff") format("woff"),url("https://app.topperoo.com/fonts/print/timesnewroman.ttf") format("truetype");
+    font-weight:normal;
+    font-style:normal
+}
+@font-face{
+    font-family:"Times New Roman";
+    src:url("https://app.topperoo.com/fonts/print/timesnewroman_bold.eot");
+    src:url("https://app.topperoo.com/fonts/print/timesnewroman_bold.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/timesnewroman_bold.woff") format("woff"),url("https://app.topperoo.com/fonts/print/timesnewroman_bold.ttf") format("truetype");
+    font-weight:bold;
+    font-style:normal
+}
+@font-face{
+    font-family:"Times New Roman";
+    src:url("https://app.topperoo.com/fonts/print/timesnewroman_bold_italic.eot");
+    src:url("https://app.topperoo.com/fonts/print/timesnewroman_bold_italic.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/timesnewroman_bold_italic.woff") format("woff"),url("https://app.topperoo.com/fonts/print/timesnewroman_bold_italic.ttf") format("truetype");
+    font-weight:bold;
+    font-style:italic
+}
+@font-face{
+    font-family:"Times New Roman";
+    src:url("https://app.topperoo.com/fonts/print/timesnewroman_italic.eot");
+    src:url("https://app.topperoo.com/fonts/print/timesnewroman_italic.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/timesnewroman_italic.woff") format("woff"),url("https://app.topperoo.com/fonts/print/timesnewroman_italic.ttf") format("truetype");
+    font-weight:normal;
+    font-style:italic
+}
+@font-face{
+    font-family:"Segoe Script";
+    src:url("https://app.topperoo.com/fonts/print/segoescript.eot");
+    src:url("https://app.topperoo.com/fonts/print/segoescript.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/segoescript.woff") format("woff"),url("https://app.topperoo.com/fonts/print/segoescript.ttf") format("truetype");
+    font-weight:normal;
+    font-style:normal
+}
+@font-face{
+    font-family:"Segoe Script";
+    src:url("https://app.topperoo.com/fonts/print/segoescript_bold.eot");
+    src:url("https://app.topperoo.com/fonts/print/segoescript_bold.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/segoescript_bold.woff") format("woff"),url("https://app.topperoo.com/fonts/print/segoescript_bold.ttf") format("truetype");
+    font-weight:bold;
+    font-style:normal
+}
+@font-face{
+    font-family:"Segoe Script";
+    src:url("https://app.topperoo.com/fonts/print/segoescript_bold_italic.eot");
+    src:url("https://app.topperoo.com/fonts/print/segoescript_bold_italic.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/segoescript_bold_italic.woff") format("woff"),url("https://app.topperoo.com/fonts/print/segoescript_bold_italic.ttf") format("truetype");
+    font-weight:bold;
+    font-style:italic
+}
+@font-face{
+    font-family:"Segoe Script";
+    src:url("https://app.topperoo.com/fonts/print/segoescript_italic.eot");
+    src:url("https://app.topperoo.com/fonts/print/segoescript_italic.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/segoescript_italic.woff") format("woff"),url("https://app.topperoo.com/fonts/print/segoescript_italic.ttf") format("truetype");
+    font-weight:normal;
+    font-style:italic
+}
+@font-face{
+    font-family:"Cloister Black";
+    src:url("https://app.topperoo.com/fonts/print/cloisterblack.eot");
+    src:url("https://app.topperoo.com/fonts/print/cloisterblack.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/cloisterblack.woff") format("woff"),url("https://app.topperoo.com/fonts/print/cloisterblack.ttf") format("truetype");
+    font-weight:normal;
+    font-style:normal
+}
+@font-face{
+    font-family:"Cloister Black";
+    src:url("https://app.topperoo.com/fonts/print/cloisterblack_bold.eot");
+    src:url("https://app.topperoo.com/fonts/print/cloisterblack_bold.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/cloisterblack_bold.woff") format("woff"),url("https://app.topperoo.com/fonts/print/cloisterblack_bold.ttf") format("truetype");
+    font-weight:bold;
+    font-style:normal
+}
+@font-face{
+    font-family:"Cloister Black";
+    src:url("https://app.topperoo.com/fonts/print/cloisterblack_bold_italic.eot");
+    src:url("https://app.topperoo.com/fonts/print/cloisterblack_bold_italic.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/cloisterblack_bold_italic.woff") format("woff"),url("https://app.topperoo.com/fonts/print/cloisterblack_bold_italic.ttf") format("truetype");
+    font-weight:bold;
+    font-style:italic
+}
+@font-face{
+    font-family:"Cloister Black";
+    src:url("https://app.topperoo.com/fonts/print/cloisterblack_italic.eot");
+    src:url("https://app.topperoo.com/fonts/print/cloisterblack_italic.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/cloisterblack_italic.woff") format("woff"),url("https://app.topperoo.com/fonts/print/cloisterblack_italic.ttf") format("truetype");
+    font-weight:normal;
+    font-style:italic
+}
+@font-face{
+    font-family:"New Shape";
+    src:url("https://app.topperoo.com/fonts/print/newshape.eot");
+    src:url("https://app.topperoo.com/fonts/print/newshape.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/newshape.woff") format("woff"),url("https://app.topperoo.com/fonts/print/newshape.ttf") format("truetype");
+    font-weight:normal;
+    font-style:normal
+}
+@font-face{
+    font-family:"New Shape";
+    src:url("https://app.topperoo.com/fonts/print/newshape_bold.eot");
+    src:url("https://app.topperoo.com/fonts/print/newshape_bold.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/newshape_bold.woff") format("woff"),url("https://app.topperoo.com/fonts/print/newshape_bold.ttf") format("truetype");
+    font-weight:bold;
+    font-style:normal
+}
+@font-face{
+    font-family:"New Shape";
+    src:url("https://app.topperoo.com/fonts/print/newshape_bold_italic.eot");
+    src:url("https://app.topperoo.com/fonts/print/newshape_bold_italic.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/newshape_bold_italic.woff") format("woff"),url("https://app.topperoo.com/fonts/print/newshape_bold_italic.ttf") format("truetype");
+    font-weight:bold;
+    font-style:italic
+}
+@font-face{
+    font-family:"New Shape";
+    src:url("https://app.topperoo.com/fonts/print/newshape_italic.eot");
+    src:url("https://app.topperoo.com/fonts/print/newshape_italic.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/newshape_italic.woff") format("woff"),url("https://app.topperoo.com/fonts/print/newshape_italic.ttf") format("truetype");
+    font-weight:normal;
+    font-style:italic
+}
+@font-face{
+    font-family:"Verdana";
+    src:url("https://app.topperoo.com/fonts/print/verdana.eot");
+    src:url("https://app.topperoo.com/fonts/print/verdana.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/verdana.woff") format("woff"),url("https://app.topperoo.com/fonts/print/verdana.ttf") format("truetype");
+    font-weight:normal;
+    font-style:normal
+}
+@font-face{
+    font-family:"Verdana";
+    src:url("https://app.topperoo.com/fonts/print/verdana_bold.eot");
+    src:url("https://app.topperoo.com/fonts/print/verdana_bold.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/verdana_bold.woff") format("woff"),url("https://app.topperoo.com/fonts/print/verdana_bold.ttf") format("truetype");
+    font-weight:bold;
+    font-style:normal
+}
+@font-face{
+    font-family:"Verdana";
+    src:url("https://app.topperoo.com/fonts/print/verdana_bold_italic.eot");
+    src:url("https://app.topperoo.com/fonts/print/verdana_bold_italic.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/verdana_bold_italic.woff") format("woff"),url("https://app.topperoo.com/fonts/print/verdana_bold_italic.ttf") format("truetype");
+    font-weight:bold;
+    font-style:italic
+}
+@font-face{
+    font-family:"Verdana";
+    src:url("https://app.topperoo.com/fonts/print/verdana_italic.eot");
+    src:url("https://app.topperoo.com/fonts/print/verdana_italic.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/verdana_italic.woff") format("woff"),url("https://app.topperoo.com/fonts/print/verdana_italic.ttf") format("truetype");
+    font-weight:normal;
+    font-style:italic
+}
+@font-face{
+    font-family:"Sickness";
+    src:url("https://app.topperoo.com/fonts/print/sickness.eot");
+    src:url("https://app.topperoo.com/fonts/print/sickness.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/sickness.woff") format("woff"),url("https://app.topperoo.com/fonts/print/sickness.ttf") format("truetype");
+    font-weight:normal;
+    font-style:normal
+}
+@font-face{
+    font-family:"Sickness";
+    src:url("https://app.topperoo.com/fonts/print/sickness.eot");
+    src:url("https://app.topperoo.com/fonts/print/sickness.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/sickness.woff") format("woff"),url("https://app.topperoo.com/fonts/print/sickness.ttf") format("truetype");
+    font-weight:bold;
+    font-style:normal
+}
+@font-face{
+    font-family:"Sickness";
+    src:url("https://app.topperoo.com/fonts/print/sickness.eot");
+    src:url("https://app.topperoo.com/fonts/print/sickness.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/sickness.woff") format("woff"),url("https://app.topperoo.com/fonts/print/sickness.ttf") format("truetype");
+    font-weight:bold;
+    font-style:italic
+}
+@font-face{
+    font-family:"Sickness";
+    src:url("https://app.topperoo.com/fonts/print/sickness.eot");
+    src:url("https://app.topperoo.com/fonts/print/sickness.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/sickness.woff") format("woff"),url("https://app.topperoo.com/fonts/print/sickness.ttf") format("truetype");
+    font-weight:normal;
+    font-style:italic
+}
+@font-face{
+    font-family:"England";
+    src:url("https://app.topperoo.com/fonts/print/england.eot");
+    src:url("https://app.topperoo.com/fonts/print/england.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/england.woff") format("woff"),url("https://app.topperoo.com/fonts/print/england.ttf") format("truetype");
+    font-weight:normal;
+    font-style:normal
+}
+@font-face{
+    font-family:"England";
+    src:url("https://app.topperoo.com/fonts/print/england.eot");
+    src:url("https://app.topperoo.com/fonts/print/england.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/england.woff") format("woff"),url("https://app.topperoo.com/fonts/print/england.ttf") format("truetype");
+    font-weight:bold;
+    font-style:normal
+}
+@font-face{
+    font-family:"England";
+    src:url("https://app.topperoo.com/fonts/print/england.eot");
+    src:url("https://app.topperoo.com/fonts/print/england.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/england.woff") format("woff"),url("https://app.topperoo.com/fonts/print/england.ttf") format("truetype");
+    font-weight:bold;
+    font-style:italic
+}
+@font-face{
+    font-family:"England";
+    src:url("https://app.topperoo.com/fonts/print/england.eot");
+    src:url("https://app.topperoo.com/fonts/print/england.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/england.woff") format("woff"),url("https://app.topperoo.com/fonts/print/england.ttf") format("truetype");
+    font-weight:normal;
+    font-style:italic
+}
+@font-face{
+    font-family:"Messy";
+    src:url("https://app.topperoo.com/fonts/print/messy.eot");
+    src:url("https://app.topperoo.com/fonts/print/messy.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/messy.woff") format("woff"),url("https://app.topperoo.com/fonts/print/messy.ttf") format("truetype");
+    font-weight:normal;
+    font-style:normal
+}
+@font-face{
+    font-family:"Messy";
+    src:url("https://app.topperoo.com/fonts/print/messy.eot");
+    src:url("https://app.topperoo.com/fonts/print/messy.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/messy.woff") format("woff"),url("https://app.topperoo.com/fonts/print/messy.ttf") format("truetype");
+    font-weight:bold;
+    font-style:normal
+}
+@font-face{
+    font-family:"Messy";
+    src:url("https://app.topperoo.com/fonts/print/messy.eot");
+    src:url("https://app.topperoo.com/fonts/print/messy.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/messy.woff") format("woff"),url("https://app.topperoo.com/fonts/print/messy.ttf") format("truetype");
+    font-weight:bold;
+    font-style:italic
+}
+@font-face{
+    font-family:"Messy";
+    src:url("https://app.topperoo.com/fonts/print/messy.eot");
+    src:url("https://app.topperoo.com/fonts/print/messy.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/messy.woff") format("woff"),url("https://app.topperoo.com/fonts/print/messy.ttf") format("truetype");
+    font-weight:normal;
+    font-style:italic
+}
+@font-face{
+    font-family:"Pacifico";
+    src:url("https://app.topperoo.com/fonts/print/pacifico.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/pacifico.woff") format("woff"),url("https://app.topperoo.com/fonts/print/pacifico.ttf") format("truetype");
+    font-weight:normal;
+    font-style:normal
+}
+@font-face{
+    font-family:"Pacifico";
+    src:url("https://app.topperoo.com/fonts/print/pacifico.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/pacifico.woff") format("woff"),url("https://app.topperoo.com/fonts/print/pacifico.ttf") format("truetype");
+    font-weight:bold;
+    font-style:normal
+}
+@font-face{
+    font-family:"Pacifico";
+    src:url("https://app.topperoo.com/fonts/print/pacifico.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/pacifico.woff") format("woff"),url("https://app.topperoo.com/fonts/print/pacifico.ttf") format("truetype");
+    font-weight:bold;
+    font-style:italic
+}
+@font-face{
+    font-family:"Pacifico";
+    src:url("https://app.topperoo.com/fonts/print/pacifico.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/pacifico.woff") format("woff"),url("https://app.topperoo.com/fonts/print/pacifico.ttf") format("truetype");
+    font-weight:normal;
+    font-style:italic
+}
+@font-face{
+    font-family:"Handlee";
+    src:url("https://app.topperoo.com/fonts/print/handlee.woff") format("woff"),url("https://app.topperoo.com/fonts/print/handlee.ttf") format("truetype");
+    font-weight:normal;
+    font-style:normal
+}
+@font-face{
+    font-family:"Handlee";
+    src:url("https://app.topperoo.com/fonts/print/handlee.woff") format("woff"),url("https://app.topperoo.com/fonts/print/handlee.ttf") format("truetype");
+    font-weight:bold;
+    font-style:normal
+}
+@font-face{
+    font-family:"Handlee";
+    src:url("https://app.topperoo.com/fonts/print/handlee.woff") format("woff"),url("https://app.topperoo.com/fonts/print/handlee.ttf") format("truetype");
+    font-weight:bold;
+    font-style:italic
+}
+@font-face{
+    font-family:"Handlee";
+    src:url("https://app.topperoo.com/fonts/print/handlee.woff") format("woff"),url("https://app.topperoo.com/fonts/print/pacifico.ttf") format("truetype");
+    font-weight:normal;
+    font-style:italic
+}
+@font-face{
+    font-family:"Graduate";
+    src:url("https://app.topperoo.com/fonts/print/graduate.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/graduate.woff") format("woff"),url("https://app.topperoo.com/fonts/print/graduate.ttf") format("truetype");
+    font-weight:normal;
+    font-style:normal
+}
+@font-face{
+    font-family:"Graduate";
+    src:url("https://app.topperoo.com/fonts/print/graduate.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/graduate.woff") format("woff"),url("https://app.topperoo.com/fonts/print/graduate.ttf") format("truetype");
+    font-weight:bold;
+    font-style:normal
+}
+@font-face{
+    font-family:"Graduate";
+    src:url("https://app.topperoo.com/fonts/print/graduate.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/graduate.woff") format("woff"),url("https://app.topperoo.com/fonts/print/graduate.ttf") format("truetype");
+    font-weight:bold;
+    font-style:italic
+}
+@font-face{
+    font-family:"Graduate";
+    src:url("https://app.topperoo.com/fonts/print/graduate.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/graduate.woff") format("woff"),url("https://app.topperoo.com/fonts/print/graduate.ttf") format("truetype");
+    font-weight:normal;
+    font-style:italic
+}
+@font-face{
+    font-family:"Londrina";
+    src:url("https://app.topperoo.com/fonts/print/londrina.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/londrina.woff") format("woff"),url("https://app.topperoo.com/fonts/print/londrina.ttf") format("truetype");
+    font-weight:normal;
+    font-style:normal
+}
+@font-face{
+    font-family:"Londrina";
+    src:url("https://app.topperoo.com/fonts/print/londrina.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/londrina.woff") format("woff"),url("https://app.topperoo.com/fonts/print/londrina.ttf") format("truetype");
+    font-weight:bold;
+    font-style:normal
+}
+@font-face{
+    font-family:"Londrina";
+    src:url("https://app.topperoo.com/fonts/print/londrina.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/londrina.woff") format("woff"),url("https://app.topperoo.com/fonts/print/londrina.ttf") format("truetype");
+    font-weight:bold;
+    font-style:italic
+}
+@font-face{
+    font-family:"Londrina";
+    src:url("https://app.topperoo.com/fonts/print/londrina.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/londrina.woff") format("woff"),url("https://app.topperoo.com/fonts/print/londrina.ttf") format("truetype");
+    font-weight:normal;
+    font-style:italic
+}
+@font-face{
+    font-family:"Bungee";
+    src:url("https://app.topperoo.com/fonts/print/bungee.eot");
+    src:url("https://app.topperoo.com/fonts/print/bungee.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/bungee.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/bungee.woff") format("woff"),url("https://app.topperoo.com/fonts/print/bungee.ttf") format("truetype");
+    font-weight:normal;
+    font-style:normal
+}
+@font-face{
+    font-family:"Bungee";
+    src:url("https://app.topperoo.com/fonts/print/bungee_bold.eot");
+    src:url("https://app.topperoo.com/fonts/print/bungee_bold.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/bungee_bold.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/bungee_bold.woff") format("woff"),url("https://app.topperoo.com/fonts/print/bungee_bold.ttf") format("truetype");
+    font-weight:bold;
+    font-style:normal
+}
+@font-face{
+    font-family:"Bungee";
+    src:url("https://app.topperoo.com/fonts/print/bungee_bold_italic.eot");
+    src:url("https://app.topperoo.com/fonts/print/bungee_bold_italic.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/bungee_bold_italic.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/bungee_bold_italic.woff") format("woff"),url("https://app.topperoo.com/fonts/print/bungee_bold_italic.ttf") format("truetype");
+    font-weight:bold;
+    font-style:italic
+}
+@font-face{
+    font-family:"Bungee";
+    src:url("https://app.topperoo.com/fonts/print/bungee_italic.eot");
+    src:url("https://app.topperoo.com/fonts/print/bungee_italic.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/bungee_italic.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/bungee_italic.woff") format("woff"),url("https://app.topperoo.com/fonts/print/bungee_italic.ttf") format("truetype");
+    font-weight:normal;
+    font-style:italic
+}
+@font-face{
+    font-family:"Luckiest Guy";
+    src:url("https://app.topperoo.com/fonts/print/luckiestguy.eot");
+    src:url("https://app.topperoo.com/fonts/print/luckiestguy.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/luckiestguy.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/luckiestguy.woff") format("woff"),url("https://app.topperoo.com/fonts/print/luckiestguy.ttf") format("truetype");
+    font-weight:normal;
+    font-style:normal
+}
+@font-face{
+    font-family:"Luckiest Guy";
+    src:url("https://app.topperoo.com/fonts/print/luckiestguy_bold.eot");
+    src:url("https://app.topperoo.com/fonts/print/luckiestguy_bold.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/luckiestguy_bold.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/luckiestguy_bold.woff") format("woff"),url("https://app.topperoo.com/fonts/print/luckiestguy_bold.ttf") format("truetype");
+    font-weight:bold;
+    font-style:normal
+}
+@font-face{
+    font-family:"Luckiest Guy";
+    src:url("https://app.topperoo.com/fonts/print/luckiestguy_bold_italic.eot");
+    src:url("https://app.topperoo.com/fonts/print/luckiestguy_bold_italic.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/luckiestguy_bold_italic.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/luckiestguy_bold_italic.woff") format("woff"),url("https://app.topperoo.com/fonts/print/luckiestguy_bold_italic.ttf") format("truetype");
+    font-weight:bold;
+    font-style:italic
+}
+@font-face{
+    font-family:"Luckiest Guy";
+    src:url("https://app.topperoo.com/fonts/print/luckiestguy_italic.eot");
+    src:url("https://app.topperoo.com/fonts/print/luckiestguy_italic.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/luckiestguy_italic.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/luckiestguy_italic.woff") format("woff"),url("https://app.topperoo.com/fonts/print/luckiestguy_italic.ttf") format("truetype");
+    font-weight:normal;
+    font-style:italic
+}
+@font-face{
+    font-family:"Old Typewriter";
+    src:url("https://app.topperoo.com/fonts/print/oldtypewriter.eot");
+    src:url("https://app.topperoo.com/fonts/print/oldtypewriter.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/oldtypewriter.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/oldtypewriter.woff") format("woff"),url("https://app.topperoo.com/fonts/print/oldtypewriter.ttf") format("truetype");
+    font-weight:normal;
+    font-style:normal
+}
+@font-face{
+    font-family:"Old Typewriter";
+    src:url("https://app.topperoo.com/fonts/print/oldtypewriter_bold.eot");
+    src:url("https://app.topperoo.com/fonts/print/oldtypewriter_bold.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/oldtypewriter_bold.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/oldtypewriter_bold.woff") format("woff"),url("https://app.topperoo.com/fonts/print/oldtypewriter_bold.ttf") format("truetype");
+    font-weight:bold;
+    font-style:normal
+}
+@font-face{
+    font-family:"Old Typewriter";
+    src:url("https://app.topperoo.com/fonts/print/oldtypewriter_bold_italic.eot");
+    src:url("https://app.topperoo.com/fonts/print/oldtypewriter_bold_italic.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/oldtypewriter_bold_italic.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/oldtypewriter_bold_italic.woff") format("woff"),url("https://app.topperoo.com/fonts/print/oldtypewriter_bold_italic.ttf") format("truetype");
+    font-weight:bold;
+    font-style:italic
+}
+@font-face{
+    font-family:"Old Typewriter";
+    src:url("https://app.topperoo.com/fonts/print/oldtypewriter_italic.eot");
+    src:url("https://app.topperoo.com/fonts/print/oldtypewriter_italic.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/oldtypewriter_italic.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/oldtypewriter_italic.woff") format("woff"),url("https://app.topperoo.com/fonts/print/oldtypewriter_italic.ttf") format("truetype");
+    font-weight:normal;
+    font-style:italic
+}
+@font-face{
+    font-family:"Permanent Marker";
+    src:url("https://app.topperoo.com/fonts/print/permanentmarker.eot");
+    src:url("https://app.topperoo.com/fonts/print/permanentmarker.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/permanentmarker.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/permanentmarker.woff") format("woff"),url("https://app.topperoo.com/fonts/print/permanentmarker.ttf") format("truetype");
+    font-weight:normal;
+    font-style:normal
+}
+@font-face{
+    font-family:"Permanent Marker";
+    src:url("https://app.topperoo.com/fonts/print/permanentmarker_bold.eot");
+    src:url("https://app.topperoo.com/fonts/print/permanentmarker_bold.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/permanentmarker_bold.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/permanentmarker_bold.woff") format("woff"),url("https://app.topperoo.com/fonts/print/permanentmarker_bold.ttf") format("truetype");
+    font-weight:bold;
+    font-style:normal
+}
+@font-face{
+    font-family:"Permanent Marker";
+    src:url("https://app.topperoo.com/fonts/print/permanentmarker_bold_italic.eot");
+    src:url("https://app.topperoo.com/fonts/print/permanentmarker_bold_italic.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/permanentmarker_bold_italic.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/permanentmarker_bold_italic.woff") format("woff"),url("https://app.topperoo.com/fonts/print/permanentmarker_bold_italic.ttf") format("truetype");
+    font-weight:bold;
+    font-style:italic
+}
+@font-face{
+    font-family:"Permanent Marker";
+    src:url("https://app.topperoo.com/fonts/print/permanentmarker_italic.eot");
+    src:url("https://app.topperoo.com/fonts/print/permanentmarker_italic.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/permanentmarker_italic.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/permanentmarker_italic.woff") format("woff"),url("https://app.topperoo.com/fonts/print/permanentmarker_italic.ttf") format("truetype");
+    font-weight:normal;
+    font-style:italic
+}
+@font-face{
+    font-family:"Shojumaru";
+    src:url("https://app.topperoo.com/fonts/print/shojumaru.eot");
+    src:url("https://app.topperoo.com/fonts/print/shojumaru.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/shojumaru.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/shojumaru.woff") format("woff"),url("https://app.topperoo.com/fonts/print/shojumaru.ttf") format("truetype");
+    font-weight:normal;
+    font-style:normal
+}
+@font-face{
+    font-family:"Shojumaru";
+    src:url("https://app.topperoo.com/fonts/print/shojumaru_bold.eot");
+    src:url("https://app.topperoo.com/fonts/print/shojumaru_bold.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/shojumaru_bold.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/shojumaru_bold.woff") format("woff"),url("https://app.topperoo.com/fonts/print/shojumaru_bold.ttf") format("truetype");
+    font-weight:bold;
+    font-style:normal
+}
+@font-face{
+    font-family:"Shojumaru";
+    src:url("https://app.topperoo.com/fonts/print/shojumaru_bold_italic.eot");
+    src:url("https://app.topperoo.com/fonts/print/shojumaru_bold_italic.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/shojumaru_bold_italic.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/shojumaru_bold_italic.woff") format("woff"),url("https://app.topperoo.com/fonts/print/shojumaru_bold_italic.ttf") format("truetype");
+    font-weight:bold;
+    font-style:italic
+}
+@font-face{
+    font-family:"Shojumaru";
+    src:url("https://app.topperoo.com/fonts/print/shojumaru_italic.eot");
+    src:url("https://app.topperoo.com/fonts/print/shojumaru_italic.eot?#iefix") format("embedded-opentype"),url("https://app.topperoo.com/fonts/print/shojumaru_italic.woff2") format("woff2"),url("https://app.topperoo.com/fonts/print/shojumaru_italic.woff") format("woff"),url("https://app.topperoo.com/fonts/print/shojumaru_italic.ttf") format("truetype");
+    font-weight:normal;
+    font-style:italic
+}
+@font-face{
+    font-family:"Material Icons";
+    font-style:normal;
+    font-weight:400;
+    src:url("https://app.topperoo.com/fonts/app/MaterialIcons-Regular.eot");
+    src:local("Material Icons"),local("MaterialIcons-Regular"),url("https://app.topperoo.com/fonts/app/MaterialIcons-Regular.woff2") format("woff2"),url("https://app.topperoo.com/fonts/app/MaterialIcons-Regular.woff") format("woff"),url("https://app.topperoo.com/fonts/app/MaterialIcons-Regular.ttf") format("truetype")
+} */
+
 .workarea{
     width: 100%;
     height: 100%;
@@ -26,22 +600,23 @@
 
 .text-section .font-style .fa{
 
-    width: 32px;
-    height: 32px;
-    margin: 0px 5px;
-    border: dashed 1px #494699;
-    border-radius: 50%;
-    line-height: 32px;
+    width: 28px;
+    height: 28px;
+    /* margin: 0px 5px; */
+    /* border: dashed 1px #494699; 
+    border-radius: 50%;*/
+    line-height: 28px;
     text-align: center;
     background: #d8d8df;
     color: #494698;
+    cursor: pointer;
 }
 .text-section .font-style .fa:hover{
 
    
     background: #2d3a50;
     color: #d8dce3;
-    border: solid 1px #2d3a50;
+    /* border: solid 1px #2d3a50; */
 }
 
 /* .canvas-container {
@@ -197,7 +772,7 @@ color:#0900fd;
      .sidebar li{
         border-bottom: solid 1px #6462a5;
         width:72px;
-        padding: 10px 0px;
+         padding: 10px 0px;
      } 
      
      .sidebar .nav-link{
@@ -397,7 +972,7 @@ color:#0900fd;
  #font-panel .slider {
     -webkit-appearance: none;
     width: 100%;
-    height: 5px;
+    height: 2px;
     border-radius: 5px;
     background: #ccc;
     outline: none;

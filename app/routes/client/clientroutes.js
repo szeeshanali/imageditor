@@ -91,14 +91,10 @@ router.get("/api/project/:id?", isLoggedIn,  async (req, res) => {
 });
 
 router.delete("/api/client/project/:id?", isLoggedIn,  async (req, res) => {
-    var id = req.params.id; 
+    var id = req.params["id"]; 
     console.log("Deleted Id: ", id)
-    try{
-        var data  = await commonService.uploadService.deleteUploadAsync(id, 'project' ,req.user._id);
-        res.status(200).send(data);
-    }catch{
-        res.status(500).send();
-    }
+    var data  =  await commonService.uploadService.deleteUploadAsync(id, 'project' , req.user._id);
+    res.status(200).send(data);
 });
 
 router.get('/api/svg-templates/:id', isLoggedIn,  async (req,res)=>{
@@ -148,19 +144,22 @@ router.get("/app/templates",  isLoggedIn, async (req, res) => {
 }); 
 
 router.post('/app/client/save-design', isLoggedIn, async function(req, res) {
+try{
+
 
     if(req.user != null)
     {
-        var totalProjects = await uploads.find({uploaded_by:req.user._id, is_admin:false, deleted:false,active:true}).count(); 
+        var totalProjects = await uploads.find({ uploaded_by:req.user._id, is_admin:false, deleted:false,active:true}).count(); 
         if(totalProjects>req.user.project_limit){
             res.status(401).send({message:`You have exceeded the limit of project quota.`, error: 'You have exceeded the limit of project quota.'});
         }
+        
     }
-    const {json,thumbBase64} = req.body; 
+    const {json,thumbBase64,title, desc} = req.body; 
     var _id = mongoose.Types.ObjectId();
     var uploadModel = {
-      title           :   "project1",
-      name            :   "project1",
+      title           :   title || `project${_id}`,
+      name            :   desc || "",
       order_no        :   1,
       code            :   _id,
       active          :   true,
@@ -177,8 +176,11 @@ router.post('/app/client/save-design', isLoggedIn, async function(req, res) {
             else{res.status(400).send({message:`Unable to upload file.`, error: msg});  }
             
         })
-
+    }catch{
+        res.status(500).send({message:`Something went wrong!`, error: msg});
+    }
   })
+  
 
   
 router.get("/app/pre-designed/:id?",  isLoggedIn, async (req, res) => {
@@ -196,6 +198,15 @@ router.get("/app/pre-designed/:id?",  isLoggedIn, async (req, res) => {
     res.render("pages/client/pre-designed",{
         user:req.user, 
         predesigned: predesigned});
+});
+
+
+router.get("/api/pre-designed/:id?",  isLoggedIn, async (req, res) => {
+
+   
+    var id = req.params.id;
+    var predesigned = await commonService.uploadService.getPreDesigned(null,id);
+    res.status(200).send({data:predesigned});
 });
 
 router.get("/api/client/download",  isLoggedIn, async (req, res) => {
@@ -222,14 +233,21 @@ router.get("/app/workspace/:id?",  isLoggedIn, async (req, res) => {
         meta = JSON.parse(template.meta);
     }
     var templates = await commonService.uploadService.getTemplatesAsync();
-   // var projects = await commonService.uploadService.getUserDesignsAsync(req.user._id);
+    var customDesigns = await uploads.find({type:'pre-designed', active:true, deleted:false, base64:{$ne:null},json:{$ne:null}},{code:1,base64:1}) || [];
+   var adminUploadItems = await commonService.uploadService.getUploads('all',true,true);
+   var templates = adminUploadItems.filter(function(item){ return item.type == 'template'});
+   var cliparts = adminUploadItems.filter(function(item){ return item.type == 'clipart'});
+   var customDesigns = adminUploadItems.filter(function(item){ return item.type == 'pre-designed'});
+    // var projects = await commonService.uploadService.getUserDesignsAsync(req.user._id);
     console.log("userId: =====>");
     console.log(req.user._id);
     res.render(PATH_WORKSPACE,{
         user:req.user,
         template:template,
         templateMeta:meta,
-        templates: templates
+        templates: templates,
+        customDesigns: customDesigns,
+        cliparts:cliparts
     });
 });
 

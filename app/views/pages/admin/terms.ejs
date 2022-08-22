@@ -1,14 +1,16 @@
-<div class="wd-lg-70p wd-xl-50p tx-center pd-x-40" style="margin:auto">
-    <h1 class="tx-100 tx-xs-140 tx-normal tx-gray-800 mg-b-0">404!</h1>
-    <h5 class="tx-xs-24 tx-normal tx-orange mg-b-30 lh-5">The content your are looking for has not been found.</h5>
-    <div class="d-flex justify-content-center">
-        <div class="tx-center mg-t-20">... or back to
-            <a href="/app/admin/dashboard" class="tx-orange hover-info">home</a>
-        </div>
-    </div>
+<div class="card pd-20 pd-sm-40 mg-t-50">
+    <h6 class="card-body-title">Terms & Conditions</h6>
+    <p class="mg-b-20 mg-sm-b-30">Please enter the terms & conditions.</p>
+    <div id="summernote"></div>
+  </div>
+  <script>
+ $(document).ready(function() {
+  $('#summernote').summernote({
+    height:"300px"
+  });
+  $(".am-mainpanel").attr("style","margin-left:75px;margin-top:91px");
+  $(".am-pagetitle").attr("style","left:73px");
 
-    <script>
-        $(".tab-content .tab-pane").each((i,e)=>
-        { $(e).removeClass("active"); })    
-       $("#dashboard-panel").addClass("active");
-    </script>
+  
+});
+</script>

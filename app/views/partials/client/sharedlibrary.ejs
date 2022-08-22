@@ -1,0 +1,9 @@
+<div class="pd-x-10 tx-12 pd-y-5"><b>Library</b> <span class="pull-right"><a href="/app/cliparts">View (<%= customDesigns.length %>)</a></span></div>
+<div class="d-flex cliparts tx-center pd-10ad" id="custom-designs ">
+    <% customDesigns.forEach(item=>{%>
+        <div  class="clipart "> 
+            <img src="<%=item.base64%>" class="custom-design" id="<%=item.code%>" style="width:100px"> 
+         </div>
+         
+    <%})%>
+ </div>

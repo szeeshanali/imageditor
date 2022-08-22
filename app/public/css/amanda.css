@@ -2398,7 +2398,7 @@ tbody.collapse.show {
   display: inline-block;
   width: 0;
   height: 0;
-  margin-left: 0.255em;
+  margin-left: 10px;
   vertical-align: 0.255em;
   content: "";
   border-top: 0.3em solid;
@@ -3025,6 +3025,7 @@ tbody.collapse.show {
 .nav-pills .nav-link.active, .show > .nav-pills .nav-link {
   color: #fff;
   background-color: #007bff;
+  padding: 10px 0px;
 }
 
 .nav-fill .nav-item {
@@ -9448,9 +9449,9 @@ textarea.parsley-error:active {
 .nav-pills .nav-link.active, .nav-pills .nav-link.active:hover, .nav-pills .nav-link.active:focus {
   color: #fff;
   background-color: #6462a5;
-  height: 70px;
-  padding: -10;
-  padding-top: 10px;
+  /* height: 70px; */
+  /* padding: -10;
+  padding-top: 10px; */
 }
 .nav-pills .nav-link {
   border-radius: 0;

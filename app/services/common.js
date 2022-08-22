@@ -47,6 +47,30 @@ const commonService = (function() {
         return  designs;
     }
 
+    this.getUploads = async (type, active, by_admin)=>
+    { 
+        var designs = [];
+        if(type == 'all')
+        {
+            designs =   await uploads.find({ active:active, by_admin:by_admin, deleted:false},
+            {
+                code:1,
+                base64:1,
+                title:1,
+                type:1
+            }).sort({order_no:1}); 
+        }else{
+            designs =   await uploads.find({type: type, active:active, by_admin:by_admin,deleted:false  },
+            {
+                code:1,
+                base64:1,
+                title:1,
+                type:1
+            }).sort({order_no:1}); 
+        }
+      
+        return  designs;
+    }
 
     this.getUserDesignsAsync = async (userId, designId)=>
     { 
@@ -78,21 +102,18 @@ const commonService = (function() {
         }
         return  designs;
     }
-
     this.getTemplateAsync = async (templateId)=>
     { 
 
         return await uploads.findOne({active:true, type:'template', by_admin:true, code:templateId}); 
     },
-
     this.deleteTemplatesAsync = async (id)=>
     { 
        var d = await uploads.deleteOne({code: id, active:true, type:'template',uploaded_by:'admin'});
        cached_templates = null; 
     },
-
     this.deleteUploadAsync = async(id, type, ownerId)=>{
-        await uploads.updateOne({code: id, type:type, uploaded_by:ownerId}, {deleted:true});
+        await uploads.deleteOne({code: id, type:type, uploaded_by:ownerId});
     }
     this.getSVGTemplatesAsync = async (id)=>
     { 
@@ -117,7 +138,6 @@ const commonService = (function() {
 
         return uploadedItems;
     },
-
     this.addCategoryItemAsync = async (categoryId, itemCode)=>{
         var findCategory = await categoryModel.findOne({code:categoryCode});
     
@@ -152,7 +172,6 @@ const commonService = (function() {
         return report; 
         
     },
-
     this.getSummaryReport = async () =>
     {
         var report = {
@@ -209,7 +228,8 @@ const commonService = (function() {
             getSVGtemplatesAsync    :   this.getSVGTemplatesAsync, 
             getUserDesignsAsync     :   this.getUserDesignsAsync,
             deleteUploadAsync       :   this.deleteUploadAsync, 
-            clear                   :   this.clearUploads
+            clear                   :   this.clearUploads,
+            getUploads              :   this.getUploads,
         },
         reportingService: {
             getCustomerReport   :   this.getCustomerReport,
