@@ -1,6 +1,8 @@
 const categoryModel = require("../models/categories");
 const uploads = require("../models/uploads"); 
 const appuserModel = require("../models/appuser"); 
+const contents = require("../models/contents"); 
+
 const { default: mongoose, mongo } = require('mongoose');
 
 const commonService = (function() {
@@ -206,6 +208,26 @@ const commonService = (function() {
        
     }
 
+    this.getContentAsync = async (type)=>{
+     var content =  await contents.findOne({type:type});
+     return content; 
+    }
+
+    this.addOrUpdateContentAsync = async (content,type,by_admin)=>{
+        if(content == null || content.length < 10)
+        {throw "Empty content."; }
+        var hasContent = await contents.findOne({type:type},{_id:1});
+        if(hasContent != null)
+        {
+            console.log("content updated"); 
+            await contents.updateOne({_id:hasContent._id},{content:content,by_admin:by_admin,modified_dt: new Date()}); }
+        else
+        { 
+        console.log("content inserted");
+        var content = new contents({content:content,type:type,by_admin:by_admin});
+        await content.save()
+    }}
+
     this.clearCache = ()=> {
         this.cached_categories = [];
         this.cached_categoryItems = [];
@@ -236,7 +258,10 @@ const commonService = (function() {
             getSummaryReport    :   this.getSummaryReport,  
         },
 
-      
+        contentService: {
+            addOrUpdateContentAsync  :  this.addOrUpdateContentAsync ,
+            getContentAsync          :  this.getContentAsync
+        },
 
        
         clearCache: clearCache
