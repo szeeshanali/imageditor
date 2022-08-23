@@ -362,6 +362,9 @@ function deleteTemplate(id)
   grayscaleObject();
   brightnessObject();
   contrastObject();
+ 
+
+
 
 
   $txtDecorationCtrl.on("click",function(e){
@@ -451,12 +454,10 @@ $("#font-list-container .fontfamily").on("click",function(e){
     setSelectedTextStyle("strokeWidth",this.value);
       
    });
-
-
- $('#text-line-height').on("change",function() {   
+   $('#text-line-height').on("change",function() {   
     setSelectedTextStyle("lineHeight",this.value);
 });
-		
+
 
 function setSelectedTextStyle(prop,value){
   canvas.getActiveObject().set(prop,value);
@@ -700,7 +701,27 @@ if(!userId)
       processFiles(e.target.files, pageid);
       $btnImageUploadHidden.val('');
     })
-   
+    $("#btnSaveContent").on("click",function(e){
+      var type = $(this).attr("data-value");
+      var html = $('#summernote').summernote('code');
+     
+  $.ajax({
+    type: "POST",
+    url: "/api/admin/content",
+    data: {  
+        content: html,
+        type:type
+      },
+    success:function(res){
+      designFlags.submitted = true; 
+      toast("Content has been successfully saved.");
+    },
+    error:function(res){
+      designFlags.submitted = false; 
+      toast("Error while saving Content");
+    }
+  })
+    })
  }
  function enabledDesignCtrl(o){
   $adminDesignCtrl.find(".disabled").removeClass("disabled");

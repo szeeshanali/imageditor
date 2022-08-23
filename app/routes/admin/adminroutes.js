@@ -2,10 +2,10 @@ const express               = require('express');
 const router                = express.Router();
 const fs                    = require('fs');
 
-const categories            = require("../../models/categories.js")
-const uploads               = require("../../models/uploads.js")
-const commonService         = require("../../services/common")
-const appusers              = require("../../models/appuser")
+const categories            = require("../../models/categories.js");
+const uploads               = require("../../models/uploads.js");
+const commonService         = require("../../services/common");
+const appusers              = require("../../models/appuser");
 
 const {isLoggedIn,isAdmin}  = require('../../config/auth')
 const passport = require('passport');
@@ -74,10 +74,12 @@ router.get("/app/admin/", isAdmin, async (req,res)=>{
 })
 
 router.get("/app/admin/privacy", isAdmin, async (req,res)=>{
+  var content = await commonService.contentService.getContentAsync('privacy-policy') || {};
   res.locals.page = {
     title  : "Privacy & Policy",
     id     : "__privacy",
-    user   : req.user
+    user   : req.user,
+    content: content || ""
    } ;
   res.render("pages/admin/privacy",res.locals.page );
 })
@@ -93,19 +95,24 @@ router.get("/app/admin/settings", isAdmin, async (req,res)=>{
 
 
 router.get("/app/admin/terms", isAdmin, async (req,res)=>{
+  var content = await commonService.contentService.getContentAsync('terms-conditions') || {};
+
   res.locals.page = {
     title  : "Terms & Conditions",
     id     : "__terms",
-    user   : req.user
+    user   : req.user,
+    content: content
    } ;
   res.render("pages/admin/terms",res.locals.page);
 })
 
 router.get("/app/admin/faq", isAdmin, async (req,res)=>{
+  var content = await commonService.contentService.getContentAsync('faq') || {};
   res.locals.page = {
     title  : "FAQs",
     id     : "__faq",
-    user   : req.user
+    user   : req.user,
+    content : content
    } ;
   res.render("pages/admin/faq",res.locals.page);
 })
@@ -171,11 +178,25 @@ router.post(ROUTE_ADMIN_SAVEDESIGN,  isAdmin,  (req,res)=>{
 
 });
 
+router.post('/api/admin/content', isAdmin, async (req,res)=>{
+  const  {content, type} = req.body;
+  var c  = await commonService.contentService.addOrUpdateContentAsync(content,type,true);
+  try{
+    
+    res.status(200).send({status:"success",message:"Content updated successfully!"})
+  }catch{
+    res.status(500).send({status:"error",message:"Update Failed!"})
 
+  }
+  
+  
+}) 
 router.post('/app/admin/workspace',(req,res)=>{
   const  {width, height, title} = req.body;
   res.render("pages/admin/index",{ executescript: `callback({width:${width},height:${height},title:${title}});` })
 })
+
+
 router.get('/app/admin/workspace',(req,res)=>{
   const  {width, height, title} = req.body;
   res.render("pages/admin/index",);``

@@ -236,6 +236,20 @@ function initUIEvents() {
     brightnessObject();
     contrastObject();
 
+    $("#btnDisplayGrid").on("click",function(){
+        var style = $("#workarea").attr("style");
+        if(style)
+        {   
+            $(this).removeClass('tx-gray-500');
+            $("#workarea").removeAttr("style");           }
+        else{
+            $(this).addClass('tx-gray-500');
+            $("#workarea").attr("style","background-image:url('')");
+           
+        }
+      
+    })
+
     $("#shared-library .custom-design").on("click",function(){
         var id = $(this).attr("id"); 
         $loader.removeClass("hidden");

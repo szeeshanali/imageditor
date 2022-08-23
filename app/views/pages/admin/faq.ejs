@@ -2,6 +2,7 @@
     <h6 class="card-body-title">FAQs</h6>
     <p class="mg-b-20 mg-sm-b-30">Please enter the FAQs.</p>
     <div id="summernote"></div>
+    <button  type="button" data-value="faq" class="btn btn-primary" id="btnSaveContent"> Save </button>
   </div>
   <script>
  $(document).ready(function() {
@@ -10,7 +11,10 @@
   });
   $(".am-mainpanel").attr("style","margin-left:75px;margin-top:91px");
   $(".am-pagetitle").attr("style","left:73px");
+  $('#summernote').summernote('editor.pasteHTML', '<%-content.content%>');
 
   
+
+
 });
 </script>
