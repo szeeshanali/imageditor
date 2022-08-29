@@ -162,7 +162,7 @@ function loadSVGTemplate(id) {
     $.get(`/api/svg-templates/${id}`, function (data) {
         const svgBase64 = data.base64;
         if (! svgBase64) {
-            alert("Error loading Template");
+            toast("Error loading Template");
             return;
         }
 
@@ -174,14 +174,20 @@ function loadSVGTemplate(id) {
         canvas.clear();
         hideWorkspaceControls();
 
+        // loading Big Design
         fabric.loadSVGFromURL(svgBase64, function (objects, options) {
-            var loadedObjects = new fabric.Group(group);
-            var templateWidth = options.viewBoxWidth;
-            var templateHeight = options.viewBoxHeight;
-            canvas.setDimensions({width: templateWidth, height: templateHeight});
-            canvas.setBackgroundImage(loadedObjects, canvas.renderAll.bind(canvas));
-            canvas.renderAll();
-            loadedObjects.center().setCoords();
+            
+             var logo= objects[0];
+            //logo.scaleToWidth(500);
+             var w =logo.getScaledWidth(); 
+             var h = logo.getScaledHeight();            
+             canvas.setDimensions({width: w , height: h});
+            // //canvas.setWidth(logo.width+logo.left/2)
+            // //canvas.setHeight(logo.height+logo.top/2);
+            // //canvas.add(logo);
+              canvas.setBackgroundImage(logo, canvas.renderAll.bind(canvas));            
+             canvas.renderAll();
+            //loadedObjects.center().setCoords();
 
             $("#template-info-panel .template-name").text(data.name);
             $("#template-info-panel .page-size").text(meta.pageSize);
@@ -196,12 +202,37 @@ function loadSVGTemplate(id) {
                     data.code
                 }`;
             })
+           
+
+        }, function (item, object) {
+            object.set({left:0,top:0}); 
+object.scaleToWidth(500);
+            //object.set('id', item.getAttribute('id'));
+           // group.push(object);
+        });
+
+        fabric.loadSVGFromURL(svgBase64, function (objects, options) {
+            //$canvasPrev.fadeOut();
+            var loadedObjects = new fabric.Group(group);            
+            var templateWidth = options.viewBoxWidth;
+            var templateHeight = options.viewBoxHeight;
+            canvasPrev.setDimensions({width:templateWidth,height:templateHeight});
+            canvasPrev.setBackgroundImage(loadedObjects, canvasPrev.renderAll.bind(canvasPrev));
+            canvasPrev.renderAll();
+            
+            loadedObjects.center().setCoords();
+
 
         }, function (item, object) {
             object.set('id', item.getAttribute('id'));
             group.push(object);
         });
     })
+
+
+
+
+
 
 }
 
@@ -227,6 +258,25 @@ function applyFilterValue(index, prop, value) {
     }
 }
 
+
+
+function menuHighlighter(itemToHighlight)
+{
+    $("#toolbar .nav-item").each(function(e){
+        $(this).removeClass('bg-warning');
+    })
+
+    $(itemToHighlight).addClass("bg-warning");
+}
+
+function menuPanelDisplay(itemToDisplay){
+    $(".tab-content .tab-pane").each(function(e){
+        $(this).removeClass('active');
+    })
+
+    $(itemToDisplay).addClass("active");
+}
+
 function initUIEvents() {
 
     rotateObject();
@@ -235,6 +285,10 @@ function initUIEvents() {
     grayscaleObject();
     brightnessObject();
     contrastObject();
+
+    // $("#menu-clipart").on("click",function(){
+    //     menuHighlighter(this);
+    // })
 
     $("#btnDisplayGrid").on("click",function(){
         var style = $("#workarea").attr("style");
@@ -433,16 +487,16 @@ function initUIEvents() {
         // textControls(false);
     })
 
-    $btnUploadpanel.on("click", function (e) {
-        canvas.discardActiveObject().renderAll();
-        $("#workspace-right-panel .img-ctrl").each(function () {
-            $(this).removeClass("hidden");
-        })
-    })
+    // $btnUploadpanel.on("click", function (e) {
+    //     canvas.discardActiveObject().renderAll();
+    //     $("#workspace-right-panel .img-ctrl").each(function () {
+    //         $(this).removeClass("hidden");
+    //     })
+    // })
     
 
 
-    $repeatImageCtrl.hide();
+    //$repeatImageCtrl.hide();
     $canvasPrev.parent().hide();
 
     $btnRepeatDesign.on("click", function (e) {
@@ -461,8 +515,33 @@ function initUIEvents() {
         var id = e.currentTarget.id;
         canvas.clear();
         loadSVGTemplate(id);
+        $("#templatepanel").fadeOut();
+        $("#menu-upload > a").click();
+        //triggerNextStep("step-1");
 
     });
+
+
+    $("#workspace-menu .nav-link").on("click",function(e){
+        const navItem = $(this).parent();
+        const id = navItem.attr("id"); 
+        menuHighlighter(navItem);
+        menuPanelDisplay(navItem);
+        if(canvas._objects.length == 0)
+        { 
+
+
+
+
+
+            $("#template-info-panel").show();
+            $("#layers").parent().hide();
+        }else{
+            $("#template-info-panel").hide();
+            $("#layers").parent().show();
+            
+        }
+    })
 
     // $(`#templatepanel #del{}`).on("click",(e)=>{
     //     e.stopPropagation();
@@ -510,7 +589,7 @@ function initUIEvents() {
             img1.globalCompositeOperation = 'source-atop';
             canvas.add(img1);
             mainControls(true);
-
+            $("#menu-text > a").click();
         });
 
     });
@@ -518,41 +597,69 @@ function initUIEvents() {
 
     $btnApplyRepeatDesign.on("click", function (e) {
         state.isPreviewCanvas = false;
-
-
-        canvasPrev.clone(function (clonedCanvas) {
-            var bg = clonedCanvas.backgroundImage;
-            clonedCanvas.backgroundImage = false;
-            for (var i = 0; i < clonedCanvas._objects.length; i++) {
-                clonedCanvas._objects[i].globalCompositeOperation = null;
-                canvasPrev.renderAll.bind(clonedCanvas)
-            }
-            clonedCanvas.renderAll()
-
-            var dataURL = clonedCanvas.toDataURL({
+        $clientMainCanvas.parent().fadeOut();
+        $canvasPrev.parent().fadeIn();
+        var logos = canvasPrev.backgroundImage._objects;
+        var logox = logos[0];
+        
+        var dataURL = canvas.toDataURL({
                 format: "png",
                 left: 0,
                 top: 0,
                 width: canvas.width,
                 height: canvas.height
-            });
-            var logos = canvas.backgroundImage._objects;
-            fabric.Image.fromURL(dataURL, (img) => {
-                canvas.remove(... canvas.getObjects());
+        });
+
+        
+             fabric.Image.fromURL(dataURL, (img) => {
+
                 for (var i = 0; i < logos.length; i++) {
                     var logo = logos[i];
                     var object = fabric.util.object.clone(img);
-                    var left = logo.left + logo.group.left / 2 + logo.group.width / 2;
-                    var top = logo.top + logo.group.top / 2 + logo.group.height / 2;
-                    object.scaleToWidth(object.width / 2)
+                    var left = logo.left + logo.group.left + logo.group.width / 2;
+                    var top = logo.top + logo.group.top  + logo.group.height / 2;
+                    object.scaleToWidth(logo.width)
                     object.set("top", top);
                     object.set("left", left);
                     object.globalCompositeOperation = "source-atop";
-                    canvas.add(object).renderAll();
+                    canvasPrev.add(object).renderAll();
                 }
-                closeRepeatDesignPreview();
-            });
-        });
+            })
+        // canvas.clone(function (clonedCanvas) {
+        //     var bg = clonedCanvas.backgroundImage;
+        //     clonedCanvas.backgroundImage = false;
+        //     for (var i = 0; i < clonedCanvas._objects.length; i++) {
+        //         clonedCanvas._objects[i].globalCompositeOperation = null;
+        //         canvas.renderAll.bind(clonedCanvas)
+        //     }
+        //     clonedCanvas.renderAll()
+
+        //     var dataURL = clonedCanvas.toDataURL({
+        //         format: "png",
+        //         left: 0,
+        //         top: 0,
+        //         width: canvasPrev.width,
+        //         height: canvasPrev.height
+        //     });
+
+
+        //     var logos = canvasPrev.backgroundImage._objects;
+        //     fabric.Image.fromURL(dataURL, (img) => {
+        //         canvasPrev.remove(... canvas.getObjects());
+        //         for (var i = 0; i < logos.length; i++) {
+        //             var logo = logos[i];
+        //             var object = fabric.util.object.clone(img);
+        //             var left = logo.left + logo.group.left / 2 + logo.group.width / 2;
+        //             var top = logo.top + logo.group.top / 2 + logo.group.height / 2;
+        //             object.scaleToWidth(object.width / 2)
+        //             object.set("top", top);
+        //             object.set("left", left);
+        //             object.globalCompositeOperation = "source-atop";
+        //             canvasPrev.add(object).renderAll();
+        //         }
+        //         closeRepeatDesignPreview();
+        //     });
+        // });
     });
 
 
@@ -789,7 +896,7 @@ $("#btnSaveDesignPopup").on("click",function(){
             json: JSON.stringify(canvas.toJSON())
         },
         success: function (res) {
-            debugger;
+
             toast("Design has been Saved.");
         },
         error: function (res) {
@@ -904,7 +1011,25 @@ $btnUploadImageHidden.on("change", (e) => {
     
     processFiles(e.target.files);
     $btnUploadImageHidden.val('');
+    $("#menu-clipart > a").click();
 })
+
+
+function triggerNextStep(stepId){
+   // var curStep = $(".setup-content"),
+   // curStepBtn = curStep.attr("id"),
+    nextStepWizard = $('div.setup-panel div a[href="#' + stepId + '"]').parent().next().children("a"),
+    //curInputs = curStep.find("input[type='text'],input[type='url']"),
+    isValid = true;
+    //$(".form-group").removeClass("has-error");
+    // for (var i = 0; i < curInputs.length; i++) {
+    //     if (!curInputs[i].validity.valid) {
+    //         isValid = false;
+    //         $(curInputs[i]).closest(".form-group").addClass("has-error");
+    //     }
+    // }
+    if (isValid) nextStepWizard.removeAttr('disabled').trigger('click');
+}
 
 
 const processFiles = (files) => {

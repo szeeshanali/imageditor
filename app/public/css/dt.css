@@ -1090,3 +1090,7 @@ color:#0900fd;
 .template-small > img{
     width: 93px !important;
 }
+
+.bg-light-blue{
+   background-color: #edecff;
+}

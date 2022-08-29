@@ -1,48 +1,167 @@
-
 <div class="row">
-<div class="col-lg-9 pd-r-0">
-    <div class="workarea" id="workarea">
-        <div  id="canvas-holder">
-            <div class="content tx-center">
-                <canvas id="client-main-canvas"  ></canvas>
-                <canvas id="client-main-canvas-logo"  ></canvas>                    
+    <!--Workspace Left Panel-->
+<div class="col-lg-3 pd-l-0 pd-r-0">
+    <div class="card">
+        <div class="tab-content">
+            
+            <div  id="templatepanel" class="tab-pane active"   >
+            <div   >
+                  <div class="pd-x-10 tx-12 pd-y-5 bd-r-1 bg-light-blue"><b>Choose a Template </b> <span class="pull-right"><a href="/app/templates">View (<%=templates.length %>)</a></span></div>
+                 <div class="d-flex svg-templates tx-center">
+                  <%for(var i=0; i<templates.length; i++){ %>
+                    <div id="<%=templates[i].code %>" class="template template-small" > 
+                      <img src="<%=templates[i].base64 %>" style="width:93px"> 
+                      <div class="tx-12 tx-bold pd-y-5 lh-1"><%=templates[i].title %></div>
+                  </div>
+                  <%}%> 
+                </div>
             </div>
+            </div>            
+            <div id="uploadpanel" class="tab-pane"  >
+                <div class="pd-x-10 tx-12 pd-y-5 bd-r-1 bg-light-blue"><b>Upload an Image</b> </div>
+                <%- include('../../partials/client/imgupload'); %>
+            </div>
+            <div id="clipartmenu" class="tab-pane"  >
+              <div class="pd-x-10 tx-12 pd-y-5 bd-r-1 bg-light-blue"><b>Choose Clipart</b> <span class="pull-right"><a href="/app/cliparts">View (0)</a></span></div>
+    
+              <%- include('../../partials/client/clipart'); %>
+            </div>
+            <div id="shared-library" class="tab-pane"  >
+    
+              <%- include('../../partials/client/sharedlibrary'); %>
+            </div>                          
+            <div id="textmenu" class="tab-pane" >
+              <div class="pd-x-10 tx-12 pd-y-5 bd-r-1 bg-light-blue"><b>Add your text</b></div>
+    
+                <%- include('../../partials/client/typo'); %>           
+            </div>
+             <%if(locals.page.id == "__my-projects"){ %>        
+                <div id="myprojects" class="tab-pane" >
+                  <%if(projects.length > 0) {%>
+                    <div class="card pd-t-20 mg-b-1 tx-center">
+                      <p class="tx-12" ><a href="#" id="use-template" class="start-over bg-primary">Continue Editing</a></p>
+                  </div>
+                    <%}%>
+                 
+    
+                  <div class="pd-x-10 tx-12 pd-y-5"><b>Projects</b>&nbsp;<span class="text-danger">(You have max (<%=user.project_limit %>) projects quota.)</span><span class="pull-right"><a href="#">Total (<%=projects.length %>)</a></span></div>
+    
+                  <%if(projects.length == 0){%>
+                    <div class="thumb"> 
+                      <div class="tx-12 tx-bold pd-15">Please start designing and save your design.</div>
+                  </div>
+                  <%}%>
+                  <div class="d-flex svg-templates tx-center" >
+        
+                    <%for(var i=0; i<projects.length;i++){%>
+                      <div>
+                        <div id="<%=projects[i].code %>" class="template template-small"> 
+                          <img src="<%=projects[i].thumbBase64 %>" > 
+                          <div class="tx-12 tx-bold pd-y-5"><%=projects[i].title %></div>               
+                      </div>
+                      <a href="#" id="del<%=projects[i].code %>" class="delete">Delete</a>
+    
+                      </div>
+                    
+                    <%}%>
+                   
+              </div>
+          </div>
+          <%}%>
+    
+          <%if(locals.page.id == "__pre-designed"){ %>
+            <div id="pre-designed" class="tab-pane">
+              <%if(predesigned.length == 0){%>
+                <div class="thumb"> 
+                  <img src="" style="width:100px"> 
+                  <div class="tx-12 tx-bold pd-15">No Items.</div>
+              </div>
+              <%}%>
+              <div class="d-flex svg-templates tx-center " >
+    
+                <%for(var i=0; i<predesigned.length;i++){%>
+                  <div>
+                    <div id="<%=predesigned[i].code %>" class="template template-small"> 
+                      <img src="<%=predesigned[i].thumbBase64 %>" > 
+                      <div class="tx-12 tx-bold pd-y-5"><%=predesigned[i].title %></div>               
+                  </div>
+                  <a href="#" id="del<%=predesigned[i].code %>" class="delete">Delete</a>
+    
+                  </div>
+                
+                <%}%>
+               
+          </div>
+      </div>
+      <%}%>        
+      <%if(locals.page.id == "__templates"){ %>
+        <div id="templatepanelall" class="tab-pane "  >
+          <div class="pd-x-10 tx-12 pd-y-5"><b>Choose a Template</b><span class="pull-right"><a href="#">Total (<%=templates.length %>)</a></span></div>
+        <div class="d-flex svg-templates tx-center">
+    
+    
+          <%for(var i=0; i<templates.length; i++){ %>
+            <div id="<%=templates[i].code %>" class="template template-small" > 
+              <img src="<%=templates[i].base64 %>" > 
+              <div class="tx-12 tx-bold pd-y-5"><%=templates[i].title %></div>
+          </div>
+          <%}%>  
+    </div>
+    </div>
+      <%}%> 
+            <!-- #settingMenu -->
         </div>
     </div>
 </div>
-<div class="col-lg-3 pd-x-0 mg-t-1" id="workspace-right-panel" >
-    <div class="pd-10 mg-b-1 tx-center card main-ctrl hidden"> 
-        <div class="tx-12 tx-normal" >
-            <a href="#" id="btn-download-pdf" class="start-over bg-primary">Download</a>
-            <a href="#" data-toggle="modal" data-target="#savedesignmodel" id="btn-save-design" class="start-over bg-primary">Save</a>
-        </div>  
-
+<!-- Workspace canvas-->
+<div class="col-lg-6">
+    <div class="am-pagetitle bd-l pd-r-0"> <%= locals.page.title %>
+    <div class="pull-right ">
+          <div class="d-flex">
+            <div><i class="ion-grid tx-32" id="btnDisplayGrid"></i></div>
+            <div class="tx-32 tx-normal pd-x-10" ><a href="/app/workspace" title="Start Over" class="ion-ios-refresh-outline tx-primary"> </a></div>  
+          </div>
+         
     </div>
-        <div class="pd-10 tx-center mg-b-1 card main-ctrl hidden">
-
-
-            <div  id="repeatdesign">
-        
-                <div class="toggle toggle-light primary mg-auto disabled" style="height: 22px; width: 50px;">
-                    <div class="toggle-slide">
-                        <div class="toggle-inner" style="width: 78px; margin-left: 0px;">
-                            <div class="toggle-on active" style="height: 22px; width: 39px; text-indent: -7.33333px; line-height: 22px;">ON</div>
-                            <div class="toggle-blob" style="height: 22px; width: 22px; margin-left: -11px;"></div>
-                            <div class="toggle-off" style="height: 22px; width: 39px; margin-left: -11px; text-indent: 7.33333px; line-height: 22px;">OFF</div>
-                        </div>
+    </div>
+    <div class="card">
+        <div class="workarea" id="workarea">
+            <div  id="canvas-holder">
+                <div class="content tx-center">
+                    <canvas id="client-main-canvas"   ></canvas>
+                    <canvas id="client-main-canvas-logo"  ></canvas>                    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+<!--Workspace Right panel-->
+<div class="col-lg-3 pd-x-0" id="workspace-right-panel" >
+    <div class="pd-10 tx-center mg-b-1 card main-ctrl" id="repeat-image-ctrl">
+        <!-- <div  id="repeatdesign">
+    
+            <div class="toggle toggle-light primary mg-auto disabled" style="height: 22px; width: 50px;">
+                <div class="toggle-slide">
+                    <div class="toggle-inner" style="width: 78px; margin-left: 0px;">
+                        <div class="toggle-on active" style="height: 22px; width: 39px; text-indent: -7.33333px; line-height: 22px;">ON</div>
+                        <div class="toggle-blob" style="height: 22px; width: 22px; margin-left: -11px;"></div>
+                        <div class="toggle-off" style="height: 22px; width: 39px; margin-left: -11px; text-indent: 7.33333px; line-height: 22px;">OFF</div>
                     </div>
                 </div>
-                <div class="pd-y-10">Repeat to each logo.</div>
-                
-                
             </div>
-          
-            <div id="repeat-image-ctrl"  style="display: none">
-                <a href="#" class="apply">Apply to All</a>
-                <a href="#" class="cancel">Cancel</a>
-            </div>
+            <div class="pd-y-10">Repeat to each logo.</div>
+            
+            
+        </div> -->
+      
+        <div  >
+            <a href="#" class="apply  start-over bg-primary">Apply to All</a>
+            <a href="#" class="cancel start-over">Done</a>
+            
+            
+        </div>
     </div>
-   
     <div class="card pd-20 bg-b-1 img-ctrl hidden">
         <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Color & Brightness</h6>        
         <div class="tx-12" >
@@ -84,109 +203,41 @@
               </div>
           </div>        
     </div>
-    <div class=" text-section">
-       
-             
-  
-      
-        <div class="card mg-t-1 pd-x-20 txt-ctrl hidden" id="font-panel">
-            <div  class=" pd-y-10 font-style">
-                <i class="fa fa-bold text-decoration" data-value="bold" id="bold" title="bold"></i>
-                <i class="fa fa-italic text-decoration"  data-value="italic" id="italic" title="italic"></i>
-                <i class="fa fa-underline text-decoration" data-value="underline" id="underline" title="underline"></i>
-                <i class="fa fa-align-left text-decoration " data-value="left" aria-hidden="true"></i>
-                <i class="fa fa-align-justify text-decoration" data-value="center" aria-hidden="true"></i>
-
-                <i class="fa fa-align-right text-decoration " data-value="right" aria-hidden="true"></i>
-
-            </div>
-        </div>
-        
-        <div class="card mg-t-1 pd-20 txt-ctrl hidden" id="font-panel">
-          <div class="d-flex">
-<div>
-<h6 class="tx-12 tx-uppercase tx-inverse tx-bold">Text Color</h6>   
-<input type="color" value="" id="text-color" size="10"> 
-</div>
-
-
-<div>
-<h6 class="tx-12 tx-uppercase tx-inverse tx-bold">BG Color</h6>   
-<input type="color" value="" id="text-bg-color" size="10"> 
-</div>
-
-<div>
-  <h6 class="tx-12 tx-uppercase tx-inverse tx-bold">Stroke Color</h6>   
-  <input type="color" value="" id="text-stroke-color" size="10"> 
-  </div>
-
-
-</div>
-</div>
-          
-         
-      
-       
-        <div class="card mg-t-1 pd-20 txt-ctrl hidden" id="font-panel">
-            <h6 class="tx-12 tx-uppercase tx-inverse tx-bold">Font Styles </h6>        
-
-            <div class="dropdown bd-b pd-5 mg-b-15">
-                <div class="tx-inverse tx-14 fontfamily dropdown-toggle" id="selected-font"  data-toggle="dropdown"  >Arial (sans-serif)</div>
-
-                <span class="caret "></span>
-                <ul class="dropdown-menu" id="font-list-container">
-                    <li class="list-group-item rounded-bottom-0 pd-x-10 pd-y-5">
-                      <div class="tx-inverse tx-18 fontfamily" data-value="Arial, sans-serif" style="font-family: Arial, sans-serif;">Arial (sans-serif)</div>
-                     </li>
-                    <li class="list-group-item rounded-bottom-0 pd-x-10 pd-y-5">
-                      <div class="tx-inverse tx-16 fontfamily" data-value="Verdana, sans-serif" style=" font-family: Verdana, sans-serif;">Verdana (sans-serif)</div>
-                     </li>
-                    <li class="list-group-item rounded-bottom-0 pd-x-10 pd-y-5">
-                      <div class="tx-inverse tx-18 fontfamily" data-value="Helvetica, sans-serif" style="font-family: Helvetica, sans-serif">Helvetica (sans-serif)</div>
-                     </li>
-                    <li class="list-group-item rounded-bottom-0 pd-x-10 pd-y-5">
-                      <div class="tx-inverse tx-20 fontfamily" data-value="Georgia, serif" style=" font-family: Georgia, serif">Georgia (serif)</div>
-                     </li>
-                  
-                    <li class="list-group-item rounded-bottom-0 pd-x-10 pd-y-5">
-                     <div class="tx-inverse tx-24 fontfamily" data-value="Brush Script MT, cursive" style="font-family: Brush Script MT, cursive">Brush Script MT (cursive)</div>
-                    </li>
-                    <li class="list-group-item rounded-bottom-0 pd-x-10 pd-y-5">
-                      <div class="tx-inverse tx-24 fontfamily" data-value="Segoe Script" style=" font-family: Segoe Script">Segoe Script</div>
-                     </li>
-                    
-                  </ul>
-              </div>
-
-            <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Font Size</h6>        
-            <input type="range" min="1" max="120" value="" step="1" class="slider" id="btnTextSize">
-            
-            <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15 pd-t-10">Letter Spacing</h6>        
-            <input type="range" min="1" max="100" value="50" step="1" class="slider" id="text-letter-spacing">
-
-            <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15 pd-t-10">Stoke Size</h6>        
-            <input type="range"  value="1" min="1" step="1" max="10" class="slider" id="text-stroke-width">
-
-            <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15 pd-t-10">Line Height</h6>        
-            <input type="range"  value="1" min="0.1" max="10" step="0.1" class="slider" id="text-line-height">
+    <div class="card pd-20" id="template-info-panel">
+        <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15"  >Template Details</h6>
+        <div class="d-flex mg-b-10 tx-center">
+          <div class="bd-r pd-r-10 ">
+            <label class="tx-12 ">Page Size</label>
+            <p class="tx-lato tx-inverse tx-bold page-size">-</p>
           </div>
+          <div class="bd-r pd-x-10">
+            <label class="tx-12 ">Logo Size</label>
+            <p class="tx-lato tx-inverse tx-bold logo-size">-</p>
+          </div>
+          <div class="pd-l-10">
+            <label class="tx-12 ">Total Logos</label>
+            <p class="tx-lato tx-inverse tx-bold total-logos">-</p>
+          </div>
+        </div><!-- d-flex -->
       
-         
-    </div>
-  
-    <div class="card pd-x-20 pd-y-10 mg-t-1 ">
-        <%- include('../../partials/admin/layers'); %>
-    </div>
-</div>
-</div>
-<script> 
- $(".tab-content .tab-pane").each((i,e)=>
-    { $(e).removeClass("active"); })
-   $("#uploadpanel").addClass("active");
-window.onload = function()
-{
-   var code = '<%=template.code%>' || 'default'
-    loadSVGTemplate(code);
-}
- </script>
+        <p class="tx-12 mg-b-0 page-title">-</p>
+        <div class="tx-12"><b>KopyKake Part #:</b>  <span class="kk-part-no"></span></div>
+        <div class="tx-12"><b>KopyKake Link:</b>  <span class="kk-part-link"></span></div>
 
+    </div>
+</div>
+</div>
+
+<script> 
+    $(".tab-content .tab-pane").each((i,e)=>
+       { $(e).removeClass("active"); })
+      $("#templatepanel").addClass("active");
+      $("#menu-templates").addClass("bg-warning")
+    window.onload = function()
+   { 
+        var code = '<%=template.code%>' || 'default'
+        loadSVGTemplate(code);
+    }
+</script>
+   
+   
