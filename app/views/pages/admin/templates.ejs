@@ -1,3 +1,40 @@
+<div class="row mg-r-0">
+<div class="col-lg-3 pd-0">
+  <div class="card pd-10 tx-primary tx-bold bd-b">Edit Template Details</div>
+
+  <div class="card pd-10">
+    <%- include('../../partials/admin/edit-template'); %>
+
+  </div>
+</div>
+<div class="col-lg-6 pd-x-10">
+  <div class="card pd-10 tx-primary tx-bold bd-b">Templates (<%=templates.length %>)</div>
+  <div class="card pd-10">
+    <div  id="templatepanel" class="tab-pane active"   >
+      <div   >
+           <div class="d-flex svg-templates tx-center">
+            <%for(var i=0; i<templates.length; i++){ %>
+              <div id="<%=templates[i].code %>" class="template template-small" > 
+                <img src="<%=templates[i].base64 %>" style="width:93px"> 
+                <div class="tx-12 tx-bold pd-y-5 lh-1"><%=templates[i].title %></div>
+            </div>
+            <%}%> 
+          </div>
+      </div>
+      </div> 
+
+  </div>
+</div>
+<div class="col-lg-3 pd-0">
+  <div class="card pd-10 tx-primary tx-bold bd-b">Selected Template</div>
+
+  <div class="card pd-10">
+
+    <img src="" id="selectedTemplate">
+  </div>
+</div>
+</div>
+<!-- 
 <div class="admin-template-designer-bg" style="min-height: 1050px">
   <div class="ht-100v d-flex align-items-center justify-content-center" id="upload-template-splash">
       <div class="wd-lg-70p wd-xl-50p tx-center pd-x-40">
@@ -11,10 +48,10 @@
   <div class="ht-100v tx-center" id="template-container">
       <canvas id="admin-main-canvas"></canvas>
   </div>
-</div>
+</div> -->
 
-<script>
+<!-- <script>
   $(".tab-content .tab-pane").each((i,e)=>
   { $(e).removeClass("active"); })    
  $("#templatepanel").addClass("active");
-</script>
+</script> -->

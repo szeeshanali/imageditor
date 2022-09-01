@@ -28,6 +28,10 @@ router.get(ROUTE_SIGNOUT,(req,res)=>{
    res.redirect(ROUTE_LOGIN);
   });
 
+
+
+
+
   router.get(ROUTE_USER_PROFILE,(req,res)=>{    
      // console.log(req);
    res.redirect(PATH_PROFILE);
@@ -57,10 +61,16 @@ router.get(ROUTE_LOGIN, (req, res) => {
   //  console.log( req );
 });
 
+router.get("/app/home", (req, res) => {
+    res.render("pages/client/main", {layout: false});
+  //  console.log( req );
+});
+
+
 router.post(ROUTE_LOGIN, (req, res, next) => { 
     
     passport.authenticate('local',{
-      successRedirect : ROUTE_USER_WORKSPACE,
+      successRedirect : "/app/home",
       failureRedirect : ROUTE_LOGIN,
       badRequestMessage : 'Missing username or password.',
       failureFlash : true,
