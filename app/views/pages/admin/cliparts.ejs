@@ -1,16 +1,35 @@
-<div class="row">
-    <div class="col-lg-9 pd-r-0">
-        <div class="workarea" style="height:800px">
-            <div  id="canvas-holder">
-                <div class="content tx-center">
-                    <canvas id="admin-main-canvas" width="612" height="792" ></canvas>
+<div class="row mg-r-0">
+    <div class="col-lg-3 pd-0">
+        <div class="card pd-10 tx-primary tx-bold bd-b">Upload Clipart</div>
+
+        <div class="card pd-10" >
+            <i class="tx-80  tx-gray-800 icon-imgupload ion-ios-cloud-upload-outline" id="admin-image-upload"></i>
+    
+            <p class="tx-12 pd-t-20 pd-x-30 tx-center">Upload (SVG,PNG) Cliparts.</p>
+            <input id="admin-image-upload-hidden" data-page-id="<%=locals.page.id%>" type="file" accept="image/*" multiple="multiple" hidden="hidden">
+            <input id="design-type" value="clipart" hidden="hidden">
+        </div>
+    </div>
+    <div class="col-lg-6 pd-x-10">
+        <div class="card pd-10 tx-primary tx-bold bd-b">Clipart Preview</div>
+
+        <div class="card">
+            <div class="workarea" style="height:800px">
+                <div  id="canvas-holder">
+                    <div class="content tx-center">
+                        <canvas id="admin-main-canvas" width="612" height="792" ></canvas>
+                    </div>
                 </div>
             </div>
         </div>
+     
     </div>
-    <div class="col-lg-3 pd-x-0 mg-t-1">
-        <div class="card pd-20 mg-b-1">
-            <%- include('../../partials/admin/layers'); %>
+    <div class="col-lg-3 pd-0">
+        <div class="card pd-10 tx-primary tx-bold bd-b">Save Details</div>
+
+        <div class="card pd-10">
+            <%- include('../../partials/admin/clipart-panel'); %>
+            
         </div>
        
     </div>

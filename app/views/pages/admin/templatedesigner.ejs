@@ -1,18 +1,95 @@
 
 
 
-<div class="row">
-  <div class="col-lg-9 pd-r-0">
-    <div class="admin-template-designer-bg" style="min-height: 1050px">
-      <div class="ht-100v tx-center" id="template-container">
-        <canvas id="admin-main-canvas"></canvas>
+<div class="row mg-r-0">
+  <div class="col-lg-3 pd-0">
+<div class="card pd-y-10 ">
+  <%- include('../../partials/admin/imgupload'); %>
+  </div>
+  <div class="tx-primary card bd-y pd-10"><b>Template Info</b><small class="text-danger"> (All fields are mandatory)</small></div>
+
+  <div class="card">
+  <div class="pd-10 admin-design-ctrl">
+
+    
+
+     
+        <div class="pd-b-10">
+            <div class="mg-y-5">
+                <input class="form-control" placeholder="Design name" id="admin-design-name" type="text">
+            </div>
+            <div class="mg-y-5">
+                <input class="form-control" placeholder="Thumbnail name" id="admin-design-title" type="text">
+            </div>
+            <div class="mg-y-5">
+                <input class="form-control" placeholder="File name" id="admin-file-name" type="text">
+            </div>
+            <div class="tx-left mg-y-5">
+                <select id="admin-page-size" class="form-control  select2 select2-hidden-accessible" data-placeholder="Choose one" tabindex="-1" aria-hidden="true">
+                    <option label="Page Size"></option>
+                    <option value="8.5”x11”">8.5”x11”</option>
+                    <option value="11”x17”">11”x17”</option>
+                    <option value="A4">A4</option>
+                    <option value="A3">A3</option>
+                  </select>
+                </div>
+            <div class="d-flex tx-left">
+                <div class="mg-y-5 mg-r-10">
+                    <small>Logos per page:</small>
+                    <input class="form-control"  id="admin-logo-count" type="text">
+                </div>
+                <div class="mg-y-5" >
+                    <small>Display order:</small>
+                    <input class="form-control"  id="admin-display-order" type="number">
+
+                </div>
+            </div>
+            <div class="mg-y-5">
+                <input class="form-control"  placeholder="KopyKake Webstore Link" id="admin-design-link" type="text">
+            </div>
+            <div class="mg-y-5">
+                <input class="form-control" id="admin-kopykake-part"  placeholder="KopyKake Part #" id="admin-design-link" type="text">
+            </div>
+            <div class="d-flex pd-y-10">
+                <label class="ckbox">
+                    <input type="checkbox" checked="" id="design-active"><span>Active</span>
+                  </label>
+                  <label class="ckbox mg-l-20">
+                    <input type="checkbox" id="design-default" ><span>Default</span>
+                  </label>
+              
+            </div>
     </div>
+        <div id="save-image-ctrl" class="tx-center">
+            <div class="btn-group" role="group" >
+                <button type="button" id="save-design" class="btn btn-primary  pd-x-25 active ">Save Design</button>
+                <button type="button" id="cancel-design" class="btn btn-secondary pd-x-25 ">Cancel</button>
+              </div>
+        </div>
+    </div>
+
+</div>
+  </div>
+  <div class="col-lg-6 pd-x-10 ">
+    <div class="card pd-x-15 pd-y-10 tx-primary tx-bold ">
+      Upload Template
+    </div>
+    <div class="card">
+      <div class="admin-template-designer-bg" style="min-height: 1050px">
+        <div class="ht-100v tx-center" id="template-container">
+          <canvas id="admin-main-canvas"></canvas>
+      </div>
+    </div>
+
      
   </div>
   </div>
-  <div class="col-lg-3 pd-x-0 mg-t-1" >
+  <div class="col-lg-3 pd-0 " >
+    <div class="card bd-b pd-10 tx-bold tx-primary">
+      <span>Template Details</span>
+      
+    </div>
     <div class="card pd-20" id="template-info-panel">
-        <h6 class="tx-12 tx-uppercase tx-inverse tx-bold"  >Template Meta</h6>
         <div class="d-flex mg-b-10 ">
           <div class="bd-r pd-r-10 ">
             <label class="tx-12 ">Size</label>

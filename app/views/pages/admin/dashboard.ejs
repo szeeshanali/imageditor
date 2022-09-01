@@ -1,5 +1,16 @@
-<div class="row pd-t-15 pd-10">
-    <div class="col-lg-8">
+<div class="row mg-r-0">
+  <div class="col-lg-3 pd-0">
+    <div class="card">
+      <div id="dashboard-panel" class="tab-pane">
+        <%- include('../../partials/admin/dashboard-panel'); %>
+    </div>
+    </div>
+  </div>
+    <div class="col-lg-6 ">
+      <div class="card pd-10 bd-b text-primary tx-bold">
+        <%= locals.page.title %>
+      </div>
+
       <div class="card">
         <div class="card-header bg-transparent pd-20">
           <h6 class="card-title tx-uppercase tx-12 mg-b-0">User History</h6>
@@ -37,9 +48,12 @@
         </div><!-- card-footer -->
       </div><!-- card -->
     </div><!-- col-8 -->
-    <div class="col-lg-4 mg-t-15 mg-sm-t-20 mg-lg-t-0">
+    <div class="col-lg-3 pd-0">
+      <div class="card tx-primary tx-14 tx-bold pd-x-15 pd-y-10 bd-b">
+        Customer Report
+      </div>
       <div class="card pd-20">
-        <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Customer Report</h6>
+        
         <div class="d-flex mg-b-10">
           <div class="bd-r pd-r-10">
             <label class="tx-12 wd-60">Today</label>

@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row mg-r-0">
     <!--Workspace Left Panel-->
 <div class="col-lg-3 pd-l-0 pd-r-0">
     <div class="card">
@@ -6,7 +6,7 @@
             
             <div  id="templatepanel" class="tab-pane active"   >
             <div   >
-                  <div class="pd-x-10 tx-12 pd-y-5 bd-r-1 bg-light-blue"><b>Choose a Template </b> <span class="pull-right"><a href="/app/templates">View (<%=templates.length %>)</a></span></div>
+                  <div class="pd-x-10 tx-12 pd-y-10 bd-b"><b class="tx-primary tx-14">Choose a Template </b> <span class="pull-right"><a href="#" class="text-primary">Total (<%=templates.length %>)</a></span></div>
                  <div class="d-flex svg-templates tx-center">
                   <%for(var i=0; i<templates.length; i++){ %>
                     <div id="<%=templates[i].code %>" class="template template-small" > 
@@ -18,11 +18,11 @@
             </div>
             </div>            
             <div id="uploadpanel" class="tab-pane"  >
-                <div class="pd-x-10 tx-12 pd-y-5 bd-r-1 bg-light-blue"><b>Upload an Image</b> </div>
+                <div class="pd-x-10 tx-12 pd-y-10 bd-b"><b class="tx-primary tx-14">Upload an Image</b> </div>
                 <%- include('../../partials/client/imgupload'); %>
             </div>
             <div id="clipartmenu" class="tab-pane"  >
-              <div class="pd-x-10 tx-12 pd-y-5 bd-r-1 bg-light-blue"><b>Choose Clipart</b> <span class="pull-right"><a href="/app/cliparts">View (0)</a></span></div>
+                <div class="pd-x-10 tx-12 pd-y-10 bd-b"><b class="tx-primary tx-14">Choose Clipart</b> </div>
     
               <%- include('../../partials/client/clipart'); %>
             </div>
@@ -31,7 +31,7 @@
               <%- include('../../partials/client/sharedlibrary'); %>
             </div>                          
             <div id="textmenu" class="tab-pane" >
-              <div class="pd-x-10 tx-12 pd-y-5 bd-r-1 bg-light-blue"><b>Add your text</b></div>
+                <div class="pd-x-10 tx-12 pd-y-10 bd-b"><b class="tx-primary tx-14">Add Text</b> </div>
     
                 <%- include('../../partials/client/typo'); %>           
             </div>
@@ -138,93 +138,7 @@
 </div>
 <!--Workspace Right panel-->
 <div class="col-lg-3 pd-x-0" id="workspace-right-panel" >
-    <div class="pd-10 tx-center mg-b-1 card main-ctrl" id="repeat-image-ctrl">
-        <!-- <div  id="repeatdesign">
-    
-            <div class="toggle toggle-light primary mg-auto disabled" style="height: 22px; width: 50px;">
-                <div class="toggle-slide">
-                    <div class="toggle-inner" style="width: 78px; margin-left: 0px;">
-                        <div class="toggle-on active" style="height: 22px; width: 39px; text-indent: -7.33333px; line-height: 22px;">ON</div>
-                        <div class="toggle-blob" style="height: 22px; width: 22px; margin-left: -11px;"></div>
-                        <div class="toggle-off" style="height: 22px; width: 39px; margin-left: -11px; text-indent: 7.33333px; line-height: 22px;">OFF</div>
-                    </div>
-                </div>
-            </div>
-            <div class="pd-y-10">Repeat to each logo.</div>
-            
-            
-        </div> -->
-      
-        <div  >
-            <a href="#" class="apply  start-over bg-primary">Apply to All</a>
-            <a href="#" class="cancel start-over">Done</a>
-            
-            
-        </div>
-    </div>
-    <div class="card pd-20 bg-b-1 img-ctrl hidden">
-        <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Color & Brightness</h6>        
-        <div class="tx-12" >
-            <div ><b>Brightness <span id="brightnessVal"></span></b></div>
-            <input type="range" min="-1" max="1" value="0.0" class="slider " step="0.003921" style="width:100%;height:2px" id="brightness-value">
-            <div><b>Contrast <span id="contrastVal"></span></b></div>
-            <input type="range" min="-1" max="1" value="0.0" class="slider" step="0.003921" style="width:100%;height:2px" id="contrast-value">          
-            <b class="ion-record tx-22" id="btnGrayscale"></b> &nbsp; Grayscale
-        </div>
-    </div>
-    <div class="card pd-20 mg-t-1 img-ctrl hidden">
-        <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Size</h6>
-        <div class="d-flex mg-b-10">
-            <div class="bd-r pd-r-10">
-              <label class="tx-12 ">Crop</label>
-              <p class="tx-center tx-22">
-                <i class="ion-crop" id="crop"></i>
-              </p>
-              
-            </div>
-            <div class="bd-r pd-x-10">
-              <label class="tx-12 " >Rotate</label>
-              <p class="tx-center tx-22">
-                <i class="ion-loop " id="rotate"></i>
-              </p>                
-            </div>
-           
-            <div class="pd-x-10 bd-r">
-                <label class="tx-12" >FlipX</label>
-                <p class="tx-center tx-22">
-                  <i class="ion-arrow-swap" id="flipW"></i>
-                </p>
-              </div>
-              <div class="pd-l-10">
-                <label class="tx-12" >FlipY</label>
-                <p class="tx-center tx-22" style="transform:rotate(90deg)">
-                    <i class="ion-arrow-swap" id="flipH" ></i>
-                </p>
-              </div>
-          </div>        
-    </div>
-    <div class="card pd-20" id="template-info-panel">
-        <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15"  >Template Details</h6>
-        <div class="d-flex mg-b-10 tx-center">
-          <div class="bd-r pd-r-10 ">
-            <label class="tx-12 ">Page Size</label>
-            <p class="tx-lato tx-inverse tx-bold page-size">-</p>
-          </div>
-          <div class="bd-r pd-x-10">
-            <label class="tx-12 ">Logo Size</label>
-            <p class="tx-lato tx-inverse tx-bold logo-size">-</p>
-          </div>
-          <div class="pd-l-10">
-            <label class="tx-12 ">Total Logos</label>
-            <p class="tx-lato tx-inverse tx-bold total-logos">-</p>
-          </div>
-        </div><!-- d-flex -->
-      
-        <p class="tx-12 mg-b-0 page-title">-</p>
-        <div class="tx-12"><b>KopyKake Part #:</b>  <span class="kk-part-no"></span></div>
-        <div class="tx-12"><b>KopyKake Link:</b>  <span class="kk-part-link"></span></div>
-
-    </div>
+    <%- include('../../partials/client/rightpanel'); %>
 </div>
 </div>
 
@@ -237,6 +151,7 @@
    { 
         var code = '<%=template.code%>' || 'default'
         loadSVGTemplate(code);
+        
     }
 </script>
    

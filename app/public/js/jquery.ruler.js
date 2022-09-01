@@ -7,7 +7,6 @@
  * Copyright 2013 Hillius Ettinoffe http://hilliuse.com
  */
  ;(function( $ ){
-
 	$.fn.ruler = function(options) {
 	
 		var defaults = {

@@ -282,7 +282,6 @@ router.get('/app/admin/categories', isAdmin, async (req,res)=>{
 router.get('/app/admin/cliparts', isAdmin, async (req,res)=>{
 
   var categories = await commonService.categoryService.getCategoriesAsync(); 
-  console.log
   res.locals.page = {
     id: "__cliparts",
     title: "Upload Cliparts",
@@ -330,8 +329,6 @@ router.get('/app/admin/pre-designed', isAdmin, async (req,res)=>{
   var adminUploadItems = await commonService.uploadService.getUploads('all',true,true); 
   var templates  =  adminUploadItems.filter(function(item){ return item.type == 'template'});
   var cliparts =  adminUploadItems.filter(function(item){ return item.type == 'clipart'});
-console.log(templates)
-console.log(cliparts)
 
   res.locals.page = {
     id: "__pre-designed",
