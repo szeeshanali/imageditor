@@ -1500,14 +1500,14 @@ pre code {
 .form-control, .dataTables_filter input {
   display: block;
   width: 100%;
-  padding: 7px 10px ;
+  padding: 5px 10px ;
   font-size: 14px;
   color: #495057;
-  background-color: #e1e0f5;
+  background-color: #d8dce3;
   background-image: none;
   background-clip: padding-box;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 3px;
+  border: 1px solid #d8dce3;
+  border-radius: 0px;
   transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
 }
 .form-control::-ms-expand, .dataTables_filter input::-ms-expand {
@@ -3023,9 +3023,9 @@ tbody.collapse.show {
   border-radius: 2px;
 }
 .nav-pills .nav-link.active, .show > .nav-pills .nav-link {
-  color: #fff;
+  /* color: #fff;
   background-color: #007bff;
-  padding: 10px 0px;
+  padding: 10px 0px; */
 }
 
 .nav-fill .nav-item {
@@ -8553,14 +8553,20 @@ a.text-dark:focus, a.text-dark:hover {
   display: block;
   padding: 10px 20px;
   font-size: 14px;
+  border-bottom: solid 1px #ccc;
 }
 .accordion .card-header a, .accordion .card-header a:hover, .accordion .card-header a:focus {
-  background-color: #cbcae5;
+  /* background-color: #cbcae5; */
+  background-color: #fff;
+
     color: #494699;
     margin-top: 1px;
+    border-bottom: solid 1px #ccc;
 }
 .accordion .card-header a.collapsed {
-  background-color: #cbcae5;
+  /* background-color: #cbcae5; */
+  background-color: #fff;
+
   color: #868e96;
 }
 .accordion .card-header a.collapsed:hover, .accordion .card-header a.collapsed:focus {
@@ -9148,8 +9154,8 @@ p {
 /* ############### Forms ############### */
 /* ------------------------------------- */
 .form-control, .dataTables_filter input {
-  border-radius: 3px;
-  background-color: #f8f9fa;
+  border-radius: 0px;
+  background-color: #d8dce3;
 }
 .form-control:focus, .dataTables_filter input:focus, .form-control:active, .dataTables_filter input:active {
   background-color: #fff;
@@ -9447,8 +9453,8 @@ textarea.parsley-error:active {
   background-color: transparent;
 }
 .nav-pills .nav-link.active, .nav-pills .nav-link.active:hover, .nav-pills .nav-link.active:focus {
-  color: #fff;
-  background-color: #6462a5;
+  /* color: #fff; */
+  /* background-color: #6462a5; */
   /* height: 70px; */
   /* padding: -10;
   padding-top: 10px; */
@@ -12069,10 +12075,10 @@ textarea.parsley-success:focus {
   position: fixed;
   top: 40px;
   /* left: -350px; */
-  left: -400px;
+  /* left: -400px; */
   bottom: 0;
   /* width: 350px; */
-  width: 400px;
+  /* width: 400px; */
   /* background-color: #fff;
   transition: all 0.2s ease-in-out; */
 }
@@ -12261,21 +12267,21 @@ textarea.parsley-success:focus {
 
 /***** MAIN PANEL *****/
 .am-mainpanel {
-  margin-left: 0;
+  margin-left: 80px;
   /* margin-top: 120px; */
-  margin-top: 80px;
+  margin-top: 40px;
 
   transition: all 0.2s ease-in-out;
 }
 @media (min-width: 992px) {
   .am-mainpanel {
     /* margin-left: 335px; */
-    margin-left: 400px;
+    margin-left: 80px;
   }
 }
 
 .am-pagetitle {
-  position: fixed;
+  /* position: fixed; */
   z-index: 900;
   top: 40px;
   left: 0;
@@ -12293,7 +12299,7 @@ textarea.parsley-success:focus {
 }
 @media (min-width: 992px) {
   .am-pagetitle {
-    left: 400px;
+    /* left: 400px; */
   }
 }
 .am-pagetitle .search-bar {
@@ -12341,6 +12347,7 @@ textarea.parsley-success:focus {
 
 .am-pagebody {
   padding: 0px 8px;
+
 }
 @media (min-width: 576px) {
   .am-pagebody {

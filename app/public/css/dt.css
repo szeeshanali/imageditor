@@ -574,7 +574,7 @@
 
 .workarea{
     width: 100%;
-    height: 100%;
+    height: 700px;
     background-image: url('/images/grid-trans.png');
 
 }
@@ -667,7 +667,7 @@ color:#0900fd;
     }
 #layers .layer-item .layer-label{
     line-height: 30px;
-    width:65px        
+    width:130px        
 }
     
 .template-image{
@@ -809,6 +809,7 @@ color:#0900fd;
 
      .icon-imgupload{
         border: solid 1px #494699;
+        cursor: pointer;
         width: 80px;
         height: 80px;
         line-height: 50px;
@@ -818,6 +819,10 @@ color:#0900fd;
         /* background-color: #c9c8f3; */
         margin: auto;
         font-size: 50px;
+     }
+
+     .icon-imgupload:hover{
+        background-color: gray;
      }
 
      .image-tools i {
@@ -877,11 +882,11 @@ color:#0900fd;
         border: dashed 1px #494699;
         cursor: pointer;
      }
-
+/* 
      #template-container{
 
         margin: 0px -15px 0px 15px;
-     }
+     } */
 
      #repeat-image-ctrl .apply{
         background-color: #494699;
@@ -969,7 +974,7 @@ color:#0900fd;
 /*client text area: */
 
 
- #font-panel .slider {
+  .slider {
     -webkit-appearance: none;
     width: 100%;
     height: 2px;
@@ -980,7 +985,7 @@ color:#0900fd;
     transition: opacity .2s;
   }
   
-  #font-panel .slider::-webkit-slider-thumb {
+  .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 15px;
@@ -990,7 +995,7 @@ color:#0900fd;
     cursor: pointer;
   }
   
-  #font-panel .slider::-moz-range-thumb {
+   .slider::-moz-range-thumb {
     width: 15px;
     height: 15px;
     border-radius: 50%;
@@ -1090,3 +1095,34 @@ color:#0900fd;
 .template-small > img{
     width: 93px !important;
 }
+
+.bg-light-blue{
+   background-color: #edecff;
+}
+
+#font-list-container .fontfamily {
+    cursor: pointer;
+}
+
+.arrow {
+    /* margin: 1em; */
+  }
+  
+  .arrow::before {
+    position: absolute;
+    content: '';
+    width: 0;
+    height: 0;
+    border: .4em solid transparent;
+    border-left-color: #494699;
+    transform-origin: 0 50%;
+    transition: transform .25s;
+  }
+  
+  .arrow.down::before {
+    transform: rotate(90deg);
+    transition: transform .25s;
+  }
+  #font-panel i{
+    padding:0px 10px;
+  }

@@ -100,14 +100,15 @@ const commonService = (function() {
                 by_admin:false, 
                 code: designId,
                 uploaded_by: userId,
-                active:true });
+                active:true,
+             });
         }
         return  designs;
     }
     this.getTemplateAsync = async (templateId)=>
     { 
 
-        return await uploads.findOne({active:true, type:'template', by_admin:true, code:templateId}); 
+        return await uploads.findOne({active:true, type:'template',  code:templateId}); 
     },
     this.deleteTemplatesAsync = async (id)=>
     { 

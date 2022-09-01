@@ -92,7 +92,6 @@ router.get("/api/project/:id?", isLoggedIn,  async (req, res) => {
 
 router.delete("/api/client/project/:id?", isLoggedIn,  async (req, res) => {
     var id = req.params["id"]; 
-    console.log("Deleted Id: ", id)
     var data  =  await commonService.uploadService.deleteUploadAsync(id, 'project' , req.user._id);
     res.status(200).send(data);
 });
@@ -193,8 +192,7 @@ router.get("/app/pre-designed/:id?",  isLoggedIn, async (req, res) => {
       }
 
     var predesigned = await commonService.uploadService.getPreDesigned(req.user._id);
-    console.log("userId: =====>");
-    console.log(req.user._id);
+    
     res.render("pages/client/pre-designed",{
         user:req.user, 
         predesigned: predesigned});
@@ -226,13 +224,28 @@ router.get("/app/workspace/:id?",  isLoggedIn, async (req, res) => {
       }
 
     var templateId = req.params.id;
+
     var template = {};
     var meta = {};
     if(templateId){
-        template = await commonService.uploadService.getTemplateAsync(templateId);
+        template = null;
+        
+        if(templateId.split('-')[0] === 'project')
+        { 
+            const projectId = templateId.replace("project-","");
+            console.log(projectId);
+            template =  await commonService.uploadService.getUserDesignsAsync(req.user.id,projectId);
+           console.log(template);
+         }else{
+          template =  await commonService.uploadService.getTemplateAsync(templateId);
+         }
+       if(template.meta)
+       {
         meta = JSON.parse(template.meta);
+       }
+        
     }
-    var templates = await commonService.uploadService.getTemplatesAsync();
+    //var templates = await commonService.uploadService.getTemplatesAsync();
     var customDesigns = await uploads.find({type:'pre-designed', active:true, deleted:false, base64:{$ne:null},json:{$ne:null}},{code:1,base64:1}) || [];
    var adminUploadItems = await commonService.uploadService.getUploads('all',true,true);
    var templates = adminUploadItems.filter(function(item){ return item.type == 'template'});
@@ -240,7 +253,6 @@ router.get("/app/workspace/:id?",  isLoggedIn, async (req, res) => {
    var customDesigns = adminUploadItems.filter(function(item){ return item.type == 'pre-designed'});
     // var projects = await commonService.uploadService.getUserDesignsAsync(req.user._id);
     console.log("userId: =====>");
-    console.log(req.user._id);
     res.render(PATH_WORKSPACE,{
         user:req.user,
         template:template,

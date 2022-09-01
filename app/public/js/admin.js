@@ -586,6 +586,7 @@ if(!userId)
 
 
   $templateThumb.on("click",(e)=>{
+    debugger;
     var templateId = e.currentTarget.id; 
     if(templateId){
       loadSVGTemplate(templateId);
@@ -1031,6 +1032,7 @@ var category = $("#admin-categories").val() ;
         reader.readAsDataURL(file);
         continue;
       }else{
+
         if( pageid != "__template-designer")
         {
           reader.onload = (f) => {

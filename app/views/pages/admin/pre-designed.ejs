@@ -1,14 +1,25 @@
-<div class="row">
-    <div class="col-lg-9 pd-r-0">
-        <div class="workarea" style="height:800px">
-            <div  id="canvas-holder">
-                <div class="content tx-center">
-                    <canvas id="admin-main-canvas" width="612" height="792" ></canvas>
-                </div>
-            </div>
-        </div>
+<div class="row mg-r-0">
+  <div class="col-lg-3 pd-0">
+    <div class="card pd-10 tx-primary tx-bold bd-b"></div>
+    <div class="card">
+      <%- include('../../partials/admin/pre-designed-panel'); %>
+
     </div>
-    <div class="col-lg-3 pd-x-0 mg-t-1" id="workspace-right-panel">
+  </div>
+    <div class="col-lg-6 pd-x-10">
+      <div class="card pd-10 tx-primary tx-bold mg-b-10">Workspace</div>
+      <div class="card">
+        <div class="workarea" style="height:800px">
+          <div  id="canvas-holder">
+              <div class="content tx-center">
+                  <canvas id="admin-main-canvas" width="612" height="792" ></canvas>
+              </div>
+          </div>
+      </div>
+      </div>
+        
+    </div>
+    <div class="col-lg-3 pd-0" id="workspace-right-panel">
      
    
      

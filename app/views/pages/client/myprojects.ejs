@@ -1,47 +1,78 @@
- <%if(projects.length == 0) {%>
- <div class="ht-100v d-flex align-items-center justify-content-center">
-    <div class="wd-lg-70p wd-xl-50p tx-center pd-x-40">
-      <h1 class="tx-100 tx-xs-140 tx-normal tx-gray-800 mg-b-0">404!</h1>
-      <h5 class="tx-xs-24 tx-normal tx-orange mg-b-30 lh-5">You Haven't saved any project yet.</h5>
-      <p class="tx-16 mg-b-30">You can customized and save upto 5 projects and reuse them in the future.</p>
-    </div>
-  </div>
-  <%}else{%> 
-  <div class="row">
-    <div class="col-lg-9 pd-r-0">
-        <div class="workarea">
-            <div  id="canvas-holder">
-                <div class="content tx-center">
-                    <canvas id="client-main-canvas"  ></canvas>
-                    <canvas id="client-main-canvas-logo"  ></canvas>                    
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-3 pd-x-0 mg-t-1" id="workspace-right-panel">
-      <div class="card pd-t-20 mg-b-1 tx-center">
-          <p class="tx-12" ><a href="#" id="use-template" class="start-over bg-warning">Request for Quote</a></p>
+
+  <div class="row mg-r-0">
+    <div class="col-lg-3 pd-0">
+      <div class="card pd-10 bd-b"><span class="tx-primary tx-bold  ">My Projects</span><span class="text-danger">(You have (<%=user.project_limit %>) projects limit.)</span>
       </div>
 
-     
-      <div class="card pd-20" id="template-info-panel">
-        <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15 template-name"  ></h6>
-        <div class="d-flex mg-b-10 tx-center">
-          <div class="pd-r-10 ">
-            <label class="tx-12 ">Project name</label>
-            <p class="tx-lato tx-inverse tx-bold page-size">-</p>
+      <div class="card pd-10">
+        
+        
+        <div id="myprojects" class="tab-pane" >
+          <!-- <%if(projects.length > 0) {%>
+            <div class="card pd-t-20 mg-b-1 tx-center">
+              <p class="tx-12" ><a href="#" id="use-template" class="start-over bg-primary">Continue Editing</a></p>
           </div>
-          
-        </div><!-- d-flex -->
-      
-        <p class="tx-12 mg-b-0 page-title">-</p>
-      
+          <%}%> -->
+          <%if(projects.length == 0){%>
+            <div class="thumb"> 
+              <div class="tx-12 tx-bold pd-15">Please start designing and save your design.</div>
+          </div>
+          <%}%>
+          <div class="d-flex svg-templates tx-center" >
+            <%for(var i=0; i<projects.length;i++){%>
+              <div>
+                <div id="<%=projects[i].code %>" class="template template-small"> 
+                  <img src="<%=projects[i].thumbBase64 %>" > 
+                  <div class="tx-12 tx-bold pd-y-5"><%=projects[i].title %></div>               
+              </div>
+              <a href="#" id="del<%=projects[i].code %>" class="delete">Delete</a>
+              </div>
+            <%}%>
+        </div>
+        
+        </div>
+
+
+
+
+      </div>
+    </div>
+    <div class="col-lg-6 pd-x-10">
+      <div class="card pd-10 tx-primary tx-bold mg-b-10">My Projects</div>
+
+      <div class="card">
+        <div class="workarea">
+          <div  id="canvas-holder">
+              <div class="content tx-center">
+                  <canvas id="client-main-canvas"  ></canvas>
+                  <canvas id="client-main-canvas-logo"  ></canvas>                    
+              </div>
+          </div>
+      </div>
+      </div>
+       
+    </div>
+    <div class="col-lg-3 pd-0" id="workspace-right-panel">
+      <div class="card pd-10 bd-b">
+        <div class="tx-center">
+          <a href="#" class="start-over bg-primary tx-12" id="use-project" data-id="">Use Project</a>
+        </div>
+        
+      </div>
+      <div class="card pd-10 bd-b tx-primary tx-bold">Project Details</div>
+
+      <div class="card pd-20" id="template-info-panel">
+        <div class="tx-12 tx-inverse tx-bold tx-uppercase">Project title</div>
+        <p class="template-name">-</p>
+        <div class="tx-12 tx-inverse tx-bold tx-uppercase">Description</div>
+        <p class="template-desc">-</p>
+
       </div>
    
     
   </div>
     </div>
-    <%}%>
+
     <div id="snackbar"></div>
   <script>
     $(".tab-content .tab-pane").each((i,e)=>
