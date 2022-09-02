@@ -744,6 +744,10 @@ function closeRepeatDesignPreview() {
 
     $("#repeat-image-ctrl #previewdesign").show();
     $("#repeat-image-ctrl #backtodesign").hide();
+
+    $btnDownloadPDF.addClass("hidden");
+    $btnSaveDesign.addClass("hidden");
+
 }
 
 // function openRepeatDesignPreview(e) {
