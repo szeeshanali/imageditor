@@ -233,9 +233,7 @@ router.get("/app/workspace/:id?",  isLoggedIn, async (req, res) => {
         if(templateId.split('-')[0] === 'project')
         { 
             const projectId = templateId.replace("project-","");
-            console.log(projectId);
             template =  await commonService.uploadService.getUserDesignsAsync(req.user.id,projectId);
-           console.log(template);
          }else{
           template =  await commonService.uploadService.getTemplateAsync(templateId);
          }
@@ -252,7 +250,6 @@ router.get("/app/workspace/:id?",  isLoggedIn, async (req, res) => {
    var cliparts = adminUploadItems.filter(function(item){ return item.type == 'clipart'});
    var customDesigns = adminUploadItems.filter(function(item){ return item.type == 'pre-designed'});
     // var projects = await commonService.uploadService.getUserDesignsAsync(req.user._id);
-    console.log("userId: =====>");
     res.render(PATH_WORKSPACE,{
         user:req.user,
         template:template,
