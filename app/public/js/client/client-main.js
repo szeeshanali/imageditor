@@ -233,6 +233,8 @@ function loadSVGTemplate(id) {
             $("#template-info-panel #imgSelectedTemplate").attr("src",svgBase64)
             $(".kk-part-no").text(data.ref_code || "N/A");
             $(".kk-part-link").text(data.link || "N/A");
+            var reg = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+            $("#kp-link").attr("href", reg.test(data.link)?data.link:"#");
             $("#use-template").unbind().click(function () {
                 window.location.href = `/app/workspace/${
                     data.code
@@ -250,7 +252,7 @@ function loadSVGTemplate(id) {
             }
         }, function (item, object) {
             object.set({left:0,top:0}); 
-            object.scaleToWidth(500);
+            object.scaleToWidth(400);
             //object.set('id', item.getAttribute('id'));
            // group.push(object);
         });
@@ -691,6 +693,7 @@ function initUIEvents() {
             fabric.Image.fromURL(dataURL, (img) => {
                 canvasPrev.remove(... canvasPrev.getObjects());
                 //for (var i = 0; i < logos.length; i++) {
+
                     var logo = logos[0];
                     var object = fabric.util.object.clone(img);
                     var left = logo.left + logo.group.left  + logo.group.width / 2;
@@ -770,7 +773,7 @@ function initUIEvents() {
                      var object = fabric.util.object.clone(img);
                      var left = logo.left + logo.group.left  + logo.group.width / 2;
                      var top = logo.top + logo.group.top  + logo.group.height / 2;
-                     object.scaleToWidth(logo.width)
+                     object.scaleToWidth(logo.width+10)
                      object.set("top", top);
                      object.set("left", left);
                      object.globalCompositeOperation = "source-atop";
@@ -921,6 +924,7 @@ function onCanvasModified(o) {
 function onObjectAdded(o) {
     // $pageTitle.addClass("hidden");
     // $("#maintools > .image-tools").removeClass("hidden");
+
     addLayer(o);
     enabledRepeatDesignButton(o);
 }
@@ -932,6 +936,7 @@ function enabledRepeatDesignButton(o) {
 
 // Layers:
 function addLayer(o) {
+    $("#col-layers a").click();
     var temp = layerHtml;
     $layers.html();
     var layers = "";
@@ -1063,7 +1068,11 @@ $btnDownloadPDF.on("click", () => {
                 throw "You are not eligible to download. please contact admin";
             }
             var pdf = null;
-            var pdf = new jsPDF("p", "mm", "letter");
+            var pdf = new jsPDF({
+                unit: 'px', // set the unit of measurement to px
+                format: 'letter', // set your paper size format
+                userUnit: 300, // set the DPI you desire. We used 72 because thats the default DPI used in browsers.
+              });
             var width = canvasPrev.width;
             var height = canvasPrev.height;
             width = pdf.internal.pageSize.getWidth();

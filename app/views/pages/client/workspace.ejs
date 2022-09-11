@@ -11,7 +11,7 @@
                   <%for(var i=0; i<templates.length; i++){ %>
                     <div id="<%=templates[i].code %>" class="template template-small" > 
                       <img src="<%=templates[i].base64 %>" style="width:93px"> 
-                      <div class="tx-12 tx-bold pd-y-5 lh-1"><%=templates[i].title %></div>
+                      <div class="tx-12  pd-y-5 lh-1"><span class="tx-bold"><%=templates[i].name %></span><div class="tx-primary"><%=templates[i].ref_code %></div></div>
                   </div>
                   <%}%> 
                 </div>
