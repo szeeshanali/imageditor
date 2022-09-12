@@ -96,7 +96,7 @@ router.delete("/api/client/project/:id?", isLoggedIn,  async (req, res) => {
     res.status(200).send(data);
 });
 
-router.get('/api/svg-templates/:id', isLoggedIn,  async (req,res)=>{
+router.get('/api/svg-templates/:id/:t?', isLoggedIn,  async (req,res)=>{
     const itemid = req.params["id"]; 
     var result = null; 
     if(itemid == "default"){
@@ -108,9 +108,16 @@ router.get('/api/svg-templates/:id', isLoggedIn,  async (req,res)=>{
                     type:'template', by_admin:true, active:true }).sort({order:-1}); 
             }  
     }else{
-
-        result = await uploads.findOne({
-            type:'template', by_admin:true, active:true, code:itemid });  
+        const type = req.params["t"];
+        if(type === 'project')
+        {
+            result = await uploads.findOne({
+                type:'project', by_admin:false, uploaded_by:req.user._id, active:true, code:itemid });  
+        }else{
+            result = await uploads.findOne({
+                type:'template', by_admin:true, active:true, code:itemid });  
+        }
+        
     }
     res.send(result);
     
@@ -214,7 +221,7 @@ router.get("/api/client/download",  isLoggedIn, async (req, res) => {
     res.status(200).send({data:{watermark:watermark,download:enableDownload}});
 });
 
-router.get("/app/workspace/:id?",  isLoggedIn, async (req, res) => {
+router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
 
     
     res.locals.page = {
@@ -223,26 +230,18 @@ router.get("/app/workspace/:id?",  isLoggedIn, async (req, res) => {
         user: req.user
       }
 
-    var templateId = req.params.id;
-
+    const id = req.params.id;
+    const type = req.params.type;
     var template = {};
     var meta = {};
-    if(templateId){
-        template = null;
+    // if(templateId){
+    //     template =  await commonService.uploadService.getTemplateAsync(templateId);
+    //    if(template.meta)
+    //    {
+    //     meta = JSON.parse(template.meta);
+    //    }
         
-        if(templateId.split('-')[0] === 'project')
-        { 
-            const projectId = templateId.replace("project-","");
-            template =  await commonService.uploadService.getUserDesignsAsync(req.user.id,projectId);
-         }else{
-          template =  await commonService.uploadService.getTemplateAsync(templateId);
-         }
-       if(template.meta)
-       {
-        meta = JSON.parse(template.meta);
-       }
-        
-    }
+    // }
     //var templates = await commonService.uploadService.getTemplatesAsync();
     var customDesigns = await uploads.find({type:'pre-designed', active:true, deleted:false, base64:{$ne:null},json:{$ne:null}},{code:1,base64:1}) || [];
    var adminUploadItems = await commonService.uploadService.getUploads('all',true,true);
@@ -256,7 +255,9 @@ router.get("/app/workspace/:id?",  isLoggedIn, async (req, res) => {
         templateMeta:meta,
         templates: templates,
         customDesigns: customDesigns,
-        cliparts:cliparts
+        cliparts:cliparts,
+        type:type,
+        code:id
     });
 });
 
