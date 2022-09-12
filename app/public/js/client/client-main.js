@@ -330,6 +330,7 @@ function initUIEvents() {
     cropObject();
     flipXYObject();
     grayscaleObject();
+
     brightnessObject();
     contrastObject();
 
@@ -714,6 +715,11 @@ function initUIEvents() {
     })
 
     $btnApplyRepeatDesign.on("click", function (e) {
+        if(canvas._objects.length == 0)
+        {
+            toast("Please add a design to your workspace.");
+            return;
+        }
         state.isPreviewCanvas = true;
         //$repeatImageCtrl.hide();
         $("#repeat-image-ctrl #previewdesign").hide();
@@ -936,7 +942,7 @@ function enabledRepeatDesignButton(o) {
 
 // Layers:
 function addLayer(o) {
-    $("#col-layers a").click();
+    $("#collapse-layers").addClass("show");
     var temp = layerHtml;
     $layers.html();
     var layers = "";
