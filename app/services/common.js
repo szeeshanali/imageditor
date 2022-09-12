@@ -21,7 +21,9 @@ const commonService = (function() {
     {
         code:1,
         base64:1,
-        title:1
+        title:1,
+        name:1,
+        ref_code:1
     }).sort({order_no:1}); },
 
     this.getPreDesigned = async (userId, designId)=>
@@ -59,7 +61,9 @@ const commonService = (function() {
                 code:1,
                 base64:1,
                 title:1,
-                type:1
+                type:1,
+                name:1,
+                ref_code:1
             }).sort({order_no:1}); 
         }else{
             designs =   await uploads.find({type: type, active:active, by_admin:by_admin,deleted:false  },
@@ -95,12 +99,12 @@ const commonService = (function() {
             active:true });
 
         }else{
-            designs = await uploads.findOne({active:true, 
+            designs = await uploads.findOne({
+                active:true, 
                 type:'project', 
                 by_admin:false, 
                 code: designId,
-                uploaded_by: userId,
-                active:true,
+                uploaded_by: userId
              });
         }
         return  designs;
