@@ -1,0 +1,138 @@
+<div class="am-sideleft" id="toolbar">
+    <!-- <%- include('../../partials/client/toolbar'); %> -->
+
+    <div class="d-flex flex-column flex-shrink-0 bg-light sidebar " >
+       
+        <ul id="workspace-menu" class="nav nav-pills nav-flush flex-column mb-auto text-center main-buttons am-sideleft-tab">
+          <!-- <li >
+            <a href="/app/workspace"  class="pd-y-10 lh-1  border-bottom" aria-current="page" title="" >
+                <i class="ion-ios-compose tx-24 tx-white"></i>
+                <div class="visually-hidden tx-12 tx-white ">Start Designing </sup></div>
+            </a>
+          </li> -->
+
+          <%if(locals.page.id == "__workspace"){ %>
+        <li class="nav-item" id="menu-templates">
+            <a href="#templatepanel" id="btnTemplate" class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+                <i class="ion-ios-keypad-outline tx-24 tx-white"></i>
+                <div class="visually-hidden tx-12 tx-white my-proj">Choose Templates <sup class="tag"><%=templates.length || 0 %></div>
+            </a>
+          </li>
+          <li class="nav-item" id="menu-upload"  >
+            <a href="#uploadpanel" class="nav-link  pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+                <i class="ion-ios-cloud-upload-outline tx-24 tx-white"></i>
+                <div class="visually-hidden tx-12 tx-white">Upload Image</div>
+            </a>
+          </li>
+
+          <li class="nav-item" id="menu-clipart" >
+            <a href="#clipartmenu" class="nav-link  pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+                <i class="ion-ios-paw-outline tx-24 tx-white"></i>
+                <div class="visually-hidden tx-12 tx-white">Choose Clipart</div>
+            </a>
+          </li>
+          <li class="nav-item" id="menu-text">
+            <a href="#textmenu" id="btnTextMenu" class="nav-link pd-y-10 lh-1 tx-20  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+              <i class="fa fa-font  tx-white" aria-hidden="true"></i>
+              <div class="visually-hidden tx-12 tx-white">Add Text</div>
+            </a>
+          </li>
+          <li class="nav-item" >
+            <a href="#" id="applytoall" class="pd-y-10 lh-1 tx-20  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+              <i class="ion-eye  tx-white" aria-hidden="true"></i>
+              <div class="visually-hidden tx-12 tx-white">Preview</div>
+            </a>
+          </li>
+
+          <li>
+            <a href="#shared-library" id="sharedlibrary" class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+                <i class="ion-social-dropbox tx-24 tx-white"></i>
+                <div class="visually-hidden tx-12 tx-white">Library</div>
+            </a>
+          </li>
+          <li>
+            <a href="#" id="btnMyProject" class="pd-y-10 lh-1  border-bottom"  title="" >
+                <i class="fa fa-birthday-cake tx-24 tx-white"></i>
+                <div class="visually-hidden tx-12 tx-white my-proj">My Projects </div>
+            </a>
+          </li>
+          <li id="btn-download-pdf" class="hidden">
+            <a href="#"  class="nav-link pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+                <i class="fa fa-download tx-30 tx-white"></i>
+                <div class="visually-hidden tx-12 tx-white">Download PDF</div>
+            </a>
+          </li>
+          <li id="btn-save-design" class="hidden" >
+            <a href="#" data-toggle="modal" data-target="#savedesignmodel"  class="nav-link pd-y-10 lh-1  border-bottom">
+                <i class="fa fa-floppy-o tx-24 tx-white"></i>
+                <div class="visually-hidden tx-12 tx-white">Save as Project</div>
+            </a>
+          </li>
+<%}else{%>
+  <li >
+            <a href="/app/workspace"  class="pd-y-10 lh-1  border-bottom" aria-current="page" title="" >
+                <i class="ion-ios-compose tx-24 tx-white"></i>
+                <div class="visually-hidden tx-12 tx-white ">Start Designing </sup></div>
+            </a>
+          </li>
+  <!-- <li class="nav-item">
+    <a href="/app/templates" class="pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+        <i class="ion-ios-keypad-outline tx-24 tx-white"></i>
+        <div class="visually-hidden tx-12 tx-white my-proj">View Templates <sup class="tag"><%=templates.length || 0 %></div>
+    </a>
+  </li>
+<li>
+  <a href="/app/cliparts" class="pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+      <i class="ion-ios-paw tx-24 tx-white"></i>
+      <div class="visually-hidden tx-12 tx-white">View Clip-arts</div>
+  </a>
+</li>
+<li>
+  <a href="/app/pre-designed" class=" pd-y-10 lh-1  border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+      <i class="ion-ios-keypad tx-24 tx-white"></i>
+      <div class="visually-hidden tx-12 tx-white">Pre-Designed</div>
+  </a>
+</li> -->
+  <%}%>
+
+        
+        
+         
+      
+         
+        </ul>
+    
+       
+      </div>
+<!-- <div style="position:absolute;top:10px;left:72px; width:328px">
+  <div class="stepwizard" >
+    <div class="stepwizard-row setup-panel">
+        <div class="stepwizard-step col-xs-3"> 
+            <a href="#step-1" type="button" class="btn btn-success btn-circle">1</a>
+            <p class="lh-1"><small>Choose Template</small></p>
+        </div>
+        <div class="stepwizard-step col-xs-3"> 
+            <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled">2</a>
+            <p class="lh-1" ><small>Upload Image</small></p>
+        </div>
+        <div class="stepwizard-step col-xs-3"> 
+            <a href="#step-3" type="button" class="btn btn-default btn-circle" disabled="disabled">3</a>
+            <p class="lh-1" ><small>Choose Clipart</small></p>
+        </div>
+        <div class="stepwizard-step col-xs-3"> 
+            <a href="#step-4" type="button" class="btn btn-default btn-circle" disabled="disabled">4</a>
+            <p class="lh-1"><small>Add Text</small></p>
+        </div>
+         <div class="stepwizard-step col-xs-3"> 
+            <a href="#step-4" type="button" class="btn btn-default btn-circle" disabled="disabled">5</a>
+            <p class="lh-1" ><small>Save or Download</small></p>
+        </div>
+    </div>
+</div>
+</div>
+    -->
+   
+  
+    <!-- tab-content -->
+</div>
+

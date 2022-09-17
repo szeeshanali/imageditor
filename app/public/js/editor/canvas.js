@@ -57,7 +57,6 @@
       })
 
       fabricCanvas.on('object:modified', () => {
-        console.log('trigger: modified')
         let currentState = this.canvas.toJSON();
         this.history.push(JSON.stringify(currentState));
       })

@@ -1,32 +1,38 @@
-<!-- <div class="pd-15">
-    <div class="pd-15 text-center drag-drop-input">
-        <h1 class="ion-ios-cloud-upload icon-imgupload"></h1>
-        <br>
-            <p class="tx-12  ">Drag & drop files
-                                  or click to browse.<br>JPG, PNG or SVG only!</p>
 
-                                
-              
-            </div>
-            
-        </div> -->
-
+    <ul class="nav nav-tabs tx-12 bold" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#home"><i class="ion-images pd-x-5 tx-16"></i>PHOTOS</a>
+      </li>
+      <li class="nav-item" id="menu-clipart">
+        <a class="nav-link" data-toggle="tab" href="#clipartmenu"><i class="ion-ios-paw pd-x-5 tx-16"></i> CLIP ART</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#menu2"><i class="ion-social-tumblr pd-x-5 tx-16"></i> TEXT</a>
+      </li>
+    </ul>
+  
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div id="home" class="container tab-pane active"><br>
         <div class="card pd-t-20 pd-0 tx-center" >
-            <!-- <button type="button" class="btn-upload" id="btn-upload-img"> Upload Image</button> -->
-            <i class="tx-80  tx-gray-800 icon-imgupload ion-ios-cloud-upload-outline" id="btn-upload-img"></i>
-            <p class="tx-12 pd-t-20 pd-x-30 tx-center">Upload (SVG,JPG,PNG)  or Select design from library below.</p>
+            <i class="tx-80  tx-gray-800 icon-imgupload ion-images" id="btn-upload-img"></i>
+            <p class="tx-12 pd-t-20 pd-x-30 tx-center">Upload Photos </p>
             <input id="btn-upload-img-hidden" type="file" accept="image/*" multiple="multiple" hidden="hidden">
         </div>
+      </div>
+      <div id="clipartmenu" class="container tab-pane fade"><br>
 
-    <!-- <div class="pd-t-15" ><div class="text-center drag-drop-input">
-        <h1 class="ion-ios-cloud-upload upload-icon" ></h1>
-        <br>
-            <p class="tx-12 ">Upload JPG, PNG, SVG Only.</p>
-        </div>
-       
-    </div>   
-</div>-->
-   
+        <%- include('../../partials/client/clipart'); %>
+
+      </div>
+      <div id="menu2" class="container tab-pane fade"><br>
+        <%- include('../../partials/client/typo'); %>           
+
+      </div>
+    </div>
+
+        
+
 
    
  

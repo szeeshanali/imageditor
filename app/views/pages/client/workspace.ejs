@@ -1,30 +1,45 @@
 <div class="row mg-r-0">
     <!--Workspace Left Panel-->
 <div class="col-lg-3 pd-l-0 pd-r-0">
-    <div class="card">
+  
+    <div class="card leftpanel" id="menu-panel" >
         <div class="tab-content">
             
             <div  id="templatepanel" class="tab-pane active"   >
-            <div   >
-                  <div class="pd-x-10 tx-12 pd-y-10 bd-b"><b class="tx-primary tx-14">Choose a Template </b> <span class="pull-right"><a href="#" class="t">Total (<%=templates.length %>)</a></span></div>
+          
+         
+             
+            <div>
+              
+                  <div class="pd-x-10 pd-y-10 bd-b">
+                    
+                    <b class="tx-primary">Templates </b>(<%=templates.length %>) <a href="#" id="btn-step-design" class="pull-right next-step" title="Create designing">Next</a></span>
+                  </div>
                  <div class="d-flex svg-templates tx-center">
                   <%for(var i=0; i<templates.length; i++){ %>
                     <div id="<%=templates[i].code %>" class="template template-small" > 
                       <img src="<%=templates[i].base64 %>" style="width:93px"> 
-                      <div class="tx-12  pd-y-5 lh-1"><span class="tx-bold"><%=templates[i].name %></span><div class="tx-primary"><%=templates[i].ref_code %></div></div>
+                      <div class="tx-12  pd-y-5 lh-1"><span class="tx-bold"><%=templates[i].name %></span><div># <%=templates[i].ref_code %></div></div>
                   </div>
                   <%}%> 
                 </div>
             </div>
             </div>            
             <div id="uploadpanel" class="tab-pane"  >
-                <div class="pd-x-10 tx-12 pd-y-10 bd-b"><b class="tx-primary tx-14">Upload an Image</b> </div>
+         
+                <div class="pd-x-10 pd-y-10  bd-b">
+                  <b class="tx-primary">Create Design</b>
+                  <a href="#" class="pull-right next-step" id="btn-step-preview" title="Preview Design (Step 2)" >Next</a>
+
+                  <a href="#" class=" next-step gray hidden" id="btnBack"  >Back</a></span>
+                  <a href="#" class="next-step gray mg-l-5 hidden" id="btnFinalized"  >Finalized</a></span>
+
+                </div>
                 <%- include('../../partials/client/imgupload'); %>
             </div>
             <div id="clipartmenu" class="tab-pane"  >
                 <div class="pd-x-10 tx-12 pd-y-10 bd-b"><b class="tx-primary tx-14">Choose Clipart</b> </div>
     
-              <%- include('../../partials/client/clipart'); %>
             </div>
             <div id="shared-library" class="tab-pane"  >
     
@@ -33,7 +48,6 @@
             <div id="textmenu" class="tab-pane" >
                 <div class="pd-x-10 tx-12 pd-y-10 bd-b"><b class="tx-primary tx-14">Add Text</b> </div>
     
-                <%- include('../../partials/client/typo'); %>           
             </div>
              <%if(locals.page.id == "__my-projects"){ %>        
                 <div id="myprojects" class="tab-pane" >
@@ -115,6 +129,25 @@
 </div>
 <!-- Workspace canvas-->
 <div class="col-lg-6">
+  <div class="card bd-b" style="background-color: #cac8ff">
+    <ul class="step d-flex flex-nowrap">
+      <li class="step-item ">
+        <a href="#!" class="">Select Template</a>
+      </li>
+      <li class="step-item active">
+        <a href="#!" class="">Create Design</a>
+      </li>
+      <li class="step-item ">
+        <a href="#!" class="">Preview</a>
+      </li>
+      <li class="step-item ">
+        <a href="#!" class="">Finalized</a>
+      </li>
+      <li class="step-item">
+        <a href="#!" class="">Download</a>
+      </li>
+    </ul> 
+  </div>
     <div class="am-pagetitle bd-b pd-r-0"> <%= locals.page.title %>
     <div class="pull-right ">
           <div class="d-flex">
@@ -146,10 +179,10 @@
 </div>
 
 <script> 
-    $(".tab-content .tab-pane").each((i,e)=>
-       { $(e).removeClass("active"); })
-      $("#templatepanel").addClass("active");
-      $("#menu-templates").addClass("bg-warning")
+    // $(".tab-content .tab-pane").each((i,e)=>
+    //    { $(e).removeClass("active"); })
+    //   //$("#templatepanel").addClass("active");
+      //$("#menu-templates").addClass("bg-warning")
     window.onload = function()
    { 
         var code = '<%=code || "default" %>' ;

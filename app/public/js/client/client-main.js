@@ -309,14 +309,14 @@ function applyFilterValue(index, prop, value) {
 function menuHighlighter(itemToHighlight)
 {
     $("#toolbar .nav-item").each(function(e){
-        $(this).removeClass('bg-warning');
+        $(this).removeClass('bg-menu-highlight');
     })
 
-    $(itemToHighlight).addClass("bg-warning");
+    $(itemToHighlight).addClass("bg-menu-highlight");
 }
 
 function menuPanelDisplay(itemToDisplay){
-    $(".tab-content .tab-pane").each(function(e){
+    $("#menu-panel .tab-content .tab-pane").each(function(e){
         $(this).removeClass('active');
         $(this).removeAttr("style");
     })
@@ -326,6 +326,30 @@ function menuPanelDisplay(itemToDisplay){
 
 function initUIEvents() {
 
+
+
+    $("#btn-step-design").on("click",function(){
+        $("#menu-upload > a").click();
+        $(".step-item:nth-child(2)").removeClass("active");
+        $(".step-item:nth-child(3)").addClass("active");
+    })
+
+    
+    
+    $("#btn-step-preview").on("click",function(){
+        previewDesign();
+      
+    });
+
+    $("#btnBack").on("click",function(){
+        backFromPreview();
+       
+    });
+
+   
+
+
+
     rotateObject();
     cropObject();
     flipXYObject();
@@ -333,6 +357,9 @@ function initUIEvents() {
 
     brightnessObject();
     contrastObject();
+
+
+    
 
     $("#accordion a").on("click",function(){
 
@@ -549,8 +576,8 @@ function initUIEvents() {
     })
 
     $btnTemplate.on("click", function (e) {
-        $("#templatepanel").hide();
-        canvas.discardActiveObject().renderAll();
+        //$("#templatepanel").hide();
+        //canvas.discardActiveObject().renderAll();
     })
 
     $btnMyProject.on("click", function (e) {
@@ -594,8 +621,8 @@ function initUIEvents() {
         var id = e.currentTarget.id;
         canvas.clear();
         loadSVGTemplate(id);
-        $("#templatepanel").hide();
-        $("#menu-upload > a").click();
+       // $("#templatepanel").hide();
+       // $("#menu-upload > a").click();
         //triggerNextStep("step-1");
 
     });
@@ -720,6 +747,8 @@ function initUIEvents() {
             toast("Please add a design to your workspace.");
             return;
         }
+        $loader.removeClass("hidden");
+
         state.isPreviewCanvas = true;
         //$repeatImageCtrl.hide();
         $("#repeat-image-ctrl #previewdesign").hide();
@@ -784,12 +813,12 @@ function initUIEvents() {
                      object.set("left", left);
                      object.globalCompositeOperation = "source-atop";
                      canvasPrev.add(object).renderAll();
-                     
                      $btnDownloadPDF.removeClass("hidden");
                      $btnSaveDesign.removeClass("hidden");
                      $(".vRule, .hRule").hide();
 
                  }
+                 $loader.addClass("hidden");
         //         closeRepeatDesignPreview();
              });
          });
@@ -804,15 +833,163 @@ function closeRepeatDesignPreview() {
     $repeatImageCtrl.show();
     $clientMainCanvas.parent().fadeIn();
     $canvasPrev.parent().fadeOut();
+    state.isPreviewCanvas = false;
 
     $("#repeat-image-ctrl #previewdesign").show();
     $("#repeat-image-ctrl #backtodesign").hide();
-
     $btnDownloadPDF.addClass("hidden");
     $btnSaveDesign.addClass("hidden");
-
+    var json = canvas.toJSON();
+    canvasPrev.clear();
+    canvas.clear();
+    canvas.loadFromJSON(json, function() {
+        canvas.renderAll(); 
+     },function(o,object){
+        addLayer(o);
+        console.log(o,object)
+     })
+    
 }
 
+
+
+
+
+function previewDesign()
+{
+   /*
+   . Check Design can be previewed. 
+   . Show Back and Finalized and hide Preview button. 
+   . Disable Save button. 
+   . Hide main canvas. 
+   . Show preview canvas.
+   . Render preview. 
+   . Set Preview State. 
+   . Set Wizard
+    */
+
+   //1. 
+   if(canvas.getObjects().length == 0)
+   { toast("Please create your design before preview."); return; }
+
+ 
+
+   //2. 
+   $("#btnBack").removeClass("hidden"); 
+   $("#btnFinalized").removeClass("hidden"); 
+   $("#btn-step-preview").addClass("hidden"); 
+
+   //3. 
+   $("#btnSave").unbind().click(function(){
+    toast("Please go back and save your design.");
+   });
+
+   //4. 
+   $clientMainCanvas.parent().fadeOut();
+   //5. 
+   $canvasPrev.parent().fadeIn();
+   //6. 
+   renderPreview();
+   //7.
+   state.isPreviewCanvas = true;
+
+   //8. 
+   $(".step-item:nth-child(3)").removeClass("active");
+   $(".step-item:nth-child(4)").addClass("active");
+
+
+}
+function backFromPreview(){
+    /**
+     * . Hide Back and Finalized Button and show Preview button. 
+     * . Enable Save button
+     * . Hide Preview Canvas 
+     * . Show Main Canvas. 
+     * . Clear Preview Canvas. 
+     * . Render Main Canvas back to its original state.  
+     * . Set Main Canvas State. 
+     * . Set Wizard 
+     */
+
+     //1. 
+    $("#btnBack").addClass("hidden"); 
+    $("#btnFinalized").addClass("hidden"); 
+    $("#btn-step-preview").removeClass("hidden");
+    //2. 
+     $("#btnSave").unbind().click(function(){
+        toast("Please go back and save your design.");
+     });
+
+     //3. 
+     $clientMainCanvas.parent().fadeIn();
+     //4. 
+     $canvasPrev.parent().fadeOut();
+     //5. 
+    // canvasPrev.clear(); 
+     //6. 
+     renderMainCanvasOnBackButton()
+     //7. 
+     state.isPreviewCanvas = false;
+
+     $(".step-item:nth-child(4)").removeClass("active");
+     $(".step-item:nth-child(3)").addClass("active");
+     
+}
+
+function renderPreview()
+{
+    $loader.removeClass("hidden");
+    canvas.clone(function (clonedCanvas) {
+        var bg = clonedCanvas.backgroundImage;
+        clonedCanvas.backgroundImage = false;
+        for (var i = 0; i < clonedCanvas._objects.length; i++) {
+            clonedCanvas._objects[i].globalCompositeOperation = null;
+            canvas.renderAll.bind(clonedCanvas)
+        }
+        clonedCanvas.renderAll()
+        var dataURL = clonedCanvas.toDataURL({
+            format: "png",
+            left: 0,
+            top: 0,
+            width: canvas.width,
+            height: canvas.height
+        });
+
+        var logos = canvasPrev.backgroundImage._objects;
+        fabric.Image.fromURL(dataURL, (img) => {
+            canvasPrev.remove(... canvasPrev.getObjects());
+            for (var i = 0; i < logos.length; i++) {
+                var logo = logos[i];
+                var object = fabric.util.object.clone(img);
+                var left = logo.left + logo.group.left  + logo.group.width / 2;
+                var top = logo.top + logo.group.top  + logo.group.height / 2;
+                object.scaleToWidth(logo.width+10)
+                object.set("top", top);
+                object.set("left", left);
+                object.globalCompositeOperation = "source-atop";
+                canvasPrev.add(object).renderAll();
+                $btnDownloadPDF.removeClass("hidden");
+                $btnSaveDesign.removeClass("hidden");
+                $(".vRule, .hRule").hide();
+
+            }
+            $loader.addClass("hidden");
+   //         closeRepeatDesignPreview();
+        });
+    })
+}
+function renderMainCanvasOnBackButton()
+{
+    var json = canvas.toJSON();
+    canvas.clear();
+    canvas.loadFromJSON(json, function() {
+        canvas.renderAll(); 
+     },function(o,object){
+        addLayer(o);
+        console.log(o,object)
+     })
+    
+}
 // function openRepeatDesignPreview(e) {
 //     var txt = $(e.currentTarget).find(".active").text();
 //     var factor = 2;
@@ -867,9 +1044,9 @@ function onObjectSelection(o)
     const id = o.selected[0].id;
     var elem = $(`#${id}`)[0];
     clearLayerSelection();
-    $(`#${id} .layers-controls`).show();
-    $(`#${id}`).addClass("selected-layer");
-    initLayerEvents(elem)
+    //$(`#${id} .layers-controls`).show();
+    //$(`#${id}`).addClass("selected-layer");
+    //initLayerEvents(elem)
 }
 
 
@@ -946,6 +1123,7 @@ function addLayer(o) {
     var temp = layerHtml;
     $layers.html();
     var layers = "";
+    //var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
     var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
     for (var i = _canvas._objects.length - 1; i >= 0; i--) {
         var obj = _canvas._objects[i];
@@ -957,8 +1135,13 @@ function addLayer(o) {
     }
     if (layers != "") {
         $layers.html(layers);
-        $("#layers .layer-item").on("click", function () {
-            layerSelectEventHandler(this, false);
+        $("#layers .layer-item").on("click", function (e) {
+           
+            selectedObjectBySelectLayer(this);
+            initLayerEvents(this);
+            showLayerControls(this);
+            
+
         })
     } else {
         $layers.html("Empty! please upload an image.");
@@ -967,7 +1150,9 @@ function addLayer(o) {
 }
 
 function layerSelectEventHandler($elem, selected) {
-    showLayerControls($elem, selected);
+    
+   
+    selectedObjectBySelectLayer($elem, selected);
 }
 function clearLayerSelection() {
     var _canvas =  state.isPreviewCanvas?canvasPrev:canvas;
@@ -978,34 +1163,44 @@ function clearLayerSelection() {
     }
 
 }
-function showLayerControls($elem, selected) {
+function selectedObjectBySelectLayer($elem, selected)
+{
     var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
     var target = $elem;
+    _canvas.discardActiveObject().renderAll();
+    var index = parseInt(target.id.replace("obj",""))-1;
+    _canvas.setActiveObject(_canvas.item(index)).renderAll();
+
+
+    
+}
+function showLayerControls($elem, selected) {
+    var target = $elem;
+    
+    $(`#${target.id} .layers-controls`).show();
+    $(`#${target.id} .layers-controls`).removeClass('hidden');
+    $(`#${target.id}`).addClass("selected-layer");
+    /*
+    var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
+    var target = $elem;
+  
     var index = parseInt($elem.getAttribute("data-index")) - 1;
     var preObj = _canvas.selectedObj ?. target;
-    if (preObj ?. id != target.id) {
-        $(`#${
-            target.id
-        } .layers-controls`).show();
-        $(`#${
-            target.id
-        }`).addClass("selected-layer");
+    if (preObj?. id != target.id) {
+        $(`#${target.id} .layers-controls`).show();
+        $(`#${target.id}`).addClass("selected-layer");
 
         _canvas.discardActiveObject();
         _canvas.requestRenderAll();
         _canvas.setActiveObject(_canvas.item(index));
         if (preObj) {
-            $(`#${
-                preObj.id
-            } .layers-controls`).attr("style", "display:none !important");
-            $(`#${
-                preObj.id
-            }`).removeClass("selected-layer");
+            $(`#${preObj.id} .layers-controls`).attr("style", "display:none !important");
+            $(`#${preObj.id}`).removeClass("selected-layer");
         }
-        _canvas.selectedObj = _canvas.item(index);
+       _canvas.selectedObj = _canvas.item(index);
 
     }
-
+*/
     //initLayerEvents($elem)
 
 }
@@ -1065,6 +1260,7 @@ function addWaterMark(doc) {
 }
 
 $btnDownloadPDF.on("click", () => {
+    $loader.removeClass("hidden");
     $.ajax({
         type: "GET",
         url: `/api/client/download/`,
@@ -1104,6 +1300,7 @@ $btnDownloadPDF.on("click", () => {
                 }
                 // pdf = addWaterMark(pdf);
                 pdf.save("download.pdf");
+                $loader.addClass("hidden");
 
             });
 
@@ -1320,8 +1517,10 @@ function initLayerEvents($elem) {
 
     $(`#${id} .bring-fwd`).on("click", function (e) {
         e.stopPropagation();
-        var obj = _canvas.getActiveObject();
+        var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
 
+
+        var obj = _canvas.getActiveObject();
         _canvas.bringForward(obj)
         _canvas.renderAll();
         var elem = $(`#${id}`);

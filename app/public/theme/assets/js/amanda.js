@@ -1,10 +1,4 @@
-/*!
- * Amanda Responsive Bootstrap 4 Admin Template
- * Version: 2.0.0
- * Author: ThemePixels (@themepixels)
- * URL: http://themepixels.me/amanda
- *
-**/
+
 
 'use strict';
 
