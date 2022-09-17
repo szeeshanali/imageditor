@@ -68,17 +68,17 @@ router.get(ROUTE_USER_HOME,  async (req, res) => {
     res.redirect("/app/workspace")
 });
 
-router.get("/app/projects", isLoggedIn,  async (req, res) => {
-    var myProjects = await commonService.uploadService.getUserDesignsAsync(req.user._id) || [];
-    res.locals.page = {
-        id: "__my-projects",
-        title: "My projects",
-        user: req.user,
-        projects: myProjects
-      }
+// router.get("/app/projects", isLoggedIn,  async (req, res) => {
+//     var myProjects = await commonService.uploadService.getUserDesignsAsync(req.user._id) || [];
+//     res.locals.page = {
+//         id: "__my-projects",
+//         title: "My projects",
+//         user: req.user,
+//         projects: myProjects
+//       }
 
-    res.render(PATH_USER_PROJECTS, res.locals.page);
-});
+//     res.render(PATH_USER_PROJECTS, res.locals.page);
+// });
 
 router.get("/api/project/:id?", isLoggedIn,  async (req, res) => {
     var id = req.params.id; 
@@ -89,6 +89,9 @@ router.get("/api/project/:id?", isLoggedIn,  async (req, res) => {
         res.status(500).send();
     }
 });
+
+
+
 
 router.delete("/api/client/project/:id?", isLoggedIn,  async (req, res) => {
     var id = req.params["id"]; 
@@ -149,6 +152,7 @@ router.get("/app/templates",  isLoggedIn, async (req, res) => {
     res.render(PATH_TEMPLATES,res.locals.page);
 }); 
 
+//****Save Design */
 router.post('/app/client/save-design', isLoggedIn, async function(req, res) {
 try{
 
@@ -185,7 +189,7 @@ try{
     }catch{
         res.status(500).send({message:`Something went wrong!`, error: msg});
     }
-  })
+ })
   
 
   

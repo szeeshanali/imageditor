@@ -6,24 +6,29 @@
         <div class="tab-content">
             
             <div  id="templatepanel" class="tab-pane active"   >
-          
-         
-             
-            <div>
-              
-                  <div class="pd-x-10 pd-y-10 bd-b">
-                    
-                    <b class="tx-primary">Templates </b>(<%=templates.length %>) <a href="#" id="btn-step-design" class="pull-right next-step" title="Create designing">Next</a></span>
+              <div>
+                    <div class="pd-x-10 pd-y-10 bd-b">
+                      <b class="tx-primary">Templates </b>(<%=templates.length %>) <a href="#" id="btn-step-design" class="pull-right next-step" title="Create designing">Next</a></span>
+                    </div>
+                  <div class="row mg-0">
+                    <%for(var i=0; i<templates.length; i++){ %>
+                      <!-- <div id="<%=templates[i].code %>" class="template template-small col-lg-4" > 
+                        <img src="<%=templates[i].base64 %>" style="width:93px"> 
+                        <div class="tx-12  pd-y-5 lh-1"><span class="tx-bold"><%=templates[i].name %></span><div># <%=templates[i].ref_code %></div></div>
+                    </div> -->
+                    <div class="col-lg-4 pd-0  bd template" id="<%=templates[i].code %>">
+                      <div class="card bg-gray-200 ht-200">
+                        <div class="card-body pd-10">
+                          <img class="card-img-top img-fluid pd-b-10 ht-120" src="<%=templates[i].base64 %>" alt="Image">
+                          <h5 class="card-body-title" style="height:28px;overflow:hidden"><%=templates[i].name %></h5>
+                          <p class="card-subtitle tx-normal"># <%=templates[i].ref_code %></p>
+                        
+                        </div>
+                      </div><!-- card -->
+                    </div>
+                    <%}%> 
                   </div>
-                 <div class="d-flex svg-templates tx-center">
-                  <%for(var i=0; i<templates.length; i++){ %>
-                    <div id="<%=templates[i].code %>" class="template template-small" > 
-                      <img src="<%=templates[i].base64 %>" style="width:93px"> 
-                      <div class="tx-12  pd-y-5 lh-1"><span class="tx-bold"><%=templates[i].name %></span><div># <%=templates[i].ref_code %></div></div>
-                  </div>
-                  <%}%> 
-                </div>
-            </div>
+              </div>
             </div>            
             <div id="uploadpanel" class="tab-pane"  >
          
@@ -49,8 +54,52 @@
                 <div class="pd-x-10 tx-12 pd-y-10 bd-b"><b class="tx-primary tx-14">Add Text</b> </div>
     
             </div>
+            <div id="savedesign" class="tab-pane">
+              <div class="card pd-20 ">
+                <h6 class="card-body-title">Save your Project</h6>
+                <p class="mg-b-20 ">You can save upto (5) projects in your library for feature use.</p>
+      
+                <div class="form-layout">
+                  <div class="row ">
+                    <div class="col-lg-12">
+                      <div class="form-group">
+                        <label class="form-control-label">Project title: <span class="tx-danger">*</span></label>
+                        <input class="form-control" required type="text" id="input-project-title" name="firstname"  placeholder="Enter project title">
+                      </div>
+                    </div>
+                    <div class="col-lg-12">
+                      <div class="form-group">
+                        <label class="form-control-label">Description: </label>
+                        <textarea rows="2" class="form-control" id="input-project-desc" required placeholder="Enter your address" spellcheck="false"></textarea>
+                      </div>
+                    </div>
+
+                  </div><!-- row -->
+      
+                  <div >
+                    <button class="btn  btn-primary mg-r-5" id="btnSave">Save Project</button>
+                    <button class="btn btn-secondary" id="btnCancelSaveDesign">Cancel</button>
+                  </div><!-- form-layout-footer -->
+                </div><!-- form-layout -->
+              </div>
+              
+              
+
+
+            </div>
+            <div id="myprojects" class="tab-pane">
+              <div class="card">
+                <div class="card pd-20 ">
+                  <h6 class="card-body-title">My Projects</h6>
+                  <p class="mg-b-20 ">You can save upto (5) projects in your library for feature use.</p>
+                  <div class="row row-sm mg-t-15 mg-sm-t-20" id="myProjectContainer">
+
+                  </div>
+              </div>  
+              </div>
+            </div>
              <%if(locals.page.id == "__my-projects"){ %>        
-                <div id="myprojects" class="tab-pane" >
+                <div id="myprojects_" class="tab-pane" >
                   <%if(projects.length > 0) {%>
                     <div class="card pd-t-20 mg-b-1 tx-center">
                       <p class="tx-12" ><a href="#" id="use-template" class="start-over bg-primary">Continue Editing</a></p>
@@ -112,8 +161,7 @@
         <div id="templatepanelall" class="tab-pane "  >
           <div class="pd-x-10 tx-12 pd-y-5"><b>Choose a Template</b><span class="pull-right"><a href="#">Total (<%=templates.length %>)</a></span></div>
         <div class="d-flex svg-templates tx-center">
-    
-    
+  
           <%for(var i=0; i<templates.length; i++){ %>
             <div id="<%=templates[i].code %>" class="template template-small" > 
               <img src="<%=templates[i].base64 %>" > 

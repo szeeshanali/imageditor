@@ -19,6 +19,18 @@ const layerHtml = `<div class="media d-block d-flex layer-item object-options" d
     </div>
    </div>`;
 
+const projectHtml = `<div class='col-lg-12 my-projects'><div class="list-group-item d-flex">
+<div class="media d-block d-sm-flex">
+  <div class="d-block d-sm-flex mg-sm-r-20">
+    <img src="{base64}" class="rounded-circle wd-40" alt="Image">
+  </div><!-- d-flex -->
+  <div class="media-body mg-t-10 mg-sm-t-0">
+    <h6 class="mg-b-5 tx-14"><a href="#" class="tx-inverse hover-primary tx-bold" onclick="loadProject('{code}')" id='{code}' >{title}</a></h6>
+    <p class="mg-b-0 tx-12">{created_dt}</p>
+  </div><!-- media-body -->
+</div><!-- media -->
+<a href="#" class="pd-lg-x-20 mg-l-auto ion-trash-a tx-30 text-secondary delete" ></a>
+</div></div>`;
 
 // vars
 $btnDownloadPDF = $("#btn-download-pdf");
@@ -46,7 +58,7 @@ $previewSaveDesign = $("#prevesavdesign");
 $pageTitle = $("#page-title");
 $loader = $("#loader");
 $btnTemplate = $("#btnTemplate");
-$btnMyProject = $("#btnMyProject");
+// $btnMyProject = $("#btnMyProject");
 $btnDeleteMyProject = $("#myprojects .delete");
 
 $btnUploadpanel = $("#uploadpanel");
@@ -133,13 +145,36 @@ function deleteMyProject(id) {
     })
 }
 
+function getUserProjects()
+{
+    $loader.removeClass("hidden");
+    $.get(`/api/project/`, function (data) {
+        $loader.addClass("hidden");
+        var projects = data || [];
+        
+        var temp="";
+        for(var i=0;i<projects.length;i++)
+        {
+            var p = projects[i];
+            temp+= projectHtml
+            .replace(/{code}/ig, p.code)
+            .replace(/{base64}/ig,p.thumbBase64) 
+            .replace(/{title}/ig,p.title) 
+            .replace(/{created_dt}/ig,  new Date(p.created_dt).toDateString() ); 
+            $("#myProjectContainer").html(temp);
+        }
+
+    })
+    
+}
+
 function loadUserProject(id) {
     var group = [];
     $.get(`/api/project/${id}`, function (data) {
         const json = data.json;
-        if (!json) {
-            return;
-        }
+        
+        if (!json) { return; }
+
         var object = JSON.parse(json);
         canvas.clear();
         canvasPrev.clear();
@@ -167,26 +202,24 @@ function loadUserProject(id) {
 }
 
 function loadProject(id) {
+
     var group = [];
     $.get(`/api/project/${id}`, function (data) {
         const json = data.json;
-        if (! json) {
-            return;
-        }
-        var object = JSON.parse(json);
+        if (!json) { return; }
         canvas.clear();
         canvas.loadFromJSON(json, function () {
-            canvas.setWidth(8.5 * dpi);
-            canvas.setHeight(11 * dpi);
-            canvas.renderAll.bind(canvas);
-            $("#template-info-panel .template-name").text(data.name);
-            $("#template-info-panel .template-desc").text(data.desc || "NA");
-            $("#template-info-panel .template-desc").text(data.modified_dt || "NA");
-            $("#use-project").attr("href",`/app/workspace/project/${data.code}`);
-
+        //    /// canvas.setWidth(8.5 * dpi);
+        //    // canvas.setHeight(11 * dpi);
+        //    // canvas.renderAll.bind(canvas);
+        //     $("#template-info-panel .template-name").text(data.name);
+        //     $("#template-info-panel .template-desc").text(data.desc || "NA");
+        //     $("#template-info-panel .template-desc").text(data.modified_dt || "NA");
+        //     $("#use-project").attr("href",`/app/workspace/project/${data.code}`);
             // $imgCtrl.each(function () {
             //     $(this).removeClass("hidden");
             // })
+            $("#menu-upload > a").click();
         }, function (o, object) {
             // console.log(o,object)
         })
@@ -316,7 +349,7 @@ function menuHighlighter(itemToHighlight)
 }
 
 function menuPanelDisplay(itemToDisplay){
-    $("#menu-panel .tab-content .tab-pane").each(function(e){
+    $("#menu-panel > .tab-content > .tab-pane").each(function(e){
         $(this).removeClass('active');
         $(this).removeAttr("style");
     })
@@ -334,17 +367,23 @@ function initUIEvents() {
         $(".step-item:nth-child(3)").addClass("active");
     })
 
-    
-    
-    $("#btn-step-preview").on("click",function(){
-        previewDesign();
-      
-    });
+    $("#btnCancelSaveDesign").on("click",function(){
+        $("#btnTemplate").click();
+    })
 
+
+    $("#btnSave").unbind().on("click",function(){
+       saveDesign();
+    })
+    $("#btn-step-preview").on("click",function(){
+        previewDesign();      
+    });
     $("#btnBack").on("click",function(){
         backFromPreview();
-       
     });
+    $("#btnMyProjects").on("click",function(){
+        getUserProjects();
+    })
 
    
 
@@ -580,13 +619,13 @@ function initUIEvents() {
         //canvas.discardActiveObject().renderAll();
     })
 
-    $btnMyProject.on("click", function (e) {
+    // $btnMyProject.on("click", function (e) {
 
 
-        // $.get("",)
-        $loader.removeClass("hidden")
-        window.location.href = '/app/projects';
-    })
+    //     // $.get("",)
+    //     $loader.removeClass("hidden")
+    //     window.location.href = '/app/projects';
+    // })
 
     $btnTextMenu.on("click", function (e) {
         canvas.discardActiveObject().renderAll();
@@ -853,7 +892,47 @@ function closeRepeatDesignPreview() {
 
 
 
+function saveDesign(){
+    /**
+     * . Check is Canvas is not Preview Canvas. 
+     * . Check if canvas has atleast one item. 
+     * . Validate project info. atleast title should be provided. 
+     * . Submit canvas json and project info to api. 
+     * . Notify success or failed. 
+     */
+    if(state.isPreviewCanvas)
+    {toast("Please go back and save your design."); return;}
+    if(canvas.getObjects().length == 0)
+    {toast("Please create your design before save."); return;}
+    
+    var title = $("#input-project-title").val();
+    var desc = $("#input-project-desc").val();
 
+    if(!title)
+    { toast("Please enter project title."); return;}
+
+    var thumbBase64 = canvas.toDataURL({format: 'jpg', quality: 0.8});
+    $.ajax({
+        type: "POST",
+        url: "/app/client/save-design",
+
+        data: {
+            title : title || "N/A",
+            desc :  desc || "N/A",
+            thumbBase64:thumbBase64 ,
+            json: JSON.stringify(canvas.toDatalessJSON())
+        },
+        success: function (res) {
+            toast("Design has been Saved.");
+        },
+        error: function (res) {
+            if (res.status === 401) {
+                toast(`${res.statusText}:${res.responseJSON.message}`);
+            } else {}
+
+        }
+    })
+}
 
 function previewDesign()
 {
@@ -1208,41 +1287,41 @@ function showLayerControls($elem, selected) {
 
 // UI events:
 
-$("#btnSaveDesignPopup").on("click",function(){
+// $("#btnSaveDesignPopup").on("click",function(){
 
-    var projectName = $("#projectname").val();
-    var projectDesc = $("#projectdesc").val();
-    var base64 = canvasPrev.toDataURL({format: 'jpg', quality: 0.8});
+//     var projectName = $("#projectname").val();
+//     var projectDesc = $("#projectdesc").val();
+//     var base64 = canvasPrev.toDataURL({format: 'jpg', quality: 0.8});
 
-    $.ajax({
-        type: "POST",
-        url: "/app/client/save-design",
+//     $.ajax({
+//         type: "POST",
+//         url: "/app/client/save-design",
 
-        data: {
-            title : projectName || "N/A",
-            desc :  projectDesc || "N/A",
-            thumbBase64:base64 ,
-            json: JSON.stringify(canvasPrev.toJSON())
-        },
-        success: function (res) {
+//         data: {
+//             title : projectName || "N/A",
+//             desc :  projectDesc || "N/A",
+//             thumbBase64:base64 ,
+//             json: JSON.stringify(canvasPrev.toJSON())
+//         },
+//         success: function (res) {
 
-            toast("Design has been Saved.");
-        },
-        error: function (res) {
-            if (res.status === 401) {
-                toast(`${res.statusText}:${res.responseJSON.message}`);
-            } else {}
+//             toast("Design has been Saved.");
+//         },
+//         error: function (res) {
+//             if (res.status === 401) {
+//                 toast(`${res.statusText}:${res.responseJSON.message}`);
+//             } else {}
 
-        }
-    })
+//         }
+//     })
 
 
-})
+// })
 
-$btnSaveDesign.on("click", () => {
-    var base64 = canvas.toDataURL({format: 'jpg', quality: 0.8});
-    $("#prevesavdesign").attr("src",base64);
-})
+// $btnSaveDesign.on("click", () => {
+//     var base64 = canvas.toDataURL({format: 'jpg', quality: 0.8});
+//     $("#prevesavdesign").attr("src",base64);
+// })
 
     
 

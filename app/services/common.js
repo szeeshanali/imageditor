@@ -89,7 +89,7 @@ const commonService = (function() {
             uploaded_by: userId,
             active:true,
             deleted:false
-        },{code:1,thumbBase64:1,title:1}); 
+        },{code:1,thumbBase64:1,title:1,created_dt:1}); 
         }else if(designId == "default")
         {
             designs = await uploads.findOne({active:true, 

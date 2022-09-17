@@ -578,6 +578,10 @@ color:#0900fd;
     width: 93px !important;
 }
 
+.project-thumb > img {
+  width: 100px !important;
+}
+
 .bg-light-blue{
    background-color: #edecff;
 }
@@ -730,4 +734,9 @@ color:#0900fd;
   
   .step .step-item.active ~ .step-item a::before {
     background: #e7e9ed;
+  }
+
+  #uploadpanel .nav-link a{
+color:#494699;
+font-weight: bold;
   }
