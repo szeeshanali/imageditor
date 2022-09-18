@@ -261,7 +261,8 @@ router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
         customDesigns: customDesigns,
         cliparts:cliparts,
         type:type,
-        code:id
+        code:id,
+        project_limit:req.user.project_limit
     });
 });
 

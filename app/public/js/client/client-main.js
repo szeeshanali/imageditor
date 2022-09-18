@@ -29,7 +29,7 @@ const projectHtml = `<div class='col-lg-12 my-projects'><div class="list-group-i
     <p class="mg-b-0 tx-12">{created_dt}</p>
   </div><!-- media-body -->
 </div><!-- media -->
-<a href="#" class="pd-lg-x-20 mg-l-auto ion-trash-a tx-30 text-secondary delete" ></a>
+<a href="#" class="pd-lg-x-20 mg-l-auto ion-trash-a tx-30 text-secondary delete"  onclick="deleteProject('{code}',this)" ></a>
 </div></div>`;
 
 // vars
@@ -59,7 +59,7 @@ $pageTitle = $("#page-title");
 $loader = $("#loader");
 $btnTemplate = $("#btnTemplate");
 // $btnMyProject = $("#btnMyProject");
-$btnDeleteMyProject = $("#myprojects .delete");
+// $btnDeleteMyProject = $("#myprojects .delete");
 
 $btnUploadpanel = $("#uploadpanel");
 
@@ -130,20 +130,6 @@ var filters = [
 ];
 
 
-// Events:
-
-function deleteMyProject(id) {
-    $.ajax({
-        type: "DELETE",
-        url: `/api/client/project/${id}`,
-        success: function (res) {
-            toast("Deleted successfully!");
-        },
-        error: function (res) {
-            toast("Error while deleting.");
-        }
-    })
-}
 
 function getUserProjects()
 {
@@ -153,6 +139,7 @@ function getUserProjects()
         var projects = data || [];
         
         var temp="";
+        $("#myProjectContainer").html("<p>No projects found.</p>");
         for(var i=0;i<projects.length;i++)
         {
             var p = projects[i];
@@ -201,6 +188,24 @@ function loadUserProject(id) {
     })
 }
 
+
+function deleteProject(id,self){
+    
+    if(!confirm("Do you want to delete this project?"))
+    {return; }
+
+    $.ajax({
+        type: "DELETE",
+        url: `/api/client/project/${id}`,
+        success: function (res) {
+            toast("Project deleted successfully!");
+            $(self).parent().parent().fadeOut();
+        },
+        error: function (res) {
+            toast("Error while deleting project.");
+        }
+    })
+}
 function loadProject(id) {
 
     var group = [];
@@ -263,6 +268,9 @@ function loadSVGTemplate(id) {
             $("#template-info-panel .logo-size").text((meta.objectWidth / 72).toFixed(2) + "''");
             $("#template-info-panel .total-logos").text(meta.objects);
             $("#template-info-panel .page-title").text(data.title);
+            $("#template-info-panel .ref_code").text(data.ref_code | "NA");
+
+            
             $("#template-info-panel #imgSelectedTemplate").attr("src",svgBase64)
             $(".kk-part-no").text(data.ref_code || "N/A");
             $(".kk-part-link").text(data.link || "N/A");
@@ -359,7 +367,54 @@ function menuPanelDisplay(itemToDisplay){
 
 function initUIEvents() {
 
+    var layers = $("#layers");
+    $("#collapse-layers").on("click",".layer-item", function (e) {
+        var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
+        //layerSelectEventHandler(this);
+         var selected = $(this).index();
+         var len=$(layers).children().length; 
+         _canvas.discardActiveObject().renderAll();
+         
+         var obj = _canvas.getObjects().find(i=>i.id == this.id); 
+         _canvas.setActiveObject(obj).renderAll();
 
+         showLayerControls(this);
+
+
+        $(this).on("click",".bring-fwd",function(evt){
+            evt.stopPropagation();
+             if(selected>0)
+            {
+                jQuery($(layers).children().eq(selected-1)).before(jQuery($(layers).children().eq(selected)));
+                selected=selected-1;
+            }
+        });
+       
+        $(this).on("click",".bring-back",function(evt){
+            evt.stopPropagation();
+             if(selected < len)
+            {
+            jQuery($(layers).children().eq(selected+1)).after(jQuery($(layers).children().eq(selected)));
+            selected=selected+1;
+            }
+        });
+
+        $(this).on("click",".duplicate",function(evt){
+            evt.stopPropagation();
+            var object = fabric.util.object.clone(_canvas.getActiveObject());
+            object.set("top", object.top + 5);
+            object.set("left", object.left + 5);
+            _canvas.add(object);
+        });
+        $(this).on("click",".delete",function(evt){
+            evt.stopPropagation();
+            _canvas.remove(_canvas.getActiveObject()).renderAll();
+            addLayer();
+        })
+      
+    })
+
+    
 
     $("#btn-step-design").on("click",function(){
         $("#menu-upload > a").click();
@@ -382,6 +437,9 @@ function initUIEvents() {
         backFromPreview();
     });
     $("#btnMyProjects").on("click",function(){
+        canvas.clear();
+        canvasPrev.clear();
+        $layers.html();        
         getUserProjects();
     })
 
@@ -393,12 +451,8 @@ function initUIEvents() {
     cropObject();
     flipXYObject();
     grayscaleObject();
-
     brightnessObject();
     contrastObject();
-
-
-    
 
     $("#accordion a").on("click",function(){
 
@@ -446,8 +500,6 @@ function initUIEvents() {
         }
       
     })
-
-    
     $("#shared-library .custom-design").on("click",function(){
         var id = $(this).attr("id"); 
         $loader.removeClass("hidden");
@@ -490,8 +542,7 @@ function initUIEvents() {
             }
         })
     
-      })
-
+    })
     $txtDecorationCtrl.on("click",function(e){
         var value = $(this).attr("data-value");
         var o = canvas.getActiveObject(); 
@@ -523,22 +574,17 @@ function initUIEvents() {
         }
        
     })
-
+    
     $("#font-list-container .fontfamily").on("click",function(e){
         var value = $(this).attr("data-value");
         $("#selected-font").html($(this).html())
-
         canvas.getActiveObject().set("fontFamily", value);
         canvas.requestRenderAll();
-
-       
-      })
-
+    })
       
     $("#text-color").on("change",function() {
         setSelectedTextStyle("fill",this.value);
-        
-       });
+    });
      $("#text-letter-spacing").on("change",function() {
       setSelectedTextStyle("charSpacing",this.value);
       
@@ -546,8 +592,7 @@ function initUIEvents() {
      $("#text-bg-color").on("change",function() {
       setSelectedTextStyle("backgroundColor",this.value);
        
-     });
-  
+     }); 
      $("#text-stroke-color").on("change",function() {
       setSelectedTextStyle("stroke",this.value);
       
@@ -696,33 +741,32 @@ function initUIEvents() {
     // });
 
 
-    // / MyProject Click
-    $("#myprojects .template").on("click", (e) => {
+    // // / MyProject Click
+    // $("#myprojects .template").on("click", (e) => {
 
-        e.stopPropagation();
-        enabledTextMode = false;
-        var id = e.currentTarget.id;
-        canvas.clear();
-        loadProject(id);
+    //     e.stopPropagation();
+    //     enabledTextMode = false;
+    //     var id = e.currentTarget.id;
+    //     canvas.clear();
+    //     loadProject(id);
 
-    });
+    // });
 
-    // MyProject Delete
-    $("#myprojects .delete").on("click", (e) => {
+    // // MyProject Delete
+    // $("#myprojects .delete").on("click", (e) => {
 
-        e.stopPropagation();
-        $(this).fadeOut();
-        enabledTextMode = false;
-        var id = e.currentTarget.id;
-        id = id.replace("del","");
+    //     e.stopPropagation();
+    //     $(this).fadeOut();
+    //     enabledTextMode = false;
+    //     var id = e.currentTarget.id;
+    //     id = id.replace("del","");
 
-        canvas.clear();
-        deleteMyProject(id);
+    //     canvas.clear();
+    //     deleteMyProject(id);
 
-    });
+    // });
 
     $("#clipartmenu .clipart img").on("click", (e) => {
-        enabledTextMode = false;
         var id = e.currentTarget.src;
         fabric.Image.fromURL(id, function (img) {
             var img1 = img.set({left: 0, top: 0});
@@ -783,7 +827,7 @@ function initUIEvents() {
     $btnApplyRepeatDesign.on("click", function (e) {
         if(canvas._objects.length == 0)
         {
-            toast("Please add a design to your workspace.");
+            toast("Please create your design before preview.");
             return;
         }
         $loader.removeClass("hidden");
@@ -900,8 +944,8 @@ function saveDesign(){
      * . Submit canvas json and project info to api. 
      * . Notify success or failed. 
      */
-    if(state.isPreviewCanvas)
-    {toast("Please go back and save your design."); return;}
+    // if(state.isPreviewCanvas)
+    // {toast("Please go back and save your design."); return;}
     if(canvas.getObjects().length == 0)
     {toast("Please create your design before save."); return;}
     
@@ -1214,14 +1258,14 @@ function addLayer(o) {
     }
     if (layers != "") {
         $layers.html(layers);
-        $("#layers .layer-item").on("click", function (e) {
+        // $("#layers .layer-item").on("click", function (e) {
            
-            selectedObjectBySelectLayer(this);
-            initLayerEvents(this);
-            showLayerControls(this);
+        //     selectedObjectBySelectLayer(this);
+        //     initLayerEvents(this);
+        //     showLayerControls(this);
             
 
-        })
+        // })
     } else {
         $layers.html("Empty! please upload an image.");
     }
@@ -1254,8 +1298,16 @@ function selectedObjectBySelectLayer($elem, selected)
     
 }
 function showLayerControls($elem, selected) {
-    var target = $elem;
-    
+    var target = $elem;    
+
+    $(`.layers-controls`).each(function(){
+        $(this).hide();
+        $(this).addClass('hidden');
+        $(this).parent().removeClass('selected-layer')
+    }).hide();
+   
+
+
     $(`#${target.id} .layers-controls`).show();
     $(`#${target.id} .layers-controls`).removeClass('hidden');
     $(`#${target.id}`).addClass("selected-layer");
@@ -1339,7 +1391,17 @@ function addWaterMark(doc) {
 }
 
 $btnDownloadPDF.on("click", () => {
+    
+
+    if(!state.isPreviewCanvas)
+    {toast("Please preview your design before download.");return;}
+
+    if(canvasPrev.getObjects().length == 0)
+    {toast("Please create your design before download.");return;}
+
+
     $loader.removeClass("hidden");
+
     $.ajax({
         type: "GET",
         url: `/api/client/download/`,
@@ -1580,31 +1642,43 @@ function initCanvasTextEvents() {
 }
 
 function initLayerEvents($elem) {
-    var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
-    var id = $elem.id;
-    $(`#${id} .delete`).on("click", function (e) {
-        _canvas.remove(_canvas.getActiveObject()).renderAll();
-        addLayer();
-    })
+    // var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
+    // var id = $elem.id;
+    // $(`#${id} .delete`).on("click", function (e) {
+    //     _canvas.remove(_canvas.getActiveObject()).renderAll();
+    //     addLayer();
+    // })
 
-    $(`#${id} .duplicate`).on("click", function (e) {
-        var object = fabric.util.object.clone(_canvas.getActiveObject());
-        object.set("top", object.top + 5);
-        object.set("left", object.left + 5);
-        _canvas.add(object);
-    })
+    // $(`#${id} .duplicate`).on("click", function (e) {
+    //     var object = fabric.util.object.clone(_canvas.getActiveObject());
+    //     object.set("top", object.top + 5);
+    //     object.set("left", object.left + 5);
+    //     _canvas.add(object);
+    // })
 
-    $(`#${id} .bring-fwd`).on("click", function (e) {
-        e.stopPropagation();
-        var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
-
-
-        var obj = _canvas.getActiveObject();
-        _canvas.bringForward(obj)
-        _canvas.renderAll();
-        var elem = $(`#${id}`);
-        elem.prev().insertAfter(elem);
-    })
+    // $(`#${id} .bring-fwd`)().on("click", function (e) {
+    //     e.stopPropagation();
+    //     alert(1);
+    //     // var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
+    //     // var obj = _canvas.getActiveObject();
+    //     // _canvas.bringForward(obj)
+    //     // _canvas.renderAll();
+    //     // debugger;
+    //     // var $selectedLayer = $(this).parent().parent();
+    //     // var $nextItem = $selectedLayer.next($(".layer-item"))
+    //     // $selectedLayer.insertAfter($nextItem);
+    //     //
+    //     //var x = selectedLayer.closest('layer-item');
+    //     //insertBefore( x.prev() )
+    //     //alert(index);
+    //     // e.stopPropagation();
+    //     // var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
+    //     // var obj = _canvas.getActiveObject();
+    //     // _canvas.bringForward(obj)
+    //     // _canvas.renderAll();
+    //     // var elem = $(`#${id}`);
+    //     // elem.prev().insertAfter(elem);
+    // })
 
 
 }

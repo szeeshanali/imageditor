@@ -12,17 +12,12 @@
                     </div>
                   <div class="row mg-0">
                     <%for(var i=0; i<templates.length; i++){ %>
-                      <!-- <div id="<%=templates[i].code %>" class="template template-small col-lg-4" > 
-                        <img src="<%=templates[i].base64 %>" style="width:93px"> 
-                        <div class="tx-12  pd-y-5 lh-1"><span class="tx-bold"><%=templates[i].name %></span><div># <%=templates[i].ref_code %></div></div>
-                    </div> -->
                     <div class="col-lg-4 pd-0  bd template" id="<%=templates[i].code %>">
                       <div class="card bg-gray-200 ht-200">
                         <div class="card-body pd-10">
                           <img class="card-img-top img-fluid pd-b-10 ht-120" src="<%=templates[i].base64 %>" alt="Image">
                           <h5 class="card-body-title" style="height:28px;overflow:hidden"><%=templates[i].name %></h5>
                           <p class="card-subtitle tx-normal"># <%=templates[i].ref_code %></p>
-                        
                         </div>
                       </div><!-- card -->
                     </div>
@@ -42,10 +37,7 @@
                 </div>
                 <%- include('../../partials/client/imgupload'); %>
             </div>
-            <div id="clipartmenu" class="tab-pane"  >
-                <div class="pd-x-10 tx-12 pd-y-10 bd-b"><b class="tx-primary tx-14">Choose Clipart</b> </div>
-    
-            </div>
+           
             <div id="shared-library" class="tab-pane"  >
     
               <%- include('../../partials/client/sharedlibrary'); %>
@@ -57,7 +49,7 @@
             <div id="savedesign" class="tab-pane">
               <div class="card pd-20 ">
                 <h6 class="card-body-title">Save your Project</h6>
-                <p class="mg-b-20 ">You can save upto (5) projects in your library for feature use.</p>
+                <p class="mg-b-20 ">You can save upto <b>(<%=project_limit%>)</b> projects in your library for feature use.</p>
       
                 <div class="form-layout">
                   <div class="row ">
@@ -91,86 +83,11 @@
               <div class="card">
                 <div class="card pd-20 ">
                   <h6 class="card-body-title">My Projects</h6>
-                  <p class="mg-b-20 ">You can save upto (5) projects in your library for feature use.</p>
-                  <div class="row row-sm mg-t-15 mg-sm-t-20" id="myProjectContainer">
-
-                  </div>
+                  <p class="mg-b-20 ">You can save upto <b>(<%=project_limit%>)</b> projects in your library for feature use.</p>
+                  <div class="row row-sm mg-t-15 mg-sm-t-20" id="myProjectContainer"></div>
               </div>  
               </div>
             </div>
-             <%if(locals.page.id == "__my-projects"){ %>        
-                <div id="myprojects_" class="tab-pane" >
-                  <%if(projects.length > 0) {%>
-                    <div class="card pd-t-20 mg-b-1 tx-center">
-                      <p class="tx-12" ><a href="#" id="use-template" class="start-over bg-primary">Continue Editing</a></p>
-                  </div>
-                    <%}%>
-                 
-    
-                  <div class="pd-x-10 tx-12 pd-y-5"><b>Projects</b>&nbsp;<span class="text-danger">(You have max (<%=user.project_limit %>) projects quota.)</span><span class="pull-right"><a href="#">Total (<%=projects.length %>)</a></span></div>
-    
-                  <%if(projects.length == 0){%>
-                    <div class="thumb"> 
-                      <div class="tx-12 tx-bold pd-15">Please start designing and save your design.</div>
-                  </div>
-                  <%}%>
-                  <div class="d-flex svg-templates tx-center" >
-        
-                    <%for(var i=0; i<projects.length;i++){%>
-                      <div>
-                        <div id="<%=projects[i].code %>" class="template template-small"> 
-                          <img src="<%=projects[i].thumbBase64 %>" > 
-                          <div class="tx-12 tx-bold pd-y-5"><%=projects[i].title %></div>               
-                      </div>
-                      <a href="#" id="del<%=projects[i].code %>" class="delete">Delete</a>
-    
-                      </div>
-                    
-                    <%}%>
-                   
-              </div>
-          </div>
-          <%}%>
-    
-          <%if(locals.page.id == "__pre-designed"){ %>
-            <div id="pre-designed" class="tab-pane">
-              <%if(predesigned.length == 0){%>
-                <div class="thumb"> 
-                  <img src="" style="width:100px"> 
-                  <div class="tx-12 tx-bold pd-15">No Items.</div>
-              </div>
-              <%}%>
-              <div class="d-flex svg-templates tx-center " >
-    
-                <%for(var i=0; i<predesigned.length;i++){%>
-                  <div>
-                    <div id="<%=predesigned[i].code %>" class="template template-small"> 
-                      <img src="<%=predesigned[i].thumbBase64 %>" > 
-                      <div class="tx-12 tx-bold pd-y-5"><%=predesigned[i].title %></div>               
-                  </div>
-                  <a href="#" id="del<%=predesigned[i].code %>" class="delete">Delete</a>
-    
-                  </div>
-                
-                <%}%>
-               
-          </div>
-      </div>
-      <%}%>        
-      <%if(locals.page.id == "__templates"){ %>
-        <div id="templatepanelall" class="tab-pane "  >
-          <div class="pd-x-10 tx-12 pd-y-5"><b>Choose a Template</b><span class="pull-right"><a href="#">Total (<%=templates.length %>)</a></span></div>
-        <div class="d-flex svg-templates tx-center">
-  
-          <%for(var i=0; i<templates.length; i++){ %>
-            <div id="<%=templates[i].code %>" class="template template-small" > 
-              <img src="<%=templates[i].base64 %>" > 
-              <div class="tx-12 tx-bold pd-y-5"><%=templates[i].title %></div>
-          </div>
-          <%}%>  
-    </div>
-    </div>
-      <%}%> 
             <!-- #settingMenu -->
         </div>
     </div>
