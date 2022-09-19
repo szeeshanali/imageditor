@@ -1,31 +1,84 @@
 <div class="row mg-r-0">
     <!--Workspace Left Panel-->
 <div class="col-lg-3 pd-l-0 pd-r-0">
-    <div class="card">
+  
+    <div class="card leftpanel" id="menu-panel" >
         <div class="tab-content">
             
             <div  id="templatepanel" class="tab-pane active"   >
-            <div   >
-                  <div class="pd-x-10 tx-12 pd-y-10 bd-b"><b class="tx-primary tx-14">Choose a Template </b> <span class="pull-right"><a href="#" class="t">Total (<%=templates.length %>)</a></span></div>
-                 <div class="d-flex svg-templates tx-center">
-                  <%for(var i=0; i<templates.length; i++){ %>
-                    <div id="<%=templates[i].code %>" class="template template-small" > 
-                      <img src="<%=templates[i].base64 %>" style="width:93px"> 
-                      <div class="tx-12  pd-y-5 lh-1"><span class="tx-bold"><%=templates[i].name %></span><div class="tx-primary"><%=templates[i].ref_code %></div></div>
-                  </div>
-                  <%}%> 
+              <div class="list-group widget-list-group bg-app-primary">
+                <div class="list-group-item d-flex">
+                  <div class="media d-block d-sm-flex">
+                    <div class="d-block d-sm-flex mg-sm-r-20">
+                      <i class="ion-ios-keypad tx-24 tx-white"></i>
+                    </div><!-- d-flex -->
+                    <div class="media-body mg-t-10 mg-sm-t-0">
+                      <h6 class="mg-b-5 tx-14"><a href="" class="tx-white">Select Template</a></h6>
+                      <p class="mg-b-0 tx-12 tx-white-5">Next (Create Design)</p>
+                    </div><!-- media-body -->
+                  </div><!-- media -->
+                  <a href="#" id="btn-step-design" class="btn btn-primary pd-lg-x-20 mg-l-auto">Next</a>
                 </div>
-            </div>
+              </div>
+              <div>
+                
+                  <div class="row mg-0">
+                    <%for(var i=0; i<templates.length; i++){ %>
+                    <div class="col-lg-4 pd-0  bd template" id="<%=templates[i].code %>">
+                      <div class="card bg-gray-200 ht-200">
+                        <div class="card-body pd-10">
+                          <img class="card-img-top img-fluid pd-b-10 ht-120" src="<%=templates[i].base64 %>" alt="Image">
+                          <h5 class="card-body-title" style="height:28px;overflow:hidden"><%=templates[i].name %></h5>
+                          <p class="card-subtitle tx-normal"># <%=templates[i].ref_code %></p>
+                        </div>
+                      </div><!-- card -->
+                    </div>
+                    <%}%> 
+                  </div>
+              </div>
             </div>            
             <div id="uploadpanel" class="tab-pane"  >
-                <div class="pd-x-10 tx-12 pd-y-10 bd-b"><b class="tx-primary tx-14">Upload an Image</b> </div>
+         
+                <!-- <div class="pd-x-10 pd-y-10  bd-b">
+                  <b class="tx-primary">Create Design</b>
+                  <a href="#" class="pull-right next-step" id="btn-step-preview" title="Preview Design (Step 2)" >Next</a>
+
+                  <a href="#" class=" next-step gray hidden" id="btnBack"  >Back</a></span>
+                  <a href="#" class="next-step gray mg-l-5 hidden" id="btnFinalized"  >Finalized</a></span>
+
+                </div> -->
+
+                <div class="list-group widget-list-group bg-app-primary">
+                  <div class="list-group-item d-flex" id="create-design-heading">
+                    <div class="media d-block d-sm-flex">
+                      <div class="d-block d-sm-flex mg-sm-r-20">
+                        <i class="ion-images tx-24 tx-white"></i>
+                      </div><!-- d-flex -->
+                      <div class="media-body mg-t-10 mg-sm-t-0">
+                        <h6 class="mg-b-5 tx-14"><a href="" class="tx-white">Create Design</a></h6>
+                        <p class="mg-b-0 tx-12 tx-white-5">Add Photos, Clip Art, Text.</p>
+                      </div><!-- media-body -->
+                    </div><!-- media -->
+                    <a href="#"  class="btn btn-primary pd-lg-x-20 mg-l-auto " id="btn-step-preview" >Preview</a>
+                  </div>
+                  <div class="list-group-item d-flex hidden" id="preview-design-heading">
+                    <div class="media d-block d-sm-flex">
+                      <div class="d-block d-sm-flex mg-sm-r-20">
+                        <i class="ion-images tx-24 tx-white"></i>
+                      </div><!-- d-flex -->
+                      <div class="media-body mg-t-10 mg-sm-t-0">
+                        <h6 class="mg-b-5 tx-14"><a href="" class="tx-white">Preview</a></h6>
+                        <p class="mg-b-0 tx-12 tx-white-5"><a href="#" style="text-decoration: underline" class="text-danger" id="btnBack">Back to Design</a></p>
+                      </div><!-- media-body -->
+                    </div><!-- media -->
+                    <a href="#"  class="btn btn-primary pd-lg-x-20 mg-l-auto" id="btn-step-preview" >Download</a>
+
+                  </div>
+                </div>
+                
                 <%- include('../../partials/client/imgupload'); %>
             </div>
-            <div id="clipartmenu" class="tab-pane"  >
-                <div class="pd-x-10 tx-12 pd-y-10 bd-b"><b class="tx-primary tx-14">Choose Clipart</b> </div>
-    
-              <%- include('../../partials/client/clipart'); %>
-            </div>
+           
             <div id="shared-library" class="tab-pane"  >
     
               <%- include('../../partials/client/sharedlibrary'); %>
@@ -33,88 +86,94 @@
             <div id="textmenu" class="tab-pane" >
                 <div class="pd-x-10 tx-12 pd-y-10 bd-b"><b class="tx-primary tx-14">Add Text</b> </div>
     
-                <%- include('../../partials/client/typo'); %>           
             </div>
-             <%if(locals.page.id == "__my-projects"){ %>        
-                <div id="myprojects" class="tab-pane" >
-                  <%if(projects.length > 0) {%>
-                    <div class="card pd-t-20 mg-b-1 tx-center">
-                      <p class="tx-12" ><a href="#" id="use-template" class="start-over bg-primary">Continue Editing</a></p>
-                  </div>
-                    <%}%>
-                 
-    
-                  <div class="pd-x-10 tx-12 pd-y-5"><b>Projects</b>&nbsp;<span class="text-danger">(You have max (<%=user.project_limit %>) projects quota.)</span><span class="pull-right"><a href="#">Total (<%=projects.length %>)</a></span></div>
-    
-                  <%if(projects.length == 0){%>
-                    <div class="thumb"> 
-                      <div class="tx-12 tx-bold pd-15">Please start designing and save your design.</div>
-                  </div>
-                  <%}%>
-                  <div class="d-flex svg-templates tx-center" >
-        
-                    <%for(var i=0; i<projects.length;i++){%>
-                      <div>
-                        <div id="<%=projects[i].code %>" class="template template-small"> 
-                          <img src="<%=projects[i].thumbBase64 %>" > 
-                          <div class="tx-12 tx-bold pd-y-5"><%=projects[i].title %></div>               
-                      </div>
-                      <a href="#" id="del<%=projects[i].code %>" class="delete">Delete</a>
-    
-                      </div>
-                    
-                    <%}%>
-                   
+            <div id="savedesign" class="tab-pane">
+              <div class="list-group widget-list-group bg-app-primary">
+                <div class="list-group-item d-flex">
+                  <div class="media d-block d-sm-flex">
+                    <div class="d-block d-sm-flex mg-sm-r-20">
+                      <i class="ion-android-done-all tx-24 tx-white"></i>
+                    </div><!-- d-flex -->
+                    <div class="media-body mg-t-10 mg-sm-t-0">
+                      <h6 class="mg-b-5 tx-14"><a href="" class="tx-white">Save Project</a></h6>
+                      <p class="mg-b-0 tx-12 tx-white-5">You can save upto <b>(<%=project_limit%>)</b> projects.</p>
+                    </div><!-- media-body -->
+                  </div><!-- media -->
+                </div>
               </div>
-          </div>
-          <%}%>
-    
-          <%if(locals.page.id == "__pre-designed"){ %>
-            <div id="pre-designed" class="tab-pane">
-              <%if(predesigned.length == 0){%>
-                <div class="thumb"> 
-                  <img src="" style="width:100px"> 
-                  <div class="tx-12 tx-bold pd-15">No Items.</div>
-              </div>
-              <%}%>
-              <div class="d-flex svg-templates tx-center " >
-    
-                <%for(var i=0; i<predesigned.length;i++){%>
-                  <div>
-                    <div id="<%=predesigned[i].code %>" class="template template-small"> 
-                      <img src="<%=predesigned[i].thumbBase64 %>" > 
-                      <div class="tx-12 tx-bold pd-y-5"><%=predesigned[i].title %></div>               
-                  </div>
-                  <a href="#" id="del<%=predesigned[i].code %>" class="delete">Delete</a>
-    
-                  </div>
-                
-                <%}%>
+
+              <div class="card pd-20 ">
                
-          </div>
-      </div>
-      <%}%>        
-      <%if(locals.page.id == "__templates"){ %>
-        <div id="templatepanelall" class="tab-pane "  >
-          <div class="pd-x-10 tx-12 pd-y-5"><b>Choose a Template</b><span class="pull-right"><a href="#">Total (<%=templates.length %>)</a></span></div>
-        <div class="d-flex svg-templates tx-center">
-    
-    
-          <%for(var i=0; i<templates.length; i++){ %>
-            <div id="<%=templates[i].code %>" class="template template-small" > 
-              <img src="<%=templates[i].base64 %>" > 
-              <div class="tx-12 tx-bold pd-y-5"><%=templates[i].title %></div>
-          </div>
-          <%}%>  
-    </div>
-    </div>
-      <%}%> 
+                <div class="form-layout">
+                  <div class="row ">
+                    <div class="col-lg-12">
+                      <div class="form-group">
+                        <label class="form-control-label">Project title: <span class="tx-danger">*</span></label>
+                        <input class="form-control" required type="text" id="input-project-title" name="firstname"  placeholder="Enter project title">
+                      </div>
+                    </div>
+                    <div class="col-lg-12">
+                      <div class="form-group">
+                        <label class="form-control-label">Description: </label>
+                        <textarea rows="2" class="form-control" id="input-project-desc" required placeholder="Enter your address" spellcheck="false"></textarea>
+                      </div>
+                    </div>
+
+                  </div><!-- row -->
+      
+                  <div >
+                    <button class="btn  btn-primary mg-r-5" id="btnSave">Save Project</button>
+                    <button class="btn btn-secondary" id="btnCancelSaveDesign">Cancel</button>
+                  </div><!-- form-layout-footer -->
+                </div><!-- form-layout -->
+              </div>
+              
+              
+
+
+            </div>
+            <div id="myprojects" class="tab-pane">
+              <div class="list-group widget-list-group bg-app-primary">
+                <div class="list-group-item d-flex">
+                  <div class="media d-block d-sm-flex">
+                    <div class="d-block d-sm-flex mg-sm-r-20">
+                      <i class="ion-flag tx-24 tx-white"></i>
+                    </div><!-- d-flex -->
+                    <div class="media-body mg-t-10 mg-sm-t-0">
+                      <h6 class="mg-b-5 tx-14"><a href="#" class="tx-white">My Projects</a></h6>
+                      <p class="mg-b-0 tx-12 tx-white-5">You can save upto <b>(<%=project_limit%>)</b> projects.</p>
+                    </div><!-- media-body -->
+                  </div><!-- media -->
+                </div>
+              </div>
+              <div class="card">
+                <div class="card ">
+                 <div class="row row-sm mg-t-15 mg-sm-t-20" id="myProjectContainer"></div>
+              </div>  
+              </div>
+            </div>
             <!-- #settingMenu -->
         </div>
     </div>
 </div>
 <!-- Workspace canvas-->
 <div class="col-lg-6">
+  <div class="card bd-b" style="background-color: #cac8ff">
+    <ul class="step d-flex flex-nowrap">
+      <li class="step-item ">
+        <a href="#!" class="">Select Template</a>
+      </li>
+      <li class="step-item active">
+        <a href="#!" class="">Create Design</a>
+      </li>
+      <li class="step-item ">
+        <a href="#!" class="">Preview</a>
+      </li>     
+      <li class="step-item">
+        <a href="#!" class="">Download</a>
+      </li>
+    </ul> 
+  </div>
     <div class="am-pagetitle bd-b pd-r-0"> <%= locals.page.title %>
     <div class="pull-right ">
           <div class="d-flex">
@@ -146,10 +205,10 @@
 </div>
 
 <script> 
-    $(".tab-content .tab-pane").each((i,e)=>
-       { $(e).removeClass("active"); })
-      $("#templatepanel").addClass("active");
-      $("#menu-templates").addClass("bg-warning")
+    // $(".tab-content .tab-pane").each((i,e)=>
+    //    { $(e).removeClass("active"); })
+    //   //$("#templatepanel").addClass("active");
+      //$("#menu-templates").addClass("bg-warning")
     window.onload = function()
    { 
         var code = '<%=code || "default" %>' ;

@@ -1,14 +1,4 @@
-<div
-    class="pd-10 tx-center mg-b-1 card main-ctrl" id="repeat-image-ctrl">
 
-    <div id="previewdesign">
-        <a href="#" class="start-over bg-primary " data-toggle="modal" data-target="#repeattoall">Repeat to All</a>
-        <a href="#" class="done start-over">Done</a>
-    </div>
-    <div id="backtodesign" style="display: none">
-        <a href="#" class="cancel start-over">Go Back</a>
-    </div>
-</div>
 <div id="accordion" class="accordion" role="tablist" aria-multiselectable="true">
     <div class="card">
         <div class="card-header" role="tab" id="headingOne">
@@ -22,7 +12,7 @@
         <!-- card-header -->
 
         <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne">
-            <div class="card-block" id="template-info-panel">
+            <!-- <div class="card-block" id="template-info-panel">
                 <div class="d-flex mg-b-10 tx-center bd-r">
                     <div class="wd-100">
                         <div>
@@ -42,13 +32,24 @@
                         </div>
                     </div>
 
-                </div>
+                </div> -->
+                <div class="mail-item d-flex pd-10 bd-b bd-gray-200" id="template-info-panel">
+                    <div ><img id="imgSelectedTemplate"  class="wd-80 " alt=""></div>
+                    <div class="mg-l-10">
+                      <h6 class="tx-14 tx-bold"><a href="" class="tx-inverse template-name"></a></h6>
+                      <p class="tx-13 mg-b-10"><span class="page-size tx-bold"></span> sheet of <span class="total-logos tx-bold"></span> logos, each logo size is <span class="logo-size tx-bold"></span>
+                     </p>
+                      <p class="tx-13 mg-b-10">Code: # <span class="ref_code tx-bold"></span></p>
+                    </div>
+                  </div>
+                 
+                  </div>
             </div>
         </div>
         <div class="card ">
             <div class="card-header" role="tab" id="col-layers">
                 <h6 class="mg-b-0">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-expanded="true" aria-controls="collapse2" class="tx-gray-800 transition">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse-layers" aria-expanded="true" aria-controls="collapse-layers" class="tx-gray-800 transition">
                         <b>Layers</b>
                         <div class="arrow pull-right"></div>
                     </a>
@@ -56,8 +57,8 @@
             </div>
             <!-- card-header -->
 
-            <div id="collapse2" class="collapse" role="tabpanel" aria-labelledby="col-layers" style="max-height: 200px;overflow-y:auto">
-                <div class="card pd-20 bg-b-1 ">
+            <div id="collapse-layers" class="collapse" role="tabpanel" aria-labelledby="col-layers" style="max-height: 200px;overflow-y:auto">
+                <div class="card pd-10 bg-b-1 ">
                     <%- include('../../partials/client/layers'); %>
                 </div>
             </div>
@@ -313,7 +314,7 @@
                     <div class="list-group-item pd-y-20">
                         <div class="media">
                           <div class="d-flex mg-r-10 wd-50">
-                            <i class="fa fa-folder-open-o tx-info tx-40"></i>
+                            <i class="ion-link tx-primary tx-40"></i>
                           </div><!-- d-flex -->
                           <div class="media-body">
                             <h6 class="tx-inverse">KakePrint WebLink</h6>

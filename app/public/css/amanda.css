@@ -1,24 +1,7 @@
-/*!
- * Amanda Responsive Bootstrap 4 Admin Template
- * Version: 2.0.0
- * Author: ThemePixels (@themepixels)
- * URL: http://themepixels.me/amanda
- *
-**/
-/* --------------------------------------------------- */
-/* ############### GOOGLE FONTS IMPORT ############### */
-/* --------------------------------------------------- */
+
 @import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700");
 @import url("https://fonts.googleapis.com/css?family=Lato:300,400,700");
-/* --------------------------------------------------- */
-/* ############### BOOTSTRAP FRAMEWORK ############### */
-/* --------------------------------------------------- */
-/*!
- * Bootstrap v4.0.0-beta (https://getbootstrap.com)
- * Copyright 2011-2017 The Bootstrap Authors
- * Copyright 2011-2017 Twitter, Inc.
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- */
+
 @media print {
   *,
   *::before,
@@ -212,13 +195,13 @@ sup {
 }
 
 a {
-  color: #007bff;
+  color: #494699;
   text-decoration: none;
   background-color: transparent;
   -webkit-text-decoration-skip: objects;
 }
 a:hover {
-  color: #0056b3;
+  color: #494699;
   text-decoration: none;
 }
 
@@ -2995,9 +2978,11 @@ tbody.collapse.show {
   margin-bottom: -1px;
 }
 .nav-tabs .nav-link {
-  border: 1px solid transparent;
+  /* border: 1px solid transparent;
   border-top-left-radius: 2px;
-  border-top-right-radius: 2px;
+  border-top-right-radius: 2px; */
+  padding:5px 15px;
+
 }
 .nav-tabs .nav-link:focus, .nav-tabs .nav-link:hover {
   border-color: #e9ecef #e9ecef #ddd;
@@ -3009,9 +2994,11 @@ tbody.collapse.show {
 }
 .nav-tabs .nav-link.active,
 .nav-tabs .nav-item.show .nav-link {
-  color: #495057;
-  background-color: #D8DCE3;
-  border-color: #ddd #ddd #D8DCE3;
+  color: white;
+  background-color: #32415A;
+  /* border-color: #ddd #ddd #D8DCE3; */
+  font-weight: bold;
+  border-top: solid 1px #4f5969;
 }
 .nav-tabs .dropdown-menu {
   margin-top: -1px;
@@ -12267,7 +12254,7 @@ textarea.parsley-success:focus {
 
 /***** MAIN PANEL *****/
 .am-mainpanel {
-  margin-left: 80px;
+  margin-left: 87px;
   /* margin-top: 120px; */
   margin-top: 40px;
 
@@ -12276,7 +12263,7 @@ textarea.parsley-success:focus {
 @media (min-width: 992px) {
   .am-mainpanel {
     /* margin-left: 335px; */
-    margin-left: 80px;
+    margin-left: 87px;
   }
 }
 
@@ -12346,7 +12333,7 @@ textarea.parsley-success:focus {
 }
 
 .am-pagebody {
-  padding: 0px 8px;
+  /* padding: 0px 8px; */
 
 }
 @media (min-width: 576px) {

@@ -14,31 +14,36 @@
 	position: absolute;
 	width: 100%;
 	height: 22px;
-	left: 0px;
+	left: -22px;
 	top: -22px;
-	
+	font-size: 14px;
 	border-bottom: 1px solid;
 	z-index: 9;
+	background-color: #e7e7e7;
 }
 .vRule {
+	font-size: 14px;
 	position: absolute;
 	min-height: 100%;
 	width: 22px;
 	left: -22px;
-	top: 0px;
+	top: -22px;
 	border-right: 1px solid;
 	z-index: 9;
+	background-color: #e7e7e7;
 
 }
 .corner {
-	position: fixed;
-	top: 0px;
-	left: 0px;
-	width: 18px;
-	height: 18px;
-	border-right: 1px solid;
-	border-bottom: 1px solid;
-	z-index: 10;
+	position: absolute;
+		top: -22px;
+		left: -22px;
+		width: 18px;
+		background-color: #e7e7e7;
+		height: 18px;
+		border-right: 1px solid;
+		border-bottom: 1px solid;
+		z-index: 10;
+		display: none;
 }
 .hRule .tickLabel {
 	position: absolute;
@@ -145,5 +150,5 @@
 	/* border:solid 1px #888;  */
 }
 .workarea{
-	padding-top:25px
+	 padding-top:22px 
 }
