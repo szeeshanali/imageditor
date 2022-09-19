@@ -439,6 +439,10 @@ function initUIEvents() {
         e.preventDefault();
         previewDesign();      
     });
+    $("#btn-step-download").on("click",function(e){
+        e.preventDefault();
+       $btnDownloadPDF.click(); 
+    });
     $("#btnBack").on("click",function(e){
         e.preventDefault();
         backFromPreview();
@@ -776,10 +780,12 @@ function initUIEvents() {
 
     $("#clipartmenu .clipart img").on("click", (e) => {
         var id = e.currentTarget.src;
+        var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
+
         fabric.Image.fromURL(id, function (img) {
             var img1 = img.set({left: 0, top: 0});
             img1.globalCompositeOperation = 'source-atop';
-            canvas.add(img1);
+            _canvas.add(img1);
             mainControls(true);
            // $("#menu-text > a").click();
         });
