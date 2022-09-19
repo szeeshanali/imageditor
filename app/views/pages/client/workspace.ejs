@@ -6,10 +6,22 @@
         <div class="tab-content">
             
             <div  id="templatepanel" class="tab-pane active"   >
+              <div class="list-group widget-list-group bg-app-primary">
+                <div class="list-group-item d-flex">
+                  <div class="media d-block d-sm-flex">
+                    <div class="d-block d-sm-flex mg-sm-r-20">
+                      <i class="ion-ios-keypad tx-24 tx-white"></i>
+                    </div><!-- d-flex -->
+                    <div class="media-body mg-t-10 mg-sm-t-0">
+                      <h6 class="mg-b-5 tx-14"><a href="" class="tx-white">Select Template</a></h6>
+                      <p class="mg-b-0 tx-12 tx-white-5">Next (Create Design)</p>
+                    </div><!-- media-body -->
+                  </div><!-- media -->
+                  <a href="#" id="btn-step-design" class="btn btn-primary pd-lg-x-20 mg-l-auto">Next</a>
+                </div>
+              </div>
               <div>
-                    <div class="pd-x-10 pd-y-10 bd-b">
-                      <b class="tx-primary">Templates </b>(<%=templates.length %>) <a href="#" id="btn-step-design" class="pull-right next-step" title="Create designing">Next</a></span>
-                    </div>
+                
                   <div class="row mg-0">
                     <%for(var i=0; i<templates.length; i++){ %>
                     <div class="col-lg-4 pd-0  bd template" id="<%=templates[i].code %>">
@@ -27,14 +39,43 @@
             </div>            
             <div id="uploadpanel" class="tab-pane"  >
          
-                <div class="pd-x-10 pd-y-10  bd-b">
+                <!-- <div class="pd-x-10 pd-y-10  bd-b">
                   <b class="tx-primary">Create Design</b>
                   <a href="#" class="pull-right next-step" id="btn-step-preview" title="Preview Design (Step 2)" >Next</a>
 
                   <a href="#" class=" next-step gray hidden" id="btnBack"  >Back</a></span>
                   <a href="#" class="next-step gray mg-l-5 hidden" id="btnFinalized"  >Finalized</a></span>
 
+                </div> -->
+
+                <div class="list-group widget-list-group bg-app-primary">
+                  <div class="list-group-item d-flex" id="create-design-heading">
+                    <div class="media d-block d-sm-flex">
+                      <div class="d-block d-sm-flex mg-sm-r-20">
+                        <i class="ion-images tx-24 tx-white"></i>
+                      </div><!-- d-flex -->
+                      <div class="media-body mg-t-10 mg-sm-t-0">
+                        <h6 class="mg-b-5 tx-14"><a href="" class="tx-white">Create Design</a></h6>
+                        <p class="mg-b-0 tx-12 tx-white-5">Add Photos, Clip Art, Text.</p>
+                      </div><!-- media-body -->
+                    </div><!-- media -->
+                    <a href="#"  class="btn btn-primary pd-lg-x-20 mg-l-auto " id="btn-step-preview" >Preview</a>
+                  </div>
+                  <div class="list-group-item d-flex hidden" id="preview-design-heading">
+                    <div class="media d-block d-sm-flex">
+                      <div class="d-block d-sm-flex mg-sm-r-20">
+                        <i class="ion-images tx-24 tx-white"></i>
+                      </div><!-- d-flex -->
+                      <div class="media-body mg-t-10 mg-sm-t-0">
+                        <h6 class="mg-b-5 tx-14"><a href="" class="tx-white">Preview</a></h6>
+                        <p class="mg-b-0 tx-12 tx-white-5"><a href="#" style="text-decoration: underline" class="text-danger" id="btnBack">Back to Design</a></p>
+                      </div><!-- media-body -->
+                    </div><!-- media -->
+                    <a href="#"  class="btn btn-primary pd-lg-x-20 mg-l-auto" id="btn-step-preview" >Download</a>
+
+                  </div>
                 </div>
+                
                 <%- include('../../partials/client/imgupload'); %>
             </div>
            
@@ -47,10 +88,22 @@
     
             </div>
             <div id="savedesign" class="tab-pane">
+              <div class="list-group widget-list-group bg-app-primary">
+                <div class="list-group-item d-flex">
+                  <div class="media d-block d-sm-flex">
+                    <div class="d-block d-sm-flex mg-sm-r-20">
+                      <i class="ion-android-done-all tx-24 tx-white"></i>
+                    </div><!-- d-flex -->
+                    <div class="media-body mg-t-10 mg-sm-t-0">
+                      <h6 class="mg-b-5 tx-14"><a href="" class="tx-white">Save Project</a></h6>
+                      <p class="mg-b-0 tx-12 tx-white-5">You can save upto <b>(<%=project_limit%>)</b> projects.</p>
+                    </div><!-- media-body -->
+                  </div><!-- media -->
+                </div>
+              </div>
+
               <div class="card pd-20 ">
-                <h6 class="card-body-title">Save your Project</h6>
-                <p class="mg-b-20 ">You can save upto <b>(<%=project_limit%>)</b> projects in your library for feature use.</p>
-      
+               
                 <div class="form-layout">
                   <div class="row ">
                     <div class="col-lg-12">
@@ -80,11 +133,22 @@
 
             </div>
             <div id="myprojects" class="tab-pane">
+              <div class="list-group widget-list-group bg-app-primary">
+                <div class="list-group-item d-flex">
+                  <div class="media d-block d-sm-flex">
+                    <div class="d-block d-sm-flex mg-sm-r-20">
+                      <i class="ion-flag tx-24 tx-white"></i>
+                    </div><!-- d-flex -->
+                    <div class="media-body mg-t-10 mg-sm-t-0">
+                      <h6 class="mg-b-5 tx-14"><a href="#" class="tx-white">My Projects</a></h6>
+                      <p class="mg-b-0 tx-12 tx-white-5">You can save upto <b>(<%=project_limit%>)</b> projects.</p>
+                    </div><!-- media-body -->
+                  </div><!-- media -->
+                </div>
+              </div>
               <div class="card">
-                <div class="card pd-20 ">
-                  <h6 class="card-body-title">My Projects</h6>
-                  <p class="mg-b-20 ">You can save upto <b>(<%=project_limit%>)</b> projects in your library for feature use.</p>
-                  <div class="row row-sm mg-t-15 mg-sm-t-20" id="myProjectContainer"></div>
+                <div class="card ">
+                 <div class="row row-sm mg-t-15 mg-sm-t-20" id="myProjectContainer"></div>
               </div>  
               </div>
             </div>
@@ -104,10 +168,7 @@
       </li>
       <li class="step-item ">
         <a href="#!" class="">Preview</a>
-      </li>
-      <li class="step-item ">
-        <a href="#!" class="">Finalized</a>
-      </li>
+      </li>     
       <li class="step-item">
         <a href="#!" class="">Download</a>
       </li>

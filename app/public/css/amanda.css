@@ -2995,9 +2995,10 @@ tbody.collapse.show {
 .nav-tabs .nav-link.active,
 .nav-tabs .nav-item.show .nav-link {
   color: white;
-  background-color: #494699;
+  background-color: #32415A;
   /* border-color: #ddd #ddd #D8DCE3; */
   font-weight: bold;
+  border-top: solid 1px #4f5969;
 }
 .nav-tabs .dropdown-menu {
   margin-top: -1px;
@@ -12253,7 +12254,7 @@ textarea.parsley-success:focus {
 
 /***** MAIN PANEL *****/
 .am-mainpanel {
-  margin-left: 88px;
+  margin-left: 87px;
   /* margin-top: 120px; */
   margin-top: 40px;
 
@@ -12262,7 +12263,7 @@ textarea.parsley-success:focus {
 @media (min-width: 992px) {
   .am-mainpanel {
     /* margin-left: 335px; */
-    margin-left: 88px;
+    margin-left: 87px;
   }
 }
 

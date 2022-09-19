@@ -110,16 +110,18 @@
 /*  */
 
 #layers .layer-item{
-    border:dashed 1px #bcbbd5;
-    margin-top: 1px;
-    cursor: pointer;
-    background-color: white;
-    padding:5px;
+  border: solid 1px #b3b3b3;
+  
+  cursor: pointer;
+  padding: 5px;
+ box-shadow: 1px 1px 1px #ccc;
 }
 
 .selected-layer{
     z-index: 2;
     box-shadow: rgb(67 64 141) 0px 1px 3px, rgb(72 69 150) 0px 1px 2px;
+    background-color: #cac8ff; 
+
 }
 .repeat-design {
     /* border: dashed 1px #b2b0ef; */
@@ -141,9 +143,9 @@ color:#0900fd;
 }
 #layers .layer-item i{
     
-    margin-right    : 10px;
+    margin-left    : 10px;
     line-height     : 30px;
-    font-size       : 20px;
+    font-size       : 24px;
     color           : #494699;
 
     }

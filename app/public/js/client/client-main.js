@@ -10,7 +10,7 @@ var state = {
 
 const layerHtml = `<div class="media d-block d-flex layer-item object-options" data-index='{index}' id='{id}'  >
     <div class="d-block mg-sm-r-10 img"> <img src="{src}" class="wd-30" alt="Image" ></div>
-    <small class="d-sm-flex layer-label">Layer {index}</small>
+    <div class="d-sm-flex layer-label tx-bold">Layer {index}</div>
     <div class="d-sm-flex layers-controls" style="display:none !important">
     <i class='ion-ios-copy-outline duplicate main-tool-button'   title='duplicate' ></i>
     <i class='ion-ios-upload-outline bring-fwd' title="move up" id="bring-fwd" ></i>
@@ -42,10 +42,10 @@ $layers = $("#layers");
 $btnRepeatDesign = $("#repeatdesign");
 $clientMainCanvas = $("#client-main-canvas");
 $canvasPrev = $("#client-main-canvas-logo");
-$repeatImageCtrl = $("#repeat-image-ctrl");
-$btnCancelRepeatDesign = $("#repeat-image-ctrl .cancel");
-$btnApplyToOne = $("#repeat-image-ctrl .done");
-$btnApplyRepeatDesign = $("#applytoall");
+// $repeatImageCtrl = $("#repeat-image-ctrl");
+// $btnCancelRepeatDesign = $("#repeat-image-ctrl .cancel");
+// $btnApplyToOne = $("#repeat-image-ctrl .done");
+// $btnApplyRepeatDesign = $("#applytoall");
 $templatepanel = $("#templatepanel");
 $clipartPanel = $("#clipartmenu");
 $btnTextMenu = $("#btnTextMenu");
@@ -155,38 +155,38 @@ function getUserProjects()
     
 }
 
-function loadUserProject(id) {
-    var group = [];
-    $.get(`/api/project/${id}`, function (data) {
-        const json = data.json;
+// function loadUserProject(id) {
+//     var group = [];
+//     $.get(`/api/project/${id}`, function (data) {
+//         const json = data.json;
         
-        if (!json) { return; }
+//         if (!json) { return; }
 
-        var object = JSON.parse(json);
-        canvas.clear();
-        canvasPrev.clear();
-        canvasPrev.loadFromJSON(json, function () {
-            state.isPreviewCanvas = true;
-            $("#repeat-image-ctrl #previewdesign").hide();
-            $("#repeat-image-ctrl #backtodesign").show();
-            $clientMainCanvas.parent().fadeOut();
-            $canvasPrev.parent().fadeIn();
-            canvas.setWidth(8.5 * dpi);
-            canvas.setHeight(11 * dpi);
-            canvasPrev.renderAll.bind(canvasPrev);
-            // $("#template-info-panel .template-name").text(data.name);
-            // $("#template-info-panel .template-desc").text(data.desc || "NA");
-            // $("#template-info-panel .template-desc").text(data.modified_dt || "NA");
-            // $("#use-project").attr("href",`/app/workspace/project/${data.code}`);
+//         var object = JSON.parse(json);
+//         canvas.clear();
+//         canvasPrev.clear();
+//         canvasPrev.loadFromJSON(json, function () {
+//             state.isPreviewCanvas = true;
+//             $("#repeat-image-ctrl #previewdesign").hide();
+//             $("#repeat-image-ctrl #backtodesign").show();
+//             $clientMainCanvas.parent().fadeOut();
+//             $canvasPrev.parent().fadeIn();
+//             canvas.setWidth(8.5 * dpi);
+//             canvas.setHeight(11 * dpi);
+//             canvasPrev.renderAll.bind(canvasPrev);
+//             // $("#template-info-panel .template-name").text(data.name);
+//             // $("#template-info-panel .template-desc").text(data.desc || "NA");
+//             // $("#template-info-panel .template-desc").text(data.modified_dt || "NA");
+//             // $("#use-project").attr("href",`/app/workspace/project/${data.code}`);
 
-            // $imgCtrl.each(function () {
-            //     $(this).removeClass("hidden");
-            // })
-        }, function (o, object) {
-            // console.log(o,object)
-        })
-    })
-}
+//             // $imgCtrl.each(function () {
+//             //     $(this).removeClass("hidden");
+//             // })
+//         }, function (o, object) {
+//             // console.log(o,object)
+//         })
+//     })
+// }
 
 
 function deleteProject(id,self){
@@ -207,12 +207,13 @@ function deleteProject(id,self){
     })
 }
 function loadProject(id) {
-
+    state.isPreviewCanvas = false;
     var group = [];
     $.get(`/api/project/${id}`, function (data) {
-        const json = data.json;
+        const json = JSON.parse(data.json);
         if (!json) { return; }
         canvas.clear();
+        debugger;
         canvas.loadFromJSON(json, function () {
         //    /// canvas.setWidth(8.5 * dpi);
         //    // canvas.setHeight(11 * dpi);
@@ -385,8 +386,9 @@ function initUIEvents() {
             evt.stopPropagation();
              if(selected>0)
             {
+                _canvas.bringForward(obj);
                 jQuery($(layers).children().eq(selected-1)).before(jQuery($(layers).children().eq(selected)));
-                selected=selected-1;
+                selected=selected-1;                
             }
         });
        
@@ -394,6 +396,7 @@ function initUIEvents() {
             evt.stopPropagation();
              if(selected < len)
             {
+                _canvas.sendBackwards(obj);
             jQuery($(layers).children().eq(selected+1)).after(jQuery($(layers).children().eq(selected)));
             selected=selected+1;
             }
@@ -416,7 +419,8 @@ function initUIEvents() {
 
     
 
-    $("#btn-step-design").on("click",function(){
+    $("#btn-step-design").on("click",function(e){
+        e.preventDefault();
         $("#menu-upload > a").click();
         $(".step-item:nth-child(2)").removeClass("active");
         $(".step-item:nth-child(3)").addClass("active");
@@ -427,16 +431,20 @@ function initUIEvents() {
     })
 
 
-    $("#btnSave").unbind().on("click",function(){
+    $("#btnSave").unbind().on("click",function(e){
+        e.preventDefault();
        saveDesign();
     })
-    $("#btn-step-preview").on("click",function(){
+    $("#btn-step-preview, #btn-menu-peview").on("click",function(e){
+        e.preventDefault();
         previewDesign();      
     });
-    $("#btnBack").on("click",function(){
+    $("#btnBack").on("click",function(e){
+        e.preventDefault();
         backFromPreview();
     });
-    $("#btnMyProjects").on("click",function(){
+    $("#btnMyProjects").on("click",function(e){
+        e.preventDefault();
         canvas.clear();
         canvasPrev.clear();
         $layers.html();        
@@ -693,12 +701,12 @@ function initUIEvents() {
     //     openRepeatDesignPreview(e);
     // })
 
-    $btnCancelRepeatDesign.on("click", function (e) {
-        // $("#repeatdesign .toggle-on").removeClass("active");
-        // $("#repeatdesign .toggle-off").addClass("active");
-        closeRepeatDesignPreview();
-        // closeRepeatDesignPreview();
-    })
+    // $btnCancelRepeatDesign.on("click", function (e) {
+    //     // $("#repeatdesign .toggle-on").removeClass("active");
+    //     // $("#repeatdesign .toggle-off").addClass("active");
+    //     closeRepeatDesignPreview();
+    //     // closeRepeatDesignPreview();
+    // })
 
     $("#templatepanel .template").on("click", (e) => {
         enabledTextMode = false;
@@ -778,161 +786,161 @@ function initUIEvents() {
 
     });
 
-    $btnApplyToOne.on("click",function(e){
-        state.isPreviewCanvas = true;
-        $("#repeat-image-ctrl #previewdesign").hide();
-        $("#repeat-image-ctrl #backtodesign").show();
-        $clientMainCanvas.parent().fadeOut();
-        $canvasPrev.parent().fadeIn();
-        canvas.clone(function (clonedCanvas) {
-            var bg = clonedCanvas.backgroundImage;
-            clonedCanvas.backgroundImage = false;
-            for (var i = 0; i < clonedCanvas._objects.length; i++) {
-                clonedCanvas._objects[i].globalCompositeOperation = null;
-                canvas.renderAll.bind(clonedCanvas)
-            }
-            clonedCanvas.renderAll()
-            var dataURL = clonedCanvas.toDataURL({
-                format: "png",
-                left: 0,
-                top: 0,
-                width: canvas.width,
-                height: canvas.height
-            });
+    // $btnApplyToOne.on("click",function(e){
+    //     state.isPreviewCanvas = true;
+    //     $("#repeat-image-ctrl #previewdesign").hide();
+    //     $("#repeat-image-ctrl #backtodesign").show();
+    //     $clientMainCanvas.parent().fadeOut();
+    //     $canvasPrev.parent().fadeIn();
+    //     canvas.clone(function (clonedCanvas) {
+    //         var bg = clonedCanvas.backgroundImage;
+    //         clonedCanvas.backgroundImage = false;
+    //         for (var i = 0; i < clonedCanvas._objects.length; i++) {
+    //             clonedCanvas._objects[i].globalCompositeOperation = null;
+    //             canvas.renderAll.bind(clonedCanvas)
+    //         }
+    //         clonedCanvas.renderAll()
+    //         var dataURL = clonedCanvas.toDataURL({
+    //             format: "png",
+    //             left: 0,
+    //             top: 0,
+    //             width: canvas.width,
+    //             height: canvas.height
+    //         });
 
-            var logos = canvasPrev.backgroundImage._objects;
-            fabric.Image.fromURL(dataURL, (img) => {
-                canvasPrev.remove(... canvasPrev.getObjects());
-                //for (var i = 0; i < logos.length; i++) {
+    //         var logos = canvasPrev.backgroundImage._objects;
+    //         fabric.Image.fromURL(dataURL, (img) => {
+    //             canvasPrev.remove(... canvasPrev.getObjects());
+    //             //for (var i = 0; i < logos.length; i++) {
 
-                    var logo = logos[0];
-                    var object = fabric.util.object.clone(img);
-                    var left = logo.left + logo.group.left  + logo.group.width / 2;
-                    var top = logo.top + logo.group.top  + logo.group.height / 2;
-                    object.scaleToWidth(logo.width)
-                    object.set("top", top);
-                    object.set("left", left);
-                    object.globalCompositeOperation = "source-atop";
-                    canvasPrev.add(object).renderAll();
-                    $btnDownloadPDF.removeClass("hidden");
-                    $btnSaveDesign.removeClass("hidden");
-                   $(".vRule, .hRule").hide();
+    //                 var logo = logos[0];
+    //                 var object = fabric.util.object.clone(img);
+    //                 var left = logo.left + logo.group.left  + logo.group.width / 2;
+    //                 var top = logo.top + logo.group.top  + logo.group.height / 2;
+    //                 object.scaleToWidth(logo.width)
+    //                 object.set("top", top);
+    //                 object.set("left", left);
+    //                 object.globalCompositeOperation = "source-atop";
+    //                 canvasPrev.add(object).renderAll();
+    //                 $btnDownloadPDF.removeClass("hidden");
+    //                 $btnSaveDesign.removeClass("hidden");
+    //                $(".vRule, .hRule").hide();
 
-                //}
-       //         closeRepeatDesignPreview();
-            });
-        });
-    })
+    //             //}
+    //    //         closeRepeatDesignPreview();
+    //         });
+    //     });
+    // })
 
-    $btnApplyRepeatDesign.on("click", function (e) {
-        if(canvas._objects.length == 0)
-        {
-            toast("Please create your design before preview.");
-            return;
-        }
-        $loader.removeClass("hidden");
+    // $btnApplyRepeatDesign.on("click", function (e) {
+    //     if(canvas._objects.length == 0)
+    //     {
+    //         toast("Please create your design before preview.");
+    //         return;
+    //     }
+    //     $loader.removeClass("hidden");
 
-        state.isPreviewCanvas = true;
-        //$repeatImageCtrl.hide();
-        $("#repeat-image-ctrl #previewdesign").hide();
-        $("#repeat-image-ctrl #backtodesign").show();
+    //     state.isPreviewCanvas = true;
+    //     //$repeatImageCtrl.hide();
+    //     $("#repeat-image-ctrl #previewdesign").hide();
+    //     $("#repeat-image-ctrl #backtodesign").show();
 
-        $clientMainCanvas.parent().fadeOut();
-        $canvasPrev.parent().fadeIn();
-        // var logos = canvasPrev.backgroundImage._objects;
-        // var logox = logos[0];
+    //     $clientMainCanvas.parent().fadeOut();
+    //     $canvasPrev.parent().fadeIn();
+    //     // var logos = canvasPrev.backgroundImage._objects;
+    //     // var logox = logos[0];
 
         
-        // var dataURL = canvas.toDataURL({
-        //         format: "png",
-        //         left: 0,
-        //         top: 0,
-        //         width: canvas.width,
-        //         height: canvas.height
-        // });
+    //     // var dataURL = canvas.toDataURL({
+    //     //         format: "png",
+    //     //         left: 0,
+    //     //         top: 0,
+    //     //         width: canvas.width,
+    //     //         height: canvas.height
+    //     // });
 
-        //      fabric.Image.fromURL(dataURL, (img) => {
-        //         for (var i = 0; i < logos.length; i++) {
-        //             var logo = logos[i];
-        //             var object = fabric.util.object.clone(img);
-        //             var left = logo.left + logo.group.left + logo.group.width / 2;
-        //             var top = logo.top + logo.group.top  + logo.group.height / 2;
-        //             object.scaleToWidth(logo.width)
-        //             object.set("top", top);
-        //             object.set("left", left);
-        //             object.globalCompositeOperation = "source-atop";
-        //             canvasPrev.add(object).renderAll();
-        //             $btnDownloadPDF.removeClass("hidden");
-        //             $btnSaveDesign.removeClass("hidden");
-        //             $(".vRule, .hRule").hide();
-        //         }
-        //     })
-         canvas.clone(function (clonedCanvas) {
-             var bg = clonedCanvas.backgroundImage;
-             clonedCanvas.backgroundImage = false;
-             for (var i = 0; i < clonedCanvas._objects.length; i++) {
-                 clonedCanvas._objects[i].globalCompositeOperation = null;
-                 canvas.renderAll.bind(clonedCanvas)
-             }
-             clonedCanvas.renderAll()
-             var dataURL = clonedCanvas.toDataURL({
-                 format: "png",
-                 left: 0,
-                 top: 0,
-                 width: canvas.width,
-                 height: canvas.height
-             });
+    //     //      fabric.Image.fromURL(dataURL, (img) => {
+    //     //         for (var i = 0; i < logos.length; i++) {
+    //     //             var logo = logos[i];
+    //     //             var object = fabric.util.object.clone(img);
+    //     //             var left = logo.left + logo.group.left + logo.group.width / 2;
+    //     //             var top = logo.top + logo.group.top  + logo.group.height / 2;
+    //     //             object.scaleToWidth(logo.width)
+    //     //             object.set("top", top);
+    //     //             object.set("left", left);
+    //     //             object.globalCompositeOperation = "source-atop";
+    //     //             canvasPrev.add(object).renderAll();
+    //     //             $btnDownloadPDF.removeClass("hidden");
+    //     //             $btnSaveDesign.removeClass("hidden");
+    //     //             $(".vRule, .hRule").hide();
+    //     //         }
+    //     //     })
+    //      canvas.clone(function (clonedCanvas) {
+    //          var bg = clonedCanvas.backgroundImage;
+    //          clonedCanvas.backgroundImage = false;
+    //          for (var i = 0; i < clonedCanvas._objects.length; i++) {
+    //              clonedCanvas._objects[i].globalCompositeOperation = null;
+    //              canvas.renderAll.bind(clonedCanvas)
+    //          }
+    //          clonedCanvas.renderAll()
+    //          var dataURL = clonedCanvas.toDataURL({
+    //              format: "png",
+    //              left: 0,
+    //              top: 0,
+    //              width: canvas.width,
+    //              height: canvas.height
+    //          });
 
-             var logos = canvasPrev.backgroundImage._objects;
-             fabric.Image.fromURL(dataURL, (img) => {
-                 canvasPrev.remove(... canvasPrev.getObjects());
-                 for (var i = 0; i < logos.length; i++) {
-                     var logo = logos[i];
-                     var object = fabric.util.object.clone(img);
-                     var left = logo.left + logo.group.left  + logo.group.width / 2;
-                     var top = logo.top + logo.group.top  + logo.group.height / 2;
-                     object.scaleToWidth(logo.width+10)
-                     object.set("top", top);
-                     object.set("left", left);
-                     object.globalCompositeOperation = "source-atop";
-                     canvasPrev.add(object).renderAll();
-                     $btnDownloadPDF.removeClass("hidden");
-                     $btnSaveDesign.removeClass("hidden");
-                     $(".vRule, .hRule").hide();
+    //          var logos = canvasPrev.backgroundImage._objects;
+    //          fabric.Image.fromURL(dataURL, (img) => {
+    //              canvasPrev.remove(... canvasPrev.getObjects());
+    //              for (var i = 0; i < logos.length; i++) {
+    //                  var logo = logos[i];
+    //                  var object = fabric.util.object.clone(img);
+    //                  var left = logo.left + logo.group.left  + logo.group.width / 2;
+    //                  var top = logo.top + logo.group.top  + logo.group.height / 2;
+    //                  object.scaleToWidth(logo.width+10)
+    //                  object.set("top", top);
+    //                  object.set("left", left);
+    //                  object.globalCompositeOperation = "source-atop";
+    //                  canvasPrev.add(object).renderAll();
+    //                  $btnDownloadPDF.removeClass("hidden");
+    //                  $btnSaveDesign.removeClass("hidden");
+    //                  $(".vRule, .hRule").hide();
 
-                 }
-                 $loader.addClass("hidden");
-        //         closeRepeatDesignPreview();
-             });
-         });
-    });
+    //              }
+    //              $loader.addClass("hidden");
+    //     //         closeRepeatDesignPreview();
+    //          });
+    //      });
+    // });
 
 
     this.configUndoRedoStack();
 
 }
 
-function closeRepeatDesignPreview() {
-    $repeatImageCtrl.show();
-    $clientMainCanvas.parent().fadeIn();
-    $canvasPrev.parent().fadeOut();
-    state.isPreviewCanvas = false;
+// function closeRepeatDesignPreview() {
+//     $repeatImageCtrl.show();
+//     $clientMainCanvas.parent().fadeIn();
+//     $canvasPrev.parent().fadeOut();
+//     state.isPreviewCanvas = false;
 
-    $("#repeat-image-ctrl #previewdesign").show();
-    $("#repeat-image-ctrl #backtodesign").hide();
-    $btnDownloadPDF.addClass("hidden");
-    $btnSaveDesign.addClass("hidden");
-    var json = canvas.toJSON();
-    canvasPrev.clear();
-    canvas.clear();
-    canvas.loadFromJSON(json, function() {
-        canvas.renderAll(); 
-     },function(o,object){
-        addLayer(o);
-        console.log(o,object)
-     })
+//     $("#repeat-image-ctrl #previewdesign").show();
+//     $("#repeat-image-ctrl #backtodesign").hide();
+//     $btnDownloadPDF.addClass("hidden");
+//     $btnSaveDesign.addClass("hidden");
+//     var json = canvas.toJSON();
+//     canvasPrev.clear();
+//     canvas.clear();
+//     canvas.loadFromJSON(json, function() {
+//         canvas.renderAll(); 
+//      },function(o,object){
+//         addLayer(o);
+//         console.log(o,object)
+//      })
     
-}
+// }
 
 
 
@@ -982,7 +990,7 @@ function previewDesign()
 {
    /*
    . Check Design can be previewed. 
-   . Show Back and Finalized and hide Preview button. 
+   . Hide create design heading and show preview design heading. 
    . Disable Save button. 
    . Hide main canvas. 
    . Show preview canvas.
@@ -1001,11 +1009,12 @@ function previewDesign()
    $("#btnBack").removeClass("hidden"); 
    $("#btnFinalized").removeClass("hidden"); 
    $("#btn-step-preview").addClass("hidden"); 
+  
 
    //3. 
-   $("#btnSave").unbind().click(function(){
-    toast("Please go back and save your design.");
-   });
+//    $("#btnSave").unbind().click(function(){
+//     toast("Please go back and save your design.");
+//    });
 
    //4. 
    $clientMainCanvas.parent().fadeOut();
@@ -1038,10 +1047,12 @@ function backFromPreview(){
     $("#btnBack").addClass("hidden"); 
     $("#btnFinalized").addClass("hidden"); 
     $("#btn-step-preview").removeClass("hidden");
+    $("#create-design-heading").removeClass("hidden");
+    $("#preview-design-heading").addClass("hidden");
     //2. 
-     $("#btnSave").unbind().click(function(){
-        toast("Please go back and save your design.");
-     });
+    //  $("#btnSave").unbind().click(function(){
+    //     toast("Please go back and save your design.");
+    //  });
 
      //3. 
      $clientMainCanvas.parent().fadeIn();
@@ -1094,7 +1105,8 @@ function renderPreview()
                 $btnDownloadPDF.removeClass("hidden");
                 $btnSaveDesign.removeClass("hidden");
                 $(".vRule, .hRule").hide();
-
+                $("#create-design-heading").addClass("hidden");
+                $("#preview-design-heading").removeClass("hidden");
             }
             $loader.addClass("hidden");
    //         closeRepeatDesignPreview();
@@ -1167,6 +1179,7 @@ function onObjectSelection(o)
     const id = o.selected[0].id;
     var elem = $(`#${id}`)[0];
     clearLayerSelection();
+    showLayerControls(elem);
     //$(`#${id} .layers-controls`).show();
     //$(`#${id}`).addClass("selected-layer");
     //initLayerEvents(elem)
