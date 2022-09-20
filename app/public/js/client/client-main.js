@@ -134,9 +134,9 @@ var filters = [
 function getUserProjects()
 {
     $loader.removeClass("hidden");
-    $.get(`/api/project/`, function (data) {
+    $.get(`/api/project/`, function (res) {
         $loader.addClass("hidden");
-        var projects = data || [];
+        var projects = res.data || [];
         
         var temp="";
         $("#myProjectContainer").html("<p>No projects found.</p>");
@@ -209,11 +209,11 @@ function deleteProject(id,self){
 function loadProject(id) {
     state.isPreviewCanvas = false;
     var group = [];
-    $.get(`/api/project/${id}`, function (data) {
-        const json = JSON.parse(data.json);
+    $("#btnBack").click();
+    $.get(`/api/project/${id}`, function (res) {
+        const json = JSON.parse(res.data.json);
         if (!json) { return; }
         canvas.clear();
-        debugger;
         canvas.loadFromJSON(json, function () {
         //    /// canvas.setWidth(8.5 * dpi);
         //    // canvas.setHeight(11 * dpi);
@@ -229,6 +229,22 @@ function loadProject(id) {
         }, function (o, object) {
             // console.log(o,object)
         })
+
+        fabric.loadSVGFromURL(res.template.base64, function (objects, options) {
+            //$canvasPrev.fadeOut();
+            var loadedObjects = new fabric.Group(group);            
+            var templateWidth = options.viewBoxWidth;
+            var templateHeight = options.viewBoxHeight;
+            canvasPrev.setDimensions({width:templateWidth,height:templateHeight});
+            canvasPrev.setBackgroundImage(loadedObjects, canvasPrev.renderAll.bind(canvasPrev));
+            canvasPrev.renderAll();
+            loadedObjects.center().setCoords();
+
+        }, function (item, object) {
+            object.set('id', item.getAttribute('id'));
+            group.push(object);
+        });
+        
     })
 }
 
@@ -248,21 +264,18 @@ function loadSVGTemplate(id) {
         }
 
         canvas.clear();
+        canvas.templateId = data.code;
         hideWorkspaceControls();
         // loading Big Design
         fabric.loadSVGFromURL(svgBase64, function (objects, options) {
             
             var logo= objects[0];
-            //logo.scaleToWidth(500);
             var w =logo.getScaledWidth(); 
             var h = logo.getScaledHeight();            
             canvas.setDimensions({width: w , height: h});
-            // //canvas.setWidth(logo.width+logo.left/2)
-            // //canvas.setHeight(logo.height+logo.top/2);
-            // //canvas.add(logo);
             canvas.setBackgroundImage(logo, canvas.renderAll.bind(canvas));            
             canvas.renderAll();
-            //loadedObjects.center().setCoords();
+            
 
             $("#template-info-panel .template-name").text(data.name);
             $("#template-info-panel .page-size").text(meta.pageSize);
@@ -960,8 +973,10 @@ function saveDesign(){
      */
     // if(state.isPreviewCanvas)
     // {toast("Please go back and save your design."); return;}
+
     if(canvas.getObjects().length == 0)
     {toast("Please create your design before save."); return;}
+    
     
     var title = $("#input-project-title").val();
     var desc = $("#input-project-desc").val();
@@ -969,16 +984,21 @@ function saveDesign(){
     if(!title)
     { toast("Please enter project title."); return;}
 
+    if(!canvas.templateId)
+    {  console.error("templateId is not present in canvas.");
+        toast("Can't save project. please contact admin."); return;
+    }
+
     var thumbBase64 = canvas.toDataURL({format: 'jpg', quality: 0.8});
     $.ajax({
         type: "POST",
         url: "/app/client/save-design",
-
         data: {
             title : title || "N/A",
             desc :  desc || "N/A",
             thumbBase64:thumbBase64 ,
-            json: JSON.stringify(canvas.toDatalessJSON())
+            json: JSON.stringify(canvas.toDatalessJSON()),
+            templateId: canvas.templateId
         },
         success: function (res) {
             toast("Design has been Saved.");
@@ -987,7 +1007,6 @@ function saveDesign(){
             if (res.status === 401) {
                 toast(`${res.statusText}:${res.responseJSON.message}`);
             } else {}
-
         }
     })
 }

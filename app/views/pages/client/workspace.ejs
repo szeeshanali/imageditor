@@ -26,10 +26,10 @@
                     <%for(var i=0; i<templates.length; i++){ %>
                     <div class="col-lg-4 pd-0  bd template" id="<%=templates[i].code %>">
                       <div class="card bg-gray-200 ht-200">
-                        <div class="card-body pd-10">
+                        <div class="card-body pd-0">
                           <img class="card-img-top img-fluid pd-b-10 ht-120" src="<%=templates[i].base64 %>" alt="Image">
-                          <h5 class="card-body-title" style="height:28px;overflow:hidden"><%=templates[i].name %></h5>
-                          <p class="card-subtitle tx-normal"># <%=templates[i].ref_code %></p>
+                          <h5 class="tx-14 tx-bold tx-inverse tx-center pd-x-10" style="height:28px;overflow:hidden"><%=templates[i].name %></h5>
+                          <p class="card-subtitle tx-12 tx-bold tx-center pd-x-10"># <%=templates[i].ref_code %></p>
                         </div>
                       </div><!-- card -->
                     </div>
@@ -214,8 +214,9 @@
         var code = '<%=code || "default" %>' ;
         var type = '<%=type%>';
         if(type === 'project'){
-            loadUserProject(code);
+            loadProject(code);
         }else{
+          debugger;
             loadSVGTemplate(code);
 
         }

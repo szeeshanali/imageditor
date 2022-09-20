@@ -84,7 +84,8 @@ router.get("/api/project/:id?", isLoggedIn,  async (req, res) => {
     var id = req.params.id; 
     try{
         var data  = await commonService.uploadService.getUserDesignsAsync(req.user._id,id);
-        res.status(200).send(data);
+        var svgTemplate = await uploads.findOne({code:data.templateId},{base64:1})
+        res.status(200).send({data:data,template:svgTemplate});
     }catch{
         res.status(500).send();
     }
@@ -96,6 +97,7 @@ router.get("/api/project/:id?", isLoggedIn,  async (req, res) => {
 router.delete("/api/client/project/:id?", isLoggedIn,  async (req, res) => {
     var id = req.params["id"]; 
     var data  =  await commonService.uploadService.deleteUploadAsync(id, 'project' , req.user._id);
+
     res.status(200).send(data);
 });
 
@@ -165,7 +167,7 @@ try{
         }
         
     }
-    const {json,thumbBase64,title, desc} = req.body; 
+    const {json,thumbBase64,title, desc, templateId} = req.body; 
     var _id = mongoose.Types.ObjectId();
     var uploadModel = {
       title           :   title || `project${_id}`,
@@ -178,7 +180,8 @@ try{
       default         :   false,
       by_admin        :   false,
       type            :   "project",
-      uploaded_by     :    req.user._id   
+      uploaded_by     :    req.user._id  ,
+      templateId      :    templateId 
     };
     commonService.uploadService.upload(uploadModel,(err,msg)=>{
         if(!err)
