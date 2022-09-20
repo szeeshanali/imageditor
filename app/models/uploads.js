@@ -9,6 +9,7 @@ const schema  = new mongoose.Schema({
     file_ext        :   {   type    :   String    },
     order_no        :   {   type    :   Number    },
     code            :   {   type    :   mongoose.ObjectId,  required   :   true },
+    templateId      :   {   type    :   mongoose.ObjectId },
     active          :   {   type    :   Boolean,            default    :   true },
     deleted         :   {   type    :   Boolean,            default    :   false },
     blob            :   {   type    :   Buffer    },

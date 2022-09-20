@@ -1010,14 +1010,13 @@ var category = $("#admin-categories").val() ;
                 logoHeight: objects[0].height
             }
               var loadedObjects = new fabric.Group(group);
-              var templateWidth = 612;
-              var templateHeight = 792;      
+              var templateWidth = options.viewBoxWidth;
+              var templateHeight = options.viewBoxHeight;      
               canvas.setDimensions({top:0, width: templateWidth, height: templateHeight});
               if( pageid === "__template-designer"){
-                canvas.setBackgroundImage(loadedObjects,canvas.renderAll.bind(canvas));
+                canvas.add(loadedObjects,canvas.renderAll.bind(canvas));
                 $("#upload-template-splash").remove();
               }else{
-                loadedObjects.
                 canvas.add(loadedObjects);
               }
               canvas.renderAll();

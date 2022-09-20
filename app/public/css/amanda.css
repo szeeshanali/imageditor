@@ -2981,7 +2981,7 @@ tbody.collapse.show {
   /* border: 1px solid transparent;
   border-top-left-radius: 2px;
   border-top-right-radius: 2px; */
-  padding:5px 15px;
+  padding:10px 15px;
 
 }
 .nav-tabs .nav-link:focus, .nav-tabs .nav-link:hover {
