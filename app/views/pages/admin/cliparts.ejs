@@ -1,6 +1,36 @@
 <div class="row mg-r-0">
     <div class="col-lg-3 pd-0">
-        <div class="card pd-10 tx-primary tx-bold bd-b">Upload Clipart</div>
+        <div class="list-group widget-list-group bg-app-primary">
+            <div class="list-group-item d-flex">
+              <div class="media d-block d-sm-flex">
+                <div class="d-block d-sm-flex mg-sm-r-20">
+                  <i class="ion-ios-paw-outline tx-24 tx-white"></i>
+                </div><!-- d-flex -->
+                <div class="media-body mg-t-10 mg-sm-t-0">
+                  <h6 class="mg-b-5 tx-14"><a href="" class="tx-white">Upload Image</a></h6>
+                  <p class="mg-b-0 tx-12 tx-white-5">Upload your Clip-arts</p>
+                </div><!-- media-body -->
+              </div><!-- media -->
+              <a href="#" id="admin-image-upload" class="btn btn-primary pd-lg-x-20 mg-l-auto">Upload</a>
+              <input id="admin-image-upload-hidden" data-page-id="<%=locals.page.id%>" type="file" accept="image/*" multiple="multiple" hidden="hidden">
+            <input id="design-type" value="clipart" hidden="hidden">
+    
+            </div>
+          </div>
+          <div class="list-group-item pd-20">
+           <!-- d-flex -->
+            <h6 class="mg-b-10"><a href="" class="tx-inverse">Clip Art Details</a></h6>
+            <p class="tx-13 mg-b-0">Please enter details and save your changes.</p>
+            <div class="d-flex justify-content-between align-items-center tx-12">
+                <a href="" class="tx-danger">All fields are mandatory. (*)</a>
+            
+              </div>
+          </div>
+          <div class="card pd-10">
+            <%- include('../../partials/admin/clipart-panel'); %>
+          </div>
+          
+        <!-- <div class="card pd-10 tx-primary tx-bold bd-b">Upload Clipart</div>
 
         <div class="card pd-10" >
             <i class="tx-80  tx-gray-800 icon-imgupload ion-ios-cloud-upload-outline" id="admin-image-upload"></i>
@@ -8,10 +38,10 @@
             <p class="tx-12 pd-t-20 pd-x-30 tx-center">Upload (SVG,PNG) Cliparts.</p>
             <input id="admin-image-upload-hidden" data-page-id="<%=locals.page.id%>" type="file" accept="image/*" multiple="multiple" hidden="hidden">
             <input id="design-type" value="clipart" hidden="hidden">
-        </div>
+        </div> -->
     </div>
-    <div class="col-lg-6 pd-x-10">
-        <div class="card pd-10 tx-primary tx-bold bd-b">Clipart Preview</div>
+    <div class="col-lg-9 pd-x-15">
+        <div class="card pd-10 tx-primary tx-bold bd-b">PREVIEW</div>
 
         <div class="card">
             <div class="workarea" style="height:800px">
@@ -24,15 +54,7 @@
         </div>
      
     </div>
-    <div class="col-lg-3 pd-0">
-        <div class="card pd-10 tx-primary tx-bold bd-b">Save Details</div>
-
-        <div class="card pd-10">
-            <%- include('../../partials/admin/clipart-panel'); %>
-            
-        </div>
-       
-    </div>
+  
     </div>
 <script>
     $(".tab-content .tab-pane").each((i,e)=>

@@ -1,12 +1,42 @@
 <div class="row mg-r-0">
   <div class="col-lg-3 pd-0">
-    <div class="card pd-10 tx-primary tx-bold bd-b"></div>
+  
     <div class="card">
       <%- include('../../partials/admin/pre-designed-panel'); %>
-
     </div>
   </div>
     <div class="col-lg-6 pd-x-10">
+      <div class="card pd-x-20 pd-y-15">
+
+        <div class="email-content-header">
+          <div>
+            <div class="btn-group mg-b-0 hidden-xs-down">
+             
+              <button type="button" class="btn btn-secondary" id="btnDisplayGrid"><b class="ion-grid tx-12">Grid</b></button>
+              <button type="button" class="btn btn-secondary" id="btnDisplayRuler" ><b class="fa-solid fa-ruler tx-12">Ruler</b></button>
+            </div><!-- btn-group -->
+          </div>
+          <div class="mg-l-auto">
+            <div class="btn-group mg-b-0">
+              <button type="button" onclick="$('#menu-save-design').click()" class="btn btn-secondary"><i class="ion-bookmark tx-24"></i></button>
+              <a href="/app/admin/pre-designed" class="btn btn-secondary"><i class="ion-refresh tx-24"></i></a>
+            </div><!-- btn-group -->
+    
+          </div>
+        </div>
+    
+        
+        <div class="table-responsive">
+          <div class="workarea" id="workarea">
+            <div  id="canvas-holder">
+                <div class="content tx-center">
+                    <canvas id="admin-main-canvas"   ></canvas>
+                    <canvas id="admin-main-canvas-logo"  ></canvas>                    
+                </div>
+            </div>
+        </div>
+        </div>
+      </div>
       <div class="card pd-10 tx-primary tx-bold mg-b-10">Workspace</div>
       <div class="card">
         <div class="workarea" style="height:800px">
@@ -21,142 +51,333 @@
     </div>
     <div class="col-lg-3 pd-0" id="workspace-right-panel">
      
-   
-     
-      <div class="card pd-20 bg-b-1 img-ctrl hidden">
-          <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Color & Brightness</h6>        
-          <div class="tx-12" >
-              <div ><b>Brightness <span id="brightnessVal"></span></b></div>
-              <input type="range" min="-1" max="1" value="0.0" class="slider " step="0.003921" style="width:100%;height:2px" id="brightness-value">
-              <div><b>Contrast <span id="contrastVal"></span></b></div>
-              <input type="range" min="-1" max="1" value="0.0" class="slider" step="0.003921" style="width:100%;height:2px" id="contrast-value">          
-              <b class="ion-record tx-22" id="btnGrayscale"></b> &nbsp; Grayscale
-          </div>
+<div id="accordion" class="accordion" role="tablist" aria-multiselectable="true">
+  <div class="card">
+      <div class="card-header" role="tab" id="headingOne">
+          <h6 class="mg-b-0 tx-14">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="tx-gray-800 transition">
+                  <b>Template Details</b>
+                  <div class="arrow down pull-right"></div>
+              </a>
+          </h6>
       </div>
-      <div class="card pd-20 mg-t-1 img-ctrl hidden">
-          <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Size</h6>
-          <div class="d-flex mg-b-10">
-              <div class="bd-r pd-r-10">
-                <label class="tx-12 ">Crop</label>
-                <div class="tx-center tx-22">
-                  <i class="ion-crop" id="crop"></i>
-                </div>
-                
-              </div>
-              <div class="bd-r pd-x-10">
-                <label class="tx-12 " >Rotate</label>
-                <div class="tx-center tx-22">
-                  <i class="ion-loop " id="rotate"></i>
-                </div>                
-              </div>
-             
-              <div class="pd-x-10 bd-r">
-                  <label class="tx-12" >FlipX</label>
-                  <div class="tx-center tx-22">
-                    <i class="ion-arrow-swap" id="flipW"></i>
+      <!-- card-header -->
+
+      <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne">
+          <!-- <div class="card-block" id="template-info-panel">
+              <div class="d-flex mg-b-10 tx-center bd-r">
+                  <div class="wd-100">
+                      <div>
+                          <img id="imgSelectedTemplate" style="width:80%; "></div>
+                      </div>
+                      <div class="bd-r pd-r-10 ">
+                          <label class="tx-12 ">Page Size</label>
+                          <p class="tx-lato tx-inverse tx-bold page-size">-</p>
+                      </div>
+                      <div class="bd-r pd-x-10">
+                          <label class="tx-12 ">Logo Size</label>
+                          <p class="tx-lato tx-inverse tx-bold logo-size">-</p>
+                      </div>
+                      <div class="pd-l-10">
+                          <label class="tx-12 ">Total Logos</label>
+                          <p class="tx-lato tx-inverse tx-bold total-logos">-</p>
+                      </div>
+                  </div>
+
+              </div> -->
+              <div class="mail-item d-flex pd-10 bd-b bd-gray-200" id="template-info-panel">
+                  <div ><img id="imgSelectedTemplate"  class="wd-80 " alt=""></div>
+                  <div class="mg-l-10">
+                    <h6 class="tx-14 tx-bold"><a href="" class="tx-inverse template-name"></a></h6>
+                    <p class="tx-13 mg-b-10"><span class="page-size tx-bold"></span> sheet of <span class="total-logos tx-bold"></span> logos, each logo size is <span class="logo-size tx-bold"></span>
+                   </p>
+                    <p class="tx-13 mg-b-10">Code: # <span class="ref_code tx-bold"></span></p>
                   </div>
                 </div>
-                <div class="pd-l-10">
-                  <label class="tx-12" >FlipY</label>
-                  <div class="tx-center tx-22" style="transform:rotate(90deg)">
-                      <i class="ion-arrow-swap" id="flipH" ></i>
-                  </div>
+               
                 </div>
-            </div>        
+          </div>
       </div>
-      <div class=" text-section">
-       
-             
-  
-      
-          <div class="card mg-t-1 pd-x-20 txt-ctrl hidden" id="font-panel">
-              <div  class=" pd-y-10 font-style">
-                  <i class="fa fa-bold text-decoration" data-value="bold" id="bold" title="bold"></i>
-                  <i class="fa fa-italic text-decoration"  data-value="italic" id="italic" title="italic"></i>
-                  <i class="fa fa-underline text-decoration" data-value="underline" id="underline" title="underline"></i>
-                  <i class="fa fa-align-left text-decoration " data-value="left" aria-hidden="true"></i>
-                  <i class="fa fa-align-justify text-decoration" data-value="center" aria-hidden="true"></i>
-  
-                  <i class="fa fa-align-right text-decoration " data-value="right" aria-hidden="true"></i>
-  
+      <div class="card ">
+          <div class="card-header" role="tab" id="col-layers">
+              <h6 class="mg-b-0 tx-14">
+                  <a data-toggle="collapse" data-parent="#accordion" href="#collapse-layers" aria-expanded="true" aria-controls="collapse-layers" class="tx-gray-800 transition">
+                      <b>Layers</b>
+                      <div class="arrow pull-right"></div>
+                  </a>
+              </h6>
+          </div>
+          <!-- card-header -->
+
+          <div id="collapse-layers" class="collapse" role="tabpanel" aria-labelledby="col-layers" style="max-height: 200px;overflow-y:auto">
+              <div class="card pd-10 bg-b-1 ">
+                  <%- include('../../partials/client/layers'); %>
               </div>
           </div>
-          
-          <div class="card mg-t-1 pd-20 txt-ctrl hidden" id="font-panel">
-            <div class="d-flex">
-<div>
-  <h6 class="tx-12 tx-uppercase tx-inverse tx-bold">Text Color</h6>   
-  <input type="color" value="" id="text-color" size="10"> 
-  </div>
-
-
-<div>
-  <h6 class="tx-12 tx-uppercase tx-inverse tx-bold">BG Color</h6>   
-  <input type="color" value="" id="text-bg-color" size="10"> 
-  </div>
-
-  <div>
-    <h6 class="tx-12 tx-uppercase tx-inverse tx-bold">Stroke Color</h6>   
-    <input type="color" value="" id="text-stroke-color" size="10"> 
-    </div>
-
-
-</div>
-</div>
-            
-           
-        
-         
-          <div class="card mg-t-1 pd-20 txt-ctrl hidden" id="font-panel">
-              <h6 class="tx-12 tx-uppercase tx-inverse tx-bold">Font Styles </h6>        
-  
-              <div class="dropdown bd-b pd-5 mg-b-15">
-                  <div class="tx-inverse tx-14 fontfamily dropdown-toggle" id="selected-font"  data-toggle="dropdown"  >Arial (sans-serif)</div>
-  
-                  <span class="caret "></span>
-                  <ul class="dropdown-menu" id="font-list-container">
-                      <li class="list-group-item rounded-bottom-0 pd-x-10 pd-y-5">
-                        <div class="tx-inverse tx-18 fontfamily" data-value="Arial, sans-serif" style="font-family: Arial, sans-serif;">Arial (sans-serif)</div>
-                       </li>
-                      <li class="list-group-item rounded-bottom-0 pd-x-10 pd-y-5">
-                        <div class="tx-inverse tx-16 fontfamily" data-value="Verdana, sans-serif" style=" font-family: Verdana, sans-serif;">Verdana (sans-serif)</div>
-                       </li>
-                      <li class="list-group-item rounded-bottom-0 pd-x-10 pd-y-5">
-                        <div class="tx-inverse tx-18 fontfamily" data-value="Helvetica, sans-serif" style="font-family: Helvetica, sans-serif">Helvetica (sans-serif)</div>
-                       </li>
-                      <li class="list-group-item rounded-bottom-0 pd-x-10 pd-y-5">
-                        <div class="tx-inverse tx-20 fontfamily" data-value="Georgia, serif" style=" font-family: Georgia, serif">Georgia (serif)</div>
-                       </li>
-                    
-                      <li class="list-group-item rounded-bottom-0 pd-x-10 pd-y-5">
-                       <div class="tx-inverse tx-24 fontfamily" data-value="Brush Script MT, cursive" style="font-family: Brush Script MT, cursive">Brush Script MT (cursive)</div>
-                      </li>
-                      <li class="list-group-item rounded-bottom-0 pd-x-10 pd-y-5">
-                        <div class="tx-inverse tx-24 fontfamily" data-value="Segoe Script" style=" font-family: Segoe Script">Segoe Script</div>
-                       </li>
-                      
-                    </ul>
-                </div>
-  
-              <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Font Size</h6>        
-              <input type="range" min="1" max="120" value="" step="1" class="slider" id="btnTextSize">
-              
-              <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15 pd-t-10">Letter Spacing</h6>        
-              <input type="range" min="1" max="100" value="50" step="1" class="slider" id="text-letter-spacing">
-
-              <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15 pd-t-10">Stoke Size</h6>        
-              <input type="range"  value="1" min="1" step="1" max="10" class="slider" id="text-stroke-width">
-
-              <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15 pd-t-10">Line Height</h6>        
-              <input type="range"  value="1" min="0.1" max="10" step="0.1" class="slider" id="text-line-height">
-            </div>
-        
-           
       </div>
-    
-      <div class="card pd-x-20 pd-y-10 mg-t-1 ">
-          <%- include('../../partials/admin/layers'); %>
+      <div class="card img-ctrl hidden">
+          <div class="card-header" role="tab" id="headingThree">
+              <h6 class="mg-b-0 tx-14">
+                  <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree" class="tx-gray-800 transition">
+                      <b>Color & Brightness</b>
+                      <div class="arrow pull-right"></div>
+                  </a>
+              </h6>
+          </div>
+          <!-- card-header -->
+
+          <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="collapseThree">
+              <div class="card pd-20 bg-b-1 img-ctrl hidden">
+                  <div class="tx-12">
+                      <div>
+                          <b>Brightness
+                              <span id="brightnessVal"></span>
+                          </b>
+                      </div>
+                      <input type="range" min="-1" max="1" value="0.0" class="slider " step="0.003921" style="width:100%;height:2px" id="brightness-value">
+                          <div>
+                              <b>Contrast
+                                  <span id="contrastVal"></span>
+                              </b>
+                          </div>
+                          <input type="range" min="-1" max="1" value="0.0" class="slider" step="0.003921" style="width:100%;height:2px" id="contrast-value">
+                              <b class="ion-record tx-22" id="btnGrayscale"></b>
+                              &nbsp; Grayscale
+                          </div>
+                      </div>
+                  </div>
+              </div>
+      <div class="card img-ctrl hidden">
+                  <div class="card-header" role="tab" id="headingFour">
+                      <h6 class="mg-b-0 tx-14">
+                          <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="true" aria-controls="headingFour" class="tx-gray-800 transition">
+                              <b>Size & Transform</b>
+                              <div class="arrow pull-right"></div>
+                          </a>
+                      </h6>
+                  </div>
+                  <!-- card-header -->
+
+                  <div id="collapseFour" class="collapse img-ctrl hidden" role="tabpanel" aria-labelledby="headingFour">
+                      <div class="card pd-20 mg-t-1 ">
+                          <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Size</h6>
+                          <div class="d-flex mg-b-10">
+                              <!-- <div class="bd-r pd-r-10">
+                                  <label class="tx-12 ">Crop</label>
+                                  <p class="tx-center tx-22">
+                                      <i class="ion-crop" id="crop"></i>
+                                  </p>
+
+                              </div> -->
+                              <div class="bd-r pd-x-10">
+                                  <label class="tx-12 ">Rotate</label>
+                                  <p class="tx-center tx-22">
+                                      <i class="ion-loop " id="rotate"></i>
+                                  </p>
+                              </div>
+                              <div class="pd-x-10 bd-r">
+                                  <label class="tx-12">FlipX</label>
+                                  <p class="tx-center tx-22">
+                                      <i class="ion-arrow-swap" id="flipW"></i>
+                                  </p>
+                              </div>
+                              <div class="pd-l-10">
+                                  <label class="tx-12">FlipY</label>
+                                  <p class="tx-center tx-22" style="transform:rotate(90deg)">
+                                      <i class="ion-arrow-swap" id="flipH"></i>
+                                  </p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
       </div>
+      <div class="card txt-ctrl hidden">
+                  <div class="card-header" role="tab" id="headingFive">
+                      <h6 class="mg-b-0 tx-14">
+                          <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="true" aria-controls="headingFive" class="tx-gray-800 transition">
+                              <b>Font Styles</b>
+                              <div class="arrow pull-right"></div>
+                          </a>
+                      </h6>
+                  </div>
+                  <!-- card-header -->
+
+                  <div id="collapseFive" class="collapse txt-ctrl hidden" role="tabpanel" aria-labelledby="headingFive">
+                      <div class="card">
+
+                          <ul class="list-group widget-list-group" id="font-list-container">
+                              <li class="list-group-item rounded-top-0">
+                                  <div class="tx-inverse  fontfamily" data-value="Arial, sans-serif" style="font-family: Arial, sans-serif;">Arial (sans-serif)</div>
+                              </li>
+                              <li class="list-group-item rounded-top-0">
+                                  <div class="tx-inverse  fontfamily" data-value="Luckiest Guy" style="font-family: Luckiest Guy;">Luckiest Guy</div>
+                              </li>
+                              <li class="list-group-item rounded-top-0">
+                                  <div class="tx-inverse  fontfamily" data-value="Bungee Shade" style="font-family:Bungee Shade">Bungee Shade</div>
+                              </li>
+                              <li class="list-group-item">
+                                  <div class="tx-inverse fontfamily" data-value="BlackHanSans" style=" font-family: BlackHanSans">BlackHanSans</div>
+                              </li>
+                              <li class="list-group-item">
+                                  <div class="tx-inverse fontfamily" data-value="Creepster" style="font-family: Creepster">Creepster</div>
+                              </li>
+                              <li class="list-group-item">
+                                  <div class="tx-inverse  fontfamily" data-value="LondrinaSolid" style=" font-family: LondrinaSolid">LondrinaShadow</div>
+                              </li>
+                              <li class="list-group-item rounded-bottom-0">
+                                  <div class="tx-inverse  fontfamily" data-value="Brush Script MT, cursive" style="font-family: Brush Script MT, cursive">Brush Script MT (cursive)</div>
+                              </li>
+                              <li class="list-group-item rounded-bottom-0">
+                                  <div class="tx-inverse  fontfamily" data-value="RockSalt" style="font-family: RockSalt">RockSalt</div>
+                              </li>
+                              <li class="list-group-item rounded-bottom-0">
+                                  <div class="tx-inverse  fontfamily" data-value="Shrikhand" style="font-family: Shrikhand">Shrikhand</div>
+                              </li>
+                              <li class="list-group-item rounded-bottom-0">
+                                  <div class="tx-inverse  fontfamily" data-value="PermanentMarker" style="font-family: PermanentMarker">PermanentMarker</div>
+                              </li>
+                          </ul>
+
+                        
+                      </div>
+                  </div>
+              </div>
+              <div class="card txt-ctrl hidden">
+                  <div class="card-header" role="tab" id="heading8">
+                      <h6 class="mg-b-0 tx-14">
+                          <a data-toggle="collapse" data-parent="#accordion" href="#collapse8" aria-expanded="true" aria-controls="heading8" class="tx-gray-800 transition">
+                              <b>Font Format & Alignments</b>
+                              <div class="arrow pull-right"></div>
+                          </a>
+                      </h6>
+                  </div>
+                  <!-- card-header -->
+
+                  <div id="collapse8" class="collapse txt-ctrl hidden" role="tabpanel" aria-labelledby="heading8">
+                      <div class="card mg-t-1 pd-x-20 txt-ctrl hidden" id="font-panel">
+                          <div class=" pd-y-10 font-style">
+                              <i class="fa fa-bold text-decoration" data-value="bold" id="bold" title="bold"></i>
+                              <i class="fa fa-italic text-decoration" data-value="italic" id="italic" title="italic"></i>
+                              <i class="fa fa-underline text-decoration" data-value="underline" id="underline" title="underline"></i>
+                              <i class="fa fa-align-left text-decoration " data-value="left" aria-hidden="true"></i>
+                              <i class="fa fa-align-justify text-decoration" data-value="center" aria-hidden="true"></i>
+                              <i class="fa fa-align-right text-decoration " data-value="right" aria-hidden="true"></i>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="card txt-ctrl hidden">
+                  <div class="card-header" role="tab" id="heading9">
+                      <h6 class="mg-b-0 tx-14">
+                          <a data-toggle="collapse" data-parent="#accordion" href="#collapse9" aria-expanded="true" aria-controls="heading9" class="tx-gray-800 transition">
+                              <b>Font Colors</b>
+                              <div class="arrow pull-right"></div>
+                          </a>
+                      </h6>
+                  </div>
+                  <!-- card-header -->
+
+                  <div id="collapse9" class="collapse txt-ctrl hidden" role="tabpanel" aria-labelledby="heading9">
+                      <div class="card mg-t-1 pd-20 txt-ctrl hidden" id="font-panel">
+                          <div class="d-flex">
+                              <div class="bd-r pd-r-10">
+                                  <h6 class="tx-12 tx-uppercase tx-inverse tx-bold">Text Color</h6>
+                                  <input type="color" value="" id="text-color" size="10">
+                              </div>
+                                  <div class="bd-r pd-x-10 ">
+                                      <h6 class="tx-12 tx-uppercase tx-inverse tx-bold">BG Color</h6>
+                                      <input type="color" value="" id="text-bg-color" size="10">
+                                  </div>
+                                      <div>
+                                          <h6 class="tx-12 tx-uppercase tx-inverse tx-bold">Stroke Color</h6>
+                                          <input type="color" value="" id="text-stroke-color" size="10">
+                                      </div>
+
+
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+              <div class="card txt-ctrl hidden">
+                              <div class="card-header" role="tab" id="headingSix">
+                                  <h6 class="mg-b-0 tx-14">
+                                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="true" aria-controls="headingSix" class="tx-gray-800 transition">
+                                          <b>Font Size</b>
+                                          <div class="arrow pull-right"></div>
+                                      </a>
+                                  </h6>
+                              </div>
+                              <!-- card-header -->
+
+                              <div id="collapseSix" class="collapse txt-ctrl hidden" role="tabpanel" aria-labelledby="headingSix">
+                                  <div class="card pd-15">
+                                      <input type="range" min="1" max="120" value="" step="1" class="slider" id="btnTextSize"></div>
+                                  </div>
+              </div>
+              <div class="card txt-ctrl hidden">
+                                  <div class="card-header" role="tab" id="headingSeven">
+                                      <h6 class="mg-b-0 tx-14">
+                                          <a data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" aria-expanded="true" aria-controls="headingSeven" class="tx-gray-800 transition">
+                                              <b>Letter Spacing</b>
+                                              <div class="arrow pull-right"></div>
+                                          </a>
+                                      </h6>
+                                  </div>
+                                  <!-- card-header -->
+
+                                  <div id="collapseSeven" class="collapse txt-ctrl hidden" role="tabpanel" aria-labelledby="headingSeven">
+                                      <div class="card pd-15">
+                                          <input type="range" min="1" max="100" value="50" step="1" class="slider" id="text-letter-spacing"></div>
+                                      </div>
+              </div>
+              <div class="card txt-ctrl hidden">
+                                      <div class="card-header" role="tab" id="heading10">
+                                          <h6 class="mg-b-0 tx-14">
+                                              <a data-toggle="collapse" data-parent="#accordion" href="#collapse10" aria-expanded="true" aria-controls="heading10" class="tx-gray-800 transition">
+                                                  <b>Stoke Size</b>
+                                                  <div class="arrow pull-right"></div>
+                                              </a>
+                                          </h6>
+                                      </div>
+                                      <!-- card-header -->
+
+                                      <div id="collapse10" class="collapse txt-ctrl hidden" role="tabpanel" aria-labelledby="heading10">
+                                          <div class="card pd-15">
+                                              <input type="range" value="1" min="1" step="1" max="10" class="slider" id="text-stroke-width"></div>
+                                          </div>
+              </div>
+              <div class="card txt-ctrl hidden">
+                                          <div class="card-header" role="tab" id="heading11">
+                                              <h6 class="mg-b-0 tx-14">
+                                                  <a data-toggle="collapse" data-parent="#accordion" href="#collapse9" aria-expanded="true" aria-controls="heading11" class="tx-gray-800 transition">
+                                                      <b>Line Height</b>
+                                                      <div class="arrow pull-right"></div>
+                                                  </a>
+                                              </h6>
+                                          </div>
+                                          <!-- card-header -->
+
+                                          <div id="collapse11" class="collapse txt-ctrl hidden" role="tabpanel" aria-labelledby="collapse11">
+                                              <div class="card pd-15">
+                                                  <input type="range" value="1" min="0.1" max="10" step="0.1" class="slider" id="text-line-height"></div>
+                                              </div>
+              </div>
+              <div class="card">
+                  <div class="list-group-item pd-y-20">
+                      <div class="media">
+                        <div class="d-flex mg-r-10 wd-50">
+                          <i class="ion-link tx-primary tx-40"></i>
+                        </div><!-- d-flex -->
+                        <div class="media-body">
+                          <h6 class="tx-inverse tx-14">KakePrint WebLink</h6>
+                          <p class="mg-b-0"><a href="#" id="kp-link">Here's a link to order more.</a></p>
+                        </div><!-- media-body -->
+                      </div><!-- media -->
+                    </div>
+              </div>
+
+                                      </div>
+
   </div>
     </div>
 <script>
