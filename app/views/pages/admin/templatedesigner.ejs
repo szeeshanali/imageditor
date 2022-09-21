@@ -3,13 +3,23 @@
 
 <div class="row mg-r-0">
   <div class="col-lg-3 pd-0">
-<div class="card pd-y-10 ">
+<div class="card">
   <%- include('../../partials/admin/imgupload'); %>
   </div>
-  <div class="tx-primary card bd-y pd-10"><b>Template Info</b><small class="text-danger"> (All fields are mandatory)</small></div>
+  <div class="list-group widget-list-group">
+    <div class="list-group-item pd-20">
+      <div class="d-flex justify-content-between align-items-center tx-12 mg-b-20">
+        <a href="" class="tx-danger">All fields are mandatory. (*)</a>
+    
+      </div><!-- d-flex -->
+      <h6 class="mg-b-10"><a href="" class="tx-inverse">Template Details</a></h6>
+      <p class="tx-13 mg-b-0">Please enter template details and save your changes.</p>
+    </div><!-- list-group-item -->
+    </div>
 
+  
   <div class="card">
-  <div class="pd-10 admin-design-ctrl">
+  <div class="pd-x-20 admin-design-ctrl">
 
     
 
@@ -60,22 +70,24 @@
               
             </div>
     </div>
-        <div id="save-image-ctrl" class="tx-center">
-            <div class="btn-group" role="group" >
-                <button type="button" id="save-design" class="btn btn-primary  pd-x-25 active ">Save Design</button>
-                <button type="button" id="cancel-design" class="btn btn-secondary pd-x-25 ">Cancel</button>
-              </div>
+        <div id="save-image-ctrl" >
+          <div>
+            <button type="button" id="save-design" class="btn  btn-primary mg-r-5" id="btnSave">Save Template</button>
+            <button type="button" id="cancel-design" class="btn btn-secondary" id="btnCancelSaveDesign">Cancel</button>
+          </div>
+
+        
         </div>
     </div>
 
 </div>
   </div>
-  <div class="col-lg-6 pd-x-10 ">
+  <div class="col-lg-9 pd-x-15 ">
     <div class="card pd-x-15 pd-y-10 tx-primary tx-bold ">
-      Upload Template
+        PREVIEW
     </div>
     <div class="card">
-      <div class="admin-template-designer-bg" style="min-height: 1050px">
+      <div class="admin-template-designer-bg" style="min-height: 800px">
         <div class="ht-100v tx-center" id="template-container">
           <canvas id="admin-main-canvas"></canvas>
       </div>
@@ -84,30 +96,7 @@
      
   </div>
   </div>
-  <div class="col-lg-3 pd-0 " >
-    <div class="card bd-b pd-10 tx-bold tx-primary">
-      <span>Template Details</span>
-      
-    </div>
-    <div class="card pd-20" id="template-info-panel">
-        <div class="d-flex mg-b-10 ">
-          <div class="bd-r pd-r-10 ">
-            <label class="tx-12 ">Size</label>
-            <p class="tx-lato tx-inverse tx-bold page-size">-</p>
-          </div>
-          <div class="bd-r pd-x-10">
-            <label class="tx-12 ">Logo Size</label>
-            <p class="tx-lato tx-inverse tx-bold logo-size">-</p>
-          </div>
-          <div class="pd-l-10">
-            <label class="tx-12 ">Total Logos</label>
-            <p class="tx-lato tx-inverse tx-bold total-logos">-</p>
-          </div>
-        </div><!-- d-flex -->
-      
-      
-  </div>
-  </div>
+  
 </div>
 
 <script>

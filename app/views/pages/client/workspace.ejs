@@ -25,11 +25,11 @@
                   <div class="row mg-0">
                     <%for(var i=0; i<templates.length; i++){ %>
                     <div class="col-lg-4 pd-0  bd template" id="<%=templates[i].code %>">
-                      <div class="card bg-gray-200 ht-200">
-                        <div class="card-body pd-0">
-                          <img class="card-img-top img-fluid pd-b-10 ht-120" src="<%=templates[i].base64 %>" alt="Image">
-                          <h5 class="tx-14 tx-bold tx-inverse tx-center pd-x-10" style="height:28px;overflow:hidden"><%=templates[i].name %></h5>
-                          <p class="card-subtitle tx-12 tx-bold tx-center pd-x-10"># <%=templates[i].ref_code %></p>
+                      <div class="card  ht-200">
+                        <div class="card-body pd-10">
+                          <img class="card-img-top img-fluid pd-b-10 ht-140" src="<%=templates[i].base64 %>" alt="Image">
+                          <h5 class="tx-14 tx-bold tx-inverse  pd-x-10" style="height:28px;overflow:hidden"><%=templates[i].name %></h5>
+                          <p class="card-subtitle tx-12 tx-bold  pd-x-10"># <%=templates[i].ref_code %></p>
                         </div>
                       </div><!-- card -->
                     </div>
@@ -158,44 +158,56 @@
 </div>
 <!-- Workspace canvas-->
 <div class="col-lg-6">
-  <div class="card bd-b" style="background-color: #cac8ff">
-    <ul class="step d-flex flex-nowrap">
-      <li class="step-item ">
-        <a href="#!" class="">Select Template</a>
-      </li>
-      <li class="step-item active">
-        <a href="#!" class="">Create Design</a>
-      </li>
-      <li class="step-item ">
-        <a href="#!" class="">Preview</a>
-      </li>     
-      <li class="step-item">
-        <a href="#!" class="">Download</a>
-      </li>
-    </ul> 
+  <div class="list-group widget-list-group bg-app-primary">
+    <div class="list-group-item d-flex">
+      <ul class="step d-flex flex-nowrap">
+        <li class="step-item ">
+          <a href="#!" class="">Select Template</a>
+        </li>
+        <li class="step-item active">
+          <a href="#!" class="">Create Design</a>
+        </li>
+        <li class="step-item ">
+          <a href="#!" class="">Preview</a>
+        </li>     
+        <li class="step-item">
+          <a href="#!" class="">Download</a>
+        </li>
+      </ul> 
+    </div>
   </div>
-    <div class="am-pagetitle bd-b pd-r-0"> <%= locals.page.title %>
-    <div class="pull-right ">
-          <div class="d-flex">
-            <div id="btnDisplayRuler" >Ruler<div>Turn Off</div></div>
-            <div id="btnDisplayGrid">Grid<div>Turn Off</div></div>
-            
-            <div class="tx-32 tx-normal pd-x-10" >
-                <a href="/app/workspace" title="Start Over" class="ion-ios-refresh-outline tx-primary"> </a></div>  
-          </div>
+  <div class="card pd-x-20 pd-y-15">
+
+    <div class="email-content-header">
+      <div>
+        <div class="btn-group mg-b-0 hidden-xs-down">
          
+          <button type="button" class="btn btn-secondary" id="btnDisplayGrid"><b class="ion-grid tx-12">Grid</b></button>
+          <button type="button" class="btn btn-secondary" id="btnDisplayRuler" ><b class="fa-solid fa-ruler tx-12">Ruler</b></button>
+        </div><!-- btn-group -->
+      </div>
+      <div class="mg-l-auto">
+        <div class="btn-group mg-b-0">
+          <button type="button" onclick="$('#menu-save-design').click()" class="btn btn-secondary"><i class="ion-bookmark tx-24"></i></button>
+          <a href="/app/workspace" class="btn btn-secondary"><i class="ion-refresh tx-24"></i></a>
+        </div><!-- btn-group -->
+
+      </div>
     </div>
-    </div>
-    <div class="card">
-        <div class="workarea" id="workarea">
-            <div  id="canvas-holder">
-                <div class="content tx-center">
-                    <canvas id="client-main-canvas"   ></canvas>
-                    <canvas id="client-main-canvas-logo"  ></canvas>                    
-                </div>
+
+    
+    <div class="table-responsive">
+      <div class="workarea" id="workarea">
+        <div  id="canvas-holder">
+            <div class="content tx-center">
+                <canvas id="client-main-canvas"   ></canvas>
+                <canvas id="client-main-canvas-logo"  ></canvas>                    
             </div>
         </div>
     </div>
+    </div>
+  </div>
+   
     
 </div>
 <!--Workspace Right panel-->
@@ -216,7 +228,7 @@
         if(type === 'project'){
             loadProject(code);
         }else{
-          debugger;
+          
             loadSVGTemplate(code);
 
         }

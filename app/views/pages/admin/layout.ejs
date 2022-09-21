@@ -3,6 +3,11 @@
 <html lang="en">
     <head><%- include('../../partials/client/head'); %> </head>
     <body>
+        <div class="overlay hidden" id="loader" >
+            <div class="overlay__inner">
+                <div class="overlay__content"><span class="spinner"></span></div>
+            </div>
+        </div>
      <div id="image-editor-container">
          <div class="main-panel">
         <%- include('../../partials/client/topbar', {user:user}); %>

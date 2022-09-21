@@ -34,7 +34,7 @@ const projectHtml = `<div class='col-lg-12 my-projects'><div class="list-group-i
 
 // vars
 $btnDownloadPDF = $("#btn-download-pdf");
-$btnSaveDesign = $("#btn-save-design");
+// $btnSaveDesign = $("#btn-save-design");
 
 $btnUploadImage = $("#btn-upload-img");
 $btnUploadImageHidden = $("#btn-upload-img-hidden");
@@ -42,6 +42,7 @@ $layers = $("#layers");
 $btnRepeatDesign = $("#repeatdesign");
 $clientMainCanvas = $("#client-main-canvas");
 $canvasPrev = $("#client-main-canvas-logo");
+$btnSave = $("#btnSave");
 // $repeatImageCtrl = $("#repeat-image-ctrl");
 // $btnCancelRepeatDesign = $("#repeat-image-ctrl .cancel");
 // $btnApplyToOne = $("#repeat-image-ctrl .done");
@@ -296,15 +297,15 @@ function loadSVGTemplate(id) {
                 }`;
             })
            // debugger;
-            var len = $('.canvas-container').find('.ruler').length;
-            if(len === 0){
-                $('.canvas-container').ruler({
-                    vRuleSize: 22,
-                    hRuleSize: 22,
-                    showCrosshair : false,
-                    showMousePos: false
-                }); 
-            }
+            // var len = $('.canvas-container').find('.ruler').length;
+            // if(len === 0){
+            //     $('.canvas-container').ruler({
+            //         vRuleSize: 22,
+            //         hRuleSize: 22,
+            //         showCrosshair : false,
+            //         showMousePos: false
+            //     }); 
+            // }
         }, function (item, object) {
             object.set({left:0,top:0}); 
             object.scaleToWidth(400);
@@ -327,12 +328,6 @@ function loadSVGTemplate(id) {
             group.push(object);
         });
     })
-
-
-
-
-
-
 }
 
 function applyFilter(index, filter) {
@@ -393,8 +388,6 @@ function initUIEvents() {
          _canvas.setActiveObject(obj).renderAll();
 
          showLayerControls(this);
-
-
         $(this).on("click",".bring-fwd",function(evt){
             evt.stopPropagation();
              if(selected>0)
@@ -444,7 +437,7 @@ function initUIEvents() {
     })
 
 
-    $("#btnSave").unbind().on("click",function(e){
+    $btnSave.unbind().on("click",function(e){
         e.preventDefault();
        saveDesign();
     })
@@ -513,6 +506,15 @@ function initUIEvents() {
         var style = !($(".vRule").is(':visible'));
         if(style)
         {   
+              var len = $('.canvas-container').find('.ruler').length;
+            if(len === 0){
+                $('.canvas-container').ruler({
+                    vRuleSize: 22,
+                    hRuleSize: 22,
+                    showCrosshair : false,
+                    showMousePos: false
+                }); 
+            }
             $(this).removeClass('tx-gray-500');
             $(".vRule, .hRule").show();
             $(this).html($(this).html().replace("On","Off"));
@@ -684,10 +686,10 @@ function initUIEvents() {
         canvas.renderAll();
     })
 
-    $btnTemplate.on("click", function (e) {
-        //$("#templatepanel").hide();
-        //canvas.discardActiveObject().renderAll();
-    })
+    // $btnTemplate.on("click", function (e) {
+    //     //$("#templatepanel").hide();
+    //     //canvas.discardActiveObject().renderAll();
+    // })
 
     // $btnMyProject.on("click", function (e) {
 
@@ -730,10 +732,6 @@ function initUIEvents() {
         var id = e.currentTarget.id;
         canvas.clear();
         loadSVGTemplate(id);
-       // $("#templatepanel").hide();
-       // $("#menu-upload > a").click();
-        //triggerNextStep("step-1");
-
     });
 
 
@@ -797,6 +795,8 @@ function initUIEvents() {
 
         fabric.Image.fromURL(id, function (img) {
             var img1 = img.set({left: 0, top: 0});
+            img1.scaleToHeight(250);
+
             img1.globalCompositeOperation = 'source-atop';
             _canvas.add(img1);
             mainControls(true);
@@ -1127,8 +1127,8 @@ function renderPreview()
                 object.set("left", left);
                 object.globalCompositeOperation = "source-atop";
                 canvasPrev.add(object).renderAll();
-                $btnDownloadPDF.removeClass("hidden");
-                $btnSaveDesign.removeClass("hidden");
+               // $btnDownloadPDF.removeClass("hidden");
+                //$btnSaveDesign.removeClass("hidden");
                 $(".vRule, .hRule").hide();
                 $("#create-design-heading").addClass("hidden");
                 $("#preview-design-heading").removeClass("hidden");
@@ -1204,10 +1204,9 @@ function onObjectSelection(o)
     const id = o.selected[0].id;
     var elem = $(`#${id}`)[0];
     clearLayerSelection();
-    showLayerControls(elem);
-    //$(`#${id} .layers-controls`).show();
-    //$(`#${id}`).addClass("selected-layer");
-    //initLayerEvents(elem)
+    //showLayerControls(elem);
+    $(`#${id}`).addClass("selected-layer");
+
 }
 
 
@@ -1349,6 +1348,7 @@ function showLayerControls($elem, selected) {
     $(`#${target.id} .layers-controls`).show();
     $(`#${target.id} .layers-controls`).removeClass('hidden');
     $(`#${target.id}`).addClass("selected-layer");
+   //$elem.click();
     /*
     var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
     var target = $elem;
@@ -1557,7 +1557,7 @@ const processFiles = (files) => {
         // if (file.type === 'image/svg+xml') {
         reader.onload = (e) => {
             fabric.Image.fromURL(e.target.result, (img) => {
-                img.scaleToHeight(300);
+                img.scaleToHeight(250);
                 img.set({left: 150, top: 150})
                 img.globalCompositeOperation = 'source-atop';
                 if (state.isPreviewCanvas) {
