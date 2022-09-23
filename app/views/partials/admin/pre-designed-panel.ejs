@@ -5,6 +5,100 @@
             <p class="tx-12 "><%= locals.uploadmessage %></p>
         </div>
 </div>  -->
+<div id="create-design-panel" class="hidden">
+  <div class="list-group widget-list-group bg-app-primary">
+    <div class="list-group-item d-flex">
+      <div class="media d-block d-sm-flex">
+        <div class="d-block d-sm-flex mg-sm-r-20">
+          <i class="ion-ios-keypad tx-24 tx-white"></i>
+        </div><!-- d-flex -->
+        <div class="media-body mg-t-10 mg-sm-t-0">
+          <h6 class="mg-b-5 tx-14"><a href="" class="tx-white">Create Design</a></h6>
+          <p class="mg-b-0 tx-12 tx-white-5">Add Photos, ClipArts, Text</p>
+        </div><!-- media-body -->
+      </div><!-- media -->
+      <a href="#" id="btn-step-designx" class="btn btn-primary pd-lg-x-20 mg-l-auto">Preview</a>
+    </div>
+  </div>
+  <ul class="nav nav-tabs tx-12 bold" role="tablist">
+    <li class="nav-item" id="panel-photos">
+      <a class="nav-link active " data-toggle="tab" href="#home"><i class="ion-images pd-x-5 tx-16"></i>PHOTOS</a>
+    </li>
+    <li class="nav-item" id="menu-clipart">
+      <a class="nav-link" data-toggle="tab" href="#clipartmenu"><i class="ion-ios-paw pd-x-5 tx-16"></i> CLIP ART</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#menu2"><i class="ion-social-tumblr pd-x-5 tx-16"></i> TEXT</a>
+    </li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div id="home" class="container tab-pane active">
+      <div class="card pd-t-20 pd-0 tx-center " >
+          <i class="tx-80  tx-gray-800 icon-imgupload ion-images" id="btn-upload-img"></i>
+          <p class="tx-12 pd-t-20 pd-x-30 tx-center">Upload Photos </p>
+          <input id="btn-upload-img-hidden" type="file" accept="image/*" multiple="multiple" hidden="hidden">
+      </div>
+    </div>
+    <div id="clipartmenu" class="container tab-pane fade"><%- include('../../partials/client/clipart'); %>
+
+    </div>
+    <div id="menu2" class="container tab-pane fade"><br>
+      <%- include('../../partials/client/typo'); %>           
+
+    </div>
+  </div>
+
+      
+
+
+ 
+
+</div>
+<div id="add-template-panel" class="" role="tabpanel" aria-labelledby="addtemplate">
+  <div class="list-group widget-list-group bg-app-primary">    
+    <div class="list-group widget-list-group bg-app-primary">
+      <div class="list-group-item d-flex">
+        <div class="media d-block d-sm-flex">
+          <div class="d-block d-sm-flex mg-sm-r-20">
+            <i class="ion-ios-keypad tx-24 tx-white"></i>
+          </div><!-- d-flex -->
+          <div class="media-body mg-t-10 mg-sm-t-0">
+            <h6 class="mg-b-5 tx-14"><a href="" class="tx-white">Select Template</a></h6>
+            <p class="mg-b-0 tx-12 tx-white-5">Next (Create Design)</p>
+          </div><!-- media-body -->
+        </div><!-- media -->
+        <a href="#" id="btn-step-design" class="btn btn-primary pd-lg-x-20 mg-l-auto">Next</a>
+      </div>
+    </div>
+  </div>
+  <div class="row mg-0" id="customTemplateThumb">
+    <%for(var i=0; i<templates.length; i++){ %>
+    <div class="col-lg-4 pd-0  bd template" id="<%=templates[i].code %>">
+      <div class="card  ht-200">
+        <div class="card-body pd-10">
+          <img class="card-img-top img-fluid pd-b-10 ht-140" src="<%=templates[i].base64 %>" alt="Image">
+          <h5 class="tx-14 tx-bold tx-inverse  pd-x-10" style="height:28px;overflow:hidden"><%=templates[i].name %></h5>
+          <p class="card-subtitle tx-12 tx-bold  pd-x-10"># <%=templates[i].ref_code %></p>
+        </div>
+      </div><!-- card -->
+    </div>
+    <%}%> 
+  </div>
+
+
+  <!-- <div class="d-flex svg-templates tx-center" id="customTemplateThumb">
+
+
+      <%for(var i=0; i<templates.length; i++){ %>
+        <div id="<%=templates[i].code %>" class="template template-small" > 
+          <img src="<%=templates[i].base64 %>" > 
+          <div class="tx-12 tx-bold pd-y-5"><%=templates[i].title %></div>
+      </div>
+      <%}%>  
+</div> -->
+</div>
     <input id="admin-image-upload-hidden" data-page-id="<%= locals.page.id %>" type="file" accept="image/*" multiple="multiple" hidden="hidden">
      
        <div class="card pd-t-20 pd-0" >
@@ -43,19 +137,8 @@
                    Save Design 
                   </a>
                 </h6>
-              </div><!-- card-header -->
-              <div id="add-template-panel" class="collapse" role="tabpanel" aria-labelledby="addtemplate">
-                <div class="d-flex svg-templates tx-center" id="customTemplateThumb">
-
-
-                    <%for(var i=0; i<templates.length; i++){ %>
-                      <div id="<%=templates[i].code %>" class="template template-small" > 
-                        <img src="<%=templates[i].base64 %>" > 
-                        <div class="tx-12 tx-bold pd-y-5"><%=templates[i].title %></div>
-                    </div>
-                    <%}%>  
               </div>
-            </div>
+         
               <div id="add-customtext-panel" class="collapse" role="tabpanel" aria-labelledby="addcustomtext">
               </div>
               <div id="add-clipart-panel" class="collapse" role="tabpanel" aria-labelledby="addclipart">
@@ -117,8 +200,7 @@
                     </div>
                 </div>
               </div>
-            </div><!-- card -->
-            <!-- ADD MORE CARD HERE -->
-          </div><!-- accordion -->
+            </div>
+          </div>
           
         </div>

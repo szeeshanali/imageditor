@@ -34,7 +34,7 @@ const projectHtml = `<div class='col-lg-12 my-projects'><div class="list-group-i
 
 // vars
 $btnDownloadPDF = $("#btn-download-pdf");
-$btnSaveDesign = $("#btn-save-design");
+// $btnSaveDesign = $("#btn-save-design");
 
 $btnUploadImage = $("#btn-upload-img");
 $btnUploadImageHidden = $("#btn-upload-img-hidden");
@@ -42,6 +42,7 @@ $layers = $("#layers");
 $btnRepeatDesign = $("#repeatdesign");
 $clientMainCanvas = $("#client-main-canvas");
 $canvasPrev = $("#client-main-canvas-logo");
+$btnSave = $("#btnSave");
 // $repeatImageCtrl = $("#repeat-image-ctrl");
 // $btnCancelRepeatDesign = $("#repeat-image-ctrl .cancel");
 // $btnApplyToOne = $("#repeat-image-ctrl .done");
@@ -134,9 +135,9 @@ var filters = [
 function getUserProjects()
 {
     $loader.removeClass("hidden");
-    $.get(`/api/project/`, function (data) {
+    $.get(`/api/project/`, function (res) {
         $loader.addClass("hidden");
-        var projects = data || [];
+        var projects = res.data || [];
         
         var temp="";
         $("#myProjectContainer").html("<p>No projects found.</p>");
@@ -209,11 +210,11 @@ function deleteProject(id,self){
 function loadProject(id) {
     state.isPreviewCanvas = false;
     var group = [];
-    $.get(`/api/project/${id}`, function (data) {
-        const json = JSON.parse(data.json);
+    $("#btnBack").click();
+    $.get(`/api/project/${id}`, function (res) {
+        const json = JSON.parse(res.data.json);
         if (!json) { return; }
         canvas.clear();
-        debugger;
         canvas.loadFromJSON(json, function () {
         //    /// canvas.setWidth(8.5 * dpi);
         //    // canvas.setHeight(11 * dpi);
@@ -229,6 +230,22 @@ function loadProject(id) {
         }, function (o, object) {
             // console.log(o,object)
         })
+
+        fabric.loadSVGFromURL(res.template.base64, function (objects, options) {
+            //$canvasPrev.fadeOut();
+            var loadedObjects = new fabric.Group(group);            
+            var templateWidth = options.viewBoxWidth;
+            var templateHeight = options.viewBoxHeight;
+            canvasPrev.setDimensions({width:templateWidth,height:templateHeight});
+            canvasPrev.setBackgroundImage(loadedObjects, canvasPrev.renderAll.bind(canvasPrev));
+            canvasPrev.renderAll();
+            loadedObjects.center().setCoords();
+
+        }, function (item, object) {
+            object.set('id', item.getAttribute('id'));
+            group.push(object);
+        });
+        
     })
 }
 
@@ -248,21 +265,18 @@ function loadSVGTemplate(id) {
         }
 
         canvas.clear();
+        canvas.templateId = data.code;
         hideWorkspaceControls();
         // loading Big Design
         fabric.loadSVGFromURL(svgBase64, function (objects, options) {
             
             var logo= objects[0];
-            //logo.scaleToWidth(500);
             var w =logo.getScaledWidth(); 
             var h = logo.getScaledHeight();            
             canvas.setDimensions({width: w , height: h});
-            // //canvas.setWidth(logo.width+logo.left/2)
-            // //canvas.setHeight(logo.height+logo.top/2);
-            // //canvas.add(logo);
             canvas.setBackgroundImage(logo, canvas.renderAll.bind(canvas));            
             canvas.renderAll();
-            //loadedObjects.center().setCoords();
+            
 
             $("#template-info-panel .template-name").text(data.name);
             $("#template-info-panel .page-size").text(meta.pageSize);
@@ -283,15 +297,15 @@ function loadSVGTemplate(id) {
                 }`;
             })
            // debugger;
-            var len = $('.canvas-container').find('.ruler').length;
-            if(len === 0){
-                $('.canvas-container').ruler({
-                    vRuleSize: 22,
-                    hRuleSize: 22,
-                    showCrosshair : false,
-                    showMousePos: false
-                }); 
-            }
+            // var len = $('.canvas-container').find('.ruler').length;
+            // if(len === 0){
+            //     $('.canvas-container').ruler({
+            //         vRuleSize: 22,
+            //         hRuleSize: 22,
+            //         showCrosshair : false,
+            //         showMousePos: false
+            //     }); 
+            // }
         }, function (item, object) {
             object.set({left:0,top:0}); 
             object.scaleToWidth(400);
@@ -314,12 +328,6 @@ function loadSVGTemplate(id) {
             group.push(object);
         });
     })
-
-
-
-
-
-
 }
 
 function applyFilter(index, filter) {
@@ -380,8 +388,6 @@ function initUIEvents() {
          _canvas.setActiveObject(obj).renderAll();
 
          showLayerControls(this);
-
-
         $(this).on("click",".bring-fwd",function(evt){
             evt.stopPropagation();
              if(selected>0)
@@ -431,13 +437,17 @@ function initUIEvents() {
     })
 
 
-    $("#btnSave").unbind().on("click",function(e){
+    $btnSave.unbind().on("click",function(e){
         e.preventDefault();
        saveDesign();
     })
     $("#btn-step-preview, #btn-menu-peview").on("click",function(e){
         e.preventDefault();
         previewDesign();      
+    });
+    $("#btn-step-download").on("click",function(e){
+        e.preventDefault();
+       $btnDownloadPDF.click(); 
     });
     $("#btnBack").on("click",function(e){
         e.preventDefault();
@@ -496,6 +506,15 @@ function initUIEvents() {
         var style = !($(".vRule").is(':visible'));
         if(style)
         {   
+              var len = $('.canvas-container').find('.ruler').length;
+            if(len === 0){
+                $('.canvas-container').ruler({
+                    vRuleSize: 22,
+                    hRuleSize: 22,
+                    showCrosshair : false,
+                    showMousePos: false
+                }); 
+            }
             $(this).removeClass('tx-gray-500');
             $(".vRule, .hRule").show();
             $(this).html($(this).html().replace("On","Off"));
@@ -667,10 +686,10 @@ function initUIEvents() {
         canvas.renderAll();
     })
 
-    $btnTemplate.on("click", function (e) {
-        //$("#templatepanel").hide();
-        //canvas.discardActiveObject().renderAll();
-    })
+    // $btnTemplate.on("click", function (e) {
+    //     //$("#templatepanel").hide();
+    //     //canvas.discardActiveObject().renderAll();
+    // })
 
     // $btnMyProject.on("click", function (e) {
 
@@ -713,10 +732,6 @@ function initUIEvents() {
         var id = e.currentTarget.id;
         canvas.clear();
         loadSVGTemplate(id);
-       // $("#templatepanel").hide();
-       // $("#menu-upload > a").click();
-        //triggerNextStep("step-1");
-
     });
 
 
@@ -776,10 +791,14 @@ function initUIEvents() {
 
     $("#clipartmenu .clipart img").on("click", (e) => {
         var id = e.currentTarget.src;
+        var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
+
         fabric.Image.fromURL(id, function (img) {
             var img1 = img.set({left: 0, top: 0});
+            img1.scaleToHeight(250);
+
             img1.globalCompositeOperation = 'source-atop';
-            canvas.add(img1);
+            _canvas.add(img1);
             mainControls(true);
            // $("#menu-text > a").click();
         });
@@ -954,8 +973,10 @@ function saveDesign(){
      */
     // if(state.isPreviewCanvas)
     // {toast("Please go back and save your design."); return;}
+
     if(canvas.getObjects().length == 0)
     {toast("Please create your design before save."); return;}
+    
     
     var title = $("#input-project-title").val();
     var desc = $("#input-project-desc").val();
@@ -963,16 +984,21 @@ function saveDesign(){
     if(!title)
     { toast("Please enter project title."); return;}
 
+    if(!canvas.templateId)
+    {  console.error("templateId is not present in canvas.");
+        toast("Can't save project. please contact admin."); return;
+    }
+
     var thumbBase64 = canvas.toDataURL({format: 'jpg', quality: 0.8});
     $.ajax({
         type: "POST",
         url: "/app/client/save-design",
-
         data: {
             title : title || "N/A",
             desc :  desc || "N/A",
             thumbBase64:thumbBase64 ,
-            json: JSON.stringify(canvas.toDatalessJSON())
+            json: JSON.stringify(canvas.toDatalessJSON()),
+            templateId: canvas.templateId
         },
         success: function (res) {
             toast("Design has been Saved.");
@@ -981,7 +1007,6 @@ function saveDesign(){
             if (res.status === 401) {
                 toast(`${res.statusText}:${res.responseJSON.message}`);
             } else {}
-
         }
     })
 }
@@ -1102,8 +1127,8 @@ function renderPreview()
                 object.set("left", left);
                 object.globalCompositeOperation = "source-atop";
                 canvasPrev.add(object).renderAll();
-                $btnDownloadPDF.removeClass("hidden");
-                $btnSaveDesign.removeClass("hidden");
+               // $btnDownloadPDF.removeClass("hidden");
+                //$btnSaveDesign.removeClass("hidden");
                 $(".vRule, .hRule").hide();
                 $("#create-design-heading").addClass("hidden");
                 $("#preview-design-heading").removeClass("hidden");
@@ -1179,10 +1204,9 @@ function onObjectSelection(o)
     const id = o.selected[0].id;
     var elem = $(`#${id}`)[0];
     clearLayerSelection();
-    showLayerControls(elem);
-    //$(`#${id} .layers-controls`).show();
-    //$(`#${id}`).addClass("selected-layer");
-    //initLayerEvents(elem)
+    //showLayerControls(elem);
+    $(`#${id}`).addClass("selected-layer");
+
 }
 
 
@@ -1324,6 +1348,7 @@ function showLayerControls($elem, selected) {
     $(`#${target.id} .layers-controls`).show();
     $(`#${target.id} .layers-controls`).removeClass('hidden');
     $(`#${target.id}`).addClass("selected-layer");
+   //$elem.click();
     /*
     var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
     var target = $elem;
@@ -1532,7 +1557,7 @@ const processFiles = (files) => {
         // if (file.type === 'image/svg+xml') {
         reader.onload = (e) => {
             fabric.Image.fromURL(e.target.result, (img) => {
-                img.scaleToHeight(300);
+                img.scaleToHeight(250);
                 img.set({left: 150, top: 150})
                 img.globalCompositeOperation = 'source-atop';
                 if (state.isPreviewCanvas) {

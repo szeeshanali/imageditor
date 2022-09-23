@@ -3,15 +3,17 @@
   var canvas = new fabric.Canvas("admin-main-canvas",{
     preserveObjectStacking:true
  })
+ var state = {
+  isPreviewCanvas: false
+}
 
 
- $layers = $("#layers");
- $adminImageUpload              =   $("#admin-image-upload");
- $btnImageUploadHidden          =   $(`#admin-image-upload-hidden`);
- $templateContainer             =   $("#template-container"); 
- $btnSaveDesign                 =   $("#save-design"); 
- $cancelDesign                 =   $("#cancel-design"); 
-
+ var $layers                    = $("#layers");
+ var $adminImageUpload          =   $("#admin-image-upload");
+ var $btnImageUploadHidden      =   $(`#admin-image-upload-hidden`);
+ var $templateContainer         =   $("#template-container"); 
+ var $btnSaveDesign             =   $("#save-design"); 
+ var $cancelDesign              =   $("#cancel-design"); 
  var $dropdownTemplateSize      = $("#dropdownTemplateSize");
  var $dropdownCanvasShape       = $("#dropdownCanvasShape");
  var $inputTemplateShapeWidth   = $("#inputTemplateShapeWidth");
@@ -25,7 +27,9 @@
  var $adminDesignCtrl           = $(".admin-design-ctrl");
  var $pageTitle                 = $(".am-pagetitle");
  var $btnSavePreDesign          = $("#btnSavePreDesign");
- $btnTextSize = $("#btnTextSize");
+ var $btnTextSize               = $("#btnTextSize");
+ var $loader                    = $("#loader");
+
 
  const layerHtml = `<div class="media d-block d-flex layer-item object-options" data-index='{index}' id='{id}'  >
  <div class="d-block mg-sm-r-10 img"> <img src="{src}" class="wd-30" alt="Image" ></div>
@@ -595,12 +599,16 @@ if(!userId)
   })
 
   $customTemplateThumb.on("click",(e)=>{
-    var templateId = e.currentTarget.id; 
-    if(templateId){
-      loadSVGTemplateForCustomDesign(templateId);
-    }else{
-      toast(`Can't load Template.`)
-    }
+    // var templateId = e.currentTarget.id; 
+    // if(templateId){
+    //   loadSVGTemplateForCustomDesign(templateId);
+    // }else{
+    //   toast(`Can't load Template.`)
+    // }
+    debugger;
+    var id = e.currentTarget.id;
+    canvas.clear();
+    loadSVGTemplate(id);
   })
 
   $clipartThumb.on("click", (e) => {
@@ -691,7 +699,8 @@ if(!userId)
           onSaveTemplate();
     });
   
-   $adminImageUpload.on("click",function () {
+   $adminImageUpload.on("click",function (e) {
+    e.preventDefault();
       $btnImageUploadHidden.click();
     })
   
@@ -727,45 +736,125 @@ if(!userId)
   $adminDesignCtrl.find(".disabled").removeClass("disabled");
 }
 
-function loadSVGTemplate(id)
-{
-    var group = [];
-    $.get(`/api/admin/svg-templates/${id}`, function (data) {
-        const svgBase64 = data.base64;
-        if(!svgBase64)
-        {
-            alert("Error loading Template");
-            return;}
+function loadSVGTemplate(id) {
+  var group = [];
+  state.isPreviewCanvas = false;
+  $.get(`/api/admin/svg-templates/${id}`, function (data) {
+      const svgBase64 = data.base64;
+      if (! svgBase64) {
+          toast("Error loading Template");
+          return;
+      }
+      var meta = {};
+      if (data.meta) {
+          meta = JSON.parse(data.meta);
+      }
 
-        //canvas.setDimensions({width: letterPageSize.width, height: letterPageSize.height});
-        //canvasPrev.setDimensions({width: letterPageSize.width, height: letterPageSize.height});
-        canvas.clear();
-        fabric.loadSVGFromURL(svgBase64,function(objects,options) {      
-            var loadedObjects = new fabric.Group(group);
-            var templateWidth = options.viewBoxWidth;
-            var templateHeight = options.viewBoxHeight;      
-            canvas.setDimensions({width: templateWidth, height: templateHeight});
-            //canvas.orignalBackgroundImage = loadedObjects;                      
-            canvas.setBackgroundImage(loadedObjects,canvas.renderAll.bind(canvas));
-            canvas.renderAll();
-            loadedObjects.center().setCoords();
+      canvas.clear();
+      canvas.templateId = data.code;
+      hideWorkspaceControls();
+      // loading Big Design
+      fabric.loadSVGFromURL(svgBase64, function (objects, options) {
+          
+          var logo= objects[0];
+          var w =logo.getScaledWidth(); 
+          var h = logo.getScaledHeight();            
+          canvas.setDimensions({width: w , height: h});
+          canvas.setBackgroundImage(logo, canvas.renderAll.bind(canvas));            
+          canvas.renderAll();
+          
+
+          $("#template-info-panel .template-name").text(data.name);
+          $("#template-info-panel .page-size").text(meta.pageSize);
+          $("#template-info-panel .logo-size").text((meta.objectWidth / 72).toFixed(2) + "''");
+          $("#template-info-panel .total-logos").text(meta.objects);
+          $("#template-info-panel .page-title").text(data.title);
+          $("#template-info-panel .ref_code").text(data.ref_code | "NA");
+
+          
+          $("#template-info-panel #imgSelectedTemplate").attr("src",svgBase64)
+          $(".kk-part-no").text(data.ref_code || "N/A");
+          $(".kk-part-link").text(data.link || "N/A");
+          var reg = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+          $("#kp-link").attr("href", reg.test(data.link)?data.link:"#");
+          $("#use-template").unbind().click(function () {
+              window.location.href = `/app/workspace/${
+                  data.code
+              }`;
+          })
+         // debugger;
+          var len = $('.canvas-container').find('.ruler').length;
+          if(len === 0){
+              $('.canvas-container').ruler({
+                  vRuleSize: 22,
+                  hRuleSize: 22,
+                  showCrosshair : false,
+                  showMousePos: false
+              }); 
+          }
+      }, function (item, object) {
+          object.set({left:0,top:0}); 
+          object.scaleToWidth(400);
+          //object.set('id', item.getAttribute('id'));
+         // group.push(object);
+      });
+
+      fabric.loadSVGFromURL(svgBase64, function (objects, options) {
+          //$canvasPrev.fadeOut();
+          var loadedObjects = new fabric.Group(group);            
+          var templateWidth = options.viewBoxWidth;
+          var templateHeight = options.viewBoxHeight;
+          canvasPrev.setDimensions({width:templateWidth,height:templateHeight});
+          canvasPrev.setBackgroundImage(loadedObjects, canvasPrev.renderAll.bind(canvasPrev));
+          canvasPrev.renderAll();
+          loadedObjects.center().setCoords();
+
+      }, function (item, object) {
+          object.set('id', item.getAttribute('id'));
+          group.push(object);
+      });
+  })
+}
+
+// function loadSVGTemplate(id)
+// {
+//     var group = [];
+//     $.get(`/api/admin/svg-templates/${id}`, function (data) {
+//         const svgBase64 = data.base64;
+//         if(!svgBase64)
+//         {
+//             alert("Error loading Template");
+//             return;}
+
+//         //canvas.setDimensions({width: letterPageSize.width, height: letterPageSize.height});
+//         //canvasPrev.setDimensions({width: letterPageSize.width, height: letterPageSize.height});
+//         canvas.clear();
+//         fabric.loadSVGFromURL(svgBase64,function(objects,options) {      
+//             var loadedObjects = new fabric.Group(group);
+//             var templateWidth = options.viewBoxWidth;
+//             var templateHeight = options.viewBoxHeight;      
+//             canvas.setDimensions({width: templateWidth, height: templateHeight});
+//             //canvas.orignalBackgroundImage = loadedObjects;                      
+//             canvas.setBackgroundImage(loadedObjects,canvas.renderAll.bind(canvas));
+//             canvas.renderAll();
+//             loadedObjects.center().setCoords();
         
 
 
 
-           $("#upload-template-splash").remove();
-           $(".tab-content .tab-pane").each((i,e)=>
-           { $(e).removeClass("active"); })    
-          $("#edit-template").addClass("active");
-        },function(item, object) {
-                object.set('id',item.getAttribute('id'));
-                group.push(object);
-        });
+//            $("#upload-template-splash").remove();
+//            $(".tab-content .tab-pane").each((i,e)=>
+//            { $(e).removeClass("active"); })    
+//           $("#edit-template").addClass("active");
+//         },function(item, object) {
+//                 object.set('id',item.getAttribute('id'));
+//                 group.push(object);
+//         });
 
-        loadTemplateInfo(data);
-    })
+//         loadTemplateInfo(data);
+//     })
 
-}
+// }
  
 	  
 function loadSVGTemplateForCustomDesign(id)
@@ -847,6 +936,7 @@ function loadTemplateInfo(data)
 
 
 function onDesignReload(o){
+  $loader.addClass("hidden");
   location.reload();
 
 }
@@ -868,6 +958,49 @@ function onDesignReload(o){
     $("#template-info-panel .total-logos").text(o.logoCount);
 
  }
+
+ $("#btnDisplayGrid").on("click",function(){
+  var style = $("#workarea").attr("style");
+  if(style)
+  {   
+      $(this).removeClass('tx-gray-500');
+      $("#workarea").removeAttr("style");
+      $(this).html($(this).html().replace("On","Off"));
+
+  }
+  else{
+      $(this).html($(this).html().replace("Off","On"));
+      
+      $(this).addClass('tx-gray-500');
+      $("#workarea").attr("style","background-image:url('')");
+     
+  }
+
+})
+
+
+$("#btn-step-design").on("click",function(){
+$("#add-template-panel").addClass("hidden");
+$("#create-design-panel").removeClass("hidden");
+})
+
+
+$("#btnDisplayRuler").on("click",function(){
+  var style = !($(".vRule").is(':visible'));
+  if(style)
+  {   
+      $(this).removeClass('tx-gray-500');
+      $(".vRule, .hRule").show();
+      $(this).html($(this).html().replace("On","Off"));
+  }
+  else{
+      $(".vRule, .hRule").hide();
+      $(this).html($(this).html().replace("Off","On"));
+      $(this).addClass('tx-gray-500');
+     
+  }
+
+})
 
  $btnSavePreDesign.on("click",()=>{
   var objs = canvas._objects; 
@@ -949,8 +1082,9 @@ var category = $("#admin-categories").val() ;
     }
     var MIME_TYPE = "image/png";
     var dataUrl = selectedDesign.base64;  
-var category = $("#admin-categories").val() ; 
 
+var category = $("#admin-categories").val() ; 
+$loader.removeClass("hidden");
     $.ajax({
         type: "POST",
         url: "/app/admin/save-template",
@@ -974,12 +1108,17 @@ var category = $("#admin-categories").val() ;
             category  : category
         },
         success:function(res){
+      
           designFlags.submitted = true; 
-          toast("Template has been successfully uploaded.");
+          toast("Uploaded Successfully!");
+          setTimeout(function(){
+            onDesignReload();
+          },2000)
         },
         error:function(res){
           designFlags.submitted = false; 
           toast("Error while uploading template.");
+          $loader.addClass("hidden");
         }
       })
     }
@@ -989,7 +1128,8 @@ var category = $("#admin-categories").val() ;
     if (files.length === 0) return;
     designFlags.submitted = false; 
     const allowedTypes = ['image/jpeg', 'image/png', 'image/svg+xml','image/gif']
-
+    canvas.clear();
+    onDesignLoaded({});
     for (let file of files) {
       // check type
       if (!allowedTypes.includes(file.type)) continue
@@ -1010,14 +1150,13 @@ var category = $("#admin-categories").val() ;
                 logoHeight: objects[0].height
             }
               var loadedObjects = new fabric.Group(group);
-              var templateWidth = 612;
-              var templateHeight = 792;      
+              var templateWidth = options.viewBoxWidth;
+              var templateHeight = options.viewBoxHeight;      
               canvas.setDimensions({top:0, width: templateWidth, height: templateHeight});
               if( pageid === "__template-designer"){
-                canvas.setBackgroundImage(loadedObjects,canvas.renderAll.bind(canvas));
+                canvas.add(loadedObjects,canvas.renderAll.bind(canvas));
                 $("#upload-template-splash").remove();
               }else{
-                loadedObjects.
                 canvas.add(loadedObjects);
               }
               canvas.renderAll();
@@ -1241,36 +1380,63 @@ var id = $elem.id;
 
 }
 
+
+function hideWorkspaceControls(){
+  $layers.html("Empty! please upload an image.");
+  mainControls(false);
+  hideObjectControls();
+}
+
+function hideObjectControls(){
+  imageControls(false); 
+  textControls(false);
+}
+
 function imageControls(show)
 {
 
-    if(show)
-    {
-        $imgCtrl.each(function () {
-            $(this).removeClass("hidden");
-        }) 
-    }else
-    {
-        $imgCtrl.each(function () {
-            $(this).addClass("hidden");
-        })
-     
-    }
+  if(show)
+  {
+      $imgCtrl.each(function () {
+          $(this).removeClass("hidden");
+      }) 
+  }else
+  {
+      $imgCtrl.each(function () {
+          $(this).addClass("hidden");
+      })
    
+  }
+ 
 }
 
 function textControls(show)
 {
-    if(show)
-    {
-        $txtCtrl.each(function () {
-            $(this).removeClass("hidden");
-        })
-    }else{
-        $txtCtrl.each(function () {
-            $(this).addClass("hidden");
-        })
-    }
+  if(show)
+  {
+      $txtCtrl.each(function () {
+          $(this).removeClass("hidden");
+      })
+  }else{
+      $txtCtrl.each(function () {
+          $(this).addClass("hidden");
+      })
+  }
+}
+
+function mainControls(show)
+{
+  if(show)
+  {
+      $mainCtrl.each(function () {
+          $(this).removeClass("hidden");
+      })
+  }else{
+      $mainCtrl.each(function () {
+          $(this).addClass("hidden");
+      })
+  }
+
 }
 
 /** */
