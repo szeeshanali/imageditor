@@ -12,7 +12,7 @@ const authroutes           = require("../app/routes/authroutes");
 const mainroutes           = require("../app/routes/mainroutes");
 const passport             = require('passport');
 const commonService        = require('../app/services/common');
-const monitoringService        = require('../app/services/monitor');
+///const monitoringService        = require('../app/services/monitor');
 
 
 
@@ -32,7 +32,7 @@ mongoose.connect('mongodb+srv://dtimageeditor:Xcccccc123@cluster0.gte2f0n.mongod
 .then(() => console.log('Connection Stablished.'))
 .catch((err)=> {
   console.error(err);
-  /// monitoringService.logError(`Error:Connector Failed. ${err}`);
+  // monitoringService.logError(`Error:Connector Failed. ${err}`);
 });
 
 
