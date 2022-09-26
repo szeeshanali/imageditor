@@ -1611,13 +1611,26 @@ debugger;
             
                 PDFJS.getDocument(typedarray).then(function(pdf) {
                   // you can now use *pdf* here
-                  console.log("the pdf has ", pdf.numPages, "page(s).")
-                  pdf.getPage(pdf.numPages).then(function(page) {
+                  console.log("the pdf has ", pdf.numPages, "page(s).");
+                  // getting first page only. 
+                  pdf.getPage(1).then(function(page) {
+                    // window.objs = [];
+                    // page.getOperatorList().then(function (ops) {
+                    //     for (var i=0; i < ops.fnArray.length; i++) {
+                    //         if (ops.fnArray[i] == PDFJS.OPS.paintJpegXObject) {
+                    //             window.objs.push(ops.argsArray[i][0])
+                    //         }
+                    //     }
+                    // })
+
+
+
                     // you can now use *page* here
-                    var viewport = page.getViewport(2.0);
-                    var canvasEl = document.querySelector("canvas")
-                    canvasEl.height = viewport.height;
-                    canvasEl.width = viewport.width;
+                     var viewport = page.getViewport(1.0);
+
+                     var canvasEl = document.createElement("canvas")
+                      canvasEl.height = viewport.height;
+                      canvasEl.width = viewport.width;
             
                     page.render({
                       canvasContext: canvasEl.getContext('2d'),
@@ -1627,9 +1640,8 @@ debugger;
                       var bg = canvasEl.toDataURL("image/png");
             
                       fabric.Image.fromURL(bg, function(img) {
-                      //  img.scaleToHeight(1123);
-                      //  canvas.setHeight(1123);
-                      //  canvas.setWidth(1588);
+                        img.scaleToWidth(canvas.width);
+                        img.scaleToHeight(canvas.height);
                         img.globalCompositeOperation = 'source-atop';
                         canvas.add(img);
                       });
