@@ -1610,10 +1610,13 @@ function triggerNextStep(stepId){
 const processFiles = (files) => {
     if (files.length === 0) 
         return;
-    
     const allowedTypes = ['image/jpeg', 'image/png', 'image/svg+xml', 'application/pdf']
-
     for (let file of files) {
+        var fileSizeInMB  =file.size / 1024 / 1024;
+        var limit = 5;
+        if(fileSizeInMB > limit)
+        { toast(`File size exceeds ${limit} Mb`);
+            return;}
         // check type
         if (! allowedTypes.includes(file.type)) 
             continue
@@ -1621,12 +1624,9 @@ const processFiles = (files) => {
         let reader = new FileReader()
         // handle svg
         if (file.type === 'application/pdf') {
-debugger;
 
             reader.onload = function() {
-                debugger;
                 var typedarray = new Uint8Array(this.result);
-            
                 PDFJS.getDocument(typedarray).then(function(pdf) {
                   // you can now use *pdf* here
                   console.log("the pdf has ", pdf.numPages, "page(s).");

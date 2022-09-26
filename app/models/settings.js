@@ -1,8 +1,8 @@
-const mongoose = require('default_settings');
+const mongoose = require('app_settings');
 
 const schema  = new mongoose.Schema({
-    upload_size_limit_kb:    {   type    :   Number, default: 5120 },
+    file_size_limit:    {   type    :   Number, default: 5 },
     });
 
-const defaultSettings   = mongoose.model('default_settings',schema);
-module.exports  = defaultSettings;
+const appSettings   = mongoose.model('app_settings',schema);
+module.exports  = appSettings;
