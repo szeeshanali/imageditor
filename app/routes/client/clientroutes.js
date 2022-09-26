@@ -30,6 +30,9 @@ router.get(ROUTE_USER_PROFILE, isLoggedIn, (req,res)=>{
         user:req.user,
         categories:cached_layout_data.categories
     });
+
+
+
 })
 
 
@@ -90,6 +93,25 @@ router.get("/api/project/:id?", isLoggedIn,  async (req, res) => {
         res.status(500).send();
     }
 });
+
+router.get("/api/pre-designed/:id?", isLoggedIn,  async (req, res) => {
+    
+    var id = req.params.id; 
+    console.log(`API: /api/pre-designed/${id||''}`);
+    try{
+        var data  = await commonService.uploadService.getPreDesignedAsync(id); 
+        var svgTemplate= {};     
+        if(id)
+        { svgTemplate = await uploads.findOne({code:data.templateId},{base64:1}); }
+         
+     
+        const response = {data:data,template:svgTemplate};
+        res.status(200).send(response);
+    }catch{
+        res.status(500).send();
+    }
+});
+
 
 
 
@@ -196,30 +218,30 @@ try{
   
 
   
-router.get("/app/pre-designed/:id?",  isLoggedIn, async (req, res) => {
+// router.get("/app/pre-designed/:id?",  isLoggedIn, async (req, res) => {
 
-    res.locals.page = {
-        id: "__pre-designed",
-        title: "Custom Designs",
-        user: req.user,
+//     res.locals.page = {
+//         id: "__pre-designed",
+//         title: "Custom Designs",
+//         user: req.user,
         
-      }
+//       }
 
-    var predesigned = await commonService.uploadService.getPreDesigned(req.user._id);
+//     var predesigned = await commonService.uploadService.getPreDesigned(req.user._id);
     
-    res.render("pages/client/pre-designed",{
-        user:req.user, 
-        predesigned: predesigned});
-});
+//     res.render("pages/client/pre-designed",{
+//         user:req.user, 
+//         predesigned: predesigned});
+// });
 
 
-router.get("/api/pre-designed/:id?",  isLoggedIn, async (req, res) => {
+// router.get("/api/pre-designed/:id?",  isLoggedIn, async (req, res) => {
 
    
-    var id = req.params.id;
-    var predesigned = await commonService.uploadService.getPreDesigned(null,id);
-    res.status(200).send({data:predesigned});
-});
+//     var id = req.params.id;
+//     var predesigned = await commonService.uploadService.getPreDesigned(null,id);
+//     res.status(200).send({data:predesigned});
+// });
 
 router.get("/api/client/download",  isLoggedIn, async (req, res) => {
 

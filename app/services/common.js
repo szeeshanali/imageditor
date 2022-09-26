@@ -113,6 +113,38 @@ const commonService = (function() {
         }
         return  designs;
     }
+    this.getPreDesignedAsync = async (designId)=>
+    { 
+        var designs = [];
+        if(!designId)
+        { designs = await uploads.find({
+            active:true, 
+            type:'pre-designed', 
+            by_admin:true, 
+            active:true,
+            deleted:false
+        },{code:1,thumbBase64:1,title:1,created_dt:1,templateId:1}); 
+        }else if(designId == "default")
+        {
+            designs = await uploads.findOne({active:true, 
+            type:'pre-designed', 
+            by_admin:true, 
+            active:true });
+
+        }else{
+            designs = await uploads.findOne({
+                active:true, 
+                type:'pre-designed', 
+                by_admin:true, 
+                code: designId
+             });
+
+              
+             
+
+        }
+        return  designs;
+    }
     this.getTemplateAsync = async (templateId)=>
     { 
 
@@ -261,6 +293,7 @@ const commonService = (function() {
             deleteUploadAsync       :   this.deleteUploadAsync, 
             clear                   :   this.clearUploads,
             getUploads              :   this.getUploads,
+            getPreDesignedAsync     :   this.getPreDesignedAsync
         },
         reportingService: {
             getCustomerReport   :   this.getCustomerReport,

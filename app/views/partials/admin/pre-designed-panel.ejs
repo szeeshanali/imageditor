@@ -5,9 +5,9 @@
             <p class="tx-12 "><%= locals.uploadmessage %></p>
         </div>
 </div>  -->
-<div id="create-design-panel" class="hidden">
-  <div class="list-group widget-list-group bg-app-primary">
-    <div class="list-group-item d-flex">
+<div id="create-design-panel" class="hidden" >
+  <div class="list-group widget-list-group bg-app-primary" >
+    <div class="list-group-item d-flex" id="create-design-heading">
       <div class="media d-block d-sm-flex">
         <div class="d-block d-sm-flex mg-sm-r-20">
           <i class="ion-ios-keypad tx-24 tx-white"></i>
@@ -17,9 +17,25 @@
           <p class="mg-b-0 tx-12 tx-white-5">Add Photos, ClipArts, Text</p>
         </div><!-- media-body -->
       </div><!-- media -->
-      <a href="#" id="btn-step-designx" class="btn btn-primary pd-lg-x-20 mg-l-auto">Preview</a>
+      <a href="#" id="btn-step-preview" class="btn btn-primary pd-lg-x-20 mg-l-auto">Preview</a>
+
     </div>
+    <div class="list-group-item d-flex hidden" id="preview-design-heading">
+      <div class="media d-block d-sm-flex">
+        <div class="d-block d-sm-flex mg-sm-r-20">
+          <i class="ion-images tx-24 tx-white"></i>
+        </div><!-- d-flex -->
+        <div class="media-body mg-t-10 mg-sm-t-0">
+          <h6 class="mg-b-5 tx-14"><a href="" class="tx-white">Preview</a></h6>
+          <p class="mg-b-0 tx-12 tx-white-5"><a href="#" style="text-decoration: underline" class="text-danger" id="btnBack">Back to Design</a></p>
+        </div><!-- media-body -->
+      </div><!-- media -->
+      <a href="#"  class="btn btn-primary pd-lg-x-20 mg-l-auto" id="btn-step-download" >Download</a>
+  
+    </div>
+
   </div>
+  
   <ul class="nav nav-tabs tx-12 bold" role="tablist">
     <li class="nav-item" id="panel-photos">
       <a class="nav-link active " data-toggle="tab" href="#home"><i class="ion-images pd-x-5 tx-16"></i>PHOTOS</a>
@@ -44,6 +60,7 @@
     <div id="clipartmenu" class="container tab-pane fade"><%- include('../../partials/client/clipart'); %>
 
     </div>
+   
     <div id="menu2" class="container tab-pane fade"><br>
       <%- include('../../partials/client/typo'); %>           
 
@@ -55,6 +72,61 @@
 
  
 
+</div>
+
+
+<div id="save-design-panel" class="hidden">
+  <div >
+    <div class="list-group widget-list-group bg-app-primary">
+      <div class="list-group-item d-flex">
+        <div class="media d-block d-sm-flex">
+          <div class="d-block d-sm-flex mg-sm-r-20">
+            <i class="ion-android-done-all tx-24 tx-white"></i>
+          </div><!-- d-flex -->
+          <div class="media-body mg-t-10 mg-sm-t-0">
+            <h6 class="mg-b-5 tx-14"><a href="" class="tx-white">Save Project</a></h6>
+            <p class="mg-b-0 tx-12 tx-white-5">Active designs will be shared to all users.</p>
+          </div><!-- media-body -->
+        </div><!-- media -->
+      </div>
+    </div>
+
+    <div class="card pd-20 ">
+     
+      <div class="form-layout">
+        <div class="row ">
+          <div class="col-lg-12">
+            <div class="d-r-5">
+              <label class="ckbox">
+                  <input type="checkbox" id="designActive" ><span>Active</span>
+                </label>
+          </div>
+
+            <div class="form-group">
+              <label class="form-control-label">Project title: <span class="tx-danger">*</span></label>
+              <input class="form-control" required type="text" id="input-project-title" name="firstname"  placeholder="Enter project title">
+            </div>
+          </div>
+          <div class="col-lg-12">
+            <div class="form-group">
+              <label class="form-control-label">Description: </label>
+              <textarea rows="2" class="form-control" id="input-project-desc" required placeholder="Enter your address" spellcheck="false"></textarea>
+            </div>
+          </div>
+
+        </div><!-- row -->
+
+        <div >
+          <button class="btn  btn-primary mg-r-5" id="btnSave">Save Project</button>
+          <button class="btn btn-secondary" id="btnCancelSaveDesign">Cancel</button>
+        </div><!-- form-layout-footer -->
+      </div><!-- form-layout -->
+    </div>
+    
+    
+
+
+  </div>
 </div>
 <div id="add-template-panel" class="" role="tabpanel" aria-labelledby="addtemplate">
   <div class="list-group widget-list-group bg-app-primary">    
@@ -99,108 +171,7 @@
       <%}%>  
 </div> -->
 </div>
-    <input id="admin-image-upload-hidden" data-page-id="<%= locals.page.id %>" type="file" accept="image/*" multiple="multiple" hidden="hidden">
-     
-       <div class="card pd-t-20 pd-0" >
-        <button type="button" class="btn-upload" id="admin-image-upload"> Upload Image</button>
-        <p class="tx-12 pd-t-20 pd-x-30 tx-center">Upload (SVG,JPG,PNG) Images.</p>
-        <input id="admin-image-upload-hidden" type="file" accept="image/*" multiple="multiple" hidden="hidden">
-        <input id="design-type" value="pre-designed" hidden="hidden">
-
-    </div>
-    <div class="pd-10 admin-design-ctrl">
-        <div class="tx-12"><b>Design Info</b><span class="text-danger"> (All fields are mandatory)</span></div>
-
-        
-        <div id="accordion" class="accordion" role="tablist" aria-multiselectable="true">
-            <div class="card">
-              <div class="card-header" role="tab" id="headingOne">
-                <h6 class="mg-b-0">
-                <a data-toggle="collapse" data-parent="#accordion" href="#add-template-panel"
-                    aria-controls="addtemplate" class="tx-gray-800 tx-bold transition">
-                   <strong style="background-color: white; padding:3px 7px; font-size: 12px; margin-right: 10px; border-radius: 50%; ">1</strong>Select Templates 
-                   </a>
-                  <a data-toggle="collapse" data-parent="#accordion" href="#add-clipart-panel"
-                   aria-controls="addclipart" class="tx-gray-800 transition tx-bold">
-                   <strong style="background-color: white; padding:3px 7px; font-size: 12px; margin-right: 10px; border-radius: 50%; ">2</strong>
-                   Add Clipart & Symbols
-                  </a>
-                  <a data-toggle="collapse" data-parent="#accordion" href="#add-text-panel"
-                   aria-controls="add-customtext-panel" class="tx-gray-800 transition tx-bold">
-                   <strong style="background-color: white; padding:3px 7px; font-size: 12px; margin-right: 10px; border-radius: 50%; ">3</strong>
-                   Add Text 
-                  </a>
-                
-                  <a data-toggle="collapse" data-parent="#accordion" href="#save-design-panel"
-                   aria-controls="save-design-panel" class="tx-gray-800 transition tx-bold">
-                   <strong style="background-color: #494699; color:white; padding:3px 7px; font-size: 12px; margin-right: 10px; border-radius: 50%; ">4</strong>
-                   Save Design 
-                  </a>
-                </h6>
-              </div>
-         
-              <div id="add-customtext-panel" class="collapse" role="tabpanel" aria-labelledby="addcustomtext">
-              </div>
-              <div id="add-clipart-panel" class="collapse" role="tabpanel" aria-labelledby="addclipart">
-                
-                <%for(var i=0; i<cliparts.length; i++){ %>
-                    <div id="<%=cliparts[i].code %>" class="clipart" > 
-                      <img src="<%=cliparts[i].base64 %>" > 
-                      <div class="tx-12 tx-bold pd-y-5"><%=cliparts[i].title %></div>
-                  </div>
-                  <%}%>  
-              </div>
-              <div id="add-text-panel" class="collapse" role="tabpanel" aria-labelledby="addtext">
-                <%- include('../../partials/admin/typo'); %>     
-              </div>
-              <div id="save-design-panel" class="collapse" role="tabpanel" aria-labelledby="savedesign">
-                <div class="card-block pd-20">
-                    <div class="pd-b-10">
-                        <div class="tx-left mg-y-5">
-                            <select id="admin-categories" class="form-control  select2 select2-hidden-accessible" data-placeholder="Choose one" tabindex="-1" aria-hidden="true">
-                                <option label="Categories"></option>
-                                <%for(var i=0; i<categories.length;i++){%>
-                                    <option value="<%=categories[i].code%>"><%=categories[i].name%></option>
-                               <%}%>
-                              </select>
-                            </div>
-        
-                        <div class="mg-y-5">
-                            <input class="form-control" placeholder="Design name" id="admin-design-name" type="text">
-                        </div>
-                        <div class="mg-y-5">
-                            <input class="form-control" placeholder="Thumbnail name" id="admin-design-title" type="text">
-                        </div>
-                        <div class="mg-y-5">
-                            <input class="form-control" placeholder="File name" id="admin-file-name" type="text">
-                        </div>
-        
-                        <div class="mg-y-5">
-                            <input class="form-control"  placeholder="KopyKake Webstore Link" id="admin-design-link" type="text">
-                        </div>
-                        <div class="mg-y-5">
-                            <input class="form-control" id="admin-kopykake-part"  placeholder="KopyKake Part #" id="admin-design-link" type="text">
-                        </div>
-                        <div class="d-flex pd-y-10">
-                            <label class="ckbox">
-                                <input type="checkbox" checked="" id="design-active"><span>Active</span>
-                              </label>
-                              <label class="ckbox mg-l-20">
-                                <input type="checkbox" id="design-default" ><span>Default</span>
-                              </label>
-                          
-                        </div>
-        
-                </div>
-                    <div id="save-image-ctrl" class="tx-center">
-                        <div class="btn-group" role="group" >
-                            <button type="button" id="btnSavePreDesign" class="btn btn-primary  pd-x-25 active ">Save Design</button>
-                            <button type="button" id="cancel-design" class="btn btn-secondary pd-x-25 ">Cancel</button>
-                          </div>
-                    </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-        </div>
+   
+<script>
+  $("#menu-save-design").removeClass("hidden");
+</script>
