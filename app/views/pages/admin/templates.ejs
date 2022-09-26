@@ -1,20 +1,35 @@
 <div class="row mg-r-0">
 <div class="col-lg-3 pd-0">
-  <div class="card pd-10 tx-primary tx-bold bd-b">Edit Template Details</div>
+  
+  <div class="card">
+    <div class="list-group widget-list-group bg-app-primary">
+      <div class="list-group-item d-flex">
+        <div class="media d-block d-sm-flex">
+          <div class="d-block d-sm-flex mg-sm-r-20">
+            <i class="ion-edit tx-24 tx-white"></i>
+          </div><!-- d-flex -->
+          <div class="media-body mg-t-10 mg-sm-t-0">
+            <h6 class="mg-b-5 tx-14"><a href="" class="tx-white">Edit Template</a></h6>
+            <p class="mg-b-0 tx-12 tx-white-5">Update template details.</p>
+          </div><!-- media-body -->
+        </div><!-- media -->
+      </div>
+    </div>
+  </div>
 
   <div class="card pd-10">
     <%- include('../../partials/admin/edit-template'); %>
 
   </div>
 </div>
-<div class="col-lg-6 pd-x-10">
+<div class="col-lg-9 pd-x-10">
   <div class="card pd-10 tx-primary tx-bold bd-b">Templates (<%=templates.length %>)</div>
   <div class="card pd-10">
     <div  id="templatepanel" class="tab-pane active"   >
       <div   >
-           <div class="d-flex svg-templates tx-center">
+           <div class="d-flex svg-templates tx-center ">
             <%for(var i=0; i<templates.length; i++){ %>
-              <div id="<%=templates[i].code %>" class="template template-small" > 
+              <div id="<%=templates[i].code %>" class="template template-small " > 
                 <img src="<%=templates[i].base64 %>" style="width:93px"> 
                 <div class="tx-12 tx-bold pd-y-5 lh-1"><%=templates[i].title %></div>
             </div>
@@ -25,14 +40,7 @@
 
   </div>
 </div>
-<div class="col-lg-3 pd-0">
-  <div class="card pd-10 tx-primary tx-bold bd-b">Selected Template</div>
 
-  <div class="card pd-10">
-
-    <img src="" id="selectedTemplate">
-  </div>
-</div>
 </div>
 <!-- 
 <div class="admin-template-designer-bg" style="min-height: 1050px">

@@ -347,6 +347,12 @@ color:#0900fd;
         cursor: pointer;
         max-width: 120px;
      }
+
+     .svg-templates > div:focus{
+      border: dashed 2px #ccc;
+      outline: solid 1px ;
+   }
+
      .svg-templates > div:hover , .svg-templates > div:focus{
         border: dashed 1px #494699;
         padding: 10px;
@@ -692,6 +698,8 @@ color:#0900fd;
     position: relative; 
     text-align: center;
   }
+
+
   
   .step .step-item:not(:first-child)::before {
     background: #ff7000;
@@ -741,4 +749,8 @@ color:#0900fd;
   #uploadpanel .nav-link a{
 color:#494699;
 font-weight: bold;
+  }
+
+  .admin-edit-template:focus{
+    background-color: #cbcaff;
   }

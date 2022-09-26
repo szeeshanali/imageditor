@@ -3,7 +3,7 @@ const app                   = express()
 var expressLayouts          = require('express-ejs-layouts');
 const port                 = 5001;
 const mongoose             = require('mongoose');
-const bodyParser           = require('body-parser');
+//const bodyParser           = require('body-parser');
 const session              = require('express-session');
 const flash                = require('connect-flash');
 const adminroutes          = require("../app/routes/admin/adminroutes");
@@ -12,7 +12,16 @@ const authroutes           = require("../app/routes/authroutes");
 const mainroutes           = require("../app/routes/mainroutes");
 const passport             = require('passport');
 const commonService        = require('../app/services/common');
+///const monitoringService        = require('../app/services/monitor');
+
+
+
+
+
 require("../app/config/passport")(passport);
+
+
+
 
 
 
@@ -22,12 +31,12 @@ mongoose.connect('mongodb+srv://dtimageeditor:Xcccccc123@cluster0.gte2f0n.mongod
 {useNewUrlParser: true, useUnifiedTopology : true})
 .then(() => console.log('Connection Stablished.'))
 .catch((err)=> {
-  console.log("Connection Failed");
-  console.log(err)}
-  );
+  console.error(err);
+  // monitoringService.logError(`Error:Connector Failed. ${err}`);
+});
 
 
-
+//app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressLayouts);
  
 app.set('view engine', 'ejs');
@@ -35,7 +44,7 @@ app.use(express.static('public'))
 app.use(express.static('uploads'))
 
 app.use(express.json({limit: '25mb'}));
-app.use(express.urlencoded({limit: '25mb'}));
+app.use(express.urlencoded({limit: '25mb', extended: true }));
 app.use(session(
   {   secret            : 'secret',
       resave            : true,
@@ -60,7 +69,7 @@ app.use(passport.session());
    res.locals.templates = [];
    
   next();
- })
+ }) 
 
 app.use("/",  adminroutes);  
 app.use("/",  clientroutes);  
@@ -70,5 +79,15 @@ app.use("/",  mainroutes);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
+<<<<<<< HEAD
 
 })
+=======
+})
+
+
+process.on('uncaughtException', function (err) {
+  console.error(err.stack);
+  console.log("Node NOT Exiting...");
+});
+>>>>>>> c7cc94b0f0c40b4f8535291344104a54883c1bc7
