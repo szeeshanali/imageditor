@@ -15,6 +15,7 @@ const UserSchema  = new mongoose.Schema({
     active          :   {   type    :   Boolean,   default : true },
     watermark       :   {   type    :   Boolean,   default : false },
     project_limit   :   {   type    :   Number,   default : 5 },
+    download_count  :   {   type    :   Number,   default : 0 },
     created_dt      :   {   type    :   Date,   default : Date.now }});
 
 const appusers   = mongoose.model('appusers',UserSchema);

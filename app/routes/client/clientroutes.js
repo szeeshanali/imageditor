@@ -8,6 +8,7 @@ PATH_USER_PROJECTS              = 'pages/client/myprojects';
 PATH_TEMPLATES              = 'pages/client/templates';
 PATH_WORKSPACE              = 'pages/client/workspace';
 const { default: mongoose, mongo } = require('mongoose');
+const appusers = require('../../models/appuser');
 
 PATH_USER_PROFILE           = 'pages/client/profile';
 ROUTE_USER_HOME             = '/app'
@@ -247,6 +248,12 @@ router.get("/api/client/download",  isLoggedIn, async (req, res) => {
 
     var watermark = req.user.watermark;
     var enableDownload = true; 
+    try {
+        appusers.findOneAndUpdate({_id: req.user._id},{ $inc: { download_count: 1, },upsert:true});
+    } catch (error) {
+
+        console.log(`Error while updating download count for user ${req.user._id}`);
+    }
     res.status(200).send({data:{watermark:watermark,download:enableDownload}});
 });
 
