@@ -12,6 +12,12 @@ const authroutes           = require("../app/routes/authroutes");
 const mainroutes           = require("../app/routes/mainroutes");
 const passport             = require('passport');
 const commonService        = require('../app/services/common');
+const monitoringService        = require('../app/services/monitor');
+
+
+
+
+
 require("../app/config/passport")(passport);
 
 
@@ -25,9 +31,9 @@ mongoose.connect('mongodb+srv://dtimageeditor:Xcccccc123@cluster0.gte2f0n.mongod
 {useNewUrlParser: true, useUnifiedTopology : true})
 .then(() => console.log('Connection Stablished.'))
 .catch((err)=> {
-  console.log("Connection Failed");
-  console.log(err)}
-  );
+  console.error(err);
+  /// monitoringService.logError(`Error:Connector Failed. ${err}`);
+});
 
 
 //app.use(bodyParser.urlencoded({ extended: true }));
@@ -74,3 +80,9 @@ app.use("/",  mainroutes);
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
+
+
+process.on('uncaughtException', function (err) {
+  console.error(err.stack);
+  console.log("Node NOT Exiting...");
+});
