@@ -103,6 +103,8 @@ router.post(ROUTE_USER_REGISTER, async (req, res) => {
         password2 : password2});
         
     } else {
+       try {
+        
        
         var user = await appusers.findOne({email : email}); 
         if(user)
@@ -134,6 +136,9 @@ router.post(ROUTE_USER_REGISTER, async (req, res) => {
                 }).catch(value=> { console.log(value);});
             }) 
         })
+        } catch (error) {
+          console.log(error);
+        }
     }
 
   });

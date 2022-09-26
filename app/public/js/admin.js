@@ -1,12 +1,18 @@
 (()=>{
   
-  var canvas = new fabric.Canvas("admin-main-canvas",{
-    preserveObjectStacking:true
- })
+ 
+var canvas = new fabric.Canvas("admin-main-canvas", {preserveObjectStacking: true})
+var canvasPrev = new fabric.Canvas("admin-main-canvas-logo", {preserveObjectStacking: true});
+
+var $canvas = $("#admin-main-canvas");
+var $canvasPrev = $("#admin-main-canvas-logo");
+
  var state = {
   isPreviewCanvas: false
 }
 
+// var $adminMainCanvas           = $("#admin-main-canvas");
+// var $canvasPrev                 = $("#admin-main-canvas-logo");
 
  var $layers                    = $("#layers");
  var $adminImageUpload          =   $("#admin-image-upload");
@@ -57,7 +63,7 @@
   $inputLogoPerPage   =       $("#admin-logo-count");
   $templateThumb      =       $("#templatepanel .template");
   $customTemplateThumb      =       $("#customTemplateThumb .template");
-  $clipartThumb           =   $("#add-clipart-panel .clipart img");
+  $clipartThumb           =   $("#clipartmenu .clipart img");
 
 
   $btnUpdateDesign    =       $("#btnUpdateDesign");
@@ -340,6 +346,7 @@ function initImageEvents(){
 
 function deleteTemplate(id)
 {
+  debugger;
   var templateId = $("#edit-template-id").val(); 
     $.ajax({
         type: "DELETE",
@@ -357,9 +364,266 @@ function deleteTemplate(id)
 }
 
 
+function previewDesign()
+{
+   /*
+   . Check Design can be previewed. 
+   . Hide create design heading and show preview design heading. 
+   . Disable Save button. 
+   . Hide main canvas. 
+   . Show preview canvas.
+   . Render preview. 
+   . Set Preview State. 
+   . Set Wizard
+    */
 
+   //1. 
+   if(canvas.getObjects().length == 0)
+   { toast("Please create your design before preview."); return; }
+
+ 
+
+   //2. 
+   $("#btnBack").removeClass("hidden"); 
+   $("#btnFinalized").removeClass("hidden"); 
+   $("#btn-step-preview").addClass("hidden"); 
+  
+
+   //3. 
+//    $("#btnSave").unbind().click(function(){
+//     toast("Please go back and save your design.");
+//    });
+
+   //4. 
+   $canvas.parent().fadeOut();
+   //5. 
+   $canvasPrev.parent().fadeIn();
+   //6. 
+   renderPreview();
+   //7.
+
+
+   //8. 
+   $(".step-item:nth-child(3)").removeClass("active");
+   $(".step-item:nth-child(4)").addClass("active");
+
+
+}
+
+
+function backFromPreview(){
+  /**
+   * . Hide Back and Finalized Button and show Preview button. 
+   * . Enable Save button
+   * . Hide Preview Canvas 
+   * . Show Main Canvas. 
+   * . Clear Preview Canvas. 
+   * . Render Main Canvas back to its original state.  
+   * . Set Main Canvas State. 
+   * . Set Wizard 
+   */
+
+   //1. 
+  $("#btnBack").addClass("hidden"); 
+  $("#btnFinalized").addClass("hidden"); 
+  $("#btn-step-preview").removeClass("hidden");
+  $("#create-design-heading").removeClass("hidden");
+  $("#preview-design-heading").addClass("hidden");
+  //2. 
+  //  $("#btnSave").unbind().click(function(){
+  //     toast("Please go back and save your design.");
+  //  });
+
+   //3. 
+   $canvas.parent().fadeIn();
+   //4. 
+   $canvasPrev.parent().fadeOut();
+   //5. 
+  // canvasPrev.clear(); 
+   //6. 
+   renderMainCanvasOnBackButton()
+   //7. 
+   state.isPreviewCanvas = false;
+
+
+   
+}
+
+
+function saveDesign(){
+  /**
+   * . Check is Canvas is not Preview Canvas. 
+   * . Check if canvas has atleast one item. 
+   * . Validate project info. atleast title should be provided. 
+   * . Submit canvas json and project info to api. 
+   * . Notify success or failed. 
+   */
+  // if(state.isPreviewCanvas)
+  // {toast("Please go back and save your design."); return;}
+
+  if(canvas.getObjects().length == 0)
+  {toast("Please create your design before save."); return;}
+  
+  
+  var title = $("#input-project-title").val();
+  var desc = $("#input-project-desc").val();
+  var active = $("#designActive").prop("checked");
+  
+
+  if(!title)
+  { toast("Please enter project title."); return;}
+
+  if(!canvas.templateId)
+  {  console.error("templateId is not present in canvas.");
+      toast("Can't save project. please contact admin."); return;
+  }
+
+  var thumbBase64 = canvas.toDataURL({format: 'jpg', quality: 0.8});
+  $.ajax({
+      type: "POST",
+      url: "/app/admin/save-design",
+      data: {
+          title : title || "N/A",
+          desc :  desc || "N/A",
+          thumbBase64:thumbBase64 ,
+          active : active,
+          json: JSON.stringify(canvas.toDatalessJSON()),
+          templateId: canvas.templateId
+      },
+      success: function (res) {
+          toast("Design has been Saved.");
+      },
+      error: function (res) {
+          if (res.status === 401) {
+              toast(`${res.statusText}:${res.responseJSON.message}`);
+          } else {}
+      }
+  })
+}
+
+
+function renderPreview()
+{
+   
+    $loader.removeClass("hidden");
+    canvas.clone(function (clonedCanvas) {
+        var bg = clonedCanvas.backgroundImage;
+        clonedCanvas.backgroundImage = false;
+        for (var i = 0; i < clonedCanvas._objects.length; i++) {
+            clonedCanvas._objects[i].globalCompositeOperation = null;
+            canvas.renderAll.bind(clonedCanvas)
+        }
+        clonedCanvas.renderAll()
+        var dataURL = clonedCanvas.toDataURL({
+            format: "png",
+            left: 0,
+            top: 0,
+            width: canvas.width,
+            height: canvas.height
+        });
+
+        var logos = canvasPrev.backgroundImage._objects;
+        fabric.Image.fromURL(dataURL, (img) => {
+            canvasPrev.remove(... canvasPrev.getObjects());
+            for (var i = 0; i < logos.length; i++) {
+                var logo = logos[i];
+                var object = fabric.util.object.clone(img);
+                var left = logo.left + logo.group.left  + logo.group.width / 2;
+                var top = logo.top + logo.group.top  + logo.group.height / 2;
+                object.scaleToWidth(logo.width+10)
+                object.set("top", top);
+                object.set("left", left);
+                object.globalCompositeOperation = "source-atop";
+                canvasPrev.add(object).renderAll();
+               // $btnDownloadPDF.removeClass("hidden");
+                //$btnSaveDesign.removeClass("hidden");
+                $(".vRule, .hRule").hide();
+                $("#create-design-heading").addClass("hidden");
+                $("#preview-design-heading").removeClass("hidden");
+               // canvasPrev.setZoom(.8);
+
+            }
+            $loader.addClass("hidden");
+   //         closeRepeatDesignPreview();
+        });
+    })
+    state.isPreviewCanvas = true;
+}
+
+
+function downloadDesign(){
+  if(!state.isPreviewCanvas)
+  {toast("Please preview your design before download.");return;}
+
+  if(canvasPrev.getObjects().length == 0)
+  {toast("Please create your design before download.");return;}
+  $loader.removeClass("hidden");
+
+  var pdf = null;
+  var pdf = new jsPDF({
+      unit: 'px', // set the unit of measurement to px
+      format: 'letter', // set your paper size format
+    });
+
+  var width = canvasPrev.backgroundImage.width;
+  var height = canvasPrev.backgroundImage.height;
+  width = pdf.internal.pageSize.getWidth();
+  height = pdf.internal.pageSize.getHeight();
+
+  canvasPrev.clone(function (clonedCanvas) {
+      var bg = clonedCanvas.backgroundImage;
+      clonedCanvas.backgroundImage = false;
+      //let canvasJSON = clonedCanvas.toJSON();
+      ///clonedCanvas.setDimensions({width:1000,height:1200});
+    
+
+      for (var i = 0; i < clonedCanvas._objects.length; i++) {
+          clonedCanvas._objects[i].globalCompositeOperation = null;
+          canvasPrev.renderAll.bind(clonedCanvas)
+      }
+      bg.globalCompositeOperation = "destination-in";
+      clonedCanvas.add(bg);             
+      clonedCanvas.renderAll();
+      let widthRatio = width / clonedCanvas.width
+      let heightRatio = height / clonedCanvas.height
+
+      //let ratio = widthRatio > heightRatio ? heightRatio : widthRatio
+      var imgData = clonedCanvas.toDataURL('image/jpeg',1.0);                
+      pdf.addImage(imgData, 'JPEG', 0, 0);
+      pdf.save("download.pdf");
+      $loader.addClass("hidden");
+
+  });
+
+}
  function InitUIEvents()
  {
+  
+  $canvasPrev.parent().hide();
+
+
+    $("#menu-save-design").on("click",function(){
+      debugger;
+      /**
+       * 1. validate - please create design before save.
+       * 2. show save design form. 
+       * 3. save design. 
+       */
+      if(canvas.backgroundImage == null || canvas._objects.length == 0)
+      { toast("Please create your design before save."); return;}
+
+      //1. 
+      $("#add-template-panel,#create-design-panel").addClass("hidden");
+      $("#save-design-panel").removeClass("hidden");
+      
+
+      ///saveDesign();
+
+      
+    }); 
+
+
+
   rotateObject(); 
   cropObject();
   flipXYObject();
@@ -367,7 +631,26 @@ function deleteTemplate(id)
   brightnessObject();
   contrastObject();
  
+  $("#btn-step-download").on("click",function(e){
+    e.preventDefault();
+    downloadDesign(); 
+});
 
+  
+$("#btnSave").unbind().on("click",function(e){
+    e.preventDefault();
+   saveDesign();
+})
+
+  $("#btnBack").on("click",function(e){
+    e.preventDefault();
+    backFromPreview();
+});
+
+  $("#btn-step-preview, #btn-menu-peview").on("click",function(e){
+    e.preventDefault();
+    previewDesign();      
+});
 
 
 
@@ -590,9 +873,11 @@ if(!userId)
 
 
   $templateThumb.on("click",(e)=>{
+
     var templateId = e.currentTarget.id; 
     if(templateId){
-      loadSVGTemplate(templateId);
+      loadTemplateInfoByTemplateId(templateId);
+      //loadSVGTemplate(templateId);
     }else{
       toast(`Can't load Template.`)
     }
@@ -615,7 +900,8 @@ if(!userId)
     var id = e.currentTarget.src;
     fabric.Image.fromURL(id, function (img) {
         var img1 = img.set({left: 0, top: 0});
-       // img1.globalCompositeOperation = 'source-atop';
+        img1.scaleToWidth(250);
+        img1.globalCompositeOperation = 'source-atop';
         canvas.add(img1);
     });
 
@@ -735,6 +1021,9 @@ if(!userId)
  function enabledDesignCtrl(o){
   $adminDesignCtrl.find(".disabled").removeClass("disabled");
 }
+
+
+
 
 function loadSVGTemplate(id) {
   var group = [];
@@ -910,11 +1199,8 @@ function loadTemplateInfo(data)
    $inputLogoPerPage.val(data.logos);
    $kopykakePartNo.val(data.ref_code);
 
-  if(data.active)
-   { $("#editTemplateActive").attr("checked",true); }
-
-  if(data.default)
-  {  $("#editTemplateDefault").attr("checked",true); }
+$("#editTemplateActive").prop("checked",data.active);
+$("#editTemplateDefault").prop("checked",data.default);
 
   $("#editTemplateActive").on("click",function(e)
   { designFlags.active = e.target.checked; })
@@ -932,6 +1218,30 @@ function loadTemplateInfo(data)
   // $selectPageSize     =       $("#admin-page-size");
   // $inputLogoPerPage   =       $("#admin-logo-count");
   // $templateThumb      = $("#templatepanel .template")
+}
+
+
+function loadTemplateInfoByTemplateId(id)
+{
+
+  var group = [];
+  state.isPreviewCanvas = false;
+  $.get(`/api/admin/svg-templates/${id}`, function (data) {
+      const svgBase64 = data.base64;
+      if (! svgBase64) {
+          toast("Error loading Template");
+          return;
+      }
+      var meta = {};
+      if (data.meta) {
+          meta = JSON.parse(data.meta);
+      }
+
+      canvas.clear();
+      canvas.templateId = data.code;
+      loadTemplateInfo(data);
+  })
+ 
 }
 
 
@@ -980,8 +1290,16 @@ function onDesignReload(o){
 
 
 $("#btn-step-design").on("click",function(){
-$("#add-template-panel").addClass("hidden");
-$("#create-design-panel").removeClass("hidden");
+  
+
+    if(canvas.backgroundImage == null)
+    {toast("Please Select template"); return;}  
+  
+  
+  
+  $("#add-template-panel").addClass("hidden");
+    $("#create-design-panel").removeClass("hidden");
+
 })
 
 
@@ -1010,7 +1328,7 @@ $("#btnDisplayRuler").on("click",function(){
     left:0,
     top:0
   });
-  var json =grp.toJSON(); 
+  var json =grp.toDatalessJSON(); 
    var m = {};
    var meta = {
       width: m.width, 

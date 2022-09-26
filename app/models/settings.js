@@ -1,14 +1,8 @@
-const mongoose = require('mongoose');
+const mongoose = require('default_settings');
 
 const schema  = new mongoose.Schema({
-    name           :    {   type    :   String },
-    code           :    {   type    :   String },
-    level          :    {   type    :   String },
-    parent         :    {   type    :   String },
-    order          :    {   type    :   String },
-    active         :    {   type    :   Boolean },
-    items          :    [{  type    :   mongoose.Types.ObjectId}], 
+    upload_size_limit_kb:    {   type    :   Number, default: 5120 },
     });
 
-const categories   = mongoose.model('categories',schema);
-module.exports  = categories;
+const defaultSettings   = mongoose.model('default_settings',schema);
+module.exports  = defaultSettings;

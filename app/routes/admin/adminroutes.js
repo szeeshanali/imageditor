@@ -292,36 +292,37 @@ router.get('/app/admin/cliparts', isAdmin, async (req,res)=>{
   res.locals.page);
 })
 
-router.post('/api/admin/save-pre-design', isAdmin, function(req, res) {
+//****Save Design */
+router.post('/app/admin/save-design', isAdmin, async function(req, res) {
+  try{
 
-  const {desc, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link,json, thumbBase64, code, ref_code} = req.body; 
-  var _id = mongoose.Types.ObjectId();
-  var uploadModel = {
-    title           :   title,
-    name            :   name,
-    order_no        :   1,
-    code            :   _id,
-    active          :   true,
-    json            :   json,
-    thumbBase64     :   thumbBase64,
-    default         :   false,
-    by_admin        :   true,
-    type            :   "pre-designed",
-    uploaded_by     :    req.user._id  ,
-    ref_code        :   ref_code, 
-    link :              link
-
-
-  };
-  commonService.uploadService.upload(uploadModel,(err,msg)=>{
-      if(!err)
-          {res.status(200).send({message:`Success`, error: msg}); }
-          else{res.status(400).send({message:`Unable to upload file.`, error: msg});  }
-          
-      })
-
-})
-
+    const {json,thumbBase64,title, desc, templateId, active} = req.body; 
+      var _id = mongoose.Types.ObjectId();
+      var uploadModel = {
+        title           :   title || `design${_id}`,
+        name            :   desc || "",
+        order_no        :   1,
+        code            :   _id,
+        active          :   active,
+        json            :   json,
+        thumbBase64     :   thumbBase64,
+        default         :   false,
+        by_admin        :   false,
+        type            :   "pre-designed",
+        uploaded_by     :    req.user._id  ,
+        templateId      :    templateId 
+      };
+      commonService.uploadService.upload(uploadModel,(err,msg)=>{
+          if(!err)
+              {res.status(200).send({message:`Success`, error: msg}); }
+              else{res.status(400).send({message:`Unable to upload file.`, error: msg});  }
+              
+          })
+      }catch{
+          res.status(500).send({message:`Something went wrong!`, error: msg});
+      }
+   })
+    
 router.get('/app/admin/pre-designed', isAdmin, async (req,res)=>{
   var categories = await commonService.categoryService.getCategoriesAsync(); 
   //var templates  = await commonService.uploadService.getTemplatesAsync();
