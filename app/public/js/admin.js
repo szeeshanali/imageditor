@@ -1266,6 +1266,8 @@ function onDesignReload(o){
     $("#template-info-panel .page-size").text(pageSize);
     $("#template-info-panel .logo-size").text(logoSize);
     $("#template-info-panel .total-logos").text(o.logoCount);
+debugger;
+    $("#admin-file-name").val(o.filename)
 
  }
 
@@ -1449,6 +1451,7 @@ $loader.removeClass("hidden");
     canvas.clear();
     onDesignLoaded({});
     for (let file of files) {
+      debugger;
       // check type
       if (!allowedTypes.includes(file.type)) continue
       let reader = new FileReader()
@@ -1465,14 +1468,16 @@ $loader.removeClass("hidden");
                 height    : options.viewBoxHeight,
                 logoCount : objects.length,
                 logoWidth : objects[0].width, 
-                logoHeight: objects[0].height
+                logoHeight: objects[0].height,
+                filename  : file.name  
             }
               var loadedObjects = new fabric.Group(group);
               var templateWidth = options.viewBoxWidth;
               var templateHeight = options.viewBoxHeight;      
               canvas.setDimensions({top:0, width: templateWidth, height: templateHeight});
               if( pageid === "__template-designer"){
-                canvas.add(loadedObjects,canvas.renderAll.bind(canvas));
+                canvas.add(loadedObjects);
+                canvas.renderAll.bind(canvas);
                 $("#upload-template-splash").remove();
               }else{
                 canvas.add(loadedObjects);
