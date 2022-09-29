@@ -299,13 +299,10 @@ const commonService = (function() {
             getCustomerReport   :   this.getCustomerReport,
             getSummaryReport    :   this.getSummaryReport,  
         },
-
         contentService: {
             addOrUpdateContentAsync  :  this.addOrUpdateContentAsync ,
             getContentAsync          :  this.getContentAsync
         },
-
-       
         clearCache: clearCache
     }
 })();
