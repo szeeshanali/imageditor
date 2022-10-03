@@ -3,9 +3,9 @@
 <script src="/js/editor/fabric.min.js"></script>
 <script src="/js/editor/spectrum.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/css/editor/spectrum.min.css">
-<link rel="stylesheet" href="/css/editor/grapick.min.css">
+<!-- <link rel="stylesheet" href="/css/editor/grapick.min.css">
 <script src="/js/editor/grapick.min.js"></script>
-<script src="/js/editor/undo-redo-stack.js"></script>
+<script src="/js/editor/undo-redo-stack.js"></script> -->
 <!--
 <script src="/js/editor/core.js"></script>
 <script src="/js/editor/toolbar.js"></script>
@@ -44,7 +44,6 @@
 <script src="/js/editor/script.js"></script>
 <script src="/js/editor/jspdf.debug.js"></script>
 <!-- <script src="/js/dt.js"></script> -->
-<script src="/js/spectrum.min.js"></script>
 
 <script src="/js/client/client-main.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
@@ -52,4 +51,16 @@
 <script src="/js/jquery.ruler.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/1.8.349/pdf.min.js"></script>
 
+<script>
+$("#showPaletteOnly").spectrum({
+    showPaletteOnly: true,
+    showPalette:true,
+    color: 'blanchedalmond',
+    palette: [
+        ['black', 'white', 'blanchedalmond',
+        'rgb(255, 128, 0);', 'hsv 100 70 50'],
+        ['red', 'yellow', 'green', 'blue', 'violet']
+    ]
+});
 
+</script>

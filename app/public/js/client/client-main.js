@@ -66,7 +66,7 @@ $clipartPanel = $("#clipartmenu");
 $btnTextMenu = $("#btnTextMenu");
 $textarea = $("#textarea");
 $btnAddText = $("#btnAddText");
-$btnTextSize = $("#btnTextSize");
+$btnTextSize = $("#btnTextSize,#btnTextSize-range ");
 $saveBrowserTxt = $("#save-browser-txt");
 $rotateObj = $("#rotateObj");
 $previewSaveDesign = $("#prevesavdesign");
@@ -464,16 +464,6 @@ function menuPanelDisplay(itemToDisplay){
 
 function initUIEvents() {
 
-    $("#showPaletteOnly").spectrum({
-        showPaletteOnly: true,
-        showPalette:true,
-        color: 'blanchedalmond',
-        palette: [
-            ['black', 'white', 'blanchedalmond',
-            'rgb(255, 128, 0);', 'hsv 100 70 50'],
-            ['red', 'yellow', 'green', 'blue', 'violet']
-        ]
-    });
 
     var layers = $("#layers");
     $("#collapse-layers").on("click",".layer-item", function (e) {
@@ -719,7 +709,7 @@ function initUIEvents() {
     $("#text-color").on("change",function() {
         setSelectedTextStyle("fill",this.value);
     });
-     $("#text-letter-spacing").on("change",function() {
+     $("#text-letter-spacing, #text-letter-spacing-range").on("change",function() {
       setSelectedTextStyle("charSpacing",this.value);
       
      });
@@ -1005,7 +995,7 @@ function initUIEvents() {
     // });
 
 
-    this.configUndoRedoStack();
+    //this.configUndoRedoStack();
 
 }
 
