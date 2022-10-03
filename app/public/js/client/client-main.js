@@ -464,6 +464,17 @@ function menuPanelDisplay(itemToDisplay){
 
 function initUIEvents() {
 
+    $("#showPaletteOnly").spectrum({
+        showPaletteOnly: true,
+        showPalette:true,
+        color: 'blanchedalmond',
+        palette: [
+            ['black', 'white', 'blanchedalmond',
+            'rgb(255, 128, 0);', 'hsv 100 70 50'],
+            ['red', 'yellow', 'green', 'blue', 'violet']
+        ]
+    });
+
     var layers = $("#layers");
     $("#collapse-layers").on("click",".layer-item", function (e) {
         var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
@@ -1779,6 +1790,11 @@ function initCanvasTextEvents() {
 
     $btnAddText.on("click", function () {
         var text = $textarea.val();
+        if(!text || text.length == 0)
+        {
+            ///toast("Please enter text");
+            return; 
+        }
         var item = new fabric.IText(text, {
             left: (textLeft += 20),
             top: (textTop += 20),

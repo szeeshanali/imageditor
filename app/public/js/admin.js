@@ -1266,8 +1266,7 @@ function onDesignReload(o){
     $("#template-info-panel .page-size").text(pageSize);
     $("#template-info-panel .logo-size").text(logoSize);
     $("#template-info-panel .total-logos").text(o.logoCount);
-debugger;
-    $("#admin-file-name").val(o.filename)
+    $("#admin-file-name").val(o.filename);
 
  }
 
@@ -1402,7 +1401,7 @@ var category = $("#admin-categories").val() ;
     }
     var MIME_TYPE = "image/png";
     var dataUrl = selectedDesign.base64;  
-
+debugger;
 var category = $("#admin-categories").val() ; 
 $loader.removeClass("hidden");
     $.ajax({
@@ -1437,7 +1436,7 @@ $loader.removeClass("hidden");
         },
         error:function(res){
           designFlags.submitted = false; 
-          toast("Error while uploading template.");
+          toast("Error while uploading.");
           $loader.addClass("hidden");
         }
       })
@@ -1451,7 +1450,6 @@ $loader.removeClass("hidden");
     canvas.clear();
     onDesignLoaded({});
     for (let file of files) {
-      debugger;
       // check type
       if (!allowedTypes.includes(file.type)) continue
       let reader = new FileReader()
@@ -1484,6 +1482,7 @@ $loader.removeClass("hidden");
               }
               canvas.renderAll();
               onDesignLoaded(selectedDesign.meta);
+
              
           },function(item, object) {
                   object.set('id',item.getAttribute('id'));
@@ -1502,8 +1501,10 @@ $loader.removeClass("hidden");
               selectedDesign.base64 = f.target.result; 
               selectedDesign.meta = {
                 width     : img.width, 
-                height    : img.height
+                height    : img.height,
+                filename  : file.name
             }
+            $("#admin-file-name").val(file.name);
             //img.globalCompositeOperation = 'source-atop';
             img.scaleToWidth(300);
               canvas.add(img).renderAll();

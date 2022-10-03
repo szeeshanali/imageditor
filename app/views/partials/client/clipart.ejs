@@ -1,17 +1,55 @@
-    <div class="row" >
-      <%cliparts?.forEach(item=>{%>
-         
-    <div class="col-lg-3 pd-0 bd clipart" >
-      <div class="card bg-gray-200 ht-150 ">
-        <div class="card-body pd-5">
-          <img class="card-img-top img-fluid pd-b-10 ht-80" src="<%=item.base64 %>" alt="Image">
-          <h5 class="card-body-title tx-12 tx-center" style="height:28px;overflow:hidden"><%=item.title %></h5>
-          <p class="card-subtitle tx-12"><%=item.category %></p>
-        </div>
-      </div>
-    </div>
+   
 
-      <%})%>
+
+
+<div class="row" >
+
+  <div class="col-lg-12 pd-0 bd " >
+
+    <!-- <div class="dropdown">
+      <button class="btn  dropdown-toggle" type="button" data-toggle="dropdown">Categories
+      <span class="caret"></span></button>
+      <ul class="dropdown-menu">
+        <%categories?.forEach(item=>{%>
+
+        <li><a href="#"><%=item.name%></a></li>
+        <%})%>
+      </ul>
+    </div> -->
+    <div class="nav am-sideleft-menu pd-0">
+    
+      <%cliparts?.forEach(clipart=>{ %>
+       
+        <div class="nav-item pd-x-15">
+          <a href="" class="nav-link with-sub text-primary">
+            <span><%=clipart.categoryName%> (<%= clipart.items.length %>)</span>
+          </a>
+       
+            <div class="nav-sub d-flex" style="display: none;">
+              <%clipart.items.forEach(item=>{ %>
+                <div class="nav-item  pd-0 bd clipart">
+                  <div class="" >
+                    <div class="card bg-gray-200 ht-130 ">
+                      <div class="card-body pd-5">
+                        <img class="card-img-top img-fluid pd-b-10 ht-80" src="<%=item.base64 %>" alt="Image">
+                        <h5 class="card-body-title tx-12 tx-center" style="height:28px;overflow:hidden"><%=item.title %></h5>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <%})%>
+              </div>
+         
+       
+              
+            </div>
+       
+    
+   <%})%>
+      </div>
+  </div>
+
+
       
     </div>
 
