@@ -207,16 +207,19 @@
 
     <div class="email-content-header">
       <div>
-        <div class="btn-group mg-b-0 hidden-xs-down">
-         
-          <button type="button" class="btn btn-secondary" id="btnDisplayGrid"><b class="ion-grid tx-12">Grid</b></button>
-          <button type="button" class="btn btn-secondary" id="btnDisplayRuler" ><b class="fa-solid fa-ruler tx-12">Ruler</b></button>
+          <div class="d-flex">
+          <button type="button" id="btnDisplayGrid" class="btn btn-secondary bd-0 pd-x-20">Grid</button>
+          <button type="button" id="btnDisplayRuler" class="btn btn-secondary bd-0 pd-x-20">Ruler</button>
+
         </div><!-- btn-group -->
       </div>
       <div class="mg-l-auto">
+        <div class="d-flex">
+          <button type="button" onclick="$('#menu-save-design').click()" class="btn btn-secondary bd-0 pd-x-20"><i class="fa fa-floppy-o mg-r-5"></i>Save</button>
+          <a href="/app/workspace" class="btn btn-success bd-0 pd-x-20 mg-l-1"><i class="ion-refresh mg-r-5"></i>Start Over</a>
+        </div>
+
         <div class="btn-group mg-b-0">
-          <button type="button" onclick="$('#menu-save-design').click()" class="btn btn-secondary tx-22"><i class="fa fa-floppy-o"></i></button>
-          <a href="/app/workspace" class="btn btn-secondary"><i class="ion-refresh tx-24"></i></a>
         </div><!-- btn-group -->
 
       </div>
