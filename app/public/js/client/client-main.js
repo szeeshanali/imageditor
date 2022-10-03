@@ -176,7 +176,6 @@ function getSharedProjects()
     $loader.removeClass("hidden");
     $.get(`/api/pre-designed/`, function (res) {
         $loader.addClass("hidden");
-        debugger;
         var projects = res.data || [];
         
         var temp="";
@@ -1127,6 +1126,7 @@ function backFromPreview(){
      * . Set Main Canvas State. 
      * . Set Wizard 
      */
+     state.isPreviewCanvas = false;
 
      //1. 
     $("#btnBack").addClass("hidden"); 
@@ -1134,6 +1134,9 @@ function backFromPreview(){
     $("#btn-step-preview").removeClass("hidden");
     $("#create-design-heading").removeClass("hidden");
     $("#preview-design-heading").addClass("hidden");
+
+    $("#ws-btn-save").removeClass("hidden");
+    $("#ws-btn-back").addClass("hidden");
     //2. 
     //  $("#btnSave").unbind().click(function(){
     //     toast("Please go back and save your design.");
@@ -1148,7 +1151,6 @@ function backFromPreview(){
      //6. 
      renderMainCanvasOnBackButton()
      //7. 
-     state.isPreviewCanvas = false;
 
      $(".step-item:nth-child(4)").removeClass("active");
      $(".step-item:nth-child(3)").addClass("active");
@@ -1205,6 +1207,8 @@ function renderPreview()
 
             }
             $loader.addClass("hidden");
+            $("#ws-btn-save").addClass("hidden");
+            $("#ws-btn-back").removeClass("hidden");
    //         closeRepeatDesignPreview();
         });
     })
@@ -2060,6 +2064,8 @@ function pasteImage(event) {
             var imageURL = window.webkitURL.createObjectURL(imageData);
             fabric.Image.fromURL(imageURL, (img) => {
                 // img.scaleToWidth(300);
+                img.scaleToHeight(300);
+
                 img.globalCompositeOperation = "source-atop";
                 canvas.add(img).renderAll();
             })

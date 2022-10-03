@@ -346,7 +346,6 @@ function initImageEvents(){
 
 function deleteTemplate(id)
 {
-  debugger;
   var templateId = $("#edit-template-id").val(); 
     $.ajax({
         type: "DELETE",
@@ -603,7 +602,6 @@ function downloadDesign(){
 
 
     $("#menu-save-design").on("click",function(){
-      debugger;
       /**
        * 1. validate - please create design before save.
        * 2. show save design form. 
@@ -890,7 +888,6 @@ if(!userId)
     // }else{
     //   toast(`Can't load Template.`)
     // }
-    debugger;
     var id = e.currentTarget.id;
     canvas.clear();
     loadSVGTemplate(id);
@@ -1401,7 +1398,6 @@ var category = $("#admin-categories").val() ;
     }
     var MIME_TYPE = "image/png";
     var dataUrl = selectedDesign.base64;  
-debugger;
 var category = $("#admin-categories").val() ; 
 $loader.removeClass("hidden");
     $.ajax({
