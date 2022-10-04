@@ -11,7 +11,7 @@ const commonService = (function() {
     this.cached_templates = [];
     this.getCategoriesAsync = async ()=>
     { 
-        return await categoryModel.find({});
+        return await categoryModel.find({active:true});
     },
 
     this.getTemplatesAsync = async (active)=>
@@ -63,7 +63,9 @@ const commonService = (function() {
                 title:1,
                 type:1,
                 name:1,
-                ref_code:1
+                ref_code:1,
+                id:1,
+                category:1
             }).sort({order_no:1}); 
         }else{
             designs =   await uploads.find({type: type, active:active, by_admin:by_admin,deleted:false  },
@@ -71,7 +73,9 @@ const commonService = (function() {
                 code:1,
                 base64:1,
                 title:1,
-                type:1
+                type:1,
+                id:1,
+                category:1
             }).sort({order_no:1}); 
         }
       
@@ -299,13 +303,10 @@ const commonService = (function() {
             getCustomerReport   :   this.getCustomerReport,
             getSummaryReport    :   this.getSummaryReport,  
         },
-
         contentService: {
             addOrUpdateContentAsync  :  this.addOrUpdateContentAsync ,
             getContentAsync          :  this.getContentAsync
         },
-
-       
         clearCache: clearCache
     }
 })();

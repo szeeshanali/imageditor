@@ -662,7 +662,7 @@ color:#0900fd;
     font-size: 14px;
     font-weight: bold;
     color: #45447e;
-    background-color: #6663b1;
+    background-color: #b7b5ff;
     width: 22px;
     height: 21px;
     border-radius: 50%;
@@ -754,3 +754,6 @@ font-weight: bold;
   .admin-edit-template:focus{
     background-color: #cbcaff;
   }
+
+  /**/
+  

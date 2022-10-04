@@ -279,22 +279,36 @@ router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
         
     // }
     //var templates = await commonService.uploadService.getTemplatesAsync();
-    var customDesigns = await uploads.find({type:'pre-designed', active:true, deleted:false, base64:{$ne:null},json:{$ne:null}},{code:1,base64:1}) || [];
+   var customDesigns = await uploads.find({type:'pre-designed', active:true, deleted:false, base64:{$ne:null},json:{$ne:null}},{code:1,base64:1}) || [];
    var adminUploadItems = await commonService.uploadService.getUploads('all',true,true);
    var templates = adminUploadItems.filter(function(item){ return item.type == 'template'});
    var cliparts = adminUploadItems.filter(function(item){ return item.type == 'clipart'});
    var customDesigns = adminUploadItems.filter(function(item){ return item.type == 'pre-designed'});
-    // var projects = await commonService.uploadService.getUserDesignsAsync(req.user._id);
+   var categories = await commonService.categoryService.getCategoriesAsync();
+  
+   var ca = [];
+   categories.forEach(category => {
+    var items = cliparts?.filter(i=>i.category == category.id);
+    if(items != null && items.length > 0)
+    {
+        ca.push({
+           categoryName:category.name,
+           items: items
+        })
+    }
+   
+   });
     res.render(PATH_WORKSPACE,{
         user:req.user,
         template:template,
         templateMeta:meta,
         templates: templates,
         customDesigns: customDesigns,
-        cliparts:cliparts,
+        cliparts:ca,
+        categories:categories,
         type:type,
         code:id,
-        project_limit:req.user.project_limit
+        project_limit:req.user.project_limit,
     });
 });
 

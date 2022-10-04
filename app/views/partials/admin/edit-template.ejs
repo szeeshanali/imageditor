@@ -50,7 +50,8 @@
                     </div>
                     <div class="mg-y-5" >
                         <small>Display order:</small>
-                        <input class="form-control"  id="admin-display-order" type="number">
+                        <input class="form-control" min="1" oninput="this.value = 
+                        !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null"  id="admin-display-order" type="number">
 
                     </div>
                 </div>
