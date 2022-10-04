@@ -389,11 +389,11 @@ function loadSVGTemplate(id) {
         
         }, function (item, object) {
             object.set({left:0,top:0}); 
-            object.scaleToWidth(400);
+            
+            object.scaleToWidth(384); // 4in = 96 res 
             //object.set('id', item.getAttribute('id'));
            // group.push(object);
         });
-
         /// load template - preview display
         fabric.loadSVGFromURL(svgBase64, function (objects, options) {
             //$canvasPrev.fadeOut();
