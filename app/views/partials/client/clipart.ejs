@@ -21,13 +21,13 @@
       <%cliparts?.forEach(clipart=>{ %>
        
         <div class="nav-item pd-x-15">
-          <a href="" class="nav-link with-sub text-primary">
+          <a href="#" class="nav-link with-sub text-primary">
             <span><%=clipart.categoryName%> (<%= clipart.items.length %>)</span>
           </a>
        
-            <div class="nav-sub d-flex" style="display: none;">
+            <div class="nav-sub" style="display: none;">
               <%clipart.items.forEach(item=>{ %>
-                <div class="nav-item  pd-0 bd clipart">
+                <div class="nav-item col-lg-4  pd-0 bd clipart" style="width:30%">
                   <div class="" >
                     <div class="card bg-gray-200 ht-130 ">
                       <div class="card-body pd-5">
