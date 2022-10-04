@@ -18,7 +18,7 @@ const schema  = new mongoose.Schema({
     thumbBase64     :   {   type    :   String   },
     editable        :   {   type    :   Boolean, default    :  false    },
     paid            :   {   type    :   Boolean, default    :  false    },
-    category        :   {   type    :   Buffer,  required   :  false    },
+    category        :   {   type    :   mongoose.ObjectId,  required   :  false    },
     link            :   {   type    :   String  },
     path            :   {   type    :   String  },
     meta            :   {   type    :   String  },
