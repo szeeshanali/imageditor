@@ -79,10 +79,7 @@ app.use("/",  mainroutes);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
-<<<<<<< HEAD
 
-})
-=======
 })
 
 
@@ -90,4 +87,4 @@ process.on('uncaughtException', function (err) {
   console.error(err.stack);
   console.log("Node NOT Exiting...");
 });
->>>>>>> c7cc94b0f0c40b4f8535291344104a54883c1bc7
+
