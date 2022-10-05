@@ -107,6 +107,7 @@ fabric.Object.prototype.cornerColor = '#494699';
 fabric.Object.prototype.cornerStrokeColor = '#000';
 fabric.Object.prototype.cornerSize = 5;
 fabric.Object.prototype.padding = 0;
+
 fabric.CurvedText = fabric.util.createClass(fabric.Object, {
     type: 'curved-text',
     diameter: 250,
@@ -121,6 +122,7 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
      cacheProperties: fabric.Object.prototype.cacheProperties.concat('diameter', 'kerning', 'flipped', 'fill', 'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'strokeStyle', 'strokeWidth'),
     strokeStyle: null,
     strokeWidth: 0,
+    text:'',
 
     initialize: function(text, options) {
         options || (options = {});
@@ -130,10 +132,10 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
         this.set('lockUniScaling', true);
 
         // Draw curved text here initially too, while we need to know the width and height.
-        var canvas = this.getCircularText();
-        this._trimCanvas(canvas);
-        this.set('width', canvas.width);
-        this.set('height', canvas.height);
+        var ___canvas = this.getCircularText();
+        this._trimCanvas(___canvas);
+        this.set('width', ___canvas.width);
+        this.set('height', ___canvas.height);
     },
 
     _getFontDeclaration: function()
@@ -180,7 +182,7 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
     // Source: http://jsfiddle.net/rbdszxjv/
     getCircularText: function()
     {
-        var text = this.text,
+                var text = this.text.text || this.text,
             diameter = this.diameter,
             flipped = this.flipped,
             kerning = this.kerning,
@@ -298,6 +300,9 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
     }
 });
 
+fabric.CurvedText.fromObject = function(object, callback, forceAsync) {
+    return fabric.Object._fromObject('CurvedText', object, callback, forceAsync, 'curved-text');
+};
 
 
 var canvas = new fabric.Canvas("client-main-canvas", {preserveObjectStacking: true})
@@ -591,7 +596,6 @@ function loadSVGTemplate(id) {
            
             let templateWidth = options.viewBoxWidth;
             let templateHeight = options.viewBoxHeight;
-            debugger;
             let  isLandspace = (templateWidth > templateHeight);
              if(isLandspace)
              {
@@ -1470,7 +1474,8 @@ function onObjectSelectionCleared(o)
 function onObjectSelection(o)
 {
     var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
-    if (_canvas.getActiveObject().get('type') == "i-text") {
+    var t = _canvas.getActiveObject().get('type');
+    if ( t== "i-text" || t == "curved-text") {
      
         textControls(true);
         imageControls(false);
@@ -1794,7 +1799,6 @@ function downloadDesign(){
 
         },
         error: function (res) {
-            debugger;
             toast("Error while downloading.");
         }
     })
@@ -1995,7 +1999,45 @@ function initCanvasTextEvents() {
     let isDrawingText = false;
     var textLeft = 50;
     var textTop = 100;
+    $("#inputCurvedText").on("click",function(e){
+      if(e.target.checked)
+      { 
+        $("#curveTextCtrlPanel").removeClass("hidden"); 
+        var obj = canvas.getActiveObject();
+        if (obj) {
+           var item =  new fabric.CurvedText(obj.text, {
+            type: 'curved-text',
+            diameter:250,
+            left:obj.left,
+            top:obj.top,
+            fontFamily:obj.fontFamily,
+            fontSize:obj.fontSize,
+            kerning: 0,
+            flipped: false,
+            fill: obj.fill,
+            fontSize: obj.fontSize, // in px
+            fontWeight: obj.fontWeight,
+            fontStyle: obj.fontStyle,
+             cacheProperties: fabric.Object.prototype.cacheProperties.concat('diameter', 'kerning', 'flipped', 'fill', 'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'strokeStyle', 'strokeWidth'),
+            strokeStyle: obj.strokeStyle,
+            strokeWidth: obj.strokeWidth,
 
+
+           });
+           canvas.add(item);
+
+           canvas.renderAll();
+           canvas.remove(obj)
+           canvas.setActiveObject(item);
+
+          
+        }
+    
+    }
+      else{
+        $("#curveTextCtrlPanel").addClass("hidden");
+      }
+    })
     $btnAddText.on("click", function () {
         var text = $textarea.val();
         if(!text || text.length == 0)
@@ -2037,7 +2079,6 @@ function initCanvasTextEvents() {
     $("#curveTextCtrl").on("input",function(e){
         var val = e.currentTarget.value;
         var obj = canvas.getActiveObject();
-    
         if (obj) {
             obj.set({
                 diameter: val,
