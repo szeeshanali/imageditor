@@ -108,6 +108,201 @@ fabric.Object.prototype.cornerStrokeColor = '#000';
 fabric.Object.prototype.cornerSize = 5;
 fabric.Object.prototype.padding = 0;
 
+fabric.CurvedText = fabric.util.createClass(fabric.Object, {
+    type: 'curved-text',
+    diameter: 250,
+    kerning: 0,
+    text: '',
+    flipped: false,
+    fill: '#000',
+    fontFamily: 'Times New Roman',
+    fontSize: 24, // in px
+    fontWeight: 'normal',
+    fontStyle: '', // "normal", "italic" or "oblique".
+     cacheProperties: fabric.Object.prototype.cacheProperties.concat('diameter', 'kerning', 'flipped', 'fill', 'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'strokeStyle', 'strokeWidth'),
+    strokeStyle: null,
+    strokeWidth: 0,
+    text:'',
+
+    initialize: function(text, options) {
+        options || (options = {});
+        this.text = text;
+
+        this.callSuper('initialize', options);
+        this.set('lockUniScaling', true);
+
+        // Draw curved text here initially too, while we need to know the width and height.
+        var ___canvas = this.getCircularText();
+        this._trimCanvas(___canvas);
+        this.set('width', ___canvas.width);
+        this.set('height', ___canvas.height);
+    },
+
+    _getFontDeclaration: function()
+    {
+        return [
+            // node-canvas needs "weight style", while browsers need "style weight"
+            (fabric.isLikelyNode ? this.fontWeight : this.fontStyle),
+            (fabric.isLikelyNode ? this.fontStyle : this.fontWeight),
+            this.fontSize + 'px',
+            (fabric.isLikelyNode ? ('"' + this.fontFamily + '"') : this.fontFamily)
+        ].join(' ');
+    },
+
+    _trimCanvas: function(canvas)
+    {
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width,
+            h = canvas.height,
+            pix = {x:[], y:[]}, n,
+            imageData = ctx.getImageData(0,0,w,h),
+            fn = function(a,b) { return a-b };
+
+        for (var y = 0; y < h; y++) {
+            for (var x = 0; x < w; x++) {
+                if (imageData.data[((y * w + x) * 4)+3] > 0) {
+                    pix.x.push(x);
+                    pix.y.push(y);
+                }
+            }
+        }
+        pix.x.sort(fn);
+        pix.y.sort(fn);
+        n = pix.x.length-1;
+
+        w = pix.x[n] - pix.x[0];
+        h = pix.y[n] - pix.y[0];
+        var cut = ctx.getImageData(pix.x[0], pix.y[0], w, h);
+
+        canvas.width = w;
+        canvas.height = h;
+        ctx.putImageData(cut, 0, 0);
+    },
+
+    // Source: http://jsfiddle.net/rbdszxjv/
+    getCircularText: function()
+    {
+                var text = this.text.text || this.text,
+            diameter = this.diameter,
+            flipped = this.flipped,
+            kerning = this.kerning,
+            fill = this.fill,
+            inwardFacing = true,
+            startAngle = 0,
+            canvas = fabric.util.createCanvasElement(),
+            ctx = canvas.getContext('2d'),
+            cw, // character-width
+            x, // iterator
+            clockwise = -1; // draw clockwise for aligned right. Else Anticlockwise
+
+        if (flipped) {
+            startAngle = 180;
+            inwardFacing = false;
+        }
+
+        startAngle *= Math.PI / 180; // convert to radians
+
+        // Calc heigt of text in selected font:
+        var d = document.createElement('div');
+        d.style.fontFamily = this.fontFamily;
+    d.style.whiteSpace = 'nowrap';
+        d.style.fontSize = this.fontSize + 'px';
+        d.style.fontWeight = this.fontWeight;
+        d.style.fontStyle = this.fontStyle;
+        d.textContent = text;
+        document.body.appendChild(d);
+        var textHeight = d.offsetHeight;
+        document.body.removeChild(d);
+
+        canvas.width = canvas.height = diameter;
+        ctx.font = this._getFontDeclaration();
+
+        // Reverse letters for center inward.
+        if (inwardFacing) { text = text.split('').reverse().join('') };
+
+        // Setup letters and positioning
+        ctx.translate(diameter / 2, diameter / 2); // Move to center
+        startAngle += (Math.PI * !inwardFacing); // Rotate 180 if outward
+        ctx.textBaseline = 'middle'; // Ensure we draw in exact center
+        ctx.textAlign = 'center'; // Ensure we draw in exact center
+
+        // rotate 50% of total angle for center alignment
+        for (x = 0; x < text.length; x++) {
+            cw = ctx.measureText(text[x]).width;
+            startAngle += ((cw + (x == text.length-1 ? 0 : kerning)) / (diameter / 2 - textHeight)) / 2 * -clockwise;
+        }
+
+        // Phew... now rotate into final start position
+        ctx.rotate(startAngle);
+
+        // Now for the fun bit: draw, rotate, and repeat
+        for (x = 0; x < text.length; x++) {
+            cw = ctx.measureText(text[x]).width; // half letter
+            // rotate half letter
+            ctx.rotate((cw/2) / (diameter / 2 - textHeight) * clockwise);
+            // draw the character at "top" or "bottom"
+            // depending on inward or outward facing
+
+            // Stroke
+            if (this.strokeStyle && this.strokeWidth) {
+                ctx.strokeStyle = this.strokeStyle;
+                ctx.lineWidth = this.strokeWidth;
+                ctx.miterLimit = 2;
+                ctx.strokeText(text[x], 0, (inwardFacing ? 1 : -1) * (0 - diameter / 2 + textHeight / 2));
+            }
+
+            // Actual text
+            ctx.fillStyle = fill;
+            ctx.fillText(text[x], 0, (inwardFacing ? 1 : -1) * (0 - diameter / 2 + textHeight / 2));
+
+            ctx.rotate((cw/2 + kerning) / (diameter / 2 - textHeight) * clockwise); // rotate half letter
+        }
+        return canvas;
+    },
+
+    _set: function(key, value) {
+        switch(key) {
+            case 'scaleX':
+                this.fontSize *= value;
+                this.diameter *= value;
+                this.width *= value;
+                this.scaleX = 1;
+                if (this.width < 1) { this.width = 1; }
+                break;
+
+            case 'scaleY':
+                this.height *= value;
+                this.scaleY = 1;
+                if (this.height < 1) { this.height = 1; }
+                break;
+
+            default:
+                this.callSuper('_set', key, value);
+                break;
+        }
+    },
+
+    _render: function(ctx)
+    {
+        var canvas = this.getCircularText();
+        this._trimCanvas(canvas);
+
+        this.set('width', canvas.width);
+        this.set('height', canvas.height);
+
+        ctx.drawImage(canvas, -this.width / 2, -this.height / 2, this.width, this.height);
+
+        this.setCoords();
+    },
+
+    toObject: function(propertiesToInclude) {
+        return this.callSuper('toObject', ['text', 'diameter', 'kerning', 'flipped', 'fill', 'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'strokeStyle', 'strokeWidth'].concat(propertiesToInclude));
+    }
+});
+
+fabric.CurvedText.fromObject = function(object, callback, forceAsync) {
+    return fabric.Object._fromObject('CurvedText', object, callback, forceAsync, 'curved-text');
+};
 
 
 var canvas = new fabric.Canvas("client-main-canvas", {preserveObjectStacking: true})
@@ -389,11 +584,11 @@ function loadSVGTemplate(id) {
         
         }, function (item, object) {
             object.set({left:0,top:0}); 
-            object.scaleToWidth(400);
+            
+            object.scaleToWidth(384); // 4in = 96 res 
             //object.set('id', item.getAttribute('id'));
            // group.push(object);
         });
-
         /// load template - preview display
         fabric.loadSVGFromURL(svgBase64, function (objects, options) {
             //$canvasPrev.fadeOut();
@@ -401,7 +596,6 @@ function loadSVGTemplate(id) {
            
             let templateWidth = options.viewBoxWidth;
             let templateHeight = options.viewBoxHeight;
-            debugger;
             let  isLandspace = (templateWidth > templateHeight);
              if(isLandspace)
              {
@@ -1280,7 +1474,8 @@ function onObjectSelectionCleared(o)
 function onObjectSelection(o)
 {
     var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
-    if (_canvas.getActiveObject().get('type') == "i-text") {
+    var t = _canvas.getActiveObject().get('type');
+    if ( t== "i-text" || t == "curved-text") {
      
         textControls(true);
         imageControls(false);
@@ -1604,7 +1799,6 @@ function downloadDesign(){
 
         },
         error: function (res) {
-            debugger;
             toast("Error while downloading.");
         }
     })
@@ -1805,7 +1999,45 @@ function initCanvasTextEvents() {
     let isDrawingText = false;
     var textLeft = 50;
     var textTop = 100;
+    $("#inputCurvedText").on("click",function(e){
+      if(e.target.checked)
+      { 
+        $("#curveTextCtrlPanel").removeClass("hidden"); 
+        var obj = canvas.getActiveObject();
+        if (obj) {
+           var item =  new fabric.CurvedText(obj.text, {
+            type: 'curved-text',
+            diameter:250,
+            left:obj.left,
+            top:obj.top,
+            fontFamily:obj.fontFamily,
+            fontSize:obj.fontSize,
+            kerning: 0,
+            flipped: false,
+            fill: obj.fill,
+            fontSize: obj.fontSize, // in px
+            fontWeight: obj.fontWeight,
+            fontStyle: obj.fontStyle,
+             cacheProperties: fabric.Object.prototype.cacheProperties.concat('diameter', 'kerning', 'flipped', 'fill', 'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'strokeStyle', 'strokeWidth'),
+            strokeStyle: obj.strokeStyle,
+            strokeWidth: obj.strokeWidth,
 
+
+           });
+           canvas.add(item);
+
+           canvas.renderAll();
+           canvas.remove(obj)
+           canvas.setActiveObject(item);
+
+          
+        }
+    
+    }
+      else{
+        $("#curveTextCtrlPanel").addClass("hidden");
+      }
+    })
     $btnAddText.on("click", function () {
         var text = $textarea.val();
         if(!text || text.length == 0)
@@ -1813,14 +2045,21 @@ function initCanvasTextEvents() {
             ///toast("Please enter text");
             return; 
         }
-        var item = new fabric.IText(text, {
+        
+        var textInfo = {
             left: (textLeft += 20),
             top: (textTop += 20),
             fontFamily: 'arial black',
             fill: '#333',
             fontSize: 18
-        });
-        
+        };
+        var item = new fabric.IText(text, textInfo);
+
+        var isCurvedText = $("#inputCurvedText").prop("checked"); 
+        if(isCurvedText){
+            textInfo.diameter =  360;
+            item = new fabric.CurvedText(text, textInfo);
+        }
         if (state.isPreviewCanvas) {
             canvasPrev.add(item);
         } else {
@@ -1834,6 +2073,17 @@ function initCanvasTextEvents() {
 
     $btnTextSize.on("change", function () {
         canvas.getActiveObject().set("fontSize", this.value);
+        canvas.renderAll();
+    })
+
+    $("#curveTextCtrl").on("input",function(e){
+        var val = e.currentTarget.value;
+        var obj = canvas.getActiveObject();
+        if (obj) {
+            obj.set({
+                diameter: val,
+            });
+        }
         canvas.renderAll();
     })
 
