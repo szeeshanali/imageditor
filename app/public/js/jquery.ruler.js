@@ -126,13 +126,13 @@
 			var tickLabelPos = settings.vRuleSize;
 			var newTickLabel = "";
 			while ( tickLabelPos <= $hRule.width() ) {
-				if ((( tickLabelPos - settings.vRuleSize ) %50 ) == 0 ) {
-					newTickLabel = "<div class='tickLabel'>" + ( tickLabelPos - settings.vRuleSize ) + "</div>";
+				if ((( tickLabelPos - settings.vRuleSize ) % 150 ) == 0 ) {
+					newTickLabel = "<div class='tickLabel'>" + (( tickLabelPos - settings.vRuleSize )/150) + "</div>";
 					$(newTickLabel).css( "left", tickLabelPos+"px" ).appendTo($hRule);
-				} else if ((( tickLabelPos - settings.vRuleSize ) %10 ) == 0 ) {
+				} else if ((( tickLabelPos - settings.vRuleSize ) %75 ) == 0 ) {
 					newTickLabel = "<div class='tickMajor'></div>";
 					$(newTickLabel).css("left",tickLabelPos+"px").appendTo($hRule);
-				} else if ((( tickLabelPos - settings.vRuleSize ) %5 ) == 0 ) {
+				} else if ((( tickLabelPos - settings.vRuleSize ) %15 ) == 0 ) {
 					newTickLabel = "<div class='tickMinor'></div>";
 					$(newTickLabel).css( "left", tickLabelPos+"px" ).appendTo($hRule);
 				}
@@ -143,13 +143,13 @@
 			tickLabelPos = settings.hRuleSize;
 			newTickLabel = "";
 			while (tickLabelPos <= $vRule.height()) {
-				if ((( tickLabelPos - settings.hRuleSize ) %50 ) == 0) {
-					newTickLabel = "<div class='tickLabel'><span>" + ( tickLabelPos - settings.hRuleSize ) + "</span></div>";
+				if ((( tickLabelPos - settings.hRuleSize ) %150 ) == 0) {
+					newTickLabel = "<div class='tickLabel'><span>" + (( tickLabelPos - settings.hRuleSize )/150) + "</span></div>";
 					$(newTickLabel).css( "top", tickLabelPos+"px" ).appendTo($vRule);
-				} else if (((tickLabelPos - settings.hRuleSize)%10) == 0) {
+				} else if (((tickLabelPos - settings.hRuleSize)%75) == 0) {
 					newTickLabel = "<div class='tickMajor'></div>";
 					$(newTickLabel).css( "top", tickLabelPos+"px" ).appendTo($vRule);
-				} else if (((tickLabelPos - settings.hRuleSize)%5) == 0) {
+				} else if (((tickLabelPos - settings.hRuleSize)%15) == 0) {
 					newTickLabel = "<div class='tickMinor'></div>";
 					$(newTickLabel).css( "top", tickLabelPos+"px" ).appendTo($vRule);
 				}
