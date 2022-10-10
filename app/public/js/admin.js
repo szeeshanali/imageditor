@@ -346,6 +346,8 @@ function initImageEvents(){
 
 function deleteTemplate(id)
 {
+  if(!confirm("do you want to delete this template?"))
+   {return;}
   var templateId = $("#edit-template-id").val(); 
     $.ajax({
         type: "DELETE",
@@ -1398,30 +1400,58 @@ var category = $("#admin-categories").val() ;
     }
     var MIME_TYPE = "image/png";
     var dataUrl = selectedDesign.base64;  
-var category = $("#admin-categories").val() ; 
+    const file = DataURIToBlob(dataUrl)
+  //   const formData = new FormData();
+  //   formData.append('upload', file, 'image.jpg');
+  //   formData.append('data', JSON.stringify({  
+           
+  //     file      : formData,
+  //     desc      : "",
+  //     meta      : JSON.stringify(meta) ,
+  //     title     : $inputThumbnailName.val(),
+  //     name      : $inputDesignName.val(),
+  //     file_name : $inputFileName.val(),
+  //     file_ext  : ".svg",
+  //     order_no  : $inputOrderNo.val(),
+  //     active    : designFlags.active,
+  //     base64    : dataUrl,
+  //     type      : $("#design-type").val(),
+  //     by_admin  : true,
+  //     default   : designFlags.default,
+  //     link      : $inputDesignLink.val(),
+  //     logos     : $inputLogoPerPage.val(), 
+  //     ref_code  : $kopykakePartNo.val(),
+  //     category  : category
+  // })
+  
+ // )
+    var category = $("#admin-categories").val() ; 
 $loader.removeClass("hidden");
     $.ajax({
         type: "POST",
         url: "/app/admin/save-template",
+       // contentType: false,
+       // enctype: 'multipart/form-data',
+       // processData: false,
         data: {  
-            
-            desc      : "",
-            meta      : JSON.stringify(meta) ,
-            title     : $inputThumbnailName.val(),
-            name      : $inputDesignName.val(),
-            file_name : $inputFileName.val(),
-            file_ext  : ".svg",
-            order_no  : $inputOrderNo.val(),
-            active    : designFlags.active,
-            base64    : dataUrl,
-            type      : $("#design-type").val(),
-            by_admin  : true,
-            default   : designFlags.default,
-            link      : $inputDesignLink.val(),
-            logos     : $inputLogoPerPage.val(), 
-            ref_code  : $kopykakePartNo.val(),
-            category  : category
-        },
+           
+          desc      : "",
+          meta      : JSON.stringify(meta) ,
+          title     : $inputThumbnailName.val(),
+          name      : $inputDesignName.val(),
+          file_name : $inputFileName.val(),
+          file_ext  : ".svg",
+          order_no  : $inputOrderNo.val(),
+          active    : designFlags.active,
+          base64    : dataUrl,
+          type      : $("#design-type").val(),
+          by_admin  : true,
+          default   : designFlags.default,
+          link      : $inputDesignLink.val(),
+          logos     : $inputLogoPerPage.val(), 
+          ref_code  : $kopykakePartNo.val(),
+          category  : category
+      },
         success:function(res){
       
           designFlags.submitted = true; 
@@ -1784,5 +1814,16 @@ function mainControls(show)
         $toast.removeClass("show")
 
     }, 3000);
+}
+function DataURIToBlob(dataURI) {
+  const splitDataURI = dataURI.split(',')
+  const byteString = splitDataURI[0].indexOf('base64') >= 0 ? atob(splitDataURI[1]) : decodeURI(splitDataURI[1])
+  const mimeString = splitDataURI[0].split(':')[1].split(';')[0]
+
+  const ia = new Uint8Array(byteString.length)
+  for (let i = 0; i < byteString.length; i++)
+      ia[i] = byteString.charCodeAt(i)
+
+  return new Blob([ia], { type: mimeString })
 }
 })()
