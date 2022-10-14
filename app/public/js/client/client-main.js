@@ -559,13 +559,14 @@ function loadSVGTemplate(id) {
             
             /// getting actual width and height of a logo
             /// setting canvas dimensions with logo width/height
+            debugger;
             var logo= objects[0];
-            var w =logo.getScaledWidth(); 
-            var h = logo.getScaledHeight();            
-            canvas.setDimensions({width: w , height: h});
+            var w = Math.floor(logo.getScaledWidth()); 
+            var h = Math.floor(logo.getScaledHeight());            
+            canvas.setDimensions({width:  w , height: h});
             canvas.setBackgroundImage(logo, canvas.renderAll.bind(canvas));            
             canvas.renderAll();
-            //canvas.setZoom(2);
+            //canvas.setZoom(2); 
 
             $("#template-info-panel .template-name").text(data.name);
             $("#template-info-panel .page-size").text(meta.pageSize);
@@ -783,7 +784,6 @@ function initUIEvents() {
     contrastObject();
 
     $("#accordion a").on("click",function(){
-
         $("#accordion").find('.arrow').each(function(){
             $(this).removeClass("down");
         })
@@ -801,14 +801,11 @@ function initUIEvents() {
             $(this).removeClass('tx-gray-500');
             $("#workarea").removeAttr("style");
             $(this).html($(this).html().replace("On","Off"));
-
         }
         else{
             $(this).html($(this).html().replace("Off","On"));
-            
             $(this).addClass('tx-gray-500');
             $("#workarea").attr("style","background-image:url('')");
-           
         }
       
     })
@@ -816,7 +813,7 @@ function initUIEvents() {
         var style = !($(".vRule").is(':visible'));
         if(style)
         {   
-              var len = $('.canvas-container').find('.ruler').length;
+            var len = $('.canvas-container').find('.ruler').length;
             if(len === 0){
                 $('.canvas-container').ruler({
                     vRuleSize: 22,
@@ -1297,7 +1294,13 @@ function previewDesign()
    . Render preview. 
    . Set Preview State. 
    . Set Wizard
+   . Hide Ruler 
+   . Hide Grid 
     */
+   $("#workarea").attr("style","background-image:url('')");
+   $("#btnDisplayGrid").hide();
+   $("#btnDisplayRuler").hide();
+   
 
    //1. 
    if(canvas.getObjects().length == 0)
@@ -1342,6 +1345,11 @@ function backFromPreview(){
      * . Set Main Canvas State. 
      * . Set Wizard 
      */
+     $("#workarea").removeAttr("style");
+     $("#btnDisplayGrid").show();
+     $("#btnDisplayRuler").show();
+   
+     
      state.isPreviewCanvas = false;
 
      //1. 
