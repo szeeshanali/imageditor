@@ -2301,10 +2301,10 @@ function cropObject() {
 
 
 function grayscaleObject() {
-    $("#btnGrayscale").on("click", () => {
-        applyFilter(0, new fabric.Image.filters.Grayscale());
-        applyFilterValue(0, 'mode', 'average');
+    $("#btnGrayscale").on("click", (e) => {
 
+        applyFilter(0, e.currentTarget.checked && new fabric.Image.filters.Grayscale());
+        applyFilterValue(0, 'mode', 'average');
     })
 }
 
