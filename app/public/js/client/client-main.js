@@ -834,49 +834,7 @@ function initUIEvents() {
         }
       
     })
-    // $("#shared-library .custom-design").on("click",function(){
-    //     var id = $(this).attr("id"); 
-    //     $loader.removeClass("hidden");
-    //     $.ajax({
-    //         type: "GET",
-    //         url: `/api/pre-designed/${id}`,
-    //         success: function (res) {
-    //             const {json} = res.data;
-    //             if(!json) return; 
-    //             var obj = JSON.parse(json);
-    //             var objs = obj.objects;
-             
-    //             fabric.util.enlivenObjects(objs, function(objects) {
-    //                 var origRenderOnAddRemove = canvas.renderOnAddRemove;
-    //                 canvas.renderOnAddRemove = false;
-    //                 var grp = new fabric.Group(objects,{
-    //                     top:100,
-    //                     left:100
-    //                 });
-    //                 grp.globalCompositeOperation = "source-atop"
-
-    //                 if (state.isPreviewCanvas) {
-    //                     canvasPrev.add(grp);
-    //                 } else {
-    //                     canvas.add(grp);
-    //                 }
-
-                  
-    //                 canvas.renderOnAddRemove = origRenderOnAddRemove;
-    //                 canvas.renderAll();
-    //                 mainControls(true);
-    //                 $loader.addClass("hidden");
-    //               });
-    
-    
-    
-    //         },
-    //         error: function (res) {
-    //             toast("Error while downloading.");
-    //         }
-    //     })
-    
-    // })
+   
     $txtDecorationCtrl.on("click",function(e){
         var value = $(this).attr("data-value");
         var o = canvas.getActiveObject(); 
@@ -916,9 +874,9 @@ function initUIEvents() {
         canvas.requestRenderAll();
     })
       
-    $("#text-color").on("change",function() {
-        setSelectedTextStyle("fill",this.value);
-    });
+    // $("#text-color").on("click",function() {
+    //     setSelectedTextStyle("fill",this.value);
+    // });
      $("#text-letter-spacing, #text-letter-spacing-range").on("change",function() {
       setSelectedTextStyle("charSpacing",this.value);
       
@@ -942,11 +900,7 @@ function initUIEvents() {
   });
           
   
-  function setSelectedTextStyle(prop,value){
-    canvas.getActiveObject().set(prop,value);
-    canvas.renderAll();
-  
-  }
+
     
     $btnUndo.on("click", () => {
 
@@ -1075,140 +1029,13 @@ function initUIEvents() {
 
     });
 
-    // $btnApplyToOne.on("click",function(e){
-    //     state.isPreviewCanvas = true;
-    //     $("#repeat-image-ctrl #previewdesign").hide();
-    //     $("#repeat-image-ctrl #backtodesign").show();
-    //     $clientMainCanvas.parent().fadeOut();
-    //     $canvasPrev.parent().fadeIn();
-    //     canvas.clone(function (clonedCanvas) {
-    //         var bg = clonedCanvas.backgroundImage;
-    //         clonedCanvas.backgroundImage = false;
-    //         for (var i = 0; i < clonedCanvas._objects.length; i++) {
-    //             clonedCanvas._objects[i].globalCompositeOperation = null;
-    //             canvas.renderAll.bind(clonedCanvas)
-    //         }
-    //         clonedCanvas.renderAll()
-    //         var dataURL = clonedCanvas.toDataURL({
-    //             format: "png",
-    //             left: 0,
-    //             top: 0,
-    //             width: canvas.width,
-    //             height: canvas.height
-    //         });
-
-    //         var logos = canvasPrev.backgroundImage._objects;
-    //         fabric.Image.fromURL(dataURL, (img) => {
-    //             canvasPrev.remove(... canvasPrev.getObjects());
-    //             //for (var i = 0; i < logos.length; i++) {
-
-    //                 var logo = logos[0];
-    //                 var object = fabric.util.object.clone(img);
-    //                 var left = logo.left + logo.group.left  + logo.group.width / 2;
-    //                 var top = logo.top + logo.group.top  + logo.group.height / 2;
-    //                 object.scaleToWidth(logo.width)
-    //                 object.set("top", top);
-    //                 object.set("left", left);
-    //                 object.globalCompositeOperation = "source-atop";
-    //                 canvasPrev.add(object).renderAll();
-    //                 $btnDownloadPDF.removeClass("hidden");
-    //                 $btnSaveDesign.removeClass("hidden");
-    //                $(".vRule, .hRule").hide();
-
-    //             //}
-    //    //         closeRepeatDesignPreview();
-    //         });
-    //     });
-    // })
-
-    // $btnApplyRepeatDesign.on("click", function (e) {
-    //     if(canvas._objects.length == 0)
-    //     {
-    //         toast("Please create your design before preview.");
-    //         return;
-    //     }
-    //     $loader.removeClass("hidden");
-
-    //     state.isPreviewCanvas = true;
-    //     //$repeatImageCtrl.hide();
-    //     $("#repeat-image-ctrl #previewdesign").hide();
-    //     $("#repeat-image-ctrl #backtodesign").show();
-
-    //     $clientMainCanvas.parent().fadeOut();
-    //     $canvasPrev.parent().fadeIn();
-    //     // var logos = canvasPrev.backgroundImage._objects;
-    //     // var logox = logos[0];
-
-        
-    //     // var dataURL = canvas.toDataURL({
-    //     //         format: "png",
-    //     //         left: 0,
-    //     //         top: 0,
-    //     //         width: canvas.width,
-    //     //         height: canvas.height
-    //     // });
-
-    //     //      fabric.Image.fromURL(dataURL, (img) => {
-    //     //         for (var i = 0; i < logos.length; i++) {
-    //     //             var logo = logos[i];
-    //     //             var object = fabric.util.object.clone(img);
-    //     //             var left = logo.left + logo.group.left + logo.group.width / 2;
-    //     //             var top = logo.top + logo.group.top  + logo.group.height / 2;
-    //     //             object.scaleToWidth(logo.width)
-    //     //             object.set("top", top);
-    //     //             object.set("left", left);
-    //     //             object.globalCompositeOperation = "source-atop";
-    //     //             canvasPrev.add(object).renderAll();
-    //     //             $btnDownloadPDF.removeClass("hidden");
-    //     //             $btnSaveDesign.removeClass("hidden");
-    //     //             $(".vRule, .hRule").hide();
-    //     //         }
-    //     //     })
-    //      canvas.clone(function (clonedCanvas) {
-    //          var bg = clonedCanvas.backgroundImage;
-    //          clonedCanvas.backgroundImage = false;
-    //          for (var i = 0; i < clonedCanvas._objects.length; i++) {
-    //              clonedCanvas._objects[i].globalCompositeOperation = null;
-    //              canvas.renderAll.bind(clonedCanvas)
-    //          }
-    //          clonedCanvas.renderAll()
-    //          var dataURL = clonedCanvas.toDataURL({
-    //              format: "png",
-    //              left: 0,
-    //              top: 0,
-    //              width: canvas.width,
-    //              height: canvas.height
-    //          });
-
-    //          var logos = canvasPrev.backgroundImage._objects;
-    //          fabric.Image.fromURL(dataURL, (img) => {
-    //              canvasPrev.remove(... canvasPrev.getObjects());
-    //              for (var i = 0; i < logos.length; i++) {
-    //                  var logo = logos[i];
-    //                  var object = fabric.util.object.clone(img);
-    //                  var left = logo.left + logo.group.left  + logo.group.width / 2;
-    //                  var top = logo.top + logo.group.top  + logo.group.height / 2;
-    //                  object.scaleToWidth(logo.width+10)
-    //                  object.set("top", top);
-    //                  object.set("left", left);
-    //                  object.globalCompositeOperation = "source-atop";
-    //                  canvasPrev.add(object).renderAll();
-    //                  $btnDownloadPDF.removeClass("hidden");
-    //                  $btnSaveDesign.removeClass("hidden");
-    //                  $(".vRule, .hRule").hide();
-
-    //              }
-    //              $loader.addClass("hidden");
-    //     //         closeRepeatDesignPreview();
-    //          });
-    //      });
-    // });
-
-
-    //this.configUndoRedoStack();
 
 }
-
+function setSelectedTextStyle(prop,value){
+    canvas.getActiveObject().set(prop,value);
+    canvas.renderAll();
+  
+  }
 // function closeRepeatDesignPreview() {
 //     $repeatImageCtrl.show();
 //     $clientMainCanvas.parent().fadeIn();
