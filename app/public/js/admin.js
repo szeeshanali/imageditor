@@ -271,8 +271,8 @@ function cropObject(){
 
 function grayscaleObject()
 {
-  $("#btnGrayscale").on("click", ()=>{
-    applyFilter(0, new fabric.Image.filters.Grayscale());         
+  $("#btnGrayscale").on("click", (e)=>{
+    applyFilter(0, e.currentTarget.checked && new fabric.Image.filters.Grayscale());         
     applyFilterValue(0, 'mode', 'average');
     
 })
@@ -949,7 +949,7 @@ if(!userId)
     var data = {  
           
       title     : $inputThumbnailName.val(),
-      name      : $inputDesignName.val(),
+      name      : $inputThumbnailName.val(),
       file_name : $inputFileName.val(),
       order_no  : $inputOrderNo.val(),
       active    : designFlags.active,

@@ -632,8 +632,9 @@ color:#0900fd;
   }
 
   .leftpanel{
-    max-height: 700px;
+    height: 100%;
     overflow-y: auto;     
+    position: absolute;
   }
 
   ::-webkit-scrollbar {
@@ -755,8 +756,133 @@ font-weight: bold;
     background-color: #cbcaff;
   }
 
-  /**/
-  
+  /*main page*/
+  @font-face {
+    font-family: "hipster";
+    src: url("../fonts/FontsFree-Net-Hipster-Script-W00-Regular.ttf");
+}
 
+.typo {
+    font-family: "hipster";
+}
 
+.w-35 {
+    width: 35%;
+}
+.w-20{
+    width: 20%;
+}
+
+/* .background{
+    background-image: url(../img/bg.jpg);
+    background-size: cover;
+    background-position: top;
+    background-repeat: no-repeat;
+    height: 100%;
+} */
+.background {
+    background-image: url(../images/bg1.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh;
+}
+
+.rotate {
+    transform: rotate(-35deg);
+}
+
+.pic1 {
+    position: relative;
+    left: 80%;
+    top: 50%;
+}
+
+.pic2 {
+    position: relative;
+    left: 35%;
+    top: 12%;
+}
+
+.pic3 {
+    position: relative;
+    left: 105%;
+    top: 105%;
+}
+
+.pic4 {
+    position: relative;
+    left: 60%;
+    top: 25%;
+}
+
+.pos5 {
+    position: relative;
+    top: 160%;
+    right: -5%;
+}
+
+.pic6 {
+    position: relative;
+    bottom: -130%;
+    left: 70%;
+}
+
+.pic7 {
+    position: relative;
+    bottom: -145%;
+    left: 35%;
+}
+
+.customBtn{
+    border-radius: 10px;
+    font-size: 1.64rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: rgb(230, 0, 0);
+    padding: 10px 40px;
+    box-shadow: 5px 5px rgb(0, 0, 0, 0.5);
+}
+.customBtn:hover{
+    box-shadow: none;
+}
+.customLayout{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+@media only screen and (max-width: 600px) {
+    .rotate {
+        transform: none;
+    }
+    .pic1 {
+        position: static;
+    }
+
+    .pic2 {
+        position: static;
+    }
+
+    .pic3 {
+        position: static;
+    }
+
+    .pic4 {
+        position: static;
+    }
+
+    .pos5 {
+        position: static;
+    }
+
+    .pic6 {
+        position: static;
+    }
+
+    .pic7 {
+        position: static;
+    }
+}
+  /*--*/
   

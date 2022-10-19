@@ -99,8 +99,15 @@
                             </b>
                         </div>
                         <input type="range" min="-1" max="1" value="0.0" class="slider" step="0.003921" style="width:100%;height:2px" id="contrast-value">
-                            <b class="ion-record tx-22" id="btnGrayscale"></b>
-                            &nbsp; Grayscale
+                          
+                        <div>
+                            <label class="ckbox ">
+                                <input type="checkbox" id="btnGrayscale">
+                                    <span class="tx-14 tx-bold">Grayscale</span>
+                                </label>
+                            </div>
+
+
                         </div>
                     </div>
                 </div>
@@ -240,13 +247,19 @@
                     <div class="row mg-0 txt-ctrl hidden" id="font-panel">
                         <div class="col-lg-4 pd-10">
                             <Label>Font Color</Label>
-                            <input id='text-color' class="form-control"/>
+                            <!-- <button class="swatchy-button swatchy-trigger">
+                                <span class="swatchy-button-top">Select a Color</span>
+                              </button> -->
+                              <input type="text" class="swatchy-button swatchy-output swatchy-display swatchy-trigger" data-id="text-color" >
+
                         </div>
 
 
                         <div class="col-lg-4 pd-10">
                             <label>Stroke Color</label>
-                            <input id='text-stroke-color' class="form-control"/>
+                            <input type="text" class="swatchy-button swatchy-output swatchy-display swatchy-trigger"  data-id="text-stroke" >
+
+                            <!-- <input id='text-stroke-color' class="form-control"/> -->
                         </div>
 
                         <div class="col-lg-4 pd-10">
@@ -254,18 +267,11 @@
 
                             <select id="text-stroke-width" class="form-control select2 select2-hidden-accessible" data-placeholder="Choose one" tabindex="-1" aria-hidden="true">
                                 <option value="0">None</option>
-                                <option value="1">1</option>
+                                <option value="1" selected="selected" >1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
-                                <option value="4" selected="selected">4</option>
-                                <option value="5">5</option>
-                                <option value="6">6</option>
-                                <option value="7">7</option>
-                                <option value="8">8</option>
-                                <option value="9">9</option>
-                                <option value="10">10</option>
-                                <option value="11">11</option>
-                                <option value="12">12</option>
+                                <option value="4" >4</option>
+                                <option value="5">5</option>                              
                             </select>
                             <!-- <input type="range" min="1" max="120" value="" step="1" class="slider" id="btnTextSize-range"> -->
 

@@ -50,60 +50,8 @@
 <script src="/js/jquery.ruler.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/1.8.349/pdf.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.js"></script>
-
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css">
+<script src="/js/swatchy.js"></script>
 <script>
-
-$("#text-color , #text-stroke-color").spectrum({
-    showPaletteOnly: false,
-    showPalette:true,
-
-    color: 'black',
-    
-    palette: [
-        ['black', 'white', 'blanchedalmond',
-        'rgb(255, 128, 0);', 'hsv 100 70 50'],
-        ['red', 'yellow', 'green', 'blue', 'violet'],
-        ['DeepPink', 'DeepSkyBlue', 'DodgerBlue', 'Fuchsia', 'Gold'],
-        ['GreenYellow', 'Indigo', 'Ivory', 'LemonChiffon', 'LightCoral'],
-        ['LightGreen', 'LightPink', 'Lime', 'Magenta', 'MediumBlue']
-
-    ]
-});
+    Swatchy();
 
 </script>
-<style>
-    .sp-dd {
-    padding: 0px 0px;
-    height: 40px;
-    line-height: 40px;
-    float: left;
-    font-size: 10px;
-}
-.sp-replacer {
-    margin: 0;
-    overflow: hidden;
-    cursor: pointer;
-    /* padding: 9px; */
-    display: inline-block;
-    *zoom: 1;
-    *display: inline;
-    /* border: solid 1px #91765d; */
-    background: #eee;
-    color: #333;
-    vertical-align: middle;
-    width: 60px;
-    height: 40px;
-    border-radius: 0;
-}
-.sp-preview {
-    position: relative;
-    width: 25px;
-    height: 30px;
-    /* border: solid 1px #222; */
-    margin-right: 5px;
-    float: left;
-    z-index: 0;
-}
-</style>
