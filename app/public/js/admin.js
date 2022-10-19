@@ -949,7 +949,7 @@ if(!userId)
     var data = {  
           
       title     : $inputThumbnailName.val(),
-      name      : $inputDesignName.val(),
+      name      : $inputThumbnailName.val(),
       file_name : $inputFileName.val(),
       order_no  : $inputOrderNo.val(),
       active    : designFlags.active,

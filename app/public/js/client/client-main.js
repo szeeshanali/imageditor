@@ -559,11 +559,10 @@ function loadSVGTemplate(id) {
             
             /// getting actual width and height of a logo
             /// setting canvas dimensions with logo width/height
-            debugger;
             var logo= objects[0];
             var w = Math.floor(logo.getScaledWidth()); 
             var h = Math.floor(logo.getScaledHeight());            
-            canvas.setDimensions({width:  w , height: h});
+            canvas.setDimensions({width:  420 , height: 420});
             canvas.setBackgroundImage(logo, canvas.renderAll.bind(canvas));            
             canvas.renderAll();
             //canvas.setZoom(2); 
@@ -590,7 +589,7 @@ function loadSVGTemplate(id) {
         }, function (item, object) {
             object.set({left:0,top:0}); 
             
-            object.scaleToWidth(384); // 4in = 96 res 
+            object.scaleToWidth(420); // 4in = 96 res 
             //object.set('id', item.getAttribute('id'));
            // group.push(object);
         });
@@ -2223,6 +2222,8 @@ function ungroup(event)
         canvas.renderAll();
     }
 }
+
+
 initUIEvents();
 initCanvasEvents();
 

@@ -27,7 +27,7 @@
                   <div class="row mg-0">
                     <%for(var i=0; i<templates.length; i++){ %>
                     <div class="col-lg-4 pd-0  bd template" id="<%=templates[i].code %>">
-                      <div class="card  ht-200">
+                      <div class="card" style="min-height: 200px">
                         <div class="card-body pd-10">
                           <img class="card-img-top img-fluid pd-b-10 ht-140" src="<%=templates[i].base64 %>" alt="Image">
                           <h5 class="tx-14 tx-bold tx-inverse  pd-x-10" style="height:28px;overflow:hidden"><%=templates[i].name %></h5>
@@ -230,10 +230,19 @@
     
     
     <div class="table-responsive">
+      
       <div class="workarea" id="workarea">
-       
+    
         <div  id="canvas-holder">
             <div class="content tx-center">
+              <!-- <div class="___ruler">
+                <label>0</label>
+                <label>100</label>
+                <label>200</label>
+                <label>2.8</label>
+
+                
+              </div> -->
                 <canvas id="client-main-canvas"   ></canvas>
                 <canvas id="client-main-canvas-logo" style="max-width: 612px; max-height:792px"  ></canvas>                    
             </div>
