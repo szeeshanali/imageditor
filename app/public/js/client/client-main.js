@@ -125,9 +125,14 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
     text:'',
 
     initialize: function(text, options) {
+       // this = (typeof(text) ==='object')?text:this;
         options || (options = {});
-        this.text = text;
 
+        // if((typeof(text) === 'object')) {
+        //     this.self = text;
+        // }
+        
+        this.text =text;
         this.callSuper('initialize', options);
         this.set('lockUniScaling', true);
 
@@ -140,12 +145,16 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
 
     _getFontDeclaration: function()
     {
+        const fontWeight = this.text.fontWeight || this.fontWeight;
+        const fontStyle = this.text.fontStyle   ||this.fontStyle;
+        const fontSize = this.text.fontSize     ||this.fontSize;
+        const fontFamily = this.text.fontFamily ||this.fontFamily;
         return [
             // node-canvas needs "weight style", while browsers need "style weight"
-            (fabric.isLikelyNode ? this.fontWeight : this.fontStyle),
-            (fabric.isLikelyNode ? this.fontStyle : this.fontWeight),
-            this.fontSize + 'px',
-            (fabric.isLikelyNode ? ('"' + this.fontFamily + '"') : this.fontFamily)
+            (fabric.isLikelyNode ?  fontWeight:fontStyle ),
+            (fabric.isLikelyNode ? fontStyle : fontWeight),
+            fontSize + 'px',
+            (fabric.isLikelyNode ? ('"' +  fontFamily + '"') : fontFamily)
         ].join(' ');
     },
 
@@ -182,11 +191,11 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
     // Source: http://jsfiddle.net/rbdszxjv/
     getCircularText: function()
     {
-                var text = this.text.text || this.text,
-            diameter = this.diameter,
-            flipped = this.flipped,
-            kerning = this.kerning,
-            fill = this.fill,
+            var text =  (this.text.text        || this.text),
+            diameter =  (this.text.diameter    ||this.diameter),
+            flipped =   (this.text.flipped     ||this.flipped),
+            kerning =   (this.text.kerning     || this.kerning),
+            fill =      (this.text.fill        || this.fill),
             inwardFacing = true,
             startAngle = 0,
             canvas = fabric.util.createCanvasElement(),
@@ -204,12 +213,12 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
 
         // Calc heigt of text in selected font:
         var d = document.createElement('div');
-        d.style.fontFamily = this.fontFamily;
-    d.style.whiteSpace = 'nowrap';
-        d.style.fontSize = this.fontSize + 'px';
-        d.style.fontWeight = this.fontWeight;
-        d.style.fontStyle = this.fontStyle;
-        d.textContent = text;
+        d.style.fontFamily =    (this.text.fontFamily ||this.fontFamily);
+        d.style.whiteSpace = 'nowrap';
+        d.style.fontSize =      (this.text.fontSize    ||this.fontSize) + 'px';
+        d.style.fontWeight =    (this.text.fontWeight  ||this.fontWeight);
+        d.style.fontStyle =     (this.text.fontStyle   ||this.fontStyle);
+        d.textContent =         (this.text.text        ||text); 
         document.body.appendChild(d);
         var textHeight = d.offsetHeight;
         document.body.removeChild(d);
@@ -244,9 +253,11 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
             // depending on inward or outward facing
 
             // Stroke
-            if (this.strokeStyle && this.strokeWidth) {
-                ctx.strokeStyle = this.strokeStyle;
-                ctx.lineWidth = this.strokeWidth;
+            const strokeStyle = (this.text.strokeStyle || this.strokeStyle);
+            const strokeWidth = (this.text.strokeWidth || this.strokeWidth);
+            if (strokeStyle && strokeWidth) {
+                ctx.strokeStyle = strokeStyle;
+                ctx.lineWidth = strokeWidth;
                 ctx.miterLimit = 2;
                 ctx.strokeText(text[x], 0, (inwardFacing ? 1 : -1) * (0 - diameter / 2 + textHeight / 2));
             }
@@ -284,15 +295,17 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
 
     _render: function(ctx)
     {
+        if(state.isPreviewCanvas) return;
         var canvas = this.getCircularText();
         this._trimCanvas(canvas);
-
         this.set('width', canvas.width);
         this.set('height', canvas.height);
-
-        ctx.drawImage(canvas, -this.width / 2, -this.height / 2, this.width, this.height);
-
+        const width = this.text.width || this.width; 
+        const height = this.text.height || this.height;
+        ctx.drawImage(canvas, -width / 2, -height / 2, width, height);
         this.setCoords();
+        this.left = this.text.left || this.left; 
+        this.top = this.text.top || this.top;
     },
 
     toObject: function(propertiesToInclude) {
@@ -1123,6 +1136,8 @@ function previewDesign()
    . Hide Ruler 
    . Hide Grid 
     */
+   state.isPreviewCanvas = true;
+
    $("#workarea").attr("style","background-image:url('')");
    $("#btnDisplayGrid").hide();
    $("#btnDisplayRuler").hide();
@@ -1152,7 +1167,6 @@ function previewDesign()
    //6. 
    renderPreview();
    //7.
-   state.isPreviewCanvas = true;
 
    //8. 
    $(".step-item:nth-child(3)").removeClass("active");
@@ -1855,16 +1869,12 @@ function initCanvasTextEvents() {
              cacheProperties: fabric.Object.prototype.cacheProperties.concat('diameter', 'kerning', 'flipped', 'fill', 'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'strokeStyle', 'strokeWidth'),
             strokeStyle: obj.strokeStyle,
             strokeWidth: obj.strokeWidth,
-
-
            });
            canvas.add(item);
-
            canvas.renderAll();
            canvas.remove(obj)
            canvas.setActiveObject(item);
-
-          
+           addLayer();          
         }
     
     }

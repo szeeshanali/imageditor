@@ -69,7 +69,7 @@ router.post(ROUTE_USER_PROFILE, isLoggedIn, (req,res)=>{
 
 router.get(ROUTE_USER_HOME,  async (req, res) => {
     res.locals.pagetitle ="Dashboard";
-    res.redirect("/app/workspace")
+    res.redirect("/app/main")
 });
 
 // router.get("/app/projects", isLoggedIn,  async (req, res) => {
@@ -176,6 +176,12 @@ router.get("/app/templates",  isLoggedIn, async (req, res) => {
       }
     res.render(PATH_TEMPLATES,res.locals.page);
 }); 
+
+
+router.get("/app/main",   (req, res) => {
+    res.render('pages/client/main',{layout:false});
+}); 
+
 
 //****Save Design */
 router.post('/app/client/save-design', isLoggedIn, async function(req, res) {
