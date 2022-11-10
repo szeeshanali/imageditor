@@ -61,7 +61,7 @@
 			// Horizontal ruler ticks
 			var tickLabelPos = settings.vRuleSize;
 			var newTickLabel = "";
-			while ( tickLabelPos <= $hRule.width() ) {
+			while ( tickLabelPos <= 200 ) {
 				if ((( tickLabelPos - settings.vRuleSize ) %50 ) == 0 ) {
 					newTickLabel = "<div class='tickLabel'>" + ( tickLabelPos - settings.vRuleSize ) + "</div>";
 					$(newTickLabel).css( "left", tickLabelPos+"px" ).appendTo($hRule);
@@ -78,7 +78,7 @@
 			// Vertical ruler ticks
 			tickLabelPos = settings.hRuleSize;
 			newTickLabel = "";
-			while (tickLabelPos <= $vRule.height()) {
+			while (tickLabelPos <= 200) {
 				if ((( tickLabelPos - settings.hRuleSize ) %50 ) == 0) {
 					newTickLabel = "<div class='tickLabel'><span>" + ( tickLabelPos - settings.hRuleSize ) + "</span></div>";
 					$(newTickLabel).css( "top", tickLabelPos+"px" ).appendTo($vRule);
@@ -125,31 +125,31 @@
 			// Horizontal ruler ticks
 			var tickLabelPos = settings.vRuleSize;
 			var newTickLabel = "";
-			while ( tickLabelPos <= $hRule.width() ) {
-				if ((( tickLabelPos - settings.vRuleSize ) % 150 ) == 0 ) {
-					newTickLabel = "<div class='tickLabel'>" + (( tickLabelPos - settings.vRuleSize )/150) + "</div>";
+			while ( tickLabelPos <= 400 ) {
+				if (( tickLabelPos - settings.vRuleSize ) % 130 == 0 ) {
+					newTickLabel = "<div class='tickLabel'>" + (( tickLabelPos - settings.vRuleSize )) + "</div>";
 					$(newTickLabel).css( "left", tickLabelPos+"px" ).appendTo($hRule);
-				} else if ((( tickLabelPos - settings.vRuleSize ) %75 ) == 0 ) {
+				} else if ((( tickLabelPos - settings.vRuleSize ) %10 ) == 0 ) {
 					newTickLabel = "<div class='tickMajor'></div>";
 					$(newTickLabel).css("left",tickLabelPos+"px").appendTo($hRule);
-				} else if ((( tickLabelPos - settings.vRuleSize ) %15 ) == 0 ) {
+				} else if ((( tickLabelPos - settings.vRuleSize ) %5 ) == 0 ) {
 					newTickLabel = "<div class='tickMinor'></div>";
 					$(newTickLabel).css( "left", tickLabelPos+"px" ).appendTo($hRule);
 				}
-				tickLabelPos = (tickLabelPos + 5);				
+				tickLabelPos = (tickLabelPos + 1);				
 			}//hz ticks
 			
 			// Vertical ruler ticks
 			tickLabelPos = settings.hRuleSize;
 			newTickLabel = "";
-			while (tickLabelPos <= $vRule.height()) {
-				if ((( tickLabelPos - settings.hRuleSize ) %150 ) == 0) {
-					newTickLabel = "<div class='tickLabel'><span>" + (( tickLabelPos - settings.hRuleSize )/150) + "</span></div>";
+			while (tickLabelPos <= 400) {
+				if ((( tickLabelPos - settings.hRuleSize ) %50 ) == 0) {
+					newTickLabel = "<div class='tickLabel'><span>" + (( tickLabelPos - settings.hRuleSize )) + "</span></div>";
 					$(newTickLabel).css( "top", tickLabelPos+"px" ).appendTo($vRule);
-				} else if (((tickLabelPos - settings.hRuleSize)%75) == 0) {
+				} else if (((tickLabelPos - settings.hRuleSize)%10) == 0) {
 					newTickLabel = "<div class='tickMajor'></div>";
 					$(newTickLabel).css( "top", tickLabelPos+"px" ).appendTo($vRule);
-				} else if (((tickLabelPos - settings.hRuleSize)%15) == 0) {
+				} else if (((tickLabelPos - settings.hRuleSize)%5) == 0) {
 					newTickLabel = "<div class='tickMinor'></div>";
 					$(newTickLabel).css( "top", tickLabelPos+"px" ).appendTo($vRule);
 				}

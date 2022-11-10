@@ -26,6 +26,7 @@ require("../app/config/passport")(passport);
 
 
 
+
 //mongoose
 mongoose.connect('mongodb+srv://dtimageeditor:Xcccccc123@cluster0.gte2f0n.mongodb.net/dtimageeditor',
 {useNewUrlParser: true, useUnifiedTopology : true})
