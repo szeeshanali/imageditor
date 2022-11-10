@@ -1017,7 +1017,7 @@ font-weight: bold;
     width: 420px; 
     text-align: center; 
     border-bottom: 1px dashed #000; 
-    line-height: 0.1em;
+    line-height: 19px;
     margin: 10px auto; 
  } 
  #client-main-canvas{
