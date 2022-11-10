@@ -800,6 +800,8 @@ if(!userId)
 { toast("Something went wrong!");
   return; }
 
+  
+
       selectedUser.is_admin = $( "#edit-user-container .is_admin" ).prop("checked");
       selectedUser.active = $( "#edit-user-container .is_active" ).prop("checked");
       selectedUser.watermark = $( "#edit-user-container .watermark" ).prop("checked");
@@ -933,9 +935,11 @@ if(!userId)
       e.currentTarget.checked =false; 
     return; 
   }
-   
+
 
   designFlags.default = e.currentTarget.checked;
+  var meta = JSON.parse(selectedDesign.meta);
+
     // setTimeout(function(){
     //   var txt = $(e.currentTarget).find(".active").text();
     //   designFlags.default = (txt == "ON");
@@ -946,6 +950,14 @@ if(!userId)
 
   
   $btnUpdateDesign.on("click",function(){
+    
+    var meta = selectedDesign.data.meta;
+
+    if(meta)
+    {
+      meta = JSON.parse(meta);
+      meta.objects = $inputLogoPerPage.val() || 0; 
+    } 
     var data = {  
           
       title     : $inputThumbnailName.val(),
@@ -956,8 +968,8 @@ if(!userId)
       default   : designFlags.default,
       link      : $inputDesignLink.val(),
       logos     : $inputLogoPerPage.val(), 
-      ref_code  : $kopykakePartNo.val(),
-  
+      ref_code  : $kopykakePartNo.val(), 
+      meta      : JSON.stringify(meta)
   }
   if(!data.title || !data.name)
   { toast("Template mandatory information is missing. ")
@@ -995,6 +1007,7 @@ if(!userId)
       processFiles(e.target.files, pageid);
       $btnImageUploadHidden.val('');
     })
+
     $("#btnSaveContent").on("click",function(e){
       var type = $(this).attr("data-value");
       var html = $('#summernote').summernote('code');
@@ -1186,25 +1199,30 @@ function loadSVGTemplateForCustomDesign(id)
 function loadTemplateInfo(data)
 {
 
-  selectedDesign.data = data; 
+  var meta = data.meta;
+  if(meta)
+  {
+    meta = JSON.parse(meta);
+  }
+  selectedDesign.data = data;
   $("#edit-template-id").val(data.code);
   $inputThumbnailName.val(data.title);
-   $inputDesignName.val(data.name);
+  $inputDesignName.val(data.name);
   $inputFileName.val(data.file_name);
   $inputOrderNo.val(data.order_no);
   designFlags.active = data.active;
   designFlags.default = data.default;
   $inputDesignLink.val(data.link);
-   $inputLogoPerPage.val(data.logos);
-   $kopykakePartNo.val(data.ref_code);
+  debugger;
+  $inputLogoPerPage.val(meta.objects || 0);
+  $kopykakePartNo.val(data.ref_code);
 
-$("#editTemplateActive").prop("checked",data.active);
-$("#editTemplateDefault").prop("checked",data.default);
+  $("#editTemplateActive").prop("checked",data.active);
+  $("#editTemplateDefault").prop("checked",data.default);
 
   $("#editTemplateActive").on("click",function(e)
   { designFlags.active = e.target.checked; })
 
-  
   $("#editTemplateDefault").on("click",function(e){
     designFlags.default = e.target.checked;    
   })
@@ -1234,6 +1252,7 @@ function loadTemplateInfoByTemplateId(id)
       var meta = {};
       if (data.meta) {
           meta = JSON.parse(data.meta);
+          //meta.objects = parseInt($inputLogoPerPage.val() || (meta.objects || 0));
       }
 
       canvas.clear();

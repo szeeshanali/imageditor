@@ -25,7 +25,7 @@ router.get(ROUTE_SIGNOUT,(req,res)=>{
     req.session.destroy(function(){
       console.log("user logged out.")
    });
-   res.redirect(ROUTE_LOGIN);
+   res.redirect('/app/home');
   });
 
 
@@ -70,7 +70,7 @@ router.get("/app/home", (req, res) => {
 router.post(ROUTE_LOGIN, (req, res, next) => { 
     
     passport.authenticate('local',{
-      successRedirect : "/app/home",
+      successRedirect : "/app/workspace",
       failureRedirect : ROUTE_LOGIN,
       badRequestMessage : 'Missing username or password.',
       failureFlash : true,
