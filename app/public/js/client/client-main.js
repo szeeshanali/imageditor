@@ -588,23 +588,25 @@ function loadSVGTemplate(id) {
 
             // / getting actual width and height of a logo
             // / setting canvas dimensions with logo width/height
-            var logo = objects[0];
+            var logo = objects[objects.length-1];
             var w = Math.floor(logo.getScaledWidth());
             var h = Math.floor(logo.getScaledHeight());
             canvas.setDimensions({width: 420, height: 420});
             canvas.setBackgroundImage(logo, canvas.renderAll.bind(canvas));
+            
             canvas.renderAll();
             // canvas.setZoom(2);
-
+            var logoSize = (meta.objectWidth / dpi).toFixed(1);
             $("#template-info-panel .template-name").text(data.name);
             $("#template-info-panel .page-size").text(meta.pageSize);
-            $("#template-info-panel .logo-size").text((meta.objectWidth / dpi).toFixed(1) + "''");
+            $("#template-info-panel .logo-size").text(logoSize + "''");
             $("#template-info-panel .total-logos").text(meta.objects);
             $("#template-info-panel .page-title").text(data.title);
             $("#template-info-panel .ref_code").text(data.ref_code | "NA");
             $("#template-info-panel #imgSelectedTemplate").attr("src", svgBase64)
             $(".kk-part-no").text(data.ref_code || "N/A");
             $(".kk-part-link").text(data.link || "N/A");
+            $("#rulerLogoSize").text(`${logoSize} x ${logoSize} inches `)
 
 
             var reg = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
@@ -705,6 +707,11 @@ function initUIEvents() {
         }
     });
     var layers = $("#layers");
+
+    $("#predefinedText").on("change",function(){
+        var selectedValue = $(this).val();
+        $("#textarea").val(selectedValue);
+    })
     $("#collapse-layers").on("click", ".layer-item", function (e) {
         var _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
         // layerSelectEventHandler(this);
@@ -827,17 +834,31 @@ function initUIEvents() {
 
     })
     $("#btnDisplayRuler").on("click", function () {
-        var style = !($(".vRule").is(':visible'));
+        debugger;
+        var style = !($(".ruler-line").is(':visible'));
         if (style) {
-            var len = $('.canvas-container').find('.ruler').length;
+            $(".ruler-line").show();
+            $("#client-main-canvas").css({
+                "border": "dashed 1px #333",
+                "border-top": "0px",
+                "padding-top": "10px",
+                  "margin-top": -"10px"
+               });
+            //var len = $('.canvas-container').find('.ruler').length;
             if (len === 0) {
-                $('.canvas-container').ruler({vRuleSize: 22, hRuleSize: 22, showCrosshair: false, showMousePos: false});
+                //$('.canvas-container').ruler({vRuleSize: 22, hRuleSize: 22, showCrosshair: false, showMousePos: false});
             }
             $(this).removeClass('tx-gray-500');
-            $(".vRule, .hRule").show();
+            //$(".vRule, .hRule").show();
             $(this).html($(this).html().replace("On", "Off"));
         } else {
-            $(".vRule, .hRule").hide();
+            $(".ruler-line").hide();
+            $("#client-main-canvas").css({
+                "border": "dashed 0px #333",
+                "border-top": "0px",
+                "padding-top": "10px",
+                  "margin-top": -"10px"
+               });
             $(this).html($(this).html().replace("Off", "On"));
             $(this).addClass('tx-gray-500');
 
@@ -897,11 +918,25 @@ function initUIEvents() {
 
     });
     $("#text-stroke-color").on("change", function () {
-        setSelectedTextStyle("stroke", this.value);
+        
+        var checked = $("#inputStrokeText").prop("checked");
+        if(checked)
+        {
+            setSelectedTextStyle("stroke", this.value);
+
+        }
 
     });
     $("#text-stroke-width").on("change", function () {
-        setSelectedTextStyle("strokeWidth", this.value);
+
+        var checked = $("#inputStrokeText").prop("checked");
+        if(checked)
+        {
+            setSelectedTextStyle("strokeWidth", this.value);
+
+        }
+
+
 
     });
 
@@ -1143,7 +1178,7 @@ function previewDesign() { /*
 
     $("#workarea").attr("style", "background-image:url('')");
     $("#btnDisplayGrid").hide();
-    $("#btnDisplayRuler").hide();
+    $(".ruler-line").hide();
 
 
     // 1.
@@ -1190,7 +1225,8 @@ function backFromPreview() { /**
      */
     $("#workarea").removeAttr("style");
     $("#btnDisplayGrid").show();
-    $("#btnDisplayRuler").show();
+    //$("#btnDisplayRuler").show();
+    $(".ruler-line").show();
 
 
     state.isPreviewCanvas = false;
@@ -1763,7 +1799,8 @@ const processFiles = (files) => {
                         canvas.setActiveObject(img);
                     } mainControls(true);
                 })
-            } reader.readAsDataURL(file);
+            } 
+            reader.readAsDataURL(file);
         }
         continue
         // }
@@ -1837,10 +1874,31 @@ function initCanvasTextEvents() {
     let isDrawingText = false;
     var textLeft = 50;
     var textTop = 100;
+    $("#inputStrokeText").on("click", function (e) {
+        var checked = $(this).prop('checked');
+        var obj = canvas.getActiveObject();
+        var strokeWidth = $("#text-stroke-width").val();
+        var strokeColor = $("#strokecolor").attr('data-current-color');
+        if (obj && checked) {
+            obj.set('stroke',strokeColor);
+            obj.set('strokeWidth',strokeWidth);
+        }else
+        {
+            obj.set('strokeWidth',0)
+        }
+        canvas.renderAll();
+    });
+
     $("#inputCurvedText").on("click", function (e) {
+        var obj = canvas.getActiveObject();
+        if(!obj){
+            toast("Please select Text");
+            return;
+        }
+        var orginalText =  obj.text;
         if (e.target.checked) {
-            $("#curveTextCtrlPanel").removeClass("hidden");
-            var obj = canvas.getActiveObject();
+          //  $("#curveTextCtrlPanel").removeClass("hidden");
+           
             if (obj) {
                 var item = new fabric.CurvedText(obj.text, {
                     type: 'curved-text',
@@ -1867,7 +1925,26 @@ function initCanvasTextEvents() {
             }
 
         } else {
-            $("#curveTextCtrlPanel").addClass("hidden");
+
+            var obj = canvas.getActiveObject();
+            
+            var textInfo = {
+                left: obj.left,
+                top: obj.top,
+                fontFamily: obj.fontFamily,
+                fill: obj.fill,
+                fontSize: obj.fontSize
+            };
+            
+        
+            var item = new fabric.IText(obj.text, textInfo);
+            canvas.remove(obj);
+            canvas.add(item);            
+            canvas.setActiveObject(item);
+            canvas.renderAll();
+            
+            addLayer();
+           // $("#curveTextCtrlPanel").addClass("hidden");
         }
     })
     $btnAddText.on("click", function () {
@@ -1906,6 +1983,7 @@ function initCanvasTextEvents() {
 
     $("#curveTextCtrl").on("input", function (e) {
         var val = e.currentTarget.value;
+        console.log(val);
         var obj = canvas.getActiveObject();
         if (obj) {
             obj.set({diameter: val});
@@ -2218,12 +2296,15 @@ function ungroup(event) {
 
 function onChangeFontColor(picker, type) {
     var selectedText = canvas.getActiveObject();
+    var checked = $("#inputStrokeText").prop("checked");
+        
     if (type === 'font-color') {
-        prop = 'fill';
-    } else if (type === 'stroke-color') {
-        prop = 'stroke';
+        selectedText.set('fill', picker.toRGBAString());
+    } else if (type === 'stroke-color' && checked) {
+        
+        selectedText.set('stroke', picker.toRGBAString());
     }
-    selectedText.set(prop, picker.toRGBAString());
+    
     canvas.renderAll();
 }
 initUIEvents();

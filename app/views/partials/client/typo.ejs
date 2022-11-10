@@ -1,10 +1,44 @@
 
 <div class="text-section">
+
  
  <div class="card pd-b-20 txt-ctrl">
+  <div class="pd-b-10">
+    <select class="form-control select2" id="predefinedText" data-placeholder="Please Choose...">
+      <option value="">Please Choose...</option>
+      <option value="Happy Birthday">Happy Birthday</option>
+      <option value="Greetings">Greetings</option>
+      <option value="Welcome Home">Welcome Home</option>
+      <option value="Congratulations">Congratulations</option>
+      <option value="I Love You">I Love You</option>
+      <option value="Happy Anniversary">Happy Anniversary</option>
+      <option value="I Love You MOM">I Love You Mom</option>
+      <option value="I Love You DAD">I Love You Dad</option>
+    </select>
+  </div>
+
   <div class="tx-12" >
       <textarea id="textarea" rows="2" class="form-control " placeholder="Enter your text here.." onfocus="this.value=''" >Your text here...</textarea>
   </div>
+
+  
+
+
+  <div >
+    <div class="pd-y-15">
+
+
+    <div>
+        <label class="ckbox ">
+            <input type="checkbox" id="inputCurvedText">
+                <span class="tx-14 tx-bold">Circular Text
+                </span>
+            </label>
+        </div>
+        <div >
+            <input type="range"  value="250" min="100" max="2500" step="0.1" class="slider" id="curveTextCtrl"  ></div>
+        </div>
+    </div>
   <!-- <div  class=" pd-y-10 font-style">
       <i class="fa fa-bold text-decoration" data-value="bold" id="bold" title="bold"></i>
       <i class="fa fa-italic text-decoration"  data-value="italic" id="italic" title="italic"></i>
