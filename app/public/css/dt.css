@@ -1027,6 +1027,9 @@ font-weight: bold;
     margin-top: -10px;
     background-color: #d2d0ff;
  }
+ #client-main-canvas-logo{
+  background-color: #d2d0ff;
+ }
  .ruler-line span { 
   background: #888;
   padding: 1px 11px;
