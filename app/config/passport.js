@@ -15,7 +15,7 @@ module.exports = function(passport) {
                  User.findOne({email : email}).exec()
                  .then((user)=>{
                   if(!user) {
-                      return done(null, false, { message : 'Incorrent username or password'});
+                      return done(null, false, { message : 'Incorrect username or password'});
                   }
 
                   if(!agreeterms && !user.is_admin )
@@ -28,7 +28,7 @@ module.exports = function(passport) {
                      if(isMatch) {
                          return done(null,user);
                      } else {
-                         return done(null,false,{ message : 'Incorrent username or password'});
+                         return done(null,false,{ message : 'Incorrect username or password'});
                      }
                  })
                 })
