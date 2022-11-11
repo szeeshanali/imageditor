@@ -1,4 +1,9 @@
 const dpi = 72;
+const defaults = {
+    fontSize:36,
+    fontFill:'#000',
+    fontFamily:'Arial'
+}
 const letterPageSize = {
     width: (8.5 * dpi),
     height: (11 * dpi)
@@ -102,8 +107,8 @@ fabric.Object.prototype.cornerStyle = 'circle';
 fabric.Object.prototype.borderColor = '#000';
 fabric.Object.prototype.cornerColor = '#494699';
 fabric.Object.prototype.cornerStrokeColor = '#000';
-fabric.Object.prototype.cornerSize = 5;
-fabric.Object.prototype.padding = 0;
+fabric.Object.prototype.cornerSize = 10;
+fabric.Object.prototype.padding = 3;
 
 fabric.CurvedText = fabric.util.createClass(fabric.Object, {
     type: 'curved-text',
@@ -129,7 +134,13 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
         //     this.self = text;
         // }
 
-        this.text = text;
+        this.text = text.text || text;
+        if(text.text)
+        {
+            for(var i in text)
+            { this[i] = text[i]; }
+        }
+
         this.callSuper('initialize', options);
         this.set('lockUniScaling', true);
 
@@ -141,10 +152,10 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
     },
 
     _getFontDeclaration: function () {
-        const fontWeight = this.text.fontWeight || this.fontWeight;
-        const fontStyle = this.text.fontStyle || this.fontStyle;
-        const fontSize = this.text.fontSize || this.fontSize;
-        const fontFamily = this.text.fontFamily || this.fontFamily;
+        const fontWeight =  this.fontWeight;
+        const fontStyle =   this.fontStyle;
+        const fontSize =    this.fontSize;
+        const fontFamily =  this.fontFamily;
         return [
             // node-canvas needs "weight style", while browsers need "style weight"
             (fabric.isLikelyNode ? fontWeight : fontStyle),
@@ -193,11 +204,12 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
 
     // Source: http://jsfiddle.net/rbdszxjv/
     getCircularText: function () {
-        var text = (this.text.text || this.text),
-            diameter = (this.text.diameter || this.diameter),
-            flipped = (this.text.flipped || this.flipped),
-            kerning = (this.text.kerning || this.kerning),
-            fill = (this.text.fill || this.fill),
+        
+        var text = this.text,
+            diameter = this.diameter,
+            flipped = this.flipped,
+            kerning = this.kerning,
+            fill = this.fill,
             inwardFacing = true,
             startAngle = 0,
             canvas = fabric.util.createCanvasElement(),
@@ -216,12 +228,12 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
 
         // Calc heigt of text in selected font:
         var d = document.createElement('div');
-        d.style.fontFamily = (this.text.fontFamily || this.fontFamily);
+        d.style.fontFamily = this.fontFamily;
         d.style.whiteSpace = 'nowrap';
-        d.style.fontSize = (this.text.fontSize || this.fontSize) + 'px';
-        d.style.fontWeight = (this.text.fontWeight || this.fontWeight);
-        d.style.fontStyle = (this.text.fontStyle || this.fontStyle);
-        d.textContent = (this.text.text || text);
+        d.style.fontSize = this.fontSize + 'px';
+        d.style.fontWeight = this.fontWeight;
+        d.style.fontStyle = this.fontStyle;
+        d.textContent = text;
         document.body.appendChild(d);
         var textHeight = d.offsetHeight;
         document.body.removeChild(d);
@@ -260,8 +272,8 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
             // depending on inward or outward facing
 
             // Stroke
-            const strokeStyle = (this.text.strokeStyle || this.strokeStyle);
-            const strokeWidth = (this.text.strokeWidth || this.strokeWidth);
+            const strokeStyle = this.strokeStyle;
+            const strokeWidth = this.strokeWidth;
             if (strokeStyle && strokeWidth) {
                 ctx.strokeStyle = strokeStyle;
                 ctx.lineWidth = strokeWidth;
@@ -272,7 +284,6 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
             // Actual text
             ctx.fillStyle = fill;
             ctx.fillText(text[x], 0, (inwardFacing ? 1 : -1) * (0 - diameter / 2 + textHeight / 2));
-
             ctx.rotate((cw / 2 + kerning) / (diameter / 2 - textHeight) * clockwise); // rotate half letter
         }
         return canvas;
@@ -305,19 +316,17 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
     },
 
     _render: function (ctx) {
-        if (state.isPreviewCanvas) 
-            return;
         
         var canvas = this.getCircularText();
         this._trimCanvas(canvas);
         this.set('width', canvas.width);
         this.set('height', canvas.height);
-        const width = this.text.width || this.width;
-        const height = this.text.height || this.height;
+        const width = this.width;
+        const height = this.height;
         ctx.drawImage(canvas, - width / 2, - height / 2, width, height);
         this.setCoords();
-        this.left = this.text.left || this.left;
-        this.top = this.text.top || this.top;
+        //this.left = this.text.left || this.left;
+        //this.top = this.text.top || this.top;
     },
 
     toObject: function (propertiesToInclude) {
@@ -834,7 +843,7 @@ function initUIEvents() {
 
     })
     $("#btnDisplayRuler").on("click", function () {
-        debugger;
+        
         var style = !($(".ruler-line").is(':visible'));
         if (style) {
             $(".ruler-line").show();
@@ -1074,7 +1083,11 @@ function initUIEvents() {
 
 }
 function setSelectedTextStyle(prop, value) {
-    canvas.getActiveObject().set(prop, value);
+    
+    var txt = canvas.getActiveObject();
+ if(txt.type == 'curved-text')
+ {return;}
+    txt.set(prop, value);
     canvas.renderAll();
 
 }
@@ -1302,7 +1315,7 @@ function renderPreview() {
                 canvasPrev.add(object).renderAll();
                 // $btnDownloadPDF.removeClass("hidden");
                 // $btnSaveDesign.removeClass("hidden");
-                $(".vRule, .hRule").hide();
+                //$(".vRule, .hRule").hide();
                 $("#create-design-heading").addClass("hidden");
                 $("#preview-design-heading").removeClass("hidden");
                 // canvasPrev.setZoom(.8);
@@ -1727,7 +1740,7 @@ const processFiles = (files) => {
     if (files.length === 0) 
         return;
     
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/svg+xml', 'application/pdf']
+    const allowedTypes = ['image/jpeg','image/gif', 'image/png', 'image/svg+xml', 'application/pdf']
     for (let file of files) {
         var fileSizeInMB = file.size / 1024 / 1024;
         var limit = 5;
@@ -1737,7 +1750,10 @@ const processFiles = (files) => {
         }
         // check type
         if (! allowedTypes.includes(file.type)) 
-            continue
+        { 
+            toast(`'${file.type}' unsupported image type. `)
+            return; }
+            
 
         
 
@@ -1877,11 +1893,14 @@ function initCanvasTextEvents() {
     $("#inputStrokeText").on("click", function (e) {
         var checked = $(this).prop('checked');
         var obj = canvas.getActiveObject();
+        if(obj.type == "curved-text")
+        { return; }
+
         var strokeWidth = $("#text-stroke-width").val();
         var strokeColor = $("#strokecolor").attr('data-current-color');
         if (obj && checked) {
-            obj.set('stroke',strokeColor);
-            obj.set('strokeWidth',strokeWidth);
+            
+
         }else
         {
             obj.set('strokeWidth',0)
@@ -1898,11 +1917,11 @@ function initCanvasTextEvents() {
         var orginalText =  obj.text;
         if (e.target.checked) {
           //  $("#curveTextCtrlPanel").removeClass("hidden");
-           
+           debugger;
             if (obj) {
                 var item = new fabric.CurvedText(obj.text, {
                     type: 'curved-text',
-                    diameter: 250,
+                    diameter: parseInt($("#curveTextCtrl").val()) || 250,
                     left: obj.left,
                     top: obj.top,
                     fontFamily: obj.fontFamily,
@@ -1913,9 +1932,10 @@ function initCanvasTextEvents() {
                     fontSize: obj.fontSize, // in px
                     fontWeight: obj.fontWeight,
                     fontStyle: obj.fontStyle,
-                    cacheProperties: fabric.Object.prototype.cacheProperties.concat('diameter', 'kerning', 'flipped', 'fill', 'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'strokeStyle', 'strokeWidth'),
-                    strokeStyle: obj.strokeStyle,
-                    strokeWidth: obj.strokeWidth
+                    cacheProperties: fabric.Object.prototype.cacheProperties.concat('diameter', 'kerning', 'flipped', 'fill', 'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'strokeStyle', 'strokeWidth','stroke'),
+                    //strokeStyle: obj.strokeStyle,
+                    //stroke:obj.stroke,
+                    //strokeWidth: 2
                 });
                 canvas.add(item);
                 canvas.renderAll();
@@ -1956,9 +1976,9 @@ function initCanvasTextEvents() {
         var textInfo = {
             left: (textLeft += 20),
             top: (textTop += 20),
-            fontFamily: 'arial black',
-            fill: '#333',
-            fontSize: 18
+            fontFamily: defaults.fontFamily || 'Arial',
+            fill: defaults.fontFill,
+            fontSize: defaults.fontSize
         };
         var item = new fabric.IText(text, textInfo);
 
@@ -2297,11 +2317,11 @@ function ungroup(event) {
 function onChangeFontColor(picker, type) {
     var selectedText = canvas.getActiveObject();
     var checked = $("#inputStrokeText").prop("checked");
-        
+    if(selectedText.type == "curved-text")
+    { return; }
     if (type === 'font-color') {
         selectedText.set('fill', picker.toRGBAString());
     } else if (type === 'stroke-color' && checked) {
-        
         selectedText.set('stroke', picker.toRGBAString());
     }
     
