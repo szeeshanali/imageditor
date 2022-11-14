@@ -11,9 +11,10 @@ const letterPageSize = {
 const enabledSaveInBrowser = true;
 var state = {
     isPreviewCanvas: false
+
 }
 const rulerSettings = {
-    vRuleSize: 22, hRuleSize: 22, showCrosshair: false, showMousePos: false
+    vRuleSize: 28, hRuleSize: 25, showCrosshair: false, showMousePos: false
 }
 
 const layerHtml = `<div class="media d-block d-flex layer-item object-options" data-index='{index}' id='{id}'  >
@@ -663,9 +664,7 @@ function loadSVGTemplate(id) {
 
         }, function (item, object) {
 
-        var c  = canvas; 
-        debugger;
-            object.set({left: 2, top: 2});
+                   object.set({left: 8, top: 4});
             object.scaleToWidth(logoDisplaySize);
             // 4in = 96 res
             // object.set('id', item.getAttribute('id'));
