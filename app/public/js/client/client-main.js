@@ -650,7 +650,7 @@ function loadSVGTemplate(id) {
                   
                   var pos = $(labels[i]).position();
                   console.log(pos);
-                  $(".canvas-container").first().append(`<div class='grid-lines' style='height:500px;left:${pos.left-22}px; top:0px; '></div>`)
+                  $(".canvas-container").first().append(`<div class='grid-lines' style='height:500px;left:${pos.left-28}px; top:0px; '></div>`)
                 }
           // vlines 
           
@@ -659,7 +659,8 @@ function loadSVGTemplate(id) {
                   
                   var pos = $(vlabels[i]).position();
                  console.log(pos);
-                  $(".canvas-container").first().append(`<div class='grid-lines h-gridlines' style='width:500px;top:${pos.top-22}px; left:0px; border-bottom: solid 1px #666;'></div>`)
+                  $(".canvas-container").first().append(`<div class='grid-lines h-gridlines' style='width:500px;top:${pos.top-25}px; left:0px; border-bottom: solid 1px #666;'></div>`);
+                  $(".canvas-container").first().css({border:"solid 1px #666"})
                 }
 
         }, function (item, object) {
