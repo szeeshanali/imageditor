@@ -12254,7 +12254,7 @@ textarea.parsley-success:focus {
 
 /***** MAIN PANEL *****/
 .am-mainpanel {
-  margin-left: 87px;
+  margin-left: 115px;
   /* margin-top: 120px; */
   margin-top: 40px;
 
@@ -12263,7 +12263,7 @@ textarea.parsley-success:focus {
 @media (min-width: 992px) {
   .am-mainpanel {
     /* margin-left: 335px; */
-    margin-left: 87px;
+    margin-left: 115px;
   }
 }
 
