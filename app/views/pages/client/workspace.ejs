@@ -9,16 +9,17 @@
               <div class="list-group widget-list-group bg-app-primary">
                 <div class="list-group-item d-flex">
                   <div class="media d-block d-sm-flex">
-                    <div class="d-block d-sm-flex mg-sm-r-20">
-                      <i class="ion-ios-keypad tx-24 tx-white"></i>
-                    </div><!-- d-flex -->
+                  
                     <div class="media-body mg-t-10 mg-sm-t-0">
-                      <h6 class="mg-b-5 tx-14"><a href="" class="tx-white">Select Template</a></h6>
-                      <p class="mg-b-0 tx-12 tx-white-5">Next (Create Design)</p>
-                    </div><!-- media-body -->
+                      <h6 class="mg-b-5 tx-18 tx-white">Choose Template</h6>
+                    </div>
+                     
+                    
+                    <!-- media-body -->
                   </div><!-- media -->
-                   <div class="btn-group mg-b-0 mg-l-auto">
-                      <button type="button" class="btn btn-primary" id="btn-step-design">Next</button>
+                   <div class="btn-group mg-b-0 mg-l-auto lh-2">
+                      <button type="button" class="btn btn-primary wd-120 ht-60 tx-18" id="btn-step-design">
+                        NEXT <br> <span class="tx-12 text-warning tx-bold underline">Create Design</span></button>
                     </div>
                 </div>
               </div>
@@ -53,32 +54,38 @@
                 <div class="list-group widget-list-group bg-app-primary">
                   <div class="list-group-item d-flex" id="create-design-heading">
                     <div class="media d-block d-sm-flex">
-                      <div class="d-block d-sm-flex mg-sm-r-20">
+                      <!-- <div class="d-block d-sm-flex mg-sm-r-20">
                         <i class="ion-images tx-24 tx-white"></i>
-                      </div><!-- d-flex -->
+                      </div> -->
                       <div class="media-body mg-t-10 mg-sm-t-0 ">
-                        <h6 class="mg-b-5 tx-14"><a href="" class="tx-white">Create Design</a></h6>
-                        <p class="mg-b-0 tx-12 tx-white-5">Add Photos, Clip Art, Text.</p>
+                        <h6 class="mg-b-5 tx-18 tx-white ">Create Design</h6>
                       </div><!-- media-body -->
                     </div><!-- media -->
                     <div class="btn-group mg-b-0 mg-l-auto">
                       <button type="button" class="btn btn-secondary disabled" onclick="$btnTemplate.click()" ><i class="icon ion-ios-arrow-back tx-20"></i></button>
-                      <button type="button" class="btn btn-primary" id="btn-step-preview">Preview</button>
+                      <button type="button" class="btn btn-primary wd-120 ht-60 tx-18" id="btn-step-preview">
+                        NEXT <br> <span class="tx-12 text-warning tx-bold underline">Preview Design</span>
+                      </button>
                     </div>
                     <!-- <a href="#"  class="btn btn-primary pd-lg-x-20 mg-l-auto " id="btn-step-preview" >Preview</a> -->
                   </div>
                   <div class="list-group-item d-flex hidden" id="preview-design-heading">
                     <div class="media d-block d-sm-flex">
-                      <div class="d-block d-sm-flex mg-sm-r-20">
+                      <!-- <div class="d-block d-sm-flex mg-sm-r-20">
                         <i class="ion-images tx-24 tx-white"></i>
-                      </div><!-- d-flex -->
+                      </div> -->
                       <div class="media-body mg-t-10 mg-sm-t-0">
-                        <h6 class="mg-b-5 tx-14"><a href="" class="tx-white">Preview</a></h6>
-                        <p class="mg-b-0 tx-12 tx-white-5"><a href="#" style="text-decoration: underline" class="text-danger" id="btnBack">Back to Design</a></p>
+                        <h6 class="mg-b-5 tx-18 tx-white">Preview Design</h6>
                       </div><!-- media-body -->
                     </div><!-- media -->
-                    <a href="#"  class="btn btn-primary pd-lg-x-20 mg-l-auto" id="btn-step-download" >Download</a>
+                    <div class="btn-group mg-b-0 mg-l-auto">
 
+                    <button type="button" class="btn btn-secondary disabled"  id="btnBack" ><i class="icon ion-ios-arrow-back tx-20"></i></button>
+
+                    <button type="button" class="btn btn-primary wd-120 ht-60 tx-18" id="btn-step-download">
+                      NEXT <br> <span class="tx-12 text-warning tx-bold underline">Download PDF</span>
+                    </button>
+                    </div>
                   </div>
                 </div>
                 
@@ -189,16 +196,16 @@
     <div class="list-group-item d-flex">
       <ul class="step d-flex flex-nowrap">
         <li class="step-item ">
-          <a href="#!" class="">Select Template</a>
+          <a href="#!" class="" style="cursor:default">Select Template</a>
         </li>
         <li class="step-item active">
-          <a href="#!" class="">Create Design</a>
+          <a href="#!" class="" style="cursor:default" >Create Design</a>
         </li>
         <li class="step-item ">
-          <a href="#!" class="">Preview</a>
+          <a href="#!" class="" style="cursor:default">Preview</a>
         </li>     
         <li class="step-item">
-          <a href="#!" class="">Download</a>
+          <a href="#!" class="" style="cursor:default" >Download</a>
         </li>
       </ul> 
     </div>
@@ -208,8 +215,19 @@
     <div class="email-content-header">
       <div>
           <div class="d-flex">
-          <button type="button" id="btnDisplayGrid" class="btn btn-secondary bd-0 pd-x-20">Grid</button>
-          <button type="button" id="btnDisplayRuler" class="btn btn-secondary bd-0 pd-x-20">Ruler</button>
+            <div class=" mg-r-10">
+              <label class="ckbox">
+                <input type="checkbox" checked="" id="btnDisplayGrid" ><span>Grid</span>
+              </label>
+            </div>
+            <div class="mg-r-10">
+              <label class="ckbox">
+                <input type="checkbox" checked="" id="btnDisplayRuler" ><span>Ruler</span>
+              </label>
+            </div>
+
+          <!-- <button type="button" id="btnDisplayGrid" class="btn btn-secondary bd-0 pd-x-20">Grid</button>
+          <button type="button" id="btnDisplayRuler" class="btn btn-secondary bd-0 pd-x-20">Ruler</button> -->
 
         </div><!-- btn-group -->
       </div>
@@ -232,133 +250,10 @@
     <div class="table-responsive">
       
       <div class="workarea" id="workarea">
-        <!-- <div class='ruler2'>
-          <div class='cm'>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          </div>
-          <div class='cm'>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          </div>
-          <div class='cm'>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          </div>
-          <div class='cm'>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          </div>
-          <div class='cm'>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          </div>
-          <div class='cm'>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          </div>
-          <div class='cm'>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          </div>
-          <div class='cm'>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          </div>
-          <div class='cm'>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          </div>
-          <div class='cm'>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          <div class='mm'></div>
-          </div>
-          <div class='cm'></div>
-         </div> -->
+      
 
         <div  id="canvas-holder">
-
             <div class="content tx-center">
-              <div class="ruler-line" ><span id="rulerLogoSize">Loading...</span></div>
-
-              <!-- <div class="___ruler">
-                <label>0</label>
-                <label>100</label>
-                <label>200</label>
-                <label>2.8</label>
-
-                
-              </div> -->
                 <canvas id="client-main-canvas"   ></canvas>
                 <canvas id="client-main-canvas-logo" style="max-width: 612px; max-height:792px"  ></canvas>                    
             </div>
@@ -392,7 +287,8 @@
 
         }
         
-    }
+
+   }
 
 </script>
    
