@@ -663,8 +663,9 @@ function loadSVGTemplate(id) {
 
         }, function (item, object) {
 
-           
-            object.set({left: 2, top: 0});
+        var c  = canvas; 
+        debugger;
+            object.set({left: 2, top: 2});
             object.scaleToWidth(logoDisplaySize);
             // 4in = 96 res
             // object.set('id', item.getAttribute('id'));
