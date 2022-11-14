@@ -903,7 +903,7 @@ border-right: solid 0px #ccc;  }
 
 .canvas-container{
   margin:auto;
-  /* border:solid 1px #999; */
+   /* border:solid 1px #666;  */
 }
 .grid-lines{
   position:absolute;
