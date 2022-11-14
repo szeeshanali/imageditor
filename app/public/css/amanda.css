@@ -2994,11 +2994,10 @@ tbody.collapse.show {
 }
 .nav-tabs .nav-link.active,
 .nav-tabs .nav-item.show .nav-link {
-  color: white;
-  background-color: #32415A;
+  color: #918ede;
   /* border-color: #ddd #ddd #D8DCE3; */
   font-weight: bold;
-  border-top: solid 1px #4f5969;
+  border-bottom: solid 3px #32415A;
 }
 .nav-tabs .dropdown-menu {
   margin-top: -1px;
@@ -8554,11 +8553,11 @@ a.text-dark:focus, a.text-dark:hover {
   /* background-color: #cbcae5; */
   background-color: #fff;
 
-  color: #868e96;
+  color: #494699;
 }
 .accordion .card-header a.collapsed:hover, .accordion .card-header a.collapsed:focus {
   background-color: #cbcae5;
-  color: #343a40;
+  color: #494699;
 }
 .accordion .card-body {
   padding: 20px;

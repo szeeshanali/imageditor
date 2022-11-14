@@ -625,6 +625,11 @@ function loadSVGTemplate(id) {
 
             var reg = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
             $("#kp-link").attr("href", reg.test(data.link) ? data.link : "#");
+            if(!reg.test(data.link))
+          {
+            $("#kpweblink-panel").hide();
+          }
+
             $("#use-template").unbind().click(function () {
                 window.location.href = `/app/workspace/${
                     data.code
@@ -659,7 +664,7 @@ function loadSVGTemplate(id) {
         }, function (item, object) {
 
            
-            object.set({left: 0, top: 0});
+            object.set({left: 2, top: 0});
             object.scaleToWidth(logoDisplaySize);
             // 4in = 96 res
             // object.set('id', item.getAttribute('id'));
@@ -1944,7 +1949,6 @@ function initCanvasTextEvents() {
         var orginalText =  obj.text;
         if (e.target.checked) {
           //  $("#curveTextCtrlPanel").removeClass("hidden");
-           debugger;
             if (obj) {
                 var item = new fabric.CurvedText(obj.text, {
                     type: 'curved-text',
@@ -1972,7 +1976,7 @@ function initCanvasTextEvents() {
             }
 
         } else {
-
+            $("#curveTextCtrl").val(250);
             var obj = canvas.getActiveObject();
             
             var textInfo = {
