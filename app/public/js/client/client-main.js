@@ -11,6 +11,10 @@ const letterPageSize = {
 const enabledSaveInBrowser = true;
 var state = {
     isPreviewCanvas: false
+
+}
+const rulerSettings = {
+    vRuleSize: 28, hRuleSize: 25, showCrosshair: false, showMousePos: false
 }
 
 const layerHtml = `<div class="media d-block d-flex layer-item object-options" data-index='{index}' id='{id}'  >
@@ -593,6 +597,8 @@ function loadSVGTemplate(id) {
         canvas.templateId = data.code;
         hideWorkspaceControls();
         // loading Big display
+        var logoDisplaySize = 500;
+
         fabric.loadSVGFromURL(svgBase64, function (objects, options) {
 
             // / getting actual width and height of a logo
@@ -600,7 +606,7 @@ function loadSVGTemplate(id) {
             var logo = objects[objects.length-1];
             var w = Math.floor(logo.getScaledWidth());
             var h = Math.floor(logo.getScaledHeight());
-            canvas.setDimensions({width: 420, height: 420});
+            canvas.setDimensions({width: logoDisplaySize, height: logoDisplaySize});
             canvas.setBackgroundImage(logo, canvas.renderAll.bind(canvas));
             
             canvas.renderAll();
@@ -620,16 +626,47 @@ function loadSVGTemplate(id) {
 
             var reg = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
             $("#kp-link").attr("href", reg.test(data.link) ? data.link : "#");
+            if(!reg.test(data.link))
+          {
+            $("#kpweblink-panel").hide();
+          }
+
             $("#use-template").unbind().click(function () {
                 window.location.href = `/app/workspace/${
                     data.code
                 }`;
             })
 
-        }, function (item, object) {
-            object.set({left: 0, top: 0});
+            $(".vRule, .hRule").remove();
+            $('.canvas-container').first().ruler(rulerSettings);
 
-            object.scaleToWidth(420);
+            /// show grid lines 
+            var labels   = $(".hRule .tickLabel");
+            var vlabels   = $(".vRule .tickLabel");
+          
+            // hlines 
+                for(var i=0;i<(labels.length);i++)
+                {
+                  
+                  var pos = $(labels[i]).position();
+                  console.log(pos);
+                  $(".canvas-container").first().append(`<div class='grid-lines' style='height:500px;left:${pos.left-28}px; top:0px; '></div>`)
+                }
+          // vlines 
+          
+                for(var i=0;i<(vlabels.length);i++)
+                {
+                  
+                  var pos = $(vlabels[i]).position();
+                 console.log(pos);
+                  $(".canvas-container").first().append(`<div class='grid-lines h-gridlines' style='width:500px;top:${pos.top-25}px; left:0px; border-bottom: solid 1px #666;'></div>`);
+                  $(".canvas-container").first().css({border:"solid 1px #666"})
+                }
+
+        }, function (item, object) {
+
+                   object.set({left: 8, top: 4});
+            object.scaleToWidth(logoDisplaySize);
             // 4in = 96 res
             // object.set('id', item.getAttribute('id'));
             // group.push(object);
@@ -655,7 +692,7 @@ function loadSVGTemplate(id) {
             canvasPrev.renderAll();
 
             loadedObjects.center().setCoords();
-
+            //loadgrid()
         }, function (item, object) {
             object.set('id', item.getAttribute('id'));
             // object.set('width', (object.width/72)*96);
@@ -829,45 +866,40 @@ function initUIEvents() {
     //     menuHighlighter(this);
     // })
 
-    $("#btnDisplayGrid").on("click", function () {
-        var style = $("#workarea").attr("style");
-        if (style) {
-            $(this).removeClass('tx-gray-500');
-            $("#workarea").removeAttr("style");
-            $(this).html($(this).html().replace("On", "Off"));
-        } else {
-            $(this).html($(this).html().replace("Off", "On"));
-            $(this).addClass('tx-gray-500');
-            $("#workarea").attr("style", "background-image:url('')");
-        }
+    $("#btnDisplayGrid").on("click", function (e) {
+       if(e.target.checked)
+       {
+        $(".grid-lines").show();
+       }else{
+        $(".grid-lines").hide();
+       }
+        //var style = $("#workarea").attr("style");
+        //if (style) {
+           // $(this).removeClass('tx-gray-500');
+            //$("#workarea").removeAttr("style");
+           // $(this).html($(this).html().replace("On", "Off"));
+       // } else {
+            //$(this).html($(this).html().replace("Off", "On"));
+            //$(this).addClass('tx-gray-500');
+            //$("#workarea").attr("style", "background-image:url('')");
+       // }
 
     })
     $("#btnDisplayRuler").on("click", function () {
         
-        var style = !($(".ruler-line").is(':visible'));
+        var style = !($(".ruler").is(':visible'));
         if (style) {
-            $(".ruler-line").show();
-            $("#client-main-canvas").css({
-                "border": "dashed 1px #333",
-                "border-top": "0px",
-                "padding-top": "10px",
-                  "margin-top": -"10px"
-               });
-            //var len = $('.canvas-container').find('.ruler').length;
-            if (len === 0) {
-                //$('.canvas-container').ruler({vRuleSize: 22, hRuleSize: 22, showCrosshair: false, showMousePos: false});
-            }
-            $(this).removeClass('tx-gray-500');
-            //$(".vRule, .hRule").show();
+            $('.canvas-container').first().ruler(rulerSettings);
             $(this).html($(this).html().replace("On", "Off"));
         } else {
-            $(".ruler-line").hide();
-            $("#client-main-canvas").css({
-                "border": "dashed 0px #333",
-                "border-top": "0px",
-                "padding-top": "10px",
-                  "margin-top": -"10px"
-               });
+            $(".vRule, .hRule").remove();
+            // $(".ruler-line").hide();
+            // $("#client-main-canvas").css({
+            //     "border": "dashed 0px #333",
+            //     "border-top": "0px",
+            //     "padding-top": "10px",
+            //       "margin-top": -"10px"
+            //    });
             $(this).html($(this).html().replace("Off", "On"));
             $(this).addClass('tx-gray-500');
 
@@ -1466,6 +1498,7 @@ function addLayer(o) {
     var _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
     for (var i = _canvas._objects.length - 1; i >= 0; i--) {
         var obj = _canvas._objects[i];
+        
         var src = obj._element ?. currentSrc;
         if (obj.text) {
             src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAABHNJREFUeJzt3LurHGUcx+FvcqKiJohGBBGjRPHyB4imE0u72Akix1bsBAsriyiKokQ7CQoKaiGKCpGAjSI2golXhIR4v3USbzExicViiCHndy55d95zdp4H3iYLM7+d3c+emd0hCQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABJsq73AFOyMckVmd3ntxp9n+T33kNQ25hkV5IjSU5Yg64jSZ5NcuGirxJdrEuyJ/3fKGNfu+Mv96p0W/q/OazJurV+qdaO9b0HaOiW3gNw0rbeA7QyS4Fc0HsATjqv9wCtzFIg0JxAoCAQKGzoPcAqcSDJd0mON9zmukx+rLy+4TbP5MskP2by7VEr65NcmeTahtuksx1Z/teRLyW5YcpzbUtycAWzLbb2J7lpyrPfmOSVFcz20JTnYgWWE8ixJHcPONvWTG7DaBXHoSRbBpz/nkyO2egCGes1yANJXhhwfweTvNhwe88n+bbh9payvwcH3N+qMcZAvkqys8N+9zbc1r6G21qqJzNslKvCGAPZmeSfDvs90nBbRxtuazn7fKbDfrsaWyCHkjzXe4g1bFeSP3oPMaSxBbIryW+9h1jDfs3IPmDGFMjxjPAUYQqeTtvfXFa1MQXyepKvew8xAw4keav3EEMZUyBP9R5ghozmWI4lkA+TfNB7iBnybvp81Ty4WQrkcPHY4xnRefMATiR5onj8z6EGmbZZCuSjBf79nSSvDjnISLyc5L0FHlvotaCjczK5s/XUe4L2Jtncc6hTzKfdvVh3DTv6gi5L8mn+P9tnSeZ6DsXCrkvyfia3kzya1fVf0Mxn9gJJkk2ZnMJ+k8lfFLfIsyLzmc1AZtosXYNAcwKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIZDhzDbfldRuIAz2crQ23dXXDbUF3c0n2JznRaH0eH27MkPvTLo7/1n2DPgOYkvkkx9I+kKNJ7hzuaUA7m5LckWR32odx+nozyfYkGwd5ZrBCV2Vy2rMnyd+Zfhinr8NJ3k5yb5ItU36usKi5JNuSPJLkkwwfxGLr4yQ7ktwcF/QM6KIkjyX5Jf0jWOr6OcnDmZz6wdRck+Rg+r/hV7r2Z3IqCM2dm+SL9H+Tn+3al2RD42MD2Z7+b+5W6/bGx2ZmuXhbukt6D9DQ5t4DMHsuzeRit/en/9muH5Jc3PjYQJLJRfobmfyK3fuNvtx1NMlrcaPjsqzrPcAadX6Sy7N2TlGPJ/kpyV+9BwEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM7kX8fwvIWqet/rAAAAAElFTkSuQmCC';
@@ -1917,7 +1950,6 @@ function initCanvasTextEvents() {
         var orginalText =  obj.text;
         if (e.target.checked) {
           //  $("#curveTextCtrlPanel").removeClass("hidden");
-           debugger;
             if (obj) {
                 var item = new fabric.CurvedText(obj.text, {
                     type: 'curved-text',
@@ -1945,7 +1977,7 @@ function initCanvasTextEvents() {
             }
 
         } else {
-
+            $("#curveTextCtrl").val(250);
             var obj = canvas.getActiveObject();
             
             var textInfo = {
@@ -2334,4 +2366,52 @@ initCanvasEvents();
 // const savedCanvas = saveInBrowser.load('kp-editor');
 // if (savedCanvas) {
 //     canvas.loadFromJSON(savedCanvas, canvas.renderAll.bind(canvas));
+// }
+
+
+
+var grid = 20;
+var width = 700;
+
+window.canvasgrid = new fabric.Canvas('cg', { selection: false });
+
+// Draw measuring area
+// First = first point
+// 
+// Third = second point
+var measurementThickness = 60;
+window.canvasgrid.add( new fabric.Rect({
+    left: 0,
+    top: 0,
+    fill: '#FFF',
+    selectable: false,
+    width: measurementThickness,
+    height: 1000
+}));
+
+window.canvasgrid.add( new fabric.Rect({
+    left: 0,
+    top: 0,
+    fill: '#FFF',
+    width: 4000,
+    selectable: false,
+    height: measurementThickness
+}));
+
+    
+    
+// var r = $("#ruler3");
+// for(var i=0;i<=500;i++)
+// {
+//     var val = Math.ceil(500/1.5)
+//     if(i == val)
+//     {
+//         r.append(`<li style='border-right:solid 2px #000'></li>`);
+
+//     }else
+//     {
+//         r.append(`<li style='border-right:solid 1px #ccc'></li>`);
+
+//     }
+
 // }

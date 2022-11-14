@@ -1077,7 +1077,13 @@ function loadSVGTemplate(id) {
           $(".kk-part-no").text(data.ref_code || "N/A");
           $(".kk-part-link").text(data.link || "N/A");
           var reg = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+          $("#kpweblink-panel").show();
+          
           $("#kp-link").attr("href", reg.test(data.link)?data.link:"#");
+          if(!reg.test(data.link))
+          {
+            $("#kpweblink-panel").hide();
+          }
           $("#use-template").unbind().click(function () {
               window.location.href = `/app/workspace/${
                   data.code

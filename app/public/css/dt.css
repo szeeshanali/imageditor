@@ -57,7 +57,7 @@
 .workarea{
     width: 100%;
     height: 800px;
-    background-image: url('/images/grid-trans.png');
+    /* background-image: url('/images/grid-trans.png'); */
 
 }
 .admin-template-designer-bg{
@@ -250,14 +250,15 @@ color:#0900fd;
      .sidebar{
       background-color:   #494699 !important;
       height:100%;
-      width:72px;
+      width:100px;
 
      }
      .sidebar li{
-        border-bottom: solid 1px #6462a5;
-        width:72px;
-         padding: 5px 0px;
-     } 
+        border-bottom: solid 1px #bfbcff;
+        width:100px;
+        padding: 5px 5px;
+
+    } 
      
      .sidebar .nav-link{
 
@@ -885,168 +886,27 @@ font-weight: bold;
     }
 }
   /*--*/
-  .ruler2 {
-    position: relative;
-    width: 70%;
-    margin: 20px auto;
-    height: 14px;
-   }
-   .ruler2 .cm,
-   .ruler2 .mm {
-    position: absolute;
-    border-left: 1px solid #555;
-    height: 14px;
-    width: 10%;
-   }
-   .ruler2 .cm:after {
-    position: absolute;
-    bottom: -15px;
-    font: 11px/1 sans-serif;
-   }
-   .ruler2 .mm {
-    height: 5px;
-   }
-   .ruler2 .mm:nth-of-type(5) {
-    height: 10px;
-   }
-   .ruler2 .cm:nth-of-type(1) {
-    left: 0%;
-   }
-   .ruler2 .cm:nth-of-type(1):after {
-    content: "0";
-   }
-   .ruler2 .cm:nth-of-type(2) {
-    left: 10%;
-   }
-   .ruler2 .cm:nth-of-type(2):after {
-    content: "1";
-   }
-   .ruler2 .cm:nth-of-type(3) {
-    left: 20%;
-   }
-   .ruler2 .cm:nth-of-type(3):after {
-    content: "2";
-   }
-   .ruler2 .cm:nth-of-type(4) {
-    left: 30%;
-   }
-   .ruler2 .cm:nth-of-type(4):after {
-    content: "3";
-   }
-   .ruler2 .cm:nth-of-type(5) {
-    left: 40%;
-   }
-   .ruler2 .cm:nth-of-type(5):after {
-    content: "4";
-   }
-   .ruler2 .cm:nth-of-type(6) {
-    left: 50%;
-   }
-   .ruler2 .cm:nth-of-type(6):after {
-    content: "5";
-   }
-   .ruler2 .cm:nth-of-type(7) {
-    left: 60%;
-   }
-   .ruler2 .cm:nth-of-type(7):after {
-    content: "6";
-   }
-   .ruler2 .cm:nth-of-type(8) {
-    left: 70%;
-   }
-   .ruler2 .cm:nth-of-type(8):after {
-    content: "7";
-   }
-   .ruler2 .cm:nth-of-type(9) {
-    left: 80%;
-   }
-   .ruler2 .cm:nth-of-type(9):after {
-    content: "8";
-   }
-   .ruler2 .cm:nth-of-type(10) {
-    left: 90%;
-   }
-   .ruler2 .cm:nth-of-type(10):after {
-    content: "9";
-   }
-   .ruler2 .cm:nth-of-type(11) {
-    left: 100%;
-   }
-   .ruler2 .cm:nth-of-type(11):after {
-    content: "10";
-   }
-   .ruler2 .mm:nth-of-type(1) {
-    left: 10%;
-   }
-   .ruler2 .mm:nth-of-type(2) {
-    left: 20%;
-   }
-   .ruler2 .mm:nth-of-type(3) {
-    left: 30%;
-   }
-   .ruler2 .mm:nth-of-type(4) {
-    left: 40%;
-   }
-   .ruler2 .mm:nth-of-type(5) {
-    left: 50%;
-   }
-   .ruler2 .mm:nth-of-type(6) {
-    left: 60%;
-   }
-   .ruler2 .mm:nth-of-type(7) {
-    left: 70%;
-   }
-   .ruler2 .mm:nth-of-type(8) {
-    left: 80%;
-   }
-   .ruler2 .mm:nth-of-type(9) {
-    left: 90%;
-   }
-   .ruler2 .mm:nth-of-type(10) {
-    left: 100%;
-   }
+  #ruler3 {
+    padding: 0px;
+    margin: 0px;
+  }
+  #ruler3 > li {
+    display: inline;
+    list-style-type: none;
+    padding-right: 0px;
+border-right: solid 0px #ccc;  }
 
 
+/* #client-main-canvas{
+  background-color: blue;
+} */
 
-
-
-  /**/
-
-  
-  .ruler-line {
-    width: 420px; 
-    text-align: center; 
-    border-bottom: 1px dashed #000; 
-    line-height: 19px;
-    margin: 10px auto; 
- } 
- #client-main-canvas{
-  border: dashed 1px #333;
-  border-top: 0px;
-  padding-top: 10px;
-    margin-top: -10px;
-    background-color: #d2d0ff;
- }
- #client-main-canvas-logo{
-  background-color: #d2d0ff;
- }
- .ruler-line span { 
-  background: #888;
-  padding: 1px 11px;
-  color: white;
- }
- .ruler-line-vr {
-  height: 440px; 
-  text-align: center; 
-  border-right: 1px dashed #000; 
-  line-height: 0.1em;
-  width:1px;
-  left:25%;
-  position: absolute;
-} 
-
-
-.ruler-line-vr  span { 
-  background:#eee; 
-  padding:0 10px; 
+.canvas-container{
+  margin:auto;
+   /* border:solid 1px #666;  */
+}
+.grid-lines{
+  position:absolute;
+  z-index:1;
+  border-right:solid 1px #666;
 }
