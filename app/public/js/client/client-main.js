@@ -1412,6 +1412,7 @@ function onObjectSelection(o) {
     if (t == "i-text" || t == "curved-text") {
 
         textControls(true);
+        updateTextControls(o);
         imageControls(false);
 
     } else {
@@ -1429,10 +1430,31 @@ function onObjectSelection(o) {
 }
 
 
+function updateTextControls(e){
+   var item = e.selected[0]; 
+   $("#btnTextSize").val(item.fontSize);
+   if(item.charSpacing)
+   { $("#text-letter-spacing").val(item.charSpacing);}
+   if(item.strokeWidth)
+   { $("#text-stroke-width").val(item.strokeWidth); }
+   if(item.stroke)
+   { document.querySelector('#strokecolor')?.jscolor.fromString(item.stroke); }
+   document.querySelector('#fontColorBox').jscolor.fromString(item.fill);
+   
+   
+}
+
 function initCanvasEvents() {
 
-    canvas.on({"selection:updated": onObjectSelection, "selection:created": onObjectSelection, "selection:cleared": onObjectSelectionCleared});
-    canvasPrev.on({"selection:updated": onObjectSelection, "selection:created": onObjectSelection, "selection:cleared": onObjectSelectionCleared});
+    canvas.on({
+        "selection:updated": onObjectSelection, 
+        "selection:created": onObjectSelection, 
+        "selection:cleared": onObjectSelectionCleared});
+
+    canvasPrev.on({
+        "selection:updated": onObjectSelection, 
+    "selection:created": onObjectSelection, 
+    "selection:cleared": onObjectSelectionCleared});
 
 
     canvas.selectedLayerId = null;
