@@ -472,19 +472,26 @@ function deleteProject(id, self) {
     if (!confirm("Do you want to delete this project?")) {
         return;
     }
+    $loader.removeClass("hidden");
 
     $.ajax({
         type: "DELETE",
         url: `/api/client/project/${id}`,
         success: function (res) {
-            if (typeof(res) === "string") {
-                window.location.reload();
-                return;
-            }
+            $loader.addClass("hidden");
+
+            // if (typeof(res) === "string") {
+            //     //debugger;  
+            //     //window.location.reload();
+            //     //return;
+            // }
+            
             toast("Project deleted successfully!");
             $(self).parent().parent().fadeOut();
         },
         error: function (res) {
+            $loader.addClass("hidden");
+
             toast("Error while deleting project.");
         }
     })
