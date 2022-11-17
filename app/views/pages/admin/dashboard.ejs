@@ -24,11 +24,11 @@
                   <i class="ion-ios-person-outline tx-30"></i>
                 </td>
                 <td>
-                  <a href="" class="tx-inverse tx-14 tx-medium d-block"><%=users[i].fname %>&nbsp;<%=users[i].lname %></a>
+                  <p class="tx-inverse tx-14 tx-medium d-block"><%=users[i].fname %>&nbsp;<%=users[i].lname %></p>
                   <span class="tx-11 d-block"><%=users[i].email %></span>
                 </td>
                 <td>
-                    <a href="" class="tx-inverse tx-medium d-block"><%=(users[i].is_admin == true)?"Admin":"User" %></a>
+                    <p class="tx-inverse tx-medium d-block"><%=(users[i].is_admin == true)?"Admin":"User" %></p>
                   </td>
                 <td class="tx-12">
                   <span  class="square-8 <%=(users[i].active)?'bg-success':'bg-danger' %> mg-r-5 rounded-circle"></span> <%=(users[i].active)?"Active":"Disabled" %>
