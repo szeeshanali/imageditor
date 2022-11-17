@@ -33,7 +33,7 @@
                 <td class="tx-12">
                   <span  class="square-8 <%=(users[i].active)?'bg-success':'bg-danger' %> mg-r-5 rounded-circle"></span> <%=(users[i].active)?"Active":"Disabled" %>
                 </td>
-                <td><%=users[i].date.toLocaleString() %></td>
+                <td><%=users[i].date.toLocaleString('en-US', { hour12: false, }) %></td>
                 <td class="tx-20" id="user-ctrl">
                     <i class="ion-edit pd-x-5 edit" data-meta="<%= JSON.stringify(users[i]) %>" data-target="#edituser" data-toggle="modal" title="Edit" id="edit<%=users[i]._id %>"></i>
                     <i class="ion-trash-a pd-x-5 delete" id="delete<%=users[i]._id %>" title="Delete"></i>
