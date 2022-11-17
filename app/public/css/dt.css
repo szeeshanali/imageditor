@@ -636,6 +636,7 @@ color:#0900fd;
     height: 100%;
     overflow-y: auto;     
     position: absolute;
+    width: 100%;
   }
 
   ::-webkit-scrollbar {
@@ -909,4 +910,8 @@ border-right: solid 0px #ccc;  }
   position:absolute;
   z-index:1;
   border-right:solid 1px #666;
+}
+.card-subtitle{
+  height:32px; 
+  overflow: hidden;
 }
