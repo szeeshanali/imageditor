@@ -1173,8 +1173,17 @@ function saveDesign() {
     var title = $("#input-project-title").val();
     var desc = $("#input-project-desc").val();
 
-    if (! title) {
+    if (!title) {
         toast("Please enter project title.");
+        return;
+    }
+    if (title?.length < 3 || title?.length > 50) {
+        toast("Title should be greater than 3 and less than 50 characters.");
+        return;
+    }
+
+    if ( title?.length > 100) {
+        toast("Description should be less than 100 characters.");
         return;
     }
 
