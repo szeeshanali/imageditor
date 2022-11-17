@@ -94,16 +94,34 @@ router.post(ROUTE_USER_REGISTER, async (req, res) => {
     const {fname, lname, email, password, password2, company_name} = req.body;
     let errors = [];
     if(!fname || !email || !password || !password2) {
-        errors.push({msg : "Please fill in all fields"})
+      errors.push({msg : "Please fill in all fields"})
     }
 
-    if(password !== password2) {
-        errors.push({msg : "passwords dont match"});
-    } 
+      if(password !== password2) {
+          errors.push({msg : "passwords don't match"});
+      } 
 
+
+    if(fname?.length < 3 || fname?.length > 20) {
+      errors.push({msg : "First name should be greater than 3 and less than 20 characters."})
+    }
+
+    if(lname?.length > 20) {
+      errors.push({msg : "Last name should be less than 20 characters."})
+    }
+
+  
     if(password.length < 6 ) {
-        errors.push({msg : 'Password should be atleast 6 characters.'})
+      errors.push({msg : 'Password should be atleast 6 characters.'})
     }
+
+    if(password2?.length > 20) {
+      errors.push({msg : "Password should be less than 20 characters."})
+    }
+
+  
+
+   
 
     if(errors.length > 0 ) {
         res.render(PATH_REGISTER, {
