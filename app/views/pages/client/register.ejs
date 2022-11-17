@@ -63,6 +63,9 @@
                                                     <p class="tx-center tx-white-5 tx-12 mg-t-15"></p>
                                                 </div>
                                             </form>
+                                            <div>
+                                        
+                                            </div>
                                             <%- include('../../partials/client/popups/terms'); %>
 
                                         </div>
@@ -73,5 +76,11 @@
 
 <script src="/js/bootstrap.js"></script>
 <script src="../js/amanda.js"></script>
+
+<script>
+    $.get('/app/terms',(res)=>{
+      $("#terms-contanier").html(res);
+    })
+</script>
                                     </body>
                                 </html>
