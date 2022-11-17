@@ -636,6 +636,7 @@ color:#0900fd;
     height: 100%;
     overflow-y: auto;     
     position: absolute;
+    width: 100%;
   }
 
   ::-webkit-scrollbar {
