@@ -39,7 +39,7 @@
             <div class="form-group mg-b-20"><a href="">Reset password</a></div>
           </div><!-- col-7 -->
         </div><!-- row -->
-        <p class="tx-center  tx-12 mg-t-15">Copyright © 2022</p>
+        <p class="tx-center  tx-12 mg-t-15">Copyright © 2022. KakePrints.com</p>
       </div><!-- signin-box -->
     </div><!-- am-signin-wrapper -->
 </form>
@@ -51,6 +51,12 @@
 
 <script src="/js/bootstrap.js"></script>
 <script src="../js/amanda.js"></script>
-  
+  <script>
+    
+    $.get('/app/terms',(res)=>{
+      $("#terms-contanier").html(res);
+    })
+</script>
+  </script>
 
 </body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

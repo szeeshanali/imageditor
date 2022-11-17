@@ -31,7 +31,7 @@
                       <div class="card" style="min-height: 200px">
                         <div class="card-body pd-10">
                           <img class="card-img-top img-fluid pd-b-10 ht-140" src="<%=templates[i].base64 %>" alt="Image">
-                          <h5 class="tx-14 tx-bold tx-inverse  pd-x-10" style="height:28px;overflow:hidden"><%=templates[i].title %></h5>
+                          <h5 class="tx-14 tx-bold tx-inverse  pd-x-10" style="height:28px;overflow:hidden" title="<%=templates[i].title %>"><%=templates[i].title %></h5>
                           <p class="card-subtitle tx-12 tx-bold  pd-x-10">Part # <%=templates[i].ref_code || "N/A" %></p>
                         </div>
                       </div><!-- card -->
@@ -122,13 +122,13 @@
                     <div class="col-lg-12">
                       <div class="form-group">
                         <label class="form-control-label">Project title: <span class="tx-danger">*</span></label>
-                        <input class="form-control" required type="text" id="input-project-title" name="firstname"  placeholder="Enter project title">
+                        <input class="form-control" minlength="3"  maxlength="50" pattern=".{3,50}" title="Minimum 3 and maximum 50 characters." required type="text" id="input-project-title" name="firstname"  placeholder="Enter project title">
                       </div>
                     </div>
                     <div class="col-lg-12">
                       <div class="form-group">
                         <label class="form-control-label">Description: </label>
-                        <textarea rows="2" class="form-control" id="input-project-desc" required placeholder="Enter your address" spellcheck="false"></textarea>
+                        <textarea rows="2" class="form-control" pattern=".{3,100}" title="Minimum 3 and maximum 100 characters." minlength="3"  maxlength="50"  id="input-project-desc" required placeholder="Enter your address" spellcheck="false"></textarea>
                       </div>
                     </div>
 
@@ -161,7 +161,7 @@
               </div>
               <div class="card">
                 <div class="card ">
-                 <div class="row row-sm mg-t-15 mg-sm-t-20" id="myProjectContainer"></div>
+                 <div class="row pd-20" id="myProjectContainer"></div>
               </div>  
               </div>
             </div>

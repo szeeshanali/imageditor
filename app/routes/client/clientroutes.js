@@ -190,9 +190,9 @@ try{
 
     if(req.user != null)
     {
-        var totalProjects = await uploads.find({ uploaded_by:req.user._id, is_admin:false, deleted:false,active:true}).count(); 
+        var totalProjects = await uploads.find({ uploaded_by:req.user._id,  deleted:false,active:true}).count(); 
         if(totalProjects>req.user.project_limit){
-            res.status(401).send({message:`You have exceeded the limit of project quota.`, error: 'You have exceeded the limit of project quota.'});
+            res.status(401).send({message:`You can not save more than ${req.user.project_limit} projects.`, error: `You can not save more than ${req.user.project_limit} projects.`});
         }
         
     }

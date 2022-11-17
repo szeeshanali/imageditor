@@ -2,7 +2,7 @@ const express               = require('express');
 const router                = express.Router();
 const passport              = require('passport');
 const bcrypt                = require('bcrypt');
-
+const commonService         = require("../services/common");
 require("../config/passport")(passport);
 const appusers              = require("../../app/models/appuser")
 
@@ -52,9 +52,21 @@ router.get(ROUTE_SIGNOUT,(req,res)=>{
   });
 
   
-router.get(ROUTE_USER_REGISTER, (req, res) => {
-    res.render(PATH_REGISTER, {layout: false});   
-});
+router.get(ROUTE_USER_REGISTER,   (req, res) => {
+  res.render(PATH_REGISTER, {layout: false});  
+  
+  });
+    
+  
+  router.get('/app/terms',   (req, res) => {
+    commonService.contentService.getContentAsync('terms-conditions').then((d)=>{
+      res.status(200).send(d.content);  
+    }).catch(()=>{
+      console.error("Error loading terms and conditions.")
+      res.status(500).send("");  
+    });
+    
+    });
 
 router.get(ROUTE_LOGIN, (req, res) => {
     res.render(PATH_LOGIN, {layout: false});
@@ -82,16 +94,34 @@ router.post(ROUTE_USER_REGISTER, async (req, res) => {
     const {fname, lname, email, password, password2, company_name} = req.body;
     let errors = [];
     if(!fname || !email || !password || !password2) {
-        errors.push({msg : "Please fill in all fields"})
+      errors.push({msg : "Please fill in all fields"})
     }
 
-    if(password !== password2) {
-        errors.push({msg : "passwords dont match"});
-    } 
+      if(password !== password2) {
+          errors.push({msg : "passwords don't match"});
+      } 
 
+
+    if(fname?.length < 3 || fname?.length > 20) {
+      errors.push({msg : "First name should be greater than 3 and less than 20 characters."})
+    }
+
+    if(lname?.length > 20) {
+      errors.push({msg : "Last name should be less than 20 characters."})
+    }
+
+  
     if(password.length < 6 ) {
-        errors.push({msg : 'password atleast 6 characters'})
+      errors.push({msg : 'Password should be atleast 6 characters.'})
     }
+
+    if(password2?.length > 20) {
+      errors.push({msg : "Password should be less than 20 characters."})
+    }
+
+  
+
+   
 
     if(errors.length > 0 ) {
         res.render(PATH_REGISTER, {

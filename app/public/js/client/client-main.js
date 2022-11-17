@@ -472,19 +472,26 @@ function deleteProject(id, self) {
     if (!confirm("Do you want to delete this project?")) {
         return;
     }
+    $loader.removeClass("hidden");
 
     $.ajax({
         type: "DELETE",
         url: `/api/client/project/${id}`,
         success: function (res) {
-            if (typeof(res) === "string") {
-                window.location.reload();
-                return;
-            }
+            $loader.addClass("hidden");
+
+            // if (typeof(res) === "string") {
+            //     //debugger;  
+            //     //window.location.reload();
+            //     //return;
+            // }
+            
             toast("Project deleted successfully!");
             $(self).parent().parent().fadeOut();
         },
         error: function (res) {
+            $loader.addClass("hidden");
+
             toast("Error while deleting project.");
         }
     })
@@ -1166,8 +1173,17 @@ function saveDesign() {
     var title = $("#input-project-title").val();
     var desc = $("#input-project-desc").val();
 
-    if (! title) {
+    if (!title) {
         toast("Please enter project title.");
+        return;
+    }
+    if (title?.length < 3 || title?.length > 50) {
+        toast("Title should be greater than 3 and less than 50 characters.");
+        return;
+    }
+
+    if ( title?.length > 100) {
+        toast("Description should be less than 100 characters.");
         return;
     }
 
@@ -1412,6 +1428,7 @@ function onObjectSelection(o) {
     if (t == "i-text" || t == "curved-text") {
 
         textControls(true);
+        updateTextControls(o);
         imageControls(false);
 
     } else {
@@ -1429,10 +1446,34 @@ function onObjectSelection(o) {
 }
 
 
+function updateTextControls(e){
+   var item = e.selected[0]; 
+   $("#btnTextSize").val(item.fontSize);
+   if(item.charSpacing)
+   { $("#text-letter-spacing").val(item.charSpacing);}
+   if(item.strokeWidth)
+   { $("#text-stroke-width").val(item.strokeWidth); }
+
+   if(item.lineHeight)
+   { $("#text-line-height").val(item.lineHeight); }
+   if(item.stroke)
+   { document.querySelector('#strokecolor')?.jscolor.fromString(item.stroke); }
+   document.querySelector('#fontColorBox').jscolor.fromString(item.fill);
+   
+   
+}
+
 function initCanvasEvents() {
 
-    canvas.on({"selection:updated": onObjectSelection, "selection:created": onObjectSelection, "selection:cleared": onObjectSelectionCleared});
-    canvasPrev.on({"selection:updated": onObjectSelection, "selection:created": onObjectSelection, "selection:cleared": onObjectSelectionCleared});
+    canvas.on({
+        "selection:updated": onObjectSelection, 
+        "selection:created": onObjectSelection, 
+        "selection:cleared": onObjectSelectionCleared});
+
+    canvasPrev.on({
+        "selection:updated": onObjectSelection, 
+    "selection:created": onObjectSelection, 
+    "selection:cleared": onObjectSelectionCleared});
 
 
     canvas.selectedLayerId = null;
