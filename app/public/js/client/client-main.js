@@ -1437,6 +1437,9 @@ function updateTextControls(e){
    { $("#text-letter-spacing").val(item.charSpacing);}
    if(item.strokeWidth)
    { $("#text-stroke-width").val(item.strokeWidth); }
+
+   if(item.lineHeight)
+   { $("#text-line-height").val(item.lineHeight); }
    if(item.stroke)
    { document.querySelector('#strokecolor')?.jscolor.fromString(item.stroke); }
    document.querySelector('#fontColorBox').jscolor.fromString(item.fill);
