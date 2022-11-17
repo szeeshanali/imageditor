@@ -910,3 +910,7 @@ border-right: solid 0px #ccc;  }
   z-index:1;
   border-right:solid 1px #666;
 }
+.card-subtitle{
+  height:32px; 
+  overflow: hidden;
+}
