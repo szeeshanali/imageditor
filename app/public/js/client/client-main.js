@@ -1192,6 +1192,7 @@ function saveDesign() {
         toast("Can't save project. please contact admin.");
         return;
     }
+    
 
     var thumbBase64 = canvas.toDataURL({format: 'jpg', quality: 0.8});
     $.ajax({

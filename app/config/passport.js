@@ -12,11 +12,16 @@ module.exports = function(passport) {
                  const agreeterms = req.body.agreeterms; 
                  const admin = req.body.admin; 
 
-                 User.findOne({email : email}).exec()
+                 User.findOne({email : email, deleted:false}).exec()
                  .then((user)=>{
                   if(!user) {
                       return done(null, false, { message : 'Incorrect username or password'});
                   }
+
+                  if(user && !user.active) {
+                    return done(null, false, { message : 'Account has been blocked by Admin.'});
+                }
+
 
                   if(!agreeterms && !user.is_admin )
                   {return done(null, false, { message : 'Before sign-in, you must agree with terms & conditions.'}); }
