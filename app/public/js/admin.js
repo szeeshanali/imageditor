@@ -1423,7 +1423,7 @@ var category = $("#admin-categories").val() ;
     }
     if(!meta.title || meta.title.length > 100) 
     { 
-      toast("Error: Please Enter Title!");
+      toast("Error: Please Enter Design Name");
       return; 
     }
     var MIME_TYPE = "image/png";
