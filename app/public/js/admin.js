@@ -912,7 +912,6 @@ if(!userId)
 });
 
   $btnActiveDesign.on("click",(e)=>{
-    alert("worked");
     if(!selectedDesign.base64) {
       toast("Please upload template.");
       e.currentTarget.checked =false; 
