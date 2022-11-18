@@ -825,7 +825,8 @@ if(!userId)
   });
   
   $("#user-ctrl .delete").on("click", function(e){
-    if(confirm("do you want to delete this user?")){
+    if(confirm("Do you want to delete this user?")){
+      
       var userId = e.currentTarget.id.replace("delete","");
       $.ajax({
         type: "DELETE",
@@ -845,10 +846,12 @@ if(!userId)
 
   
   $("#user-ctrl .active").on("click", function(e){
-    if(confirm("do you want to disable this user?")){
-      var userId = e.currentTarget.id.replace("active","");
+    var userId = e.currentTarget.id.replace("active","");
       var isActive = $(e.currentTarget).attr("data-meta");
       isActive = !(isActive == "true");
+    var enableDisableText = isActive?"enable":"disable";
+    if(confirm(`do you want to ${enableDisableText} this user?`)){
+      
       $.ajax({
           type: "PUT",
           url: `/api/admin/user-active/${userId}`,     
@@ -909,7 +912,6 @@ if(!userId)
 });
 
   $btnActiveDesign.on("click",(e)=>{
-    alert("worked");
     if(!selectedDesign.base64) {
       toast("Please upload template.");
       e.currentTarget.checked =false; 
@@ -1420,7 +1422,7 @@ var category = $("#admin-categories").val() ;
     }
     if(!meta.title || meta.title.length > 100) 
     { 
-      toast("Error: Please Enter Title!");
+      toast("Error: Please Enter Design Name");
       return; 
     }
     var MIME_TYPE = "image/png";

@@ -1,16 +1,16 @@
 <div class="am-header">
     <div class="am-header-left">
         <%if(user != null){%>
-        <a id="naviconLeftx" href="#" class="am-navicon d-none d-lg-flex">
+        <span id="naviconLeftx" href="#" class="am-navicon d-none d-lg-flex">
             <i class="icon ion-navicon-round"></i>
-        </a> 
+        </span> 
         <a id="naviconLeftMobile" href="#" class="am-navicon d-lg-none">
             <i class="icon ion-navicon-round"></i>
         </a>
         <%}else{%>
             <a href="" class="pd-l-20"></a>
         <%}%>
-        <a href="#" class="am-logo">KakePrints</a>
+        <span class="am-logo">KakePrints</span>
     </div>
     <!-- am-header-left -->
     <%- include('../../partials/client/authmenu'); %>
