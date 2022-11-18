@@ -4,7 +4,7 @@ module.exports = {
     if(req.isAuthenticated()) {
     return next();
     }
-    req.flash('error_msg' , 'please login to view this resource');
+    //req.flash('error_msg' , 'please login to view this resource');
     res.redirect('/app/login');
     },
 
@@ -12,7 +12,7 @@ module.exports = {
     {
         if(req.isAuthenticated() && req.user.is_admin == true)
         {return next(); }
-        req.flash('error_msg' , 'please login to view this resource');
+        //req.flash('error_msg' , 'please login to view this resource');
         res.redirect('/app/admin/login');
 
     }
