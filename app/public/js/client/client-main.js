@@ -880,16 +880,7 @@ function initUIEvents() {
        }else{
         $(".grid-lines").hide();
        }
-        //var style = $("#workarea").attr("style");
-        //if (style) {
-           // $(this).removeClass('tx-gray-500');
-            //$("#workarea").removeAttr("style");
-           // $(this).html($(this).html().replace("On", "Off"));
-       // } else {
-            //$(this).html($(this).html().replace("Off", "On"));
-            //$(this).addClass('tx-gray-500');
-            //$("#workarea").attr("style", "background-image:url('')");
-       // }
+        
 
     })
     $("#btnDisplayRuler").on("click", function () {
@@ -1747,6 +1738,35 @@ function downloadDesign() {
                 // clonedCanvas.setWidth(width);
                 // clonedCanvas.setHeight(height);
                 var imgData = clonedCanvas.toDataURL('image/jpeg', 1.0);
+
+                var img = document.createElement('img');
+
+                // When the event "onload" is triggered we can resize the image.
+                img.onload = function()
+                    {        
+                        // We create a canvas and get its context.
+                        var canvas = document.createElement('canvas');
+                        var ctx = canvas.getContext('2d');
+        
+                        // We set the dimensions at the wanted size.
+                        canvas.width = wantedWidth;
+                        canvas.height = wantedHeight;
+        
+                        // We resize the image with the canvas method drawImage();
+                        ctx.drawImage(this, 0, 0, wantedWidth, wantedHeight);
+        
+                        var dataURI = canvas.toDataURL();
+        
+                        /////////////////////////////////////////
+                        // Use and treat your Data URI here !! //
+                        /////////////////////////////////////////
+                    };
+        
+                // We put the Data URI in the image's src attribute
+                img.src = imgData;
+
+                
+
                 // var imgData = 'data:image/svg+xml;utf8,' + encodeURIComponent(clonedCanvas.toSVG())
                 pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
                 if (res.data.watermark) {

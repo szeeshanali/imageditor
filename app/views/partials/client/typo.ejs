@@ -6,14 +6,13 @@
   <div class="pd-b-10">
     <select class="form-control select2" id="predefinedText" data-placeholder="Please Choose...">
       <option value="">Please Choose...</option>
-      <option value="Happy Birthday">Happy Birthday</option>
-      <option value="Greetings">Greetings</option>
-      <option value="Welcome Home">Welcome Home</option>
-      <option value="Congratulations">Congratulations</option>
-      <option value="I Love You">I Love You</option>
-      <option value="Happy Anniversary">Happy Anniversary</option>
-      <option value="I Love You MOM">I Love You Mom</option>
-      <option value="I Love You DAD">I Love You Dad</option>
+      <%customText?.forEach((item)=>{%>
+     
+        <option value="<%=item.content%>"><%=item.content%></option>
+      
+        <%})%>
+
+     
     </select>
   </div>
 
