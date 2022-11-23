@@ -255,7 +255,7 @@ router.get("/api/client/download",  isLoggedIn, async (req, res) => {
     var watermark = req.user.watermark;
     var enableDownload = true; 
     try {
-        appusers.findOneAndUpdate({_id: req.user._id},{ $inc: { download_count: 1, },upsert:true});
+        await appusers.findOneAndUpdate({_id: req.user._id},{ $inc: { download_count: 1, },upsert:true});
     } catch (error) {
 
         console.log(`Error while updating download count for user ${req.user._id}`);
