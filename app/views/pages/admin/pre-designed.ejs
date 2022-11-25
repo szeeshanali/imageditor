@@ -84,18 +84,15 @@
 
                     <button type="button" class="btn btn-primary wd-120 ht-60 tx-18" id="btn-step-download">
                       NEXT <br> <span class="tx-12 text-warning tx-bold underline">Download PDF</span>
-                    </button>
+                    </button>i
                     </div>
                   </div>
                 </div>
                 
-                <%- include('../../partials/client/imgupload'); %>
+                <%- include('../../partials/admin/imgupload'); %>
             </div>
            
-            <div id="shared-library" class="tab-pane"  >
-    
-              <%- include('../../partials/admin/sharedlibrary'); %>
-            </div>                          
+                                 
             <div id="textmenu" class="tab-pane" >
                 <div class="pd-x-10 tx-12 pd-y-10 bd-b"><b class="tx-primary tx-14">Add Text</b> </div>
     
@@ -271,24 +268,25 @@
 </div>
 
 <script> 
-    // $(".tab-content .tab-pane").each((i,e)=>
-    //    { $(e).removeClass("active"); })
-    //   //$("#templatepanel").addClass("active");
-      //$("#menu-templates").addClass("bg-warning")
-    window.onload = function()
-   { 
-        var code = '<%=code || "default" %>' ;
-        var type = '<%=type%>';
-        if(type === 'project'){
-            loadProject(code);
-        }else{
-          
-           // loadSVGTemplate(code);
-
-        }
+  // $(".tab-content .tab-pane").each((i,e)=>
+  //    { $(e).removeClass("active"); })
+  //   //$("#templatepanel").addClass("active");
+    //$("#menu-templates").addClass("bg-warning")
+  window.onload = function()
+ { 
+  debugger;
+      var code = '<%=code || "default" %>' ;
+      var type = '<%=type%>';
+      if(type === 'project'){
+          loadProject(code);
+      }else{
         
+          //loadSVGTemplate(code);
 
-   }
+      }
+      
+
+ }
 
 </script>
    

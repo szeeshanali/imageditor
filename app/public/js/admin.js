@@ -173,31 +173,6 @@
         });
 
 
-        // $deleteItem = $(`#${obj.id} .delete`);
-        // $duplicateItem = $(`#${obj.id} .duplicate`);
-        // $moveUpItem = $("#layers .bring-fwd");
-        // $moveDownItem = $("#layers .bring-back");
-
-        // $deleteItem.on("click",function(){
-        //     //$(this).parent().parent().remove();
-        //     var selectedObj = canvas.selectedObj.target;
-        //     canvas.remove(selectedObj).renderAll();
-        //     $(`#${selectedObj.id}`).remove();
-        // });
-
-
-        // $duplicateItem.on("click",function(){
-        //     var object = fabric.util.object.clone(canvas.getActiveObject());
-        //     object.set("top", object.top+5);
-        //     object.set("left", object.left+5);
-
-        //     canvas.add(object);
-
-        // });
-        // $moveUpItem.on("click",function(){});
-        // $moveDownItem.on("click",function(){});
-        // $moveTopItem.on("click",function(){});
-        // $moveBottomItem.on("click",function(){});
     }
     function rotateObject() {
         $(`#rotate`).on("click", function (e) {
@@ -1179,144 +1154,109 @@
 
             fabric.loadSVGFromURL(svgBase64, function (objects, options) {
 
-                // / getting actual width and height of a logo
-                // / setting canvas dimensions with logo width/height
-                var logo = objects[objects.length - 1];
-                var w = Math.floor(logo.getScaledWidth());
-                var h = Math.floor(logo.getScaledHeight());
-                canvas.setDimensions({width: logoDisplaySize, height: logoDisplaySize});
-                canvas.setBackgroundImage(logo, canvas.renderAll.bind(canvas));
-
-                canvas.renderAll();
-                // canvas.setZoom(2);
-                var logoSize = (meta.objectWidth / dpi).toFixed(1);
-                $("#template-info-panel .template-name").text(data.name);
-                $("#template-info-panel .page-size").text(meta.pageSize);
-                $("#template-info-panel .logo-size").text(logoSize + "''");
-                $("#template-info-panel .total-logos").text(meta.objects);
-                $("#template-info-panel .page-title").text(data.title);
-                $("#template-info-panel .ref_code").text(data.ref_code | "NA");
-                $("#template-info-panel #imgSelectedTemplate").attr("src", svgBase64)
-                $(".kk-part-no").text(data.ref_code || "N/A");
-                $(".kk-part-link").text(data.link || "N/A");
-                $("#rulerLogoSize").text(`${logoSize} x ${logoSize} inches `)
-
-
-                var reg = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-                $("#kp-link").attr("href", reg.test(data.link) ? data.link : "#");
-                if (! reg.test(data.link)) {
-                    $("#kpweblink-panel").hide();
-                }
-
-                $("#use-template").unbind().click(function () {
-                    window.location.href = `/app/workspace/${
-                        data.code
-                    }`;
-                })
-
-                $(".vRule, .hRule").remove();
-                $('.canvas-container').first().ruler(rulerSettings);
-
-                // / show grid lines
-                var labels = $(".hRule .tickLabel");
-                var vlabels = $(".vRule .tickLabel");
-
-                // hlines
-                for (var i = 0; i < (labels.length); i++) {
-
+              // / getting actual width and height of a logo
+              // / setting canvas dimensions with logo width/height
+              var logo = objects[objects.length-1];
+              var w = Math.floor(logo.getScaledWidth());
+              var h = Math.floor(logo.getScaledHeight());
+              canvas.setDimensions({width: logoDisplaySize, height: logoDisplaySize});
+              canvas.setBackgroundImage(logo, canvas.renderAll.bind(canvas));
+              
+              canvas.renderAll();
+              // canvas.setZoom(2);
+              var logoSize = (meta.objectWidth / dpi).toFixed(1);
+              $("#template-info-panel .template-name").text(data.name);
+              $("#template-info-panel .page-size").text(meta.pageSize);
+              $("#template-info-panel .logo-size").text(logoSize + "''");
+              $("#template-info-panel .total-logos").text(meta.objects);
+              $("#template-info-panel .page-title").text(data.title);
+              $("#template-info-panel .ref_code").text(data.ref_code | "NA");
+              $("#template-info-panel #imgSelectedTemplate").attr("src", svgBase64)
+              $(".kk-part-no").text(data.ref_code || "N/A");
+              $(".kk-part-link").text(data.link || "N/A");
+              $("#rulerLogoSize").text(`${logoSize} x ${logoSize} inches `)
+  
+  
+              var reg = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+              $("#kp-link").attr("href", reg.test(data.link) ? data.link : "#");
+              if(!reg.test(data.link))
+            {
+              $("#kpweblink-panel").hide();
+            }
+  
+              $("#use-template").unbind().click(function () {
+                  window.location.href = `/app/workspace/${
+                      data.code
+                  }`;
+              })
+  
+              $(".vRule, .hRule").remove();
+              $('.canvas-container').first().ruler(rulerSettings);
+  
+              /// show grid lines 
+              var labels   = $(".hRule .tickLabel");
+              var vlabels   = $(".vRule .tickLabel");
+            
+              // hlines 
+                  for(var i=0;i<(labels.length);i++)
+                  {
+                    
                     var pos = $(labels[i]).position();
                     console.log(pos);
-                    $(".canvas-container").first().append(`<div class='grid-lines' style='height:500px;left:${
-                        pos.left - 22
-                    }px; top:0px; '></div>`)
-                }
-                // vlines
-
-                for (var i = 0; i < (vlabels.length); i++) {
-
+                    $(".canvas-container").first().append(`<div class='grid-lines' style='height:500px;left:${pos.left-22}px; top:0px; '></div>`)
+                  }
+            // vlines 
+            
+                  for(var i=0;i<(vlabels.length);i++)
+                  {
+                    
                     var pos = $(vlabels[i]).position();
-                    console.log(pos);
-                    $(".canvas-container").first().append(`<div class='grid-lines h-gridlines' style='width:500px;top:${
-                        pos.top - 22
-                    }px; left:0px; border-bottom: solid 1px #666;'></div>`);
-                    $(".canvas-container").first().css({border: "solid 1px #666", width: "502px", height: "503px"})
-                }
-
-            }, function (item, object) {
-
-                object.set({left: 8, top: 4});
-                object.scaleToWidth(logoDisplaySize);
-
-            });
-            // / load template - preview display
-            fabric.loadSVGFromURL(svgBase64, function (objects, options) { // $canvasPrev.fadeOut();
-                let loadedObjects = new fabric.Group(group);
-
-                let templateWidth = options.viewBoxWidth;
-                let templateHeight = options.viewBoxHeight;
-                let isLandspace = (templateWidth > templateHeight);
-                if (isLandspace) {
-                    templateWidth = options.viewBoxHeight;
-                    templateHeight = options.viewBoxWidth;
-                }
-
-
-                canvasPrev.setDimensions({width: templateWidth, height: templateHeight});
-                canvasPrev.setBackgroundImage(loadedObjects, canvasPrev.renderAll.bind(canvasPrev));
-                // loadedObjects.scaleToWidth(templateWidth);
-                // loadedObjects.scaleToHeight((templateHeight/72)*96);
-
-                canvasPrev.renderAll();
-
-                loadedObjects.center().setCoords();
-                // loadgrid()
-            }, function (item, object) {
-                object.set('id', item.getAttribute('id'));
-                // object.set('width', (object.width/72)*96);
-                // object.set('height', (object.height/72)*96);
-                group.push(object);
-            });
+                   console.log(pos);
+                    $(".canvas-container").first().append(`<div class='grid-lines h-gridlines' style='width:500px;top:${pos.top-22}px; left:0px; border-bottom: solid 1px #666;'></div>`);
+                    $(".canvas-container").first().css({border:"solid 1px #666", width:"502px",height:"503px"})
+                  }
+  
+          }, function (item, object) {
+  
+                     object.set({left: 8, top: 4});
+              object.scaleToWidth(logoDisplaySize);
+              // 4in = 96 res
+              // object.set('id', item.getAttribute('id'));
+              // group.push(object);
+          });
+          // / load template - preview display
+          fabric.loadSVGFromURL(svgBase64, function (objects, options) { // $canvasPrev.fadeOut();
+              let loadedObjects = new fabric.Group(group);
+  
+              let templateWidth = options.viewBoxWidth;
+              let templateHeight = options.viewBoxHeight;
+              let isLandspace = (templateWidth > templateHeight);
+              if (isLandspace) {
+                  templateWidth = options.viewBoxHeight;
+                  templateHeight = options.viewBoxWidth;
+              }
+  
+  
+              canvasPrev.setDimensions({width: templateWidth, height: templateHeight});
+              canvasPrev.setBackgroundImage(loadedObjects, canvasPrev.renderAll.bind(canvasPrev));
+              // loadedObjects.scaleToWidth(templateWidth);
+              // loadedObjects.scaleToHeight((templateHeight/72)*96);
+  
+              canvasPrev.renderAll();
+  
+              loadedObjects.center().setCoords();
+              //loadgrid()
+          }, function (item, object) {
+              object.set('id', item.getAttribute('id'));
+              // object.set('width', (object.width/72)*96);
+              // object.set('height', (object.height/72)*96);
+              group.push(object);
+          });
         })
     }
 
 
-    // function loadSVGTemplate(id)
-    // {
-    //     var group = [];
-    //     $.get(`/api/admin/svg-templates/${id}`, function (data) {
-    //         const svgBase64 = data.base64;
-    //         if(!svgBase64)
-    //         {
-    //             alert("Error loading Template");
-    //             return;}
-
-    //         //canvas.setDimensions({width: letterPageSize.width, height: letterPageSize.height});
-    //         //canvasPrev.setDimensions({width: letterPageSize.width, height: letterPageSize.height});
-    //         canvas.clear();
-    //         fabric.loadSVGFromURL(svgBase64,function(objects,options) {
-    //             var loadedObjects = new fabric.Group(group);
-    //             var templateWidth = options.viewBoxWidth;
-    //             var templateHeight = options.viewBoxHeight;
-    //             canvas.setDimensions({width: templateWidth, height: templateHeight});
-    //             //canvas.orignalBackgroundImage = loadedObjects;
-    //             canvas.setBackgroundImage(loadedObjects,canvas.renderAll.bind(canvas));
-    //             canvas.renderAll();
-    //             loadedObjects.center().setCoords();
-
-
-    //            $("#upload-template-splash").remove();
-    //            $(".tab-content .tab-pane").each((i,e)=>
-    //            { $(e).removeClass("active"); })
-    //           $("#edit-template").addClass("active");
-    //         },function(item, object) {
-    //                 object.set('id',item.getAttribute('id'));
-    //                 group.push(object);
-    //         });
-
-    //         loadTemplateInfo(data);
-    //     })
-
-    // }
+    
 
 
     function loadSVGTemplateForCustomDesign(id) {

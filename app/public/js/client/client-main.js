@@ -753,7 +753,21 @@ function menuPanelDisplay(itemToDisplay) {
 
 function initUIEvents() {
 
+    $("#menu-save-design").on("click",function(e){
+        if(confirm("Your changes will be lost, do you want to continue?"))
+        {  }
+        else
+        { e.preventDefault();
+        e.stopPropagation(); return false; }
+        
+    })
 
+
+    $("#btnStartOver").on("click",function(e){
+    e.preventDefault();
+    if(confirm("Your changes will be lost, do you want to continue?"))
+    { window.location.reload(); }
+    })
     $btnTemplate.on("click", function () {
         if (state.isPreviewCanvas) {
             backFromPreview();

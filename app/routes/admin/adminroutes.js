@@ -384,7 +384,7 @@ if(items != null && items.length > 0)
 }
 
 });
-res.render(PATH_WORKSPACE,{
+res.render('pages/admin/pre-designed',{
     user:req.user,
     template:template,
     templateMeta:meta,
@@ -497,7 +497,6 @@ router.delete('/api/admin/user/:id', isAdmin, async (req,res)=>{
     return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."});
   }  
   try{
-    //await appusers.findOneAndDelete({ _id:id }); 
     await appusers.findOneAndUpdate({ _id:id}, {deleted:true}); 
     return res.status(200).send({"status":400,"message":`Deleted successfully, Id:${id}`});
   }catch(e)
@@ -507,26 +506,21 @@ router.delete('/api/admin/user/:id', isAdmin, async (req,res)=>{
 
 router.put('/api/admin/user-active/:id?', isAdmin, async (req,res)=>{
   var id = req.params["id"]; 
-  const {active} = req.body; 
-  
+  const {active} = req.body;   
   if(!id){
     return res.status(400).send({"status":400,"message":"Can't Update. Id is missing."});
   } 
   await appusers.findOneAndUpdate({ _id:id}, {active:active}); 
   return res.status(200).send({"status":400,"message":`Updated successfully, Id:${id}`});
-
 })
 router.put('/api/admin/user/:id?', isAdmin, async (req,res)=>{
   var id = req.params["id"]; 
   const {project_limit, active, is_admin,  watermark} = req.body; 
-  
   if(!id){
     return res.status(400).send({"status":400,"message":"Can't Update. Id is missing."});
   } 
-  await appusers.findOneAndUpdate({_id:id}, {active:active,project_limit:project_limit,is_admin:is_admin,watermark:watermark}); 
-  
+  await appusers.findOneAndUpdate({_id:id}, {active:active,project_limit:project_limit,is_admin:is_admin,watermark:watermark});   
   return res.status(200).send({"status":400,"message":`Updated successfully, Id:${id}`});
-
 })
 
 module.exports = router;
