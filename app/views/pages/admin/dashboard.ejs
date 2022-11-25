@@ -11,14 +11,15 @@
         <%= locals.page.title %>
       </div>
 
-      <div class="card">
+      <div class="card" style="max-height: 500px;
+      overflow-y: scroll;">
         <div class="card-header bg-transparent pd-20">
           <h6 class="card-title tx-uppercase tx-12 mg-b-0">User History</h6>
         </div><!-- card-header -->
         <div class="table-responsive">
           <table class="table table-white mg-b-0 tx-12">
             <tbody>
-                <%for(var i=0;i<users.length;i++){%>
+                <%for(var i=0;i<users?.length;i++){%>
               <tr>
                 <td class="pd-l-20 tx-center">
                   <i class="ion-ios-person-outline tx-30"></i>
@@ -28,7 +29,13 @@
                   <span class="tx-11 d-block"><%=users[i].email %></span>
                 </td>
                 <td>
+                  
+                  <span  class="tx-18 mg-r-5   <%=(users[i].is_admin == true)?'fa fa-user-secret':'fa fa-user' %>"></span>
                     <p class="tx-inverse tx-medium d-block"><%=(users[i].is_admin == true)?"Admin":"User" %></p>
+                  </td>
+                  <td>
+                    <span  class="tx-18 mg-r-5 fa fa-download"></span>
+                    <p class="tx-inverse tx-medium d-block"><%=users[i].download_count %></p>
                   </td>
                 <td class="tx-12">
                   <span  class="square-8 <%=(users[i].active)?'bg-success':'bg-danger' %> mg-r-5 rounded-circle"></span> <%=(users[i].active)?"Active":"Disabled" %>
