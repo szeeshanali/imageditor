@@ -650,6 +650,15 @@ function loadSVGTemplate(id) {
             /// show grid lines 
             var labels   = $(".hRule .tickLabel");
             var vlabels   = $(".vRule .tickLabel");
+            $("#btnDisplayGrid").prop("checked",true);
+            $("#btnDisplayRuler").prop("checked",true);
+            // if(!$("#btnDisplayGrid").prop("checked")){
+            //     $("#btnDisplayGrid").click();
+            // }
+            // if(!$("#btnDisplayRuler").prop("checked")){
+            //     $("#btnDisplayRuler").click();
+            // }
+
           
             // hlines 
                 for(var i=0;i<(labels.length);i++)
@@ -888,6 +897,7 @@ function initUIEvents() {
     // })
 
     $("#btnDisplayGrid").on("click", function (e) {
+      
        if(e.target.checked)
        {
         $(".grid-lines").show();
