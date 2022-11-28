@@ -846,6 +846,8 @@ function initUIEvents() {
 
 
     $btnSave.unbind().on("click", function (e) {
+        if(!confirm("Your changes will be lost, do you want to continue?"))
+        {  return; }
         e.preventDefault();
         saveDesign();
     })
@@ -863,18 +865,25 @@ function initUIEvents() {
     });
     $("#btnMyProjects").on("click", function (e) {
         e.preventDefault();
+        if(!confirm("Your changes will be lost, do you want to continue?"))
+        {return;}
         canvas.clear();
         canvasPrev.clear();
         $layers.html();
         getUserProjects();
+        $("#myProjectLink").click();
     })
 
     $("#btnLibrary").on("click", function (e) {
         e.preventDefault();
+        if(!confirm("Your changes will be lost, do you want to continue?"))
+        {return;}
         canvas.clear();
         canvasPrev.clear();
         $layers.html();
         getSharedProjects();
+        $("#libraryLink").click();
+        
     })
 
 
