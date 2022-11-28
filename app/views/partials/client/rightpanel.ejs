@@ -110,7 +110,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card img-ctrl hidden">
+            <div class="card ">
                 <div class="card-header" role="tab" id="headingFour">
                     <h6 class="mg-b-0 tx-14">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="true" aria-controls="headingFour" class="tx-gray-800 transition">
@@ -121,7 +121,7 @@
                 </div>
                 <!-- card-header -->
 
-                <div id="collapseFour" class="collapse img-ctrl hidden" role="tabpanel" aria-labelledby="headingFour">
+                <div id="collapseFour" class="collapse " role="tabpanel" aria-labelledby="headingFour">
                     <div class="card pd-20 mg-t-1 ">
                         <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Size</h6>
                         <div
@@ -139,18 +139,19 @@
                                     <i class="ion-loop " id="rotate"></i>
                                 </p>
                             </div>
-                            <div class="pd-x-10 bd-r">
+                            <div class="pd-x-10 img-ctrl bd-r">
                                 <label class="tx-12">FlipX</label>
                                 <p class="tx-center tx-22">
                                     <i class="ion-arrow-swap" id="flipW"></i>
                                 </p>
                             </div>
-                            <div class="pd-l-10">
+                            <div class="pd-l-10 img-ctrl">
                                 <label class="tx-12">FlipY</label>
                                 <p class="tx-center tx-22" style="transform:rotate(90deg)">
                                     <i class="ion-arrow-swap" id="flipH"></i>
                                 </p>
                             </div>
+                         
                         </div>
                     </div>
                 </div>
@@ -403,23 +404,70 @@
                         <!-- card-header -->
     
                         <div id="collapse12" class="collapse txt-ctrl hidden" role="tabpanel" aria-labelledby="collapse12">
-                            <div class="card pd-15">
+                            <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="card pd-15">
 
-                                <div >
-                                    <div class="pd-y-15">
-                                
-                                
-                                    <div>
-                                        <label class="ckbox ">
-                                            <input type="checkbox" id="inputCurvedText">
-                                                <span class="tx-14 tx-bold">Circular Text
-                                                </span>
-                                            </label>
+                                            <div >
+                                                <div class="pd-y-15">
+                                            
+                                            
+                                                <div>
+                                                    <label class="ckbox ">
+                                                        <input type="checkbox" id="inputCurvedText">
+                                                            <span class="tx-14 tx-bold">Circular Text
+                                                            </span>
+                                                        </label>
+                                                    </div>
+                                                    <div >
+                                                        <input type="range"  value="250" min="100" max="2500" step="0.1" class="slider" id="curveTextCtrl"  >
+                                                    </div>
+                                                    </div>
+                                                </div>                            
+                                         </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="card pd-15">
+                                            <div >
+                                                <div class="pd-y-15">
+                                            
+                                            
+                                                <div>
+                                                    <label class="ckbox ">
+                                                        <input type="checkbox" id="inputFlipText">
+                                                            <span class="tx-14 tx-bold">Flip
+                                                            </span>
+                                                        </label>
+                                                    </div>
+                                                   
+                                                    </div>
+                                                </div>   
+
+                                    
                                         </div>
-                                        <div >
-                                            <input type="range"  value="250" min="100" max="2500" step="0.1" class="slider" id="curveTextCtrl"  ></div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="card pd-15">
+                                            <div >
+                                                <div class="pd-y-15">
+                                            
+                                            
+                                                <div>
+                                                    <label class="ckbox ">
+                                                        <input type="checkbox" id="inputFlipText">
+                                                            <span class="tx-14 tx-bold">Rotate
+                                                            </span>
+                                                        </label>
+                                                    </div>
+                                                   
+                                                    </div>
+                                                </div>   
+
+                                    
                                         </div>
-                                    </div>                            </div>
+                                    </div>
+                            </div>
+                           
                         </div>
                             </div>
                             
