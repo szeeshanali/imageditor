@@ -4,6 +4,8 @@ const fs                    = require('fs');
 
 const categories            = require("../../models/categories.js");
 const uploads               = require("../../models/uploads.js");
+const contents               = require("../../models/contents.js");
+
 const commonService         = require("../../services/common");
 const appusers              = require("../../models/appuser");
 
@@ -117,7 +119,34 @@ router.get("/app/admin/faq", isAdmin, async (req,res)=>{
   res.render("pages/admin/faq",res.locals.page);
 })
 
+router.get("/api/admin/custom-text", async (req,res)=>{
+  var content = await commonService.contentService.getContentAsync('custom-text') || {};
+  res.status(200).send(content);
+})
 
+router.delete('/api/admin/custom-text/:id', isAdmin, async (req,res)=>{
+  var id = req.params["id"]; 
+  if(!id){
+    return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."});
+  }  
+  try{
+    await contents.findOneAndDelete({type:'custom-text', by_admin:true, code:id }); 
+    return res.status(200).send({"status":400,"message":`Deleted successfully, Id:${id}`});
+  }catch(e)
+  { return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."}); }
+ 
+}) 
+
+router.get("/app/admin/custom-text", isAdmin, async (req,res)=>{
+  var content = await commonService.contentService.getContentAsync('custom-text') || {};
+  res.locals.page = {
+    title  : "Custom Text",
+    id     : "__customtext",
+    user   : req.user,
+    content : content
+   } ;
+  res.render("pages/admin/custom-text",res.locals.page);
+})
 
 
 
@@ -324,23 +353,49 @@ router.post('/app/admin/save-design', isAdmin, async function(req, res) {
    })
     
 router.get('/app/admin/pre-designed', isAdmin, async (req,res)=>{
-  var categories = await commonService.categoryService.getCategoriesAsync(); 
-  //var templates  = await commonService.uploadService.getTemplatesAsync();
-  
-  var adminUploadItems = await commonService.uploadService.getUploads('all',true,true); 
-  var templates  =  adminUploadItems.filter(function(item){ return item.type == 'template'});
-  var cliparts =  adminUploadItems.filter(function(item){ return item.type == 'clipart'});
-
+    
   res.locals.page = {
-    id: "__pre-designed",
-    title: "Custom Design",
-    user: req.user,
-    categories:categories,
-    templates: templates,
-    cliparts:cliparts
+    id: "__workspace",
+    title: "Workspace",
+    user: req.user
   }
-  res.render("pages/admin/pre-designed",
-  res.locals.page);
+
+const id = req.params.id;
+const type = req.params.type;
+var template = {};
+var meta = {};
+
+var customDesigns = await uploads.find({type:'pre-designed', active:true, deleted:false, base64:{$ne:null},json:{$ne:null}},{code:1,base64:1}) || [];
+var adminUploadItems = await commonService.uploadService.getUploads('all',true,true);
+var templates = adminUploadItems.filter(function(item){ return item.type == 'template'});
+var cliparts = adminUploadItems.filter(function(item){ return item.type == 'clipart'});
+var customDesigns = adminUploadItems.filter(function(item){ return item.type == 'pre-designed'});
+var categories = await commonService.categoryService.getCategoriesAsync();
+
+var ca = [];
+categories.forEach(category => {
+var items = cliparts?.filter(i=>i.category == category.id);
+if(items != null && items.length > 0)
+{
+    ca.push({
+       categoryName:category.name,
+       items: items
+    })
+}
+
+});
+res.render('pages/admin/pre-designed',{
+    user:req.user,
+    template:template,
+    templateMeta:meta,
+    templates: templates,
+    customDesigns: customDesigns,
+    cliparts:ca,
+    categories:categories,
+    type:type,
+    code:id,
+    project_limit:req.user.project_limit,
+});
 
 })
 router.put('/api/admin/template/:id?', isAdmin, async (req,res)=>{
@@ -379,6 +434,7 @@ router.post('/app/admin/save-template', function(req, res) {
   var filename = file_name || "na"; 
   filename = `${filename}-${_id}${file_ext}`;       
   var _id = mongoose.Types.ObjectId();
+  
   var uploadModel = {
     title           :   title,
     name            :   name,
@@ -410,8 +466,6 @@ router.post('/app/admin/save-template', function(req, res) {
         if(!err)
         {res.status(200).send({message:`Success`, error: msg}); }
         res.status(400).send({message:`Unable to upload file.`, error: msg}); 
-
-        
        });
        
   });
@@ -443,7 +497,6 @@ router.delete('/api/admin/user/:id', isAdmin, async (req,res)=>{
     return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."});
   }  
   try{
-    //await appusers.findOneAndDelete({ _id:id }); 
     await appusers.findOneAndUpdate({ _id:id}, {deleted:true}); 
     return res.status(200).send({"status":400,"message":`Deleted successfully, Id:${id}`});
   }catch(e)
@@ -453,26 +506,21 @@ router.delete('/api/admin/user/:id', isAdmin, async (req,res)=>{
 
 router.put('/api/admin/user-active/:id?', isAdmin, async (req,res)=>{
   var id = req.params["id"]; 
-  const {active} = req.body; 
-  
+  const {active} = req.body;   
   if(!id){
     return res.status(400).send({"status":400,"message":"Can't Update. Id is missing."});
   } 
   await appusers.findOneAndUpdate({ _id:id}, {active:active}); 
   return res.status(200).send({"status":400,"message":`Updated successfully, Id:${id}`});
-
 })
 router.put('/api/admin/user/:id?', isAdmin, async (req,res)=>{
   var id = req.params["id"]; 
   const {project_limit, active, is_admin,  watermark} = req.body; 
-  
   if(!id){
     return res.status(400).send({"status":400,"message":"Can't Update. Id is missing."});
   } 
-  await appusers.findOneAndUpdate({_id:id}, {active:active,project_limit:project_limit,is_admin:is_admin,watermark:watermark}); 
-  
+  await appusers.findOneAndUpdate({_id:id}, {active:active,project_limit:project_limit,is_admin:is_admin,watermark:watermark});   
   return res.status(200).send({"status":400,"message":`Updated successfully, Id:${id}`});
-
 })
 
 module.exports = router;

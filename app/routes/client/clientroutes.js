@@ -255,7 +255,7 @@ router.get("/api/client/download",  isLoggedIn, async (req, res) => {
     var watermark = req.user.watermark;
     var enableDownload = true; 
     try {
-        appusers.findOneAndUpdate({_id: req.user._id},{ $inc: { download_count: 1, },upsert:true});
+        await appusers.findOneAndUpdate({_id: req.user._id},{ $inc: { download_count: 1, },upsert:true});
     } catch (error) {
 
         console.log(`Error while updating download count for user ${req.user._id}`);
@@ -276,22 +276,14 @@ router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
     const type = req.params.type;
     var template = {};
     var meta = {};
-    // if(templateId){
-    //     template =  await commonService.uploadService.getTemplateAsync(templateId);
-    //    if(template.meta)
-    //    {
-    //     meta = JSON.parse(template.meta);
-    //    }
-        
-    // }
-    //var templates = await commonService.uploadService.getTemplatesAsync();
+    
    var customDesigns = await uploads.find({type:'pre-designed', active:true, deleted:false, base64:{$ne:null},json:{$ne:null}},{code:1,base64:1}) || [];
    var adminUploadItems = await commonService.uploadService.getUploads('all',true,true);
    var templates = adminUploadItems.filter(function(item){ return item.type == 'template'});
    var cliparts = adminUploadItems.filter(function(item){ return item.type == 'clipart'});
    var customDesigns = adminUploadItems.filter(function(item){ return item.type == 'pre-designed'});
    var categories = await commonService.categoryService.getCategoriesAsync();
-  
+  var customText = await commonService.contentService.getContentAsync('custom-text');
    var ca = [];
    categories.forEach(category => {
     var items = cliparts?.filter(i=>i.category == category.id);
@@ -315,6 +307,7 @@ router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
         type:type,
         code:id,
         project_limit:req.user.project_limit,
+        customText:customText
     });
 });
 

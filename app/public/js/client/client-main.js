@@ -119,7 +119,7 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
     diameter: 250,
     kerning: 0,
     text: '',
-    flipped: false,
+    flipped: $("#inputFlipText").prop("checked") || false,
     fill: '#000',
     fontFamily: 'Times New Roman',
     fontSize: 24, // in px
@@ -211,7 +211,7 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
         
         var text = this.text,
             diameter = this.diameter,
-            flipped = this.flipped,
+            flipped = $("#inputFlipText").prop("checked") || this.flipped,
             kerning = this.kerning,
             fill = this.fill,
             inwardFacing = true,
@@ -753,7 +753,21 @@ function menuPanelDisplay(itemToDisplay) {
 
 function initUIEvents() {
 
+    $("#menu-save-design").on("click",function(e){
+        if(confirm("Your changes will be lost, do you want to continue?"))
+        {  }
+        else
+        { e.preventDefault();
+        e.stopPropagation(); return false; }
+        
+    })
 
+
+    $("#btnStartOver").on("click",function(e){
+    e.preventDefault();
+    if(confirm("Your changes will be lost, do you want to continue?"))
+    { window.location.reload(); }
+    })
     $btnTemplate.on("click", function () {
         if (state.isPreviewCanvas) {
             backFromPreview();
@@ -880,16 +894,7 @@ function initUIEvents() {
        }else{
         $(".grid-lines").hide();
        }
-        //var style = $("#workarea").attr("style");
-        //if (style) {
-           // $(this).removeClass('tx-gray-500');
-            //$("#workarea").removeAttr("style");
-           // $(this).html($(this).html().replace("On", "Off"));
-       // } else {
-            //$(this).html($(this).html().replace("Off", "On"));
-            //$(this).addClass('tx-gray-500');
-            //$("#workarea").attr("style", "background-image:url('')");
-       // }
+        
 
     })
     $("#btnDisplayRuler").on("click", function () {
@@ -947,9 +952,10 @@ function initUIEvents() {
 
     })
 
-    $("#font-list-container .fontfamily").on("click", function (e) {
-        var value = $(this).attr("data-value");
-        $("#selected-font").html($(this).html())
+    $("#font-list-container").on("change", function (e) {
+        var value = e.currentTarget.value || "Arial, sans-serif";
+      
+        //$("#selected-font").html($(this).html())
         canvas.getActiveObject().set("fontFamily", value);
         canvas.requestRenderAll();
     })
@@ -1747,6 +1753,35 @@ function downloadDesign() {
                 // clonedCanvas.setWidth(width);
                 // clonedCanvas.setHeight(height);
                 var imgData = clonedCanvas.toDataURL('image/jpeg', 1.0);
+
+                var img = document.createElement('img');
+
+                // When the event "onload" is triggered we can resize the image.
+                img.onload = function()
+                    {        
+                        // We create a canvas and get its context.
+                        var canvas = document.createElement('canvas');
+                        var ctx = canvas.getContext('2d');
+        
+                        // We set the dimensions at the wanted size.
+                        canvas.width = wantedWidth;
+                        canvas.height = wantedHeight;
+        
+                        // We resize the image with the canvas method drawImage();
+                        ctx.drawImage(this, 0, 0, wantedWidth, wantedHeight);
+        
+                        var dataURI = canvas.toDataURL();
+        
+                        /////////////////////////////////////////
+                        // Use and treat your Data URI here !! //
+                        /////////////////////////////////////////
+                    };
+        
+                // We put the Data URI in the image's src attribute
+                img.src = imgData;
+
+                
+
                 // var imgData = 'data:image/svg+xml;utf8,' + encodeURIComponent(clonedCanvas.toSVG())
                 pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
                 if (res.data.watermark) {
@@ -1965,6 +2000,16 @@ function initCanvasTextEvents() {
     let isDrawingText = false;
     var textLeft = 50;
     var textTop = 100;
+    $("#inputFlipText").on("click",function(){
+        $("#inputCurvedText").click();
+        $("#inputCurvedText").click();
+        var checked = $(this).prop('checked');
+        var obj = canvas.getActiveObject();
+        if (obj) {
+            setSelectedTextStyle("flipped", checked);           
+        }
+
+    })
     $("#inputStrokeText").on("click", function (e) {
         var checked = $(this).prop('checked');
         var obj = canvas.getActiveObject();
@@ -1974,8 +2019,8 @@ function initCanvasTextEvents() {
         var strokeWidth = $("#text-stroke-width").val();
         var strokeColor = $("#strokecolor").attr('data-current-color');
         if (obj && checked) {
-            
-
+            setSelectedTextStyle("stroke", strokeColor);
+            setSelectedTextStyle("strokeWidth", strokeWidth);
         }else
         {
             obj.set('strokeWidth',0)
@@ -1992,6 +2037,7 @@ function initCanvasTextEvents() {
         var orginalText =  obj.text;
         if (e.target.checked) {
           //  $("#curveTextCtrlPanel").removeClass("hidden");
+          var flipped = $("#inputFlipText").prop("checked");
             if (obj) {
                 var item = new fabric.CurvedText(obj.text, {
                     type: 'curved-text',
@@ -2001,7 +2047,7 @@ function initCanvasTextEvents() {
                     fontFamily: obj.fontFamily,
                     fontSize: obj.fontSize,
                     kerning: 0,
-                    flipped: false,
+                    flipped: flipped,
                     fill: obj.fill,
                     fontSize: obj.fontSize, // in px
                     fontWeight: obj.fontWeight,

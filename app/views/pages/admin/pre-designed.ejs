@@ -1,523 +1,293 @@
 <div class="row mg-r-0">
-  <div class="col-lg-3 pd-0">
+    <!--Workspace Left Panel-->
+<div class="col-lg-3 pd-l-0 pd-r-0">
   
-    <div class="card">
-      <%- include('../../partials/admin/pre-designed-panel'); %>
-    </div>
-  </div>
-  <div class="col-lg-6">
-    <div class="list-group widget-list-group bg-app-primary">
-      <div class="list-group-item d-flex">
-        <ul class="step d-flex flex-nowrap">
-          <li class="step-item ">
-            <a href="#!" class="" style="cursor:default">Select Template</a>
-          </li>
-          <li class="step-item active">
-            <a href="#!" class="" style="cursor:default" >Create Design</a>
-          </li>
-          <li class="step-item ">
-            <a href="#!" class="" style="cursor:default">Preview</a>
-          </li>     
-          <li class="step-item">
-            <a href="#!" class="" style="cursor:default" >Download</a>
-          </li>
-        </ul> 
-      </div>
-    </div>
-    <div class="card pd-x-20 pd-y-15">
-  
-      <div class="email-content-header">
-        <div>
-            <div class="d-flex">
-              <div class=" mg-r-10">
-                <label class="ckbox">
-                  <input type="checkbox" checked="" id="btnDisplayGrid" ><span>Grid</span>
-                </label>
+    <div class="card leftpanel" id="menu-panel" >
+        <div class="tab-content">
+            
+            <div  id="templatepanel" class="tab-pane active"   >
+              <div class="list-group widget-list-group bg-app-primary">
+                <div class="list-group-item d-flex">
+                  <div class="media d-block d-sm-flex">
+                  
+                    <div class="media-body mg-t-10 mg-sm-t-0">
+                      <h6 class="mg-b-5 tx-18 tx-white">Choose Template</h6>
+                    </div>
+                     
+                    
+                    <!-- media-body -->
+                  </div><!-- media -->
+                   <div class="btn-group mg-b-0 mg-l-auto lh-2">
+                      <button type="button" class="btn btn-primary wd-120 ht-60 tx-18" id="btn-step-design">
+                        NEXT <br> <span class="tx-12 text-warning tx-bold underline">Create Design</span></button>
+                    </div>
+                </div>
               </div>
-              <div class="mg-r-10">
-                <label class="ckbox">
-                  <input type="checkbox" checked="" id="btnDisplayRuler" ><span>Ruler</span>
-                </label>
+              <div>
+                
+                  <div class="row mg-0">
+                    <%for(var i=0; i<templates.length; i++){ %>
+                    <div class="col-lg-4 pd-0  bd template" id="<%=templates[i].code %>">
+                      <div class="card" style="min-height: 200px">
+                        <div class="card-body pd-10">
+                          <img class="card-img-top img-fluid pd-b-10 ht-140" src="<%=templates[i].base64 %>" alt="Image">
+                          <h5 class="tx-14 tx-bold tx-inverse  pd-x-10" style="height:28px;overflow:hidden" title="<%=templates[i].title %>"><%=templates[i].title %></h5>
+                          <p class="card-subtitle tx-12 tx-bold  pd-x-10">Part # <%=templates[i].ref_code || "N/A" %></p>
+                        </div>
+                      </div><!-- card -->
+                    </div>
+                    <%}%> 
+                  </div>
               </div>
-  
-            <!-- <button type="button" id="btnDisplayGrid" class="btn btn-secondary bd-0 pd-x-20">Grid</button>
-            <button type="button" id="btnDisplayRuler" class="btn btn-secondary bd-0 pd-x-20">Ruler</button> -->
-  
-          </div><!-- btn-group -->
-        </div>
-        <div class="mg-l-auto">
-          <div class="d-flex">
-            <button type="button" onclick="$('#menu-save-design').click()" class="btn btn-secondary bd-0 pd-x-20" id="ws-btn-save"><i class="fa fa-floppy-o mg-r-5"></i>Save</button>
-            <button type="button" onclick="$('#btnBack').click()" class="btn btn-secondary bd-0 pd-x-20 hidden" id="ws-btn-back">Back to Design</button>
-  
-            <a href="/app/workspace" class="btn btn-success bd-0 pd-x-20 mg-l-1"><i class="ion-refresh mg-r-5"></i>Start Over</a>
-          </div>
-  
-          <div class="btn-group mg-b-0">
-          </div><!-- btn-group -->
-  
-        </div>
-      </div>
-  
-      
-      
-      <div class="table-responsive">
-        
-        <div class="workarea" id="workarea">
-        
-  
-          <div  id="canvas-holder">
-              <div class="content tx-center">
-                  <canvas id="client-main-canvas"   ></canvas>
-                  <canvas id="client-main-canvas-logo" style="max-width: 612px; max-height:792px"  ></canvas>                    
-              </div>
-          </div>
-      </div>
-      </div>
-    </div>
-     
-      
-  </div>
-    <div class="col-lg-3 pd-0" id="workspace-right-panel">
-        <div id="accordion" class="accordion" role="tablist" aria-multiselectable="true">
-            <div class="card">
-                <div class="card-header" role="tab" id="headingOne">
-                    <h6 class="mg-b-0 tx-14">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="tx-gray-800 transition">
-                            <b>Template Details</b>
-                            <div class="arrow down pull-right"></div>
-                        </a>
-                    </h6>
-                </div>
-                <!-- card-header -->
-        
-                <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne">
-                    <!-- <div class="card-block" id="template-info-panel">
-                                                <div class="d-flex mg-b-10 tx-center bd-r">
-                                                    <div class="wd-100">
-                                                        <div>
-                                                            <img id="imgSelectedTemplate" style="width:80%; "></div>
-                                                        </div>
-                                                        <div class="bd-r pd-r-10 ">
-                                                            <label class="tx-12 ">Page Size</label>
-                                                            <p class="tx-lato tx-inverse tx-bold page-size">-</p>
-                                                        </div>
-                                                        <div class="bd-r pd-x-10">
-                                                            <label class="tx-12 ">Logo Size</label>
-                                                            <p class="tx-lato tx-inverse tx-bold logo-size">-</p>
-                                                        </div>
-                                                        <div class="pd-l-10">
-                                                            <label class="tx-12 ">Total Logos</label>
-                                                            <p class="tx-lato tx-inverse tx-bold total-logos">-</p>
-                                                        </div>
-                                                    </div>
-                                
-                                                </div> -->
-                    <div class="mail-item d-flex pd-10 bd-b bd-gray-200" id="template-info-panel">
-                        <div>
-                            <img id="imgSelectedTemplate" class="wd-80 " alt=""></div>
-                            <div class="mg-l-10">
-                                <h6 class="tx-14 tx-bold">
-                                    <a href="#" class="tx-inverse template-name"></a>
-                                </h6>
-                                <p class="tx-13 mg-b-10">
-                                    <span class="page-size tx-bold"></span>
-                                    sheet of
-                                    <span class="total-logos tx-bold"></span>
-                                    logos, each logo size is
-                                    <span class="logo-size tx-bold"></span>
-                                </p>
-                                <p class="tx-13 mg-b-10">Code: #
-                                    <span class="ref_code tx-bold"></span>
-                                </p>
-                            </div>
-                        </div>
-        
-                    </div>
-                </div>
-            <div class="card ">
-                <div class="card-header" role="tab" id="col-layers">
-                    <h6 class="mg-b-0 tx-14">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse-layers" aria-expanded="true" aria-controls="collapse-layers" class="tx-gray-800 transition">
-                            <b>Layers</b>
-                            <div class="arrow pull-right"></div>
-                        </a>
-                    </h6>
-                </div>
-                <!-- card-header -->
-        
-                <div id="collapse-layers" class="collapse" role="tabpanel" aria-labelledby="col-layers" style="max-height: 200px;overflow-y:auto">
-                    <div class="card pd-10 bg-b-1 ">
-                        <%- include('../../partials/client/layers'); %>
-                    </div>
-                </div>
-            </div>
-            <div class="card img-ctrl hidden">
-                <div class="card-header" role="tab" id="headingThree">
-                    <h6 class="mg-b-0 tx-14">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree" class="tx-gray-800 transition">
-                            <b>Color & Brightness</b>
-                            <div class="arrow pull-right"></div>
-                        </a>
-                    </h6>
-                </div>
-                <!-- card-header -->
-        
-                <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="collapseThree">
-                    <div class="card pd-20 bg-b-1 img-ctrl hidden">
-                        <div class="tx-12">
-                            <div>
-                                <b>Brightness
-                                    <span id="brightnessVal"></span>
-                                </b>
-                            </div>
-                            <input type="range" min="-1" max="1" value="0.0" class="slider " step="0.003921" style="width:100%;height:2px" id="brightness-value">
-                                <div>
-                                    <b>Contrast
-                                        <span id="contrastVal"></span>
-                                    </b>
-                                </div>
-                                <input type="range" min="-1" max="1" value="0.0" class="slider" step="0.003921" style="width:100%;height:2px" id="contrast-value">
-                                  
-                                <div>
-                                    <label class="ckbox ">
-                                        <input type="checkbox" id="btnGrayscale">
-                                            <span class="tx-14 tx-bold">Grayscale</span>
-                                        </label>
-                                    </div>
-        
-        
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card img-ctrl hidden">
-                        <div class="card-header" role="tab" id="headingFour">
-                            <h6 class="mg-b-0 tx-14">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="true" aria-controls="headingFour" class="tx-gray-800 transition">
-                                    <b>Size & Transform</b>
-                                    <div class="arrow pull-right"></div>
-                                </a>
-                            </h6>
-                        </div>
-                        <!-- card-header -->
-        
-                        <div id="collapseFour" class="collapse img-ctrl hidden" role="tabpanel" aria-labelledby="headingFour">
-                            <div class="card pd-20 mg-t-1 ">
-                                <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Size</h6>
-                                <div
-                                    class="d-flex mg-b-10">
-                                    <!-- <div class="bd-r pd-r-10">
-                                                                                                    <label class="tx-12 ">Crop</label>
-                                                                                                    <p class="tx-center tx-22">
-                                                                                                        <i class="ion-crop" id="crop"></i>
-                                                                                                    </p>
-                                                                
-                                                                                                </div> -->
-                                    <div class="bd-r pd-x-10">
-                                        <label class="tx-12 ">Rotate</label>
-                                        <p class="tx-center tx-22">
-                                            <i class="ion-loop " id="rotate"></i>
-                                        </p>
-                                    </div>
-                                    <div class="pd-x-10 bd-r">
-                                        <label class="tx-12">FlipX</label>
-                                        <p class="tx-center tx-22">
-                                            <i class="ion-arrow-swap" id="flipW"></i>
-                                        </p>
-                                    </div>
-                                    <div class="pd-l-10">
-                                        <label class="tx-12">FlipY</label>
-                                        <p class="tx-center tx-22" style="transform:rotate(90deg)">
-                                            <i class="ion-arrow-swap" id="flipH"></i>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card txt-ctrl hidden">
-                        <div class="card-header" role="tab" id="headingFive">
-                            <h6 class="mg-b-0 tx-14">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="true" aria-controls="headingFive" class="tx-gray-800 transition">
-                                    <b>Font Styles</b>
-                                    <div class="arrow pull-right"></div>
-                                </a>
-                            </h6>
-                        </div>
-                        <!-- card-header -->
-        
-                        <div id="collapseFive" class="collapse txt-ctrl hidden" role="tabpanel" aria-labelledby="headingFive">
-                            <div class="card">
-        
-                                <ul class="list-group widget-list-group" id="font-list-container">
-                                    <li class="list-group-item rounded-top-0">
-                                        <div class="tx-inverse  fontfamily" data-value="Arial, sans-serif" style="font-family: Arial, sans-serif;">Arial (sans-serif)</div>
-                                    </li>
-                                    <li class="list-group-item rounded-top-0">
-                                        <div class="tx-inverse  fontfamily" data-value="Luckiest Guy" style="font-family: Luckiest Guy;">Luckiest Guy</div>
-                                    </li>
-                                    <li class="list-group-item rounded-top-0">
-                                        <div class="tx-inverse  fontfamily" data-value="Bungee Shade" style="font-family:Bungee Shade">Bungee Shade</div>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <div class="tx-inverse fontfamily" data-value="BlackHanSans" style=" font-family: BlackHanSans">BlackHanSans</div>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <div class="tx-inverse fontfamily" data-value="Creepster" style="font-family: Creepster">Creepster</div>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <div class="tx-inverse  fontfamily" data-value="LondrinaSolid" style=" font-family: LondrinaSolid">LondrinaShadow</div>
-                                    </li>
-                                    <li class="list-group-item rounded-bottom-0">
-                                        <div class="tx-inverse  fontfamily" data-value="Brush Script MT, cursive" style="font-family: Brush Script MT, cursive">Brush Script MT (cursive)</div>
-                                    </li>
-                                    <li class="list-group-item rounded-bottom-0">
-                                        <div class="tx-inverse  fontfamily" data-value="RockSalt" style="font-family: RockSalt">RockSalt</div>
-                                    </li>
-                                    <li class="list-group-item rounded-bottom-0">
-                                        <div class="tx-inverse  fontfamily" data-value="Shrikhand" style="font-family: Shrikhand">Shrikhand</div>
-                                    </li>
-                                    <li class="list-group-item rounded-bottom-0">
-                                        <div class="tx-inverse  fontfamily" data-value="PermanentMarker" style="font-family: PermanentMarker">PermanentMarker</div>
-                                    </li>
-                                </ul>
-        
-        
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card txt-ctrl hidden">
-                        <div class="card-header" role="tab" id="heading8">
-                            <h6 class="mg-b-0 tx-14">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse8" aria-expanded="true" aria-controls="heading8" class="tx-gray-800 transition">
-                                    <b>Font Format & Alignments</b>
-                                    <div class="arrow pull-right"></div>
-                                </a>
-                            </h6>
-                        </div>
-                        <!-- card-header -->
-        
-                        <div id="collapse8" class="collapse txt-ctrl hidden" role="tabpanel" aria-labelledby="heading8">
-                            <div class="card mg-t-1 pd-x-20 txt-ctrl hidden" id="font-panel">
-                                <div class=" pd-y-10 font-style">
-                                    <i class="fa fa-bold text-decoration" data-value="bold" id="bold" title="bold"></i>
-                                    <i class="fa fa-italic text-decoration" data-value="italic" id="italic" title="italic"></i>
-                                    <i class="fa fa-underline text-decoration" data-value="underline" id="underline" title="underline"></i>
-                                    <i class="fa fa-align-left text-decoration " data-value="left" aria-hidden="true"></i>
-                                    <i class="fa fa-align-justify text-decoration" data-value="center" aria-hidden="true"></i>
-                                    <i class="fa fa-align-right text-decoration " data-value="right" aria-hidden="true"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card txt-ctrl hidden">
-                        <div class="card-header" role="tab" id="heading9">
-                            <h6 class="mg-b-0 tx-14">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse9" aria-expanded="true" aria-controls="heading9" class="tx-gray-800 transition">
-                                    <b>Stroke</b>
-                                    <div class="arrow pull-right"></div>
-                                </a>
-                            </h6>
-                        </div>
-                        <!-- card-header -->
-        
-                        <div id="collapse9" class="collapse txt-ctrl hidden" role="tabpanel" aria-labelledby="heading9">
-                            <div class="row mg-0 txt-ctrl hidden" id="font-panel">
-                                <div class="col-lg-12 pd-10">
-                                <div >
-                                    <label class="ckbox ">
-                                        <input type="checkbox" id="inputStrokeText">
-                                            <span class="tx-14 tx-bold">Enable Stroke
-                                            </span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 pd-10">
-                                    <label>Stroke Color</label>
-                                    <div>
-                                    <button id="strokecolor" data-jscolor="{preset:'dark', closeButton:'true',closeText:'Close', width:250, paletteCols:15, value:'#000', onChange:'onChangeFontColor(this,\'stroke-color\')'}" ></button>
-                                </div>
-                                </div>
-        
-                                <div class="col-lg-6 pd-10">
-                                    <label>Stroke Size</label>
-        
-                                    <select id="text-stroke-width" class="form-control select2 select2-hidden-accessible" data-placeholder="Choose one" tabindex="-1" aria-hidden="true">
-                                        <option value="0">None</option>
-                                        <option value="1" selected="selected" >1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4" >4</option>
-                                        <option value="5">5</option>                              
-                                    </select>
-                                    <!-- <input type="range" min="1" max="120" value="" step="1" class="slider" id="btnTextSize-range"> -->
-        
-        
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card txt-ctrl hidden">
-                            <div class="card-header" role="tab" id="headingSix">
-                                <h6 class="mg-b-0 tx-14">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="true" aria-controls="headingSix" class="tx-gray-800 transition">
-                                        <b>Font Size and Colors</b>
-                                        <div class="arrow pull-right"></div>
-                                    </a>
-                                </h6>
-                            </div>
-                            <!-- card-header -->
-        
-                            <div id="collapseSix" class="collapse txt-ctrl hidden" role="tabpanel" aria-labelledby="headingSix">
-                                <div class=" mg-0 row">
-                                    <div class="col-lg-4 pd-10">
-                                        <Label>Font Color</Label>
-                                        <!-- <button class="swatchy-button swatchy-trigger">
-                                            <span class="swatchy-button-top">Select a Color</span>
-                                          </button> -->
-                                          <!-- <input type="text" class="swatchy-button swatchy-output swatchy-display swatchy-trigger" data-id="text-color" > -->
-                                          <button id="fontColorBox" data-jscolor="{preset:'dark', closeButton:'true',closeText:'Close', width:250, paletteCols:15, value:'#000', onChange:'onChangeFontColor(this,\'font-color\')'}" ></button>
-            
-                                    </div>
-            
-            
-                                    <div class="col-lg-4 pd-10">
-                                        <label>Text Size</label>
-                                        <select id="btnTextSize" class="form-control select2 select2-hidden-accessible" data-placeholder="Choose one" tabindex="-1" aria-hidden="true">
-                                            <option value="10">10</option>
-                                            <option value="12">12</option>
-                                            <option value="14" >14</option>
-                                            <option value="16">16</option>
-                                            <option value="18" >18</option>
-                                            <option value="20">20</option>
-                                            <option value="22">22</option>
-                                            <option value="24">24</option>
-                                            <option value="26">26</option>
-                                            <option value="28">28</option>
-                                            <option value="30">30</option>
-                                            <option value="32">32</option>
-                                            <option value="34" >34</option>
-                                            <option value="36" selected >36</option>
-                                            <option value="38">38</option>
-                                            <option value="40">40</option>
-                                            <option value="45">45</option>
-                                            <option value="50">50</option>
-                                            <option value="55">55</option>
-                                            <option value="60">60</option>
-                                            <option value="65">65</option>
-                                            <option value="70">70</option>
-                                            <option value="75">75</option>
-                                            <option value="80">80</option>
-                                            <option value="85">85</option>
-                                            <option value="90">90</option>
-                                            <option value="100">100</option>
-        
-                                        </select>
-                                        <!-- <input type="range" min="1" max="120" value="" step="1" class="slider" id="btnTextSize-range"> -->
-        
-                                    </div>
-        
-                                    <div class="col-lg-4 pd-10">
-                                        <label>Letter Space</label>
-                                        <select id="text-letter-spacing" class="form-control select2 select2-hidden-accessible" data-placeholder="Choose one" tabindex="-1" aria-hidden="true">
-                                            <option value="10" selected>10</option>
-                                            <option value="12">12</option>
-                                            <option value="24" >24</option>
-                                            <option value="28">28</option>
-                                            <option value="32">32</option>
-                                            <option value="36">36</option>
-                                            <option value="40">40</option>
-                                            <option value="45">45</option>
-                                            <option value="50">50</option>
-                                            <option value="60">60</option>
-                                            <option value="70">70</option>
-                                            <option value="80">80</option>
-                                            <option value="90">90</option>
-                                            <option value="100">100</option>
-                                        </select>
-                                        <!-- <input type="range" min="1" max="120" value="" step="1" class="slider" id="text-letter-spacing-range">-->
-                                    </div>
-        
-                                </div>
-                            </div>
-        
-                        </div>
-        
-        
-                        <div class="card txt-ctrl hidden">
-                            <div class="card-header" role="tab" id="heading11">
-                                <h6 class="mg-b-0 tx-14">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse11" aria-expanded="true" aria-controls="heading11" class="tx-gray-800 transition">
-                                        <b>Line Height</b>
-                                        <div class="arrow pull-right"></div>
-                                    </a>
-                                </h6>
-                            </div>
-                            <!-- card-header -->
-        
-                            <div id="collapse11" class="collapse txt-ctrl hidden" role="tabpanel" aria-labelledby="collapse11">
-                                <div class="card pd-15">
-                                    <input type="range" value="1" min="0.1" max="10" step="0.1" class="slider" id="text-line-height"></div>
-                                </div>
-                            </div>
-        
-                            <div class="card txt-ctrl hidden">
-                                <div class="card-header" role="tab" id="heading12">
-                                    <h6 class="mg-b-0 tx-14">
-                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse12" aria-expanded="true" aria-controls="heading12" class="tx-gray-800 transition">
-                                            <b>Circular Text</b>
-                                            <div class="arrow pull-right"></div>
-                                        </a>
-                                    </h6>
-                                </div>
-                                <!-- card-header -->
-            
-                                <div id="collapse12" class="collapse txt-ctrl hidden" role="tabpanel" aria-labelledby="collapse12">
-                                    <div class="card pd-15">
-        
-                                        <div >
-                                            <div class="pd-y-15">
-                                        
-                                        
-                                            <div>
-                                                <label class="ckbox ">
-                                                    <input type="checkbox" id="inputCurvedText">
-                                                        <span class="tx-14 tx-bold">Circular Text
-                                                        </span>
-                                                    </label>
-                                                </div>
-                                                <div >
-                                                    <input type="range"  value="250" min="100" max="2500" step="0.1" class="slider" id="curveTextCtrl"  ></div>
-                                                </div>
-                                            </div>                            </div>
-                                </div>
-                                    </div>
-                                    
-        
-                                </div>
-                                <div class="card" id="kpweblink-panel">
-                                    <div class="list-group-item pd-y-20">
-                                        <div class="media">
-                                            <div class="d-flex mg-r-10 wd-50">
-                                                <i class="ion-link tx-primary tx-40"></i>
-                                            </div>
-                                            <!-- d-flex -->
-                                            <div class="media-body">
-                                                <h6 class="tx-inverse tx-14">Kake Prints Web link</h6>
-                                                <p class="mg-b-0">
-                                                    <a href="#" id="kp-link">Here's a link to order more.</a>
-                                                </p>
-                                            </div>
-                                            <!-- media-body -->
-                                        </div>
-                                        <!-- media -->
-                                    </div>
-                                </div>
+            </div>            
+            <div id="uploadpanel" class="tab-pane"  >
+         
+                <!-- <div class="pd-x-10 pd-y-10  bd-b">
+                  <b class="tx-primary">Create Design</b>
+                  <a href="#" class="pull-right next-step" id="btn-step-preview" title="Preview Design (Step 2)" >Next</a>
 
-  </div>
+                  <a href="#" class=" next-step gray hidden" id="btnBack"  >Back</a></span>
+                  <a href="#" class="next-step gray mg-l-5 hidden" id="btnFinalized"  >Finalized</a></span>
+
+                </div> -->
+
+                <div class="list-group widget-list-group bg-app-primary">
+                  <div class="list-group-item d-flex" id="create-design-heading">
+                    <div class="media d-block d-sm-flex">
+                      <!-- <div class="d-block d-sm-flex mg-sm-r-20">
+                        <i class="ion-images tx-24 tx-white"></i>
+                      </div> -->
+                      <div class="media-body mg-t-10 mg-sm-t-0 ">
+                        <h6 class="mg-b-5 tx-18 tx-white ">Create Design</h6>
+                      </div><!-- media-body -->
+                    </div><!-- media -->
+                    <div class="btn-group mg-b-0 mg-l-auto">
+                      <button type="button" class="btn btn-secondary disabled" onclick="$btnTemplate.click()" ><i class="icon ion-ios-arrow-back tx-20"></i></button>
+                      <button type="button" class="btn btn-primary wd-120 ht-60 tx-18" id="btn-step-preview">
+                        NEXT <br> <span class="tx-12 text-warning tx-bold underline">Preview Design</span>
+                      </button>
+                    </div>
+                    <!-- <a href="#"  class="btn btn-primary pd-lg-x-20 mg-l-auto " id="btn-step-preview" >Preview</a> -->
+                  </div>
+                  <div class="list-group-item d-flex hidden" id="preview-design-heading">
+                    <div class="media d-block d-sm-flex">
+                      <!-- <div class="d-block d-sm-flex mg-sm-r-20">
+                        <i class="ion-images tx-24 tx-white"></i>
+                      </div> -->
+                      <div class="media-body mg-t-10 mg-sm-t-0">
+                        <h6 class="mg-b-5 tx-18 tx-white">Preview Design</h6>
+                      </div><!-- media-body -->
+                    </div><!-- media -->
+                    <div class="btn-group mg-b-0 mg-l-auto">
+
+                    <button type="button" class="btn btn-secondary disabled"  id="btnBack" ><i class="icon ion-ios-arrow-back tx-20"></i></button>
+
+                    <button type="button" class="btn btn-primary wd-120 ht-60 tx-18" id="btn-step-download">
+                      NEXT <br> <span class="tx-12 text-warning tx-bold underline">Download PDF</span>
+                    </button>i
+                    </div>
+                  </div>
+                </div>
+                
+                <%- include('../../partials/admin/imgupload'); %>
+            </div>
+           
+                                 
+            <div id="textmenu" class="tab-pane" >
+                <div class="pd-x-10 tx-12 pd-y-10 bd-b"><b class="tx-primary tx-14">Add Text</b> </div>
+    
+            </div>
+            <div id="savedesign" class="tab-pane">
+              <div class="list-group widget-list-group bg-app-primary">
+                <div class="list-group-item d-flex">
+                  <div class="media d-block d-sm-flex">
+                    <div class="d-block d-sm-flex mg-sm-r-20">
+                      <i class="ion-android-done-all tx-24 tx-white"></i>
+                    </div><!-- d-flex -->
+                    <div class="media-body mg-t-10 mg-sm-t-0">
+                      <h6 class="mg-b-5 tx-14"><a href="" class="tx-white">Save Project</a></h6>
+                      <p class="mg-b-0 tx-12 tx-white-5">You can save upto <b>(<%=project_limit%>)</b> projects.</p>
+                    </div><!-- media-body -->
+                  </div><!-- media -->
+                </div>
+              </div>
+
+              <div class="card pd-20 ">
+               
+                <div class="form-layout">
+                  <div class="row ">
+                    <div class="col-lg-12">
+                      <div class="form-group">
+                        <label class="form-control-label">Project title: <span class="tx-danger">*</span></label>
+                        <input class="form-control" minlength="3"  maxlength="50" pattern=".{3,30}" title="Minimum 3 and maximum 30 characters." required type="text" id="input-project-title" name="firstname"  placeholder="Enter project title">
+                      </div>
+                    </div>
+                    <div class="col-lg-12">
+                      <div class="form-group">
+                        <label class="form-control-label">Description: </label>
+                        <textarea rows="2" class="form-control" pattern=".{3,100}" title="Minimum 3 and maximum 100 characters." minlength="3"  maxlength="50"  id="input-project-desc" required placeholder="Enter your address" spellcheck="false"></textarea>
+                      </div>
+                    </div>
+
+                  </div><!-- row -->
+      
+                  <div >
+                    <button class="btn  btn-primary mg-r-5" id="btnSave">Save Project</button>
+                    <button class="btn btn-secondary" id="btnCancelSaveDesign">Cancel</button>
+                  </div><!-- form-layout-footer -->
+                </div><!-- form-layout -->
+              </div>
+              
+              
+
+
+            </div>
+            <div id="myprojects" class="tab-pane">
+              <div class="list-group widget-list-group bg-app-primary">
+                <div class="list-group-item d-flex">
+                  <div class="media d-block d-sm-flex">
+                    <div class="d-block d-sm-flex mg-sm-r-20">
+                      <i class="ion-flag tx-24 tx-white"></i>
+                    </div><!-- d-flex -->
+                    <div class="media-body mg-t-10 mg-sm-t-0">
+                      <h6 class="mg-b-5 tx-14"><a href="#" class="tx-white">My Projects</a></h6>
+                      <p class="mg-b-0 tx-12 tx-white-5">You can save upto <b>(<%=project_limit%>)</b> projects.</p>
+                    </div><!-- media-body -->
+                  </div><!-- media -->
+                </div>
+              </div>
+              <div class="card">
+                <div class="card ">
+                 <div class="row pd-20" id="myProjectContainer"></div>
+              </div>  
+              </div>
+            </div>
+            <div id="library" class="tab-pane">
+              <div class="list-group widget-list-group bg-app-primary">
+                <div class="list-group-item d-flex">
+                  <div class="media d-block d-sm-flex">
+                    <div class="d-block d-sm-flex mg-sm-r-20">
+                      <i class="ion-flag tx-24 tx-white"></i>
+                    </div><!-- d-flex -->
+                    <div class="media-body mg-t-10 mg-sm-t-0">
+                      <h6 class="mg-b-5 tx-14"><a href="#" class="tx-white">Pre-Designed</a></h6>
+                      <p class="mg-b-0 tx-12 tx-white-5">Use readymade design in your template.</p>
+
+                    </div><!-- media-body -->
+                  </div><!-- media -->
+                </div>
+              </div>
+              <div class="card">
+                <div class="card ">
+                 <div class="row row-sm mg-t-15 mg-sm-t-20" id="preDesignedContainer"></div>
+              </div>  
+              </div>
+            </div>
+            <!-- #settingMenu -->
+        </div>
     </div>
-<script>
-    $(".tab-content .tab-pane").each((i,e)=>
-    { $(e).removeClass("active"); })    
-   $("#pre-designed-panel").addClass("active");
+</div>
+<!-- Workspace canvas-->
+<div class="col-lg-6">
+  <div class="list-group widget-list-group bg-app-primary">
+    <div class="list-group-item d-flex">
+      <ul class="step d-flex flex-nowrap">
+        <li class="step-item ">
+          <a href="#!" class="" style="cursor:default">Select Template</a>
+        </li>
+        <li class="step-item active">
+          <a href="#!" class="" style="cursor:default" >Create Design</a>
+        </li>
+        <li class="step-item ">
+          <a href="#!" class="" style="cursor:default">Preview</a>
+        </li>     
+        <li class="step-item">
+          <a href="#!" class="" style="cursor:default" >Download</a>
+        </li>
+      </ul> 
+    </div>
+  </div>
+  <div class="card pd-x-20 pd-y-15">
+
+    <div class="email-content-header">
+      <div>
+          <div class="d-flex">
+            <div class=" mg-r-10">
+              <label class="ckbox">
+                <input type="checkbox" checked="" id="btnDisplayGrid" ><span>Grid</span>
+              </label>
+            </div>
+            <div class="mg-r-10">
+              <label class="ckbox">
+                <input type="checkbox" checked="" id="btnDisplayRuler" ><span>Ruler</span>
+              </label>
+            </div>
+
+          <!-- <button type="button" id="btnDisplayGrid" class="btn btn-secondary bd-0 pd-x-20">Grid</button>
+          <button type="button" id="btnDisplayRuler" class="btn btn-secondary bd-0 pd-x-20">Ruler</button> -->
+
+        </div><!-- btn-group -->
+      </div>
+      <div class="mg-l-auto">
+        <div class="d-flex">
+          <button type="button" onclick="$('#menu-save-design').click()" class="btn btn-secondary bd-0 pd-x-20" id="ws-btn-save"><i class="fa fa-floppy-o mg-r-5"></i>Save</button>
+          <button type="button" onclick="$('#btnBack').click()" class="btn btn-secondary bd-0 pd-x-20 hidden" id="ws-btn-back">Back to Design</button>
+
+          <a href="/app/workspace" class="btn btn-success bd-0 pd-x-20 mg-l-1"><i class="ion-refresh mg-r-5"></i>Start Over</a>
+        </div>
+
+        <div class="btn-group mg-b-0">
+        </div><!-- btn-group -->
+
+      </div>
+    </div>
+
+    
+    
+    <div class="table-responsive">
+      
+      <div class="workarea" id="workarea">
+      
+
+        <div  id="canvas-holder">
+            <div class="content tx-center">
+                <canvas id="admin-main-canvas"   ></canvas>
+                <canvas id="admin-main-canvas-logo" style="max-width: 612px; max-height:792px"  ></canvas>                    
+            </div>
+        </div>
+    </div>
+    </div>
+  </div>
+   
+    
+</div>
+<!--Workspace Right panel-->
+<div class="col-lg-3 pd-x-0" id="workspace-right-panel" >
+    <%- include('../../partials/admin/rightpanel'); %>
+</div>
+</div>
+
+<script> 
+  // $(".tab-content .tab-pane").each((i,e)=>
+  //    { $(e).removeClass("active"); })
+  //   //$("#templatepanel").addClass("active");
+    //$("#menu-templates").addClass("bg-warning")
+  window.onload = function()
+ { 
+  debugger;
+      var code = '<%=code || "default" %>' ;
+      var type = '<%=type%>';
+      if(type === 'project'){
+          loadProject(code);
+      }else{
+        
+          //loadSVGTemplate(code);
+
+      }
+      
+
+ }
+
 </script>
+   
+   
