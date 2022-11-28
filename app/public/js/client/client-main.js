@@ -2009,7 +2009,8 @@ function initCanvasTextEvents() {
         var strokeWidth = $("#text-stroke-width").val();
         var strokeColor = $("#strokecolor").attr('data-current-color');
         if (obj && checked) {
-            
+            setSelectedTextStyle("stroke", strokeColor);
+            setSelectedTextStyle("strokeWidth", strokeWidth);
 
         }else
         {
