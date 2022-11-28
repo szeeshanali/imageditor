@@ -110,7 +110,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card ">
+            <div class="card img-ctrl hidden">
                 <div class="card-header" role="tab" id="headingFour">
                     <h6 class="mg-b-0 tx-14">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="true" aria-controls="headingFour" class="tx-gray-800 transition">
@@ -265,14 +265,16 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="col-lg-6 pd-10">
+                        <div class="col-lg-6 ">
                             <label>Stroke Color</label>
-                            <div>
-                            <button id="strokecolor" data-jscolor="{preset:'dark', closeButton:'true',closeText:'Close', width:250, paletteCols:15, value:'#000', onChange:'onChangeFontColor(this,\'stroke-color\')'}" ></button>
-                        </div>
-                        </div>
+                                <input id="strokecolor" style="height: 40px; width:100px; font-size:10px" data-jscolor="{preset:'dark', closeButton:'true',closeText:'Close', width:250, paletteCols:15, value:'#000', onChange:'onChangeFontColor(this,\'stroke-color\')'}">                         
+                            
 
-                        <div class="col-lg-6 pd-10">
+                            <!-- <button id="strokecolor" data-jscolor="{preset:'dark', closeButton:'true',closeText:'Close', width:250, paletteCols:15, value:'#000', onChange:'onChangeFontColor(this,\'stroke-color\')'}" ></button> -->
+                        </div>
+                      
+
+                        <div class="col-lg-6 ">
                             <label>Stroke Size</label>
 
                             <select id="text-stroke-width" class="form-control select2 select2-hidden-accessible" data-placeholder="Choose one" tabindex="-1" aria-hidden="true">
@@ -307,9 +309,8 @@
                                     <span class="swatchy-button-top">Select a Color</span>
                                   </button> -->
                                   <!-- <input type="text" class="swatchy-button swatchy-output swatchy-display swatchy-trigger" data-id="text-color" > -->
-                                  <button id="fontColorBox" data-jscolor="{preset:'dark', closeButton:'true',closeText:'Close', width:250, paletteCols:15, value:'#000', onChange:'onChangeFontColor(this,\'font-color\')'}" ></button>
-    
-                            </div>
+                                  <!-- <button id="fontColorBox" data-jscolor="{preset:'dark', closeButton:'true',closeText:'Close', width:250, paletteCols:15, value:'#000', onChange:'onChangeFontColor(this,\'font-color\')'}" ></button> -->
+                                  <input id="fontColorBox" style="height: 40px; width:100px; font-size:10px" data-jscolor="{preset:'dark', closeButton:'true',closeText:'Close', width:250, paletteCols:15, value:'#000', onChange:'onChangeFontColor(this,\'font-color\')'}">                            </div>
     
     
                             <div class="col-lg-4 pd-10">
@@ -404,67 +405,41 @@
                         <!-- card-header -->
     
                         <div id="collapse12" class="collapse txt-ctrl hidden" role="tabpanel" aria-labelledby="collapse12">
-                            <div class="row">
-                                    <div class="col-lg-4">
-                                        <div class="card pd-15">
-
-                                            <div >
-                                                <div class="pd-y-15">
+                            <div class="row mg-0">
+                                    <div class="col-lg-6 ">
+                                        <div class="pd-y-15">
                                             
                                             
-                                                <div>
-                                                    <label class="ckbox ">
-                                                        <input type="checkbox" id="inputCurvedText">
-                                                            <span class="tx-14 tx-bold">Circular Text
-                                                            </span>
-                                                        </label>
-                                                    </div>
-                                                    <div >
-                                                        <input type="range"  value="250" min="100" max="2500" step="0.1" class="slider" id="curveTextCtrl"  >
-                                                    </div>
-                                                    </div>
-                                                </div>                            
-                                         </div>
+                                            <div>
+                                                <label class="ckbox ">
+                                                    <input type="checkbox" id="inputCurvedText">
+                                                        <span class="tx-14 tx-bold">Circular Text
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                                <div >
+                                                    <input type="range"  value="250" min="100" max="2500" step="0.1" class="slider" id="curveTextCtrl"  >
+                                                </div>
+                                                </div>
                                     </div>
-                                    <div class="col-lg-4">
-                                        <div class="card pd-15">
-                                            <div >
-                                                <div class="pd-y-15">
-                                            
-                                            
-                                                <div>
-                                                    <label class="ckbox ">
-                                                        <input type="checkbox" id="inputFlipText">
-                                                            <span class="tx-14 tx-bold">Flip
-                                                            </span>
-                                                        </label>
-                                                    </div>
-                                                   
-                                                    </div>
-                                                </div>   
-
-                                    
-                                        </div>
+                                    <div class="col-lg-3 pd-0">
+                                        <div class="pd-y-15" >
+                                            <label class="ckbox ">
+                                                <input type="checkbox" id="inputFlipText">
+                                                    <span class="tx-14 tx-bold">Flip
+                                                    </span>
+                                                </label>
+                                            </div>
                                     </div>
-                                    <div class="col-lg-4">
-                                        <div class="card pd-15">
-                                            <div >
-                                                <div class="pd-y-15">
-                                            
-                                            
-                                                <div>
-                                                    <label class="ckbox ">
-                                                        <input type="checkbox" id="inputFlipText">
-                                                            <span class="tx-14 tx-bold">Rotate
-                                                            </span>
-                                                        </label>
-                                                    </div>
-                                                   
-                                                    </div>
-                                                </div>   
-
-                                    
-                                        </div>
+                                    <div class="col-lg-3 pd-0">
+                                        <div class="pd-y-15" >
+                                            <div class="bd-r pd-x-10 tx-center">
+                                                <label class="tx-14 tx-bold ">Rotate</label>
+                                                <p class="tx-center tx-24">
+                                                    <i class="ion-loop " id="rotateText"></i>
+                                                </p>
+                                            </div>
+                                            </div>
                                     </div>
                             </div>
                            

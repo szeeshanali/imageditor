@@ -898,9 +898,9 @@ font-weight: bold;
 border-right: solid 0px #ccc;  }
 
 
-/* #client-main-canvas{
-  background-color: blue;
-} */
+ #client-main-canvas, #client-main-canvas-logo{
+   background-color: #6b68c9;
+} 
 
 .canvas-container{
   margin:auto;
