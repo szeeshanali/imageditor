@@ -119,7 +119,7 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
     diameter: 250,
     kerning: 0,
     text: '',
-    flipped: false,
+    flipped: $("#inputFlipText").prop("checked") || false,
     fill: '#000',
     fontFamily: 'Times New Roman',
     fontSize: 24, // in px
@@ -211,7 +211,7 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
         
         var text = this.text,
             diameter = this.diameter,
-            flipped = this.flipped,
+            flipped = $("#inputFlipText").prop("checked") || this.flipped,
             kerning = this.kerning,
             fill = this.fill,
             inwardFacing = true,
@@ -952,9 +952,10 @@ function initUIEvents() {
 
     })
 
-    $("#font-list-container .fontfamily").on("click", function (e) {
-        var value = $(this).attr("data-value");
-        $("#selected-font").html($(this).html())
+    $("#font-list-container").on("change", function (e) {
+        var value = e.currentTarget.value || "Arial, sans-serif";
+      
+        //$("#selected-font").html($(this).html())
         canvas.getActiveObject().set("fontFamily", value);
         canvas.requestRenderAll();
     })
@@ -1999,6 +2000,16 @@ function initCanvasTextEvents() {
     let isDrawingText = false;
     var textLeft = 50;
     var textTop = 100;
+    $("#inputFlipText").on("click",function(){
+        $("#inputCurvedText").click();
+        $("#inputCurvedText").click();
+        var checked = $(this).prop('checked');
+        var obj = canvas.getActiveObject();
+        if (obj) {
+            setSelectedTextStyle("flipped", checked);           
+        }
+
+    })
     $("#inputStrokeText").on("click", function (e) {
         var checked = $(this).prop('checked');
         var obj = canvas.getActiveObject();
@@ -2008,8 +2019,8 @@ function initCanvasTextEvents() {
         var strokeWidth = $("#text-stroke-width").val();
         var strokeColor = $("#strokecolor").attr('data-current-color');
         if (obj && checked) {
-            
-
+            setSelectedTextStyle("stroke", strokeColor);
+            setSelectedTextStyle("strokeWidth", strokeWidth);
         }else
         {
             obj.set('strokeWidth',0)
@@ -2026,6 +2037,7 @@ function initCanvasTextEvents() {
         var orginalText =  obj.text;
         if (e.target.checked) {
           //  $("#curveTextCtrlPanel").removeClass("hidden");
+          var flipped = $("#inputFlipText").prop("checked");
             if (obj) {
                 var item = new fabric.CurvedText(obj.text, {
                     type: 'curved-text',
@@ -2035,7 +2047,7 @@ function initCanvasTextEvents() {
                     fontFamily: obj.fontFamily,
                     fontSize: obj.fontSize,
                     kerning: 0,
-                    flipped: false,
+                    flipped: flipped,
                     fill: obj.fill,
                     fontSize: obj.fontSize, // in px
                     fontWeight: obj.fontWeight,
