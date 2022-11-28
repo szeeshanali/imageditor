@@ -89,7 +89,7 @@ $btnUploadpanel = $("#uploadpanel");
 
 
 /**maintool */
-$btnRotate = $("#rotate");
+$btnRotate = $("#rotate, #rotateText");
 $btnFlipX = $("#btnFlipX");
 $btnFlipY = $("#btnFlipY");
 $btnGrayScale = $("#btnGrayScale");
@@ -659,8 +659,11 @@ function loadSVGTemplate(id) {
             //     $("#btnDisplayRuler").click();
             // }
 
-          
+             //var hasGridLines = $(".canvas-container").find('.grid-lines').length > 0; 
+             //if(hasGridLines)
+             //{return;}
             // hlines 
+            $(".grid-lines").remove();
                 for(var i=0;i<(labels.length);i++)
                 {
                   
@@ -675,10 +678,10 @@ function loadSVGTemplate(id) {
                   
                   var pos = $(vlabels[i]).position();
                  console.log(pos);
+                
                   $(".canvas-container").first().append(`<div class='grid-lines h-gridlines' style='width:500px;top:${pos.top-22}px; left:0px; border-bottom: solid 1px #666;'></div>`);
                   $(".canvas-container").first().css({border:"solid 1px #666", width:"502px",height:"503px"})
                 }
-
         }, function (item, object) {
 
                    object.set({left: 8, top: 4});
@@ -1392,6 +1395,9 @@ function renderPreview() {
                 //$(".vRule, .hRule").hide();
                 $("#create-design-heading").addClass("hidden");
                 $("#preview-design-heading").removeClass("hidden");
+
+                //$("#btnDisplayGrid").hide();
+                ///$("#btnDisplayRuler").hide();
                 // canvasPrev.setZoom(.8);
 
             }
@@ -2020,12 +2026,29 @@ function initCanvasTextEvents() {
     var textLeft = 50;
     var textTop = 100;
     $("#inputFlipText").on("click",function(){
-        $("#inputCurvedText").click();
-        $("#inputCurvedText").click();
+        var isCurvedCheckboxChecked = $("#inputCurvedText").prop('checked');
+        if(!isCurvedCheckboxChecked)
+        {
+            $("#inputFlipText").prop('checked',false);
+            toast("Curve Text must be checked!");
+            return;
+        }
+      
         var checked = $(this).prop('checked');
         var obj = canvas.getActiveObject();
         if (obj) {
-            setSelectedTextStyle("flipped", checked);           
+
+            // converting curve text back to orignal text.
+            setTimeout(function(){
+                $("#inputCurvedText").click();
+            },0);
+            setSelectedTextStyle("flipped", checked);    
+            // converting curve text back to orignal text.
+            setTimeout(function(){
+                $("#inputCurvedText").click();
+            },0)
+            
+                  
         }
 
     })
@@ -2081,9 +2104,11 @@ function initCanvasTextEvents() {
                 canvas.remove(obj)
                 canvas.setActiveObject(item);
                 addLayer();
+               
             }
 
         } else {
+            //$("#inputFlipText").prop('checked',false);
             $("#curveTextCtrl").val(250);
             var obj = canvas.getActiveObject();
             
@@ -2092,7 +2117,8 @@ function initCanvasTextEvents() {
                 top: obj.top,
                 fontFamily: obj.fontFamily,
                 fill: obj.fill,
-                fontSize: obj.fontSize
+                fontSize: obj.fontSize,
+                flipped:flipped
             };
             
         
@@ -2101,8 +2127,10 @@ function initCanvasTextEvents() {
             canvas.add(item);            
             canvas.setActiveObject(item);
             canvas.renderAll();
-            
             addLayer();
+           
+          //  debugger;
+           // $("#inputFlipText").prop('checked',false);
            // $("#curveTextCtrlPanel").addClass("hidden");
         }
     })
