@@ -952,9 +952,10 @@ function initUIEvents() {
 
     })
 
-    $("#font-list-container .fontfamily").on("click", function (e) {
-        var value = $(this).attr("data-value");
-        $("#selected-font").html($(this).html())
+    $("#font-list-container").on("change", function (e) {
+        var value = e.currentTarget.value || "Arial, sans-serif";
+      
+        //$("#selected-font").html($(this).html())
         canvas.getActiveObject().set("fontFamily", value);
         canvas.requestRenderAll();
     })
