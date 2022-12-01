@@ -582,7 +582,9 @@ function loadDesign(id) {
 /***
  * Workspace canvas.
  */
+var selectedTemplateId = 'default';
 function loadSVGTemplate(id) {
+    selectedTemplateId = id;
     var group = [];
     state.isPreviewCanvas = false;
     $.get(`/api/svg-templates/${id}`, function (data) {
@@ -633,10 +635,13 @@ function loadSVGTemplate(id) {
 
             var reg = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
             $("#kp-link").attr("href", reg.test(data.link) ? data.link : "#");
+           
             if(!reg.test(data.link))
-          {
-            $("#kpweblink-panel").hide();
-          }
+            {
+            $("#kpweblink-panel").addClass("hidden");
+            }else{
+                $("#kpweblink-panel").removeClass("hidden");
+            }
 
             $("#use-template").unbind().click(function () {
                 window.location.href = `/app/workspace/${
@@ -766,11 +771,8 @@ function menuPanelDisplay(itemToDisplay) {
 function initUIEvents() {
 
     $("#menu-save-design").on("click",function(e){
-        if(confirm("Your changes will be lost, do you want to continue?"))
-        {  }
-        else
-        { e.preventDefault();
-        e.stopPropagation(); return false; }
+        e.preventDefault();
+        e.stopPropagation(); return false;
         
     })
 
@@ -778,7 +780,11 @@ function initUIEvents() {
     $("#btnStartOver").on("click",function(e){
     e.preventDefault();
     if(confirm("Your changes will be lost, do you want to continue?"))
-    { window.location.reload(); }
+    { 
+        //window.location.reload(); 
+        const templateId  = selectedTemplateId || 'default';
+        loadSVGTemplate(templateId);
+    }
     })
     $btnTemplate.on("click", function () {
         if (state.isPreviewCanvas) {
@@ -844,12 +850,15 @@ function initUIEvents() {
     })
 
     $("#btnCancelSaveDesign").on("click", function () {
+        $("#input-project-title").val("");
+        $("#input-project-desc").val("");
         $("#btnTemplate").click();
+       
     })
 
 
     $btnSave.unbind().on("click", function (e) {
-        if(!confirm("Your changes will be lost, do you want to continue?"))
+        if(!confirm("Do you want to save your changes?"))
         {  return; }
         e.preventDefault();
         saveDesign();
@@ -944,6 +953,7 @@ function initUIEvents() {
     $txtDecorationCtrl.on("click", function (e) {
         var value = $(this).attr("data-value");
         var o = canvas.getActiveObject();
+        debugger;
         if (o && o.type === 'i-text') {
 
             if (value === 'bold') {
@@ -960,9 +970,9 @@ function initUIEvents() {
                 })
 
             } else if (value === 'underline') {
-                var isTrue = o['textDecoration'] === 'underline';
+                var isTrue = !o['underline'];
                 o.set({
-                    "textDecoration": isTrue ? '' : 'underline'
+                   "underline":isTrue
                 })
 
             } else if (value === "left" || value === "right" || value === "center") {
@@ -1239,6 +1249,8 @@ function saveDesign() {
                 return;
             }
             toast("Design has been Saved.");
+            $("#input-project-title").val("");
+            $("#input-project-desc").val("");
         },
         error: function (res) {
             if (res.status === 401) {
@@ -1267,8 +1279,8 @@ function previewDesign() { /*
     state.isPreviewCanvas = true;
 
     $("#workarea").attr("style", "background-image:url('')");
-    $("#btnDisplayGrid").hide();
-    $(".ruler-line").hide();
+    //$("#btnDisplayGrid").hide();
+    //$(".ruler-line").hide();
 
 
     // 1.
@@ -1314,9 +1326,10 @@ function backFromPreview() { /**
      * . Set Wizard 
      */
     $("#workarea").removeAttr("style");
-    $("#btnDisplayGrid").show();
+    //$("#btnDisplayGrid").show();
     //$("#btnDisplayRuler").show();
-    $(".ruler-line").show();
+    //$(".ruler-line").show();
+    $("#ruler-ctrl").removeAttr("style");
 
 
     state.isPreviewCanvas = false;
@@ -1395,7 +1408,7 @@ function renderPreview() {
                 //$(".vRule, .hRule").hide();
                 $("#create-design-heading").addClass("hidden");
                 $("#preview-design-heading").removeClass("hidden");
-
+                $("#ruler-ctrl").attr("style", "display:none !important");;
                 //$("#btnDisplayGrid").hide();
                 ///$("#btnDisplayRuler").hide();
                 // canvasPrev.setZoom(.8);
@@ -2157,6 +2170,8 @@ function initCanvasTextEvents() {
         if (state.isPreviewCanvas) {
             canvasPrev.add(item);
         } else {
+            item.globalCompositeOperation = "source-atop";
+
             canvas.add(item);
         } canvas.setActiveObject(item);
         mainControls(true);

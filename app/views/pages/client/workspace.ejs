@@ -18,8 +18,8 @@
                     <!-- media-body -->
                   </div><!-- media -->
                    <div class="btn-group mg-b-0 mg-l-auto lh-2">
-                      <button type="button" class="btn btn-primary wd-120 ht-60 tx-18" id="btn-step-design">
-                        NEXT <br> <span class="tx-12 text-warning tx-bold underline">Create Design</span></button>
+                      <button type="button" class="btn btn-primary wd-120 ht-50 tx-18" id="btn-step-design">
+                        NEXT <div class="tx-12 text-warning tx-bold underline">Create Design</div></button>
                     </div>
                 </div>
               </div>
@@ -31,8 +31,8 @@
                       <div class="card" style="min-height: 200px">
                         <div class="card-body pd-10">
                           <img class="card-img-top img-fluid pd-b-10 ht-140" src="<%=templates[i].base64 %>" alt="Image">
-                          <h5 class="tx-14 tx-bold tx-inverse  pd-x-10" style="height:28px;overflow:hidden" title="<%=templates[i].title %>"><%=templates[i].title %></h5>
-                          <p class="card-subtitle tx-12 tx-bold  pd-x-10">Part # <%=templates[i].ref_code || "N/A" %></p>
+                          <h5 class="tx-14 tx-inverse pd-x-5" style="height:45px;overflow:hidden" title="<%=templates[i].title %>"><%=templates[i].title %></h5>
+                          <p class="card-subtitle tx-12  pd-x-5">Part # <%=templates[i].ref_code || "N/A" %></p>
                         </div>
                       </div><!-- card -->
                     </div>
@@ -63,13 +63,13 @@
                     </div><!-- media -->
                     <div class="btn-group mg-b-0 mg-l-auto">
                       <button type="button" class="btn btn-secondary disabled" onclick="$btnTemplate.click()" ><i class="icon ion-ios-arrow-back tx-20"></i></button>
-                      <button type="button" class="btn btn-primary wd-120 ht-60 tx-18" id="btn-step-preview">
-                        NEXT <br> <span class="tx-12 text-warning tx-bold underline">Preview Design</span>
+                      <button type="button" class="btn btn-primary wd-120 ht-50 tx-18" id="btn-step-preview">
+                        NEXT  <div class="tx-12 text-warning tx-bold underline">Preview Design</div>
                       </button>
                     </div>
                     <!-- <a href="#"  class="btn btn-primary pd-lg-x-20 mg-l-auto " id="btn-step-preview" >Preview</a> -->
                   </div>
-                  <div class="list-group-item d-flex hidden" id="preview-design-heading">
+                  <div class="list-group-item d-flex hidden" id="preview-design-heading" style="height:90px">
                     <div class="media d-block d-sm-flex">
                       <!-- <div class="d-block d-sm-flex mg-sm-r-20">
                         <i class="ion-images tx-24 tx-white"></i>
@@ -82,8 +82,8 @@
 
                     <button type="button" class="btn btn-secondary disabled"  id="btnBack" ><i class="icon ion-ios-arrow-back tx-20"></i></button>
 
-                    <button type="button" class="btn btn-primary wd-120 ht-60 tx-18" id="btn-step-download">
-                      NEXT <br> <span class="tx-12 text-warning tx-bold underline">Download PDF</span>
+                    <button type="button" class="btn btn-primary wd-120 ht-50 tx-18" id="btn-step-download">
+                      NEXT  <div class="tx-12 text-warning tx-bold underline">Download PDF</div>
                     </button>
                     </div>
                   </div>
@@ -108,7 +108,7 @@
                       <i class="ion-android-done-all tx-24 tx-white"></i>
                     </div><!-- d-flex -->
                     <div class="media-body mg-t-10 mg-sm-t-0">
-                      <h6 class="mg-b-5 tx-14"><a href="" class="tx-white">Save Project</a></h6>
+                      <h6 class="mg-b-5 tx-14">Save Project</h6>
                       <p class="mg-b-0 tx-12 tx-white-5">You can save upto <b>(<%=project_limit%>)</b> projects.</p>
                     </div><!-- media-body -->
                   </div><!-- media -->
@@ -153,7 +153,7 @@
                       <i class="ion-flag tx-24 tx-white"></i>
                     </div><!-- d-flex -->
                     <div class="media-body mg-t-10 mg-sm-t-0">
-                      <h6 class="mg-b-5 tx-14"><a href="#" class="tx-white">My Saved Projects</a></h6>
+                      <h6 class="mg-b-5 tx-14">My Saved Projects</h6>
                       <p class="mg-b-0 tx-12 tx-white-5">You can save upto <b>(<%=project_limit%>)</b> projects.</p>
                     </div><!-- media-body -->
                   </div><!-- media -->
@@ -173,8 +173,8 @@
                       <i class="ion-flag tx-24 tx-white"></i>
                     </div><!-- d-flex -->
                     <div class="media-body mg-t-10 mg-sm-t-0">
-                      <h6 class="mg-b-5 tx-14"><a href="#" class="tx-white">Pre-Designed</a></h6>
-                      <p class="mg-b-0 tx-12 tx-white-5">Use readymade design in your template.</p>
+                      <h6 class="mg-b-5 tx-14">Pre Designed</h6>
+                      <p class="mg-b-0 tx-12 tx-white-5">Use ready made design in your template.</p>
 
                     </div><!-- media-body -->
                   </div><!-- media -->
@@ -192,7 +192,7 @@
 </div>
 <!-- Workspace canvas-->
 <div class="col-lg-6">
-  <div class="list-group widget-list-group bg-app-primary">
+  <div class="list-group widget-list-group bg-app-primary" style="height:90px">
     <div class="list-group-item d-flex">
       <ul class="step d-flex flex-nowrap">
         <li class="step-item ">
@@ -214,7 +214,7 @@
 
     <div class="email-content-header">
       <div>
-          <div class="d-flex">
+          <div class="d-flex" id="ruler-ctrl">
             <div class=" mg-r-10">
               <label class="ckbox">
                 <input type="checkbox" checked="" id="btnDisplayGrid" ><span>Grid</span>

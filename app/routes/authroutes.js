@@ -58,8 +58,10 @@ router.get(ROUTE_USER_REGISTER,   (req, res) => {
   });
     
   
-  router.get('/app/terms',   (req, res) => {
-    commonService.contentService.getContentAsync('terms-conditions').then((d)=>{
+  router.get('/app/content',   (req, res) => {
+    var content = req.query.content;
+    console.log(content);
+    commonService.contentService.getContentAsync(content).then((d)=>{
       res.status(200).send(d.content);  
     }).catch(()=>{
       console.error("Error loading terms and conditions.")
