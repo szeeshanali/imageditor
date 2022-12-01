@@ -582,7 +582,9 @@ function loadDesign(id) {
 /***
  * Workspace canvas.
  */
+var selectedTemplateId = 'default';
 function loadSVGTemplate(id) {
+    selectedTemplateId = id;
     var group = [];
     state.isPreviewCanvas = false;
     $.get(`/api/svg-templates/${id}`, function (data) {
@@ -633,10 +635,13 @@ function loadSVGTemplate(id) {
 
             var reg = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
             $("#kp-link").attr("href", reg.test(data.link) ? data.link : "#");
+           
             if(!reg.test(data.link))
-          {
-            $("#kpweblink-panel").hide();
-          }
+            {
+            $("#kpweblink-panel").addClass("hidden");
+            }else{
+                $("#kpweblink-panel").removeClass("hidden");
+            }
 
             $("#use-template").unbind().click(function () {
                 window.location.href = `/app/workspace/${
@@ -778,7 +783,11 @@ function initUIEvents() {
     $("#btnStartOver").on("click",function(e){
     e.preventDefault();
     if(confirm("Your changes will be lost, do you want to continue?"))
-    { window.location.reload(); }
+    { 
+        //window.location.reload(); 
+        const templateId  = selectedTemplateId || 'default';
+        loadSVGTemplate(templateId);
+    }
     })
     $btnTemplate.on("click", function () {
         if (state.isPreviewCanvas) {
@@ -1267,8 +1276,8 @@ function previewDesign() { /*
     state.isPreviewCanvas = true;
 
     $("#workarea").attr("style", "background-image:url('')");
-    $("#btnDisplayGrid").hide();
-    $(".ruler-line").hide();
+    //$("#btnDisplayGrid").hide();
+    //$(".ruler-line").hide();
 
 
     // 1.
@@ -1314,9 +1323,10 @@ function backFromPreview() { /**
      * . Set Wizard 
      */
     $("#workarea").removeAttr("style");
-    $("#btnDisplayGrid").show();
+    //$("#btnDisplayGrid").show();
     //$("#btnDisplayRuler").show();
-    $(".ruler-line").show();
+    //$(".ruler-line").show();
+    $("#ruler-ctrl").removeAttr("style");
 
 
     state.isPreviewCanvas = false;
@@ -1395,7 +1405,7 @@ function renderPreview() {
                 //$(".vRule, .hRule").hide();
                 $("#create-design-heading").addClass("hidden");
                 $("#preview-design-heading").removeClass("hidden");
-
+                $("#ruler-ctrl").attr("style", "display:none !important");;
                 //$("#btnDisplayGrid").hide();
                 ///$("#btnDisplayRuler").hide();
                 // canvasPrev.setZoom(.8);
