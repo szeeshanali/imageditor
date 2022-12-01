@@ -14,7 +14,18 @@ const passport             = require('passport');
 const commonService        = require('../app/services/common');
 ///const monitoringService        = require('../app/services/monitor');
 
+// var mysql = require('mysql');
 
+// var con = mysql.createConnection({
+//   host: "52.54.1.108",
+//   user: "u8bvx965rzk53",
+//   password: "EJ67dAkZTuAhgYB"
+// });
+
+// con.connect(function(err) {
+//   if (err) throw err;
+//   console.log("Connected!");
+// });
 
 
 
