@@ -771,11 +771,8 @@ function menuPanelDisplay(itemToDisplay) {
 function initUIEvents() {
 
     $("#menu-save-design").on("click",function(e){
-        if(confirm("Your changes will be lost, do you want to continue?"))
-        {  }
-        else
-        { e.preventDefault();
-        e.stopPropagation(); return false; }
+        e.preventDefault();
+        e.stopPropagation(); return false;
         
     })
 
@@ -858,7 +855,7 @@ function initUIEvents() {
 
 
     $btnSave.unbind().on("click", function (e) {
-        if(!confirm("Your changes will be lost, do you want to continue?"))
+        if(!confirm("Do you want to save your changes?"))
         {  return; }
         e.preventDefault();
         saveDesign();
@@ -953,6 +950,7 @@ function initUIEvents() {
     $txtDecorationCtrl.on("click", function (e) {
         var value = $(this).attr("data-value");
         var o = canvas.getActiveObject();
+        debugger;
         if (o && o.type === 'i-text') {
 
             if (value === 'bold') {
@@ -969,9 +967,9 @@ function initUIEvents() {
                 })
 
             } else if (value === 'underline') {
-                var isTrue = o['textDecoration'] === 'underline';
+                var isTrue = !o['underline'];
                 o.set({
-                    "textDecoration": isTrue ? '' : 'underline'
+                   "underline":isTrue
                 })
 
             } else if (value === "left" || value === "right" || value === "center") {
@@ -2167,6 +2165,8 @@ function initCanvasTextEvents() {
         if (state.isPreviewCanvas) {
             canvasPrev.add(item);
         } else {
+            item.globalCompositeOperation = "source-atop";
+
             canvas.add(item);
         } canvas.setActiveObject(item);
         mainControls(true);
