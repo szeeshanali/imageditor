@@ -850,7 +850,10 @@ function initUIEvents() {
     })
 
     $("#btnCancelSaveDesign").on("click", function () {
+        $("#input-project-title").val("");
+        $("#input-project-desc").val("");
         $("#btnTemplate").click();
+       
     })
 
 
@@ -1246,6 +1249,8 @@ function saveDesign() {
                 return;
             }
             toast("Design has been Saved.");
+            $("#input-project-title").val("");
+            $("#input-project-desc").val("");
         },
         error: function (res) {
             if (res.status === 401) {
