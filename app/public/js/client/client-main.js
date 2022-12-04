@@ -480,13 +480,7 @@ function deleteProject(id, self) {
         success: function (res) {
             $loader.addClass("hidden");
 
-            // if (typeof(res) === "string") {
-            //     //debugger;  
-            //     //window.location.reload();
-            //     //return;
-            // }
-            
-            toast("Project deleted successfully!");
+            toast("Project has been successfully deleted.");
             $(self).parent().parent().fadeOut();
         },
         error: function (res) {
@@ -688,9 +682,10 @@ function loadSVGTemplate(id) {
                   $(".canvas-container").first().css({border:"solid 1px #666", width:"502px",height:"503px"})
                 }
         }, function (item, object) {
-
-                   object.set({left: 8, top: 4});
+            object.set({fill:"#fff"});
+            object.set({left: 8, top: 4});
             object.scaleToWidth(logoDisplaySize);
+            
             // 4in = 96 res
             // object.set('id', item.getAttribute('id'));
             // group.push(object);
@@ -788,6 +783,7 @@ function initUIEvents() {
     })
     $btnTemplate.on("click", function () {
         if (state.isPreviewCanvas) {
+           
             backFromPreview();
         }
     });
@@ -884,6 +880,8 @@ function initUIEvents() {
         $layers.html();
         getUserProjects();
         $("#myProjectLink").click();
+        
+        menuHighlighter("#btnMyProjects");
     })
 
     $("#btnLibrary").on("click", function (e) {
@@ -895,7 +893,7 @@ function initUIEvents() {
         $layers.html();
         getSharedProjects();
         $("#libraryLink").click();
-        
+        menuHighlighter("#btnLibrary");
     })
 
 
@@ -1253,12 +1251,8 @@ function saveDesign() {
             $("#input-project-desc").val("");
         },
         error: function (res) {
-            if (res.status === 401) {
-                toast(`${
-                    res.statusText
-                }:${
-                    res.responseJSON.message
-                }`);
+            if (res.status != 200) {
+                toast(`${ res.responseJSON.message}`);
             } else {}
         }
     })
@@ -1313,7 +1307,7 @@ function previewDesign() { /*
     $(".step-item:nth-child(3)").removeClass("active");
     $(".step-item:nth-child(4)").addClass("active");
 
-
+    menuHighlighter("#menu-preview");
 }
 function backFromPreview() { /**
      * . Hide Back and Finalized Button and show Preview button. 
@@ -1325,6 +1319,8 @@ function backFromPreview() { /**
      * . Set Main Canvas State. 
      * . Set Wizard 
      */
+
+menuHighlighter("#menu-upload");
     $("#workarea").removeAttr("style");
     //$("#btnDisplayGrid").show();
     //$("#btnDisplayRuler").show();
@@ -1741,7 +1737,7 @@ function downloadDesign() {
 
 
     $loader.removeClass("hidden");
-
+    menuHighlighter("#menu-download");
     $.ajax({
         type: "GET",
         url: `/api/client/download/`,
@@ -1980,7 +1976,7 @@ function toast(message) {
     var $toast = $("#snackbar").addClass("show");
     $toast.text(message);
     setTimeout(function () {
-        $toast.removeClass("show")
+        $toast.removeClass("show");
     }, 5000);
 }
 
