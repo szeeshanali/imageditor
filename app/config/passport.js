@@ -11,12 +11,20 @@ module.exports = function(passport) {
                 //match user
                  const agreeterms = req.body.agreeterms; 
                  const admin = req.body.admin; 
+                 console.log(`admin : ${JSON.stringify(req.body)}`);
+                 console.log(`req.params: ${JSON.stringify(req.params)}`);
+
+                
 
                  User.findOne({email : email, deleted:false}).exec()
                  .then((user)=>{
                   if(!user) {
                       return done(null, false, { message : 'Incorrect username or password'});
                   }
+
+                  if(!user.is_admin && req.params.mode === "admin")
+                  {   return done(null, false, { message : 'Unable to login.'}); }
+
 
                   if(user && !user.active) {
                     return done(null, false, { message : 'Account has been blocked by Admin.'});

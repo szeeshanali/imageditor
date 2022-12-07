@@ -14,20 +14,19 @@ const passport             = require('passport');
 const commonService        = require('../app/services/common');
 ///const monitoringService        = require('../app/services/monitor');
 
-var mysql = require('mysql');
+// var mysql = require('mysql');
 
-var con = mysql.createConnection({
-  host: "52.54.1.108",
-  user: "upwnnhb87domx",
-  password: "y2ujzgpcjwnp",
-  database: 'db4qgewmyrzq4v',
-  port:'3306'
-});
+// var con = mysql.createConnection({
+//   host: "104.154.144.42",
+//   user: "u8bvx965rzk53",
+//   password: "EJ67dAkZTuAhgYB",
+//   database: 'db4qgewmyrzq4v'
+// });
 
-con.connect(function(err) {
-  if (err) throw err;
-  console.log("Connected!");
-});
+// con.connect(function(err) {
+//   if (err) throw err;
+//   console.log("Connected!");
+// });
 
 
 

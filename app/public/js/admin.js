@@ -1457,6 +1457,10 @@
 
         var dataUrl = grp.toDataURL({format: 'png', quality: 0.8});
         var category = $("#admin-categories").val();
+        if(!category){
+            toast(`Please select a category.`);
+            return;
+        }
 
         $.ajax({
             type: "POST",
@@ -1507,8 +1511,13 @@
             title: $templateTitle.val(),
             pageSize: $selectPageSize.val()
         }
-        if (! meta.title || meta.title.length > 100) {
-            toast("Error: Please Enter Design Name");
+        if (!meta.title || meta.title.length == 0) {
+            toast("Please enter title");
+            return;
+        }
+        if(meta.title.length > 50)
+        {
+            toast("Please should not greater than 50 characters.");
             return;
         }
         var MIME_TYPE = "image/png";
@@ -1539,6 +1548,11 @@
 
         // )
         var category = $("#admin-categories").val();
+        if(!category){
+            toast(`Please select a category.`);
+            return;
+        }
+
         $loader.removeClass("hidden");
         $.ajax({
             type: "POST",
@@ -1566,16 +1580,15 @@
                 category: category
             },
             success: function (res) {
-
                 designFlags.submitted = true;
                 toast("Uploaded Successfully!");
                 setTimeout(function () {
                     onDesignReload();
                 }, 2000)
-            },
+            },  
             error: function (res) {
                 designFlags.submitted = false;
-                toast("Error while uploading.");
+                toast("Server Error.");
                 $loader.addClass("hidden");
             }
         })
@@ -1591,8 +1604,12 @@
         canvas.clear();
         onDesignLoaded({});
         for (let file of files) { // check type
-            if (! allowedTypes.includes(file.type)) 
-                continue
+            debugger;
+            if (! allowedTypes.includes(file.type)) {
+                toast(`Incorrect File Type`)
+                return;
+            }
+               
             
             let reader = new FileReader();
             // handle svg

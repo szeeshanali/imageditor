@@ -782,10 +782,9 @@ function initUIEvents() {
     }
     })
     $btnTemplate.on("click", function () {
-        if (state.isPreviewCanvas) {
-           
-            backFromPreview();
-        }
+        if (state.isPreviewCanvas) { backFromPreview(); }
+        $(".step-item:nth-child(3)").removeClass("active");
+        $(".step-item:nth-child(2)").addClass("active");
     });
     var layers = $("#layers");
 
@@ -870,6 +869,8 @@ function initUIEvents() {
     $("#btnBack").on("click", function (e) {
         e.preventDefault();
         backFromPreview();
+        $(".step-item:nth-child(4)").removeClass("active");
+        $(".step-item:nth-child(3)").addClass("active");
     });
     $("#btnMyProjects").on("click", function (e) {
         e.preventDefault();
@@ -1339,6 +1340,11 @@ menuHighlighter("#menu-upload");
 
     $("#ws-btn-save").removeClass("hidden");
     $("#ws-btn-back").addClass("hidden");
+
+
+    $(".step-item:nth-child(3)").removeClass("active");
+    $(".step-item:nth-child(2)").addClass("active");
+
     // 2.
     // $("#btnSave").unbind().click(function(){
     //     toast("Please go back and save your design.");
@@ -1833,6 +1839,8 @@ function downloadDesign() {
                 // pdf = addWaterMark(pdf);
                 pdf.save("download.pdf");
                 $loader.addClass("hidden");
+                $(".step-item:nth-child(3)").removeClass("active");
+                $(".step-item:nth-child(4)").addClass("active");
 
             });
 
