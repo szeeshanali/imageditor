@@ -343,6 +343,7 @@
             type: "DELETE",
             url: `/api/admin/template/${templateId}`,
             success: function (res) {
+                debugger;
                 toast("Deleted successfully!");
                 setTimeout(function () {
                     window.location.reload();
@@ -917,12 +918,14 @@
                     type: "DELETE",
                     url: `/api/admin/user/${userId}`,
                     success: function (res) {
+
                         toast("Deleted successfully!");
                         setTimeout(function () {
                             window.location.reload();
                         }, 1000)
                     },
                     error: function (res) {
+                        debugger;
                         toast("Error while deleting.");
                     }
                 })
@@ -1060,6 +1063,12 @@
                 toast("Template mandatory information is missing. ")
                 return;
             }
+
+            if (data.order_no > 1000) {
+                toast("Display Order should be less than 1000.")
+                return;
+            }
+
             $.ajax({
                 type: "PUT",
                 url: `/api/admin/template/${
@@ -1079,7 +1088,7 @@
 
         $btnSaveDesign.on("click", function () {
             if (! selectedDesign.base64) {
-                toast("Error: Please upload a Template");
+                toast("Please Browse Template.");
                 return;
             }
             onSaveTemplate();
@@ -1512,7 +1521,7 @@
             pageSize: $selectPageSize.val()
         }
         if (!meta.title || meta.title.length == 0) {
-            toast("Please enter title");
+            toast("Please Enter Title!");
             return;
         }
         if(meta.title.length > 50)
@@ -1547,11 +1556,11 @@
         // })
 
         // )
-        var category = $("#admin-categories").val();
-        if(!category){
-            toast(`Please select a category.`);
-            return;
-        }
+        // var category = $("#admin-categories").val();
+        // if(!category){
+        //     toast(`Please select a category.`);
+        //     return;
+        // }
 
         $loader.removeClass("hidden");
         $.ajax({
@@ -1576,8 +1585,7 @@
                 default: designFlags.default,
                 link: $inputDesignLink.val(),
                 logos: $inputLogoPerPage.val(),
-                ref_code: $kopykakePartNo.val(),
-                category: category
+                ref_code: $kopykakePartNo.val()
             },
             success: function (res) {
                 designFlags.submitted = true;

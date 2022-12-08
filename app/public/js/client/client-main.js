@@ -28,7 +28,7 @@ const layerHtml = `<div class="media d-block d-flex layer-item object-options" d
     </div>
    </div>`;
 
-const projectHtml = `<div class='col-lg-12 my-projects'><div class="list-group-item d-flex">
+const projectHtml = `<div class='my-projects'><div class="list-group-item d-flex">
 <div class="media d-block d-sm-flex">
   <div class="d-block d-sm-flex mg-sm-r-20">
     <img src="{base64}" class="rounded-circle wd-40" alt="Image">
@@ -41,7 +41,7 @@ const projectHtml = `<div class='col-lg-12 my-projects'><div class="list-group-i
 <a href="#" class="pd-lg-x-20 mg-l-auto ion-trash-a tx-30 text-secondary delete"  onclick="deleteProject('{code}',this)" ></a>
 </div></div>`;
 
-const designHtml = `<div class='col-lg-12 pre-designed'><div class="list-group-item d-flex">
+const designHtml = `<div class='pre-designed'><div class="list-group-item d-flex">
 <div class="media d-block d-sm-flex">
   <div class="d-block d-sm-flex mg-sm-r-20">
     <img src="{base64}" class="rounded-circle wd-40" alt="Image">
