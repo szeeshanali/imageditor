@@ -28,7 +28,7 @@ const layerHtml = `<div class="media d-block d-flex layer-item object-options" d
     </div>
    </div>`;
 
-const projectHtml = `<div class='col-lg-12 my-projects'><div class="list-group-item d-flex">
+const projectHtml = `<div class='my-projects'><div class="list-group-item d-flex">
 <div class="media d-block d-sm-flex">
   <div class="d-block d-sm-flex mg-sm-r-20">
     <img src="{base64}" class="rounded-circle wd-40" alt="Image">
@@ -41,7 +41,7 @@ const projectHtml = `<div class='col-lg-12 my-projects'><div class="list-group-i
 <a href="#" class="pd-lg-x-20 mg-l-auto ion-trash-a tx-30 text-secondary delete"  onclick="deleteProject('{code}',this)" ></a>
 </div></div>`;
 
-const designHtml = `<div class='col-lg-12 pre-designed'><div class="list-group-item d-flex">
+const designHtml = `<div class='pre-designed'><div class="list-group-item d-flex">
 <div class="media d-block d-sm-flex">
   <div class="d-block d-sm-flex mg-sm-r-20">
     <img src="{base64}" class="rounded-circle wd-40" alt="Image">
@@ -480,13 +480,7 @@ function deleteProject(id, self) {
         success: function (res) {
             $loader.addClass("hidden");
 
-            // if (typeof(res) === "string") {
-            //     //debugger;  
-            //     //window.location.reload();
-            //     //return;
-            // }
-            
-            toast("Project deleted successfully!");
+            toast("Project has been successfully deleted.");
             $(self).parent().parent().fadeOut();
         },
         error: function (res) {
@@ -688,9 +682,10 @@ function loadSVGTemplate(id) {
                   $(".canvas-container").first().css({border:"solid 1px #666", width:"502px",height:"503px"})
                 }
         }, function (item, object) {
-
-                   object.set({left: 8, top: 4});
+            object.set({fill:"#fff"});
+            object.set({left: 8, top: 4});
             object.scaleToWidth(logoDisplaySize);
+            
             // 4in = 96 res
             // object.set('id', item.getAttribute('id'));
             // group.push(object);
@@ -787,9 +782,9 @@ function initUIEvents() {
     }
     })
     $btnTemplate.on("click", function () {
-        if (state.isPreviewCanvas) {
-            backFromPreview();
-        }
+        if (state.isPreviewCanvas) { backFromPreview(); }
+        $(".step-item:nth-child(3)").removeClass("active");
+        $(".step-item:nth-child(2)").addClass("active");
     });
     var layers = $("#layers");
 
@@ -874,6 +869,8 @@ function initUIEvents() {
     $("#btnBack").on("click", function (e) {
         e.preventDefault();
         backFromPreview();
+        $(".step-item:nth-child(4)").removeClass("active");
+        $(".step-item:nth-child(3)").addClass("active");
     });
     $("#btnMyProjects").on("click", function (e) {
         e.preventDefault();
@@ -884,6 +881,8 @@ function initUIEvents() {
         $layers.html();
         getUserProjects();
         $("#myProjectLink").click();
+        
+        menuHighlighter("#btnMyProjects");
     })
 
     $("#btnLibrary").on("click", function (e) {
@@ -895,7 +894,7 @@ function initUIEvents() {
         $layers.html();
         getSharedProjects();
         $("#libraryLink").click();
-        
+        menuHighlighter("#btnLibrary");
     })
 
 
@@ -1253,12 +1252,8 @@ function saveDesign() {
             $("#input-project-desc").val("");
         },
         error: function (res) {
-            if (res.status === 401) {
-                toast(`${
-                    res.statusText
-                }:${
-                    res.responseJSON.message
-                }`);
+            if (res.status != 200) {
+                toast(`${ res.responseJSON.message}`);
             } else {}
         }
     })
@@ -1313,7 +1308,7 @@ function previewDesign() { /*
     $(".step-item:nth-child(3)").removeClass("active");
     $(".step-item:nth-child(4)").addClass("active");
 
-
+    menuHighlighter("#menu-preview");
 }
 function backFromPreview() { /**
      * . Hide Back and Finalized Button and show Preview button. 
@@ -1325,6 +1320,8 @@ function backFromPreview() { /**
      * . Set Main Canvas State. 
      * . Set Wizard 
      */
+
+menuHighlighter("#menu-upload");
     $("#workarea").removeAttr("style");
     //$("#btnDisplayGrid").show();
     //$("#btnDisplayRuler").show();
@@ -1343,6 +1340,11 @@ function backFromPreview() { /**
 
     $("#ws-btn-save").removeClass("hidden");
     $("#ws-btn-back").addClass("hidden");
+
+
+    $(".step-item:nth-child(3)").removeClass("active");
+    $(".step-item:nth-child(2)").addClass("active");
+
     // 2.
     // $("#btnSave").unbind().click(function(){
     //     toast("Please go back and save your design.");
@@ -1741,7 +1743,7 @@ function downloadDesign() {
 
 
     $loader.removeClass("hidden");
-
+    menuHighlighter("#menu-download");
     $.ajax({
         type: "GET",
         url: `/api/client/download/`,
@@ -1837,6 +1839,8 @@ function downloadDesign() {
                 // pdf = addWaterMark(pdf);
                 pdf.save("download.pdf");
                 $loader.addClass("hidden");
+                $(".step-item:nth-child(3)").removeClass("active");
+                $(".step-item:nth-child(4)").addClass("active");
 
             });
 
@@ -1980,7 +1984,7 @@ function toast(message) {
     var $toast = $("#snackbar").addClass("show");
     $toast.text(message);
     setTimeout(function () {
-        $toast.removeClass("show")
+        $toast.removeClass("show");
     }, 5000);
 }
 

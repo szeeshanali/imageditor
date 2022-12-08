@@ -8,25 +8,22 @@
                 </div><!-- d-flex -->
                 <div class="media-body mg-t-10 mg-sm-t-0">
                   <h6 class="mg-b-5 tx-14">Upload Image</h6>
-                  <div class="mg-b-0 tx-12 tx-white-5">Upload Clip Arts</div>
+                  <div class="mg-b-0 tx-12 tx-white-5">JPG, GIF, SVG, PNG</div>
                 </div><!-- media-body -->
               </div><!-- media -->
-              <a href="#" id="admin-image-upload" class="btn btn-primary pd-lg-x-20 mg-l-auto">Upload</a>
+              <a href="#" id="admin-image-upload" class="btn btn-primary pd-lg-x-20 mg-l-auto">Browse</a>
               <input id="admin-image-upload-hidden" data-page-id="<%=locals.page.id%>" type="file" accept="image/*" multiple="multiple" hidden="hidden">
             <input id="design-type" value="clipart" hidden="hidden">
     
             </div>
           </div>
-          <div class="list-group-item pd-20">
+          <div class="list-group-item ">
            <!-- d-flex -->
-            <h6 class="mg-b-10"><a href="" class="tx-inverse">Clip Art Details</a></h6>
-            <p class="tx-13 mg-b-0">Please enter details and save your changes.</p>
-            <div class="d-flex justify-content-between align-items-center tx-12">
-                <p class="tx-danger">All fields are mandatory. (*)</p>
-            
-              </div>
+           <h6 class="card-body-title">ClipArt Details</h6>
+           <p >Please enter following details and save your changes.</p>
+        
           </div>
-          <div class="card pd-10">
+          <div class="card">
             <%- include('../../partials/admin/clipart-panel'); %>
           </div>
           

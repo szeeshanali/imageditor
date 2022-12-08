@@ -44,6 +44,7 @@ router.get(ROUTE_SIGNOUT,(req,res)=>{
 
   // admin dashboard 
   router.post(ROUTE_ADMIN_LOGIN, (req, res, next) => {
+    req.params['mode'] = 'admin';
     passport.authenticate('local',{
       successRedirect : ROUTE_ADMIN_DASHBOARD,
       failureRedirect : ROUTE_ADMIN_LOGIN,
@@ -144,6 +145,7 @@ router.post(ROUTE_USER_REGISTER, async (req, res) => {
             errors.push({msg: 'Email already registered'});
             console.log('Email already registered');
             res.render(PATH_REGISTER, res, errors, fname, email, password, password2,{layout:false});
+            return;
         }
 
         // new user model. 

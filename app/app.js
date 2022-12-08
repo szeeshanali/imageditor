@@ -17,9 +17,10 @@ const commonService        = require('../app/services/common');
 // var mysql = require('mysql');
 
 // var con = mysql.createConnection({
-//   host: "52.54.1.108",
+//   host: "104.154.144.42",
 //   user: "u8bvx965rzk53",
-//   password: "EJ67dAkZTuAhgYB"
+//   password: "EJ67dAkZTuAhgYB",
+//   database: 'db4qgewmyrzq4v'
 // });
 
 // con.connect(function(err) {

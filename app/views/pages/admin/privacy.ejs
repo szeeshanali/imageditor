@@ -1,6 +1,6 @@
-<div class="card pd-20 pd-sm-40 mg-t-50">
+<div class="card pd-20 mg-r-20 t-20">
     <h6 class="card-body-title">Privacy & Policy</h6>
-    <p class="mg-b-20 mg-sm-b-30">Please enter the privacy & policy.</p>
+    <p class="mg-b-20 ">Please enter the privacy & policy.</p>
     <div id="summernote"></div>
     <button  type="button" data-value="privacy-policy" class="btn btn-primary" id="btnSaveContent"> Save </button>
   </div>
@@ -9,8 +9,7 @@
   $('#summernote').summernote({
     height:"300px"
   });
-  $(".am-mainpanel").attr("style","margin-left:75px;margin-top:91px");
-  $(".am-pagetitle").attr("style","left:73px");
+
   $('#summernote').summernote('editor.pasteHTML', '<%-content.content%>');
 
   

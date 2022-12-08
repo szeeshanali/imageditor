@@ -187,19 +187,22 @@ router.get("/app/main",   (req, res) => {
 router.post('/app/client/save-design', isLoggedIn, async function(req, res) {
 try{
 
-
-    if(req.user != null)
-    {
-        var totalProjects = await uploads.count({ uploaded_by:req.user._id,  deleted:false,active:true}); 
-        console.log(`user:${req.user._id}, total projects: ${totalProjects}`);
-        if(totalProjects>req.user.project_limit){
-        return    res.status(401).send({message:`You can not save more than ${req.user.project_limit} projects.`, error: `You can not save more than ${req.user.project_limit} projects.`});
-        
-        }
-        
-        
-    }
+    const totalProjects =  await uploads.find({ uploaded_by:req.user._id,  deleted:false,active:true},{title:1}); 
+    const count = totalProjects.length;
+    console.log(`total project count: ${count}`); 
+    console.log(totalProjects);
+    if(count>req.user.project_limit){
+        return res.status(401).send({message:`You can not save more than ${req.user.project_limit} projects.`, error: `You can not save more than ${req.user.project_limit} projects.`});
+    }  
     const {json,thumbBase64,title, desc, templateId} = req.body; 
+    if(totalProjects.find(i=>i.title === title))
+    {
+        return res.status(400).send({message:`A project with the same name  (${title}) is already exists. `, error: `Project with the same name  (${title}) is already exists. `});
+
+    }
+    
+ 
+  
     var _id = mongoose.Types.ObjectId();
     var uploadModel = {
       title           :   title || `project${_id}`,
@@ -221,8 +224,8 @@ try{
             else{res.status(400).send({message:`Unable to upload file.`, error: msg});  }
             
         })
-    }catch{
-        res.status(500).send({message:`Something went wrong!`, error: msg});
+    }catch(ex) {
+        res.status(500).send({message:`Something went wrong!`, error: ex.message});
     }
  })
   

@@ -236,15 +236,7 @@ color:#0900fd;
         to {bottom: 30px; opacity: 1;}
       }
       
-      @-webkit-keyframes fadeout {
-        from {bottom: 30px; opacity: 1;} 
-        to {bottom: 0; opacity: 0;}
-      }
       
-      @keyframes fadeout {
-        from {bottom: 30px; opacity: 1;}
-        to {bottom: 0; opacity: 0;}
-      }
      /**/
 
      .sidebar{
@@ -713,6 +705,9 @@ color:#0900fd;
     top: 9px;
     width: 100%;
   }
+
+  
+  
   
   .step .step-item a {
     color: #fff;
@@ -749,6 +744,7 @@ color:#0900fd;
     background: #494699;
   }
 
+  
   #uploadpanel .nav-link a{
 color:#494699;
 font-weight: bold;

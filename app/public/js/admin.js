@@ -343,6 +343,7 @@
             type: "DELETE",
             url: `/api/admin/template/${templateId}`,
             success: function (res) {
+                debugger;
                 toast("Deleted successfully!");
                 setTimeout(function () {
                     window.location.reload();
@@ -917,12 +918,14 @@
                     type: "DELETE",
                     url: `/api/admin/user/${userId}`,
                     success: function (res) {
+
                         toast("Deleted successfully!");
                         setTimeout(function () {
                             window.location.reload();
                         }, 1000)
                     },
                     error: function (res) {
+                        debugger;
                         toast("Error while deleting.");
                     }
                 })
@@ -1060,6 +1063,12 @@
                 toast("Template mandatory information is missing. ")
                 return;
             }
+
+            if (data.order_no > 1000) {
+                toast("Display Order should be less than 1000.")
+                return;
+            }
+
             $.ajax({
                 type: "PUT",
                 url: `/api/admin/template/${
@@ -1079,7 +1088,7 @@
 
         $btnSaveDesign.on("click", function () {
             if (! selectedDesign.base64) {
-                toast("Error: Please upload a Template");
+                toast("Please Browse Template.");
                 return;
             }
             onSaveTemplate();
@@ -1457,6 +1466,10 @@
 
         var dataUrl = grp.toDataURL({format: 'png', quality: 0.8});
         var category = $("#admin-categories").val();
+        if(!category){
+            toast(`Please select a category.`);
+            return;
+        }
 
         $.ajax({
             type: "POST",
@@ -1507,8 +1520,13 @@
             title: $templateTitle.val(),
             pageSize: $selectPageSize.val()
         }
-        if (! meta.title || meta.title.length > 100) {
-            toast("Error: Please Enter Design Name");
+        if (!meta.title || meta.title.length == 0) {
+            toast("Please Enter Title!");
+            return;
+        }
+        if(meta.title.length > 50)
+        {
+            toast("Please should not greater than 50 characters.");
             return;
         }
         var MIME_TYPE = "image/png";
@@ -1538,7 +1556,12 @@
         // })
 
         // )
-        var category = $("#admin-categories").val();
+        // var category = $("#admin-categories").val();
+        // if(!category){
+        //     toast(`Please select a category.`);
+        //     return;
+        // }
+
         $loader.removeClass("hidden");
         $.ajax({
             type: "POST",
@@ -1562,20 +1585,18 @@
                 default: designFlags.default,
                 link: $inputDesignLink.val(),
                 logos: $inputLogoPerPage.val(),
-                ref_code: $kopykakePartNo.val(),
-                category: category
+                ref_code: $kopykakePartNo.val()
             },
             success: function (res) {
-
                 designFlags.submitted = true;
                 toast("Uploaded Successfully!");
                 setTimeout(function () {
                     onDesignReload();
                 }, 2000)
-            },
+            },  
             error: function (res) {
                 designFlags.submitted = false;
-                toast("Error while uploading.");
+                toast("Server Error.");
                 $loader.addClass("hidden");
             }
         })
@@ -1591,8 +1612,12 @@
         canvas.clear();
         onDesignLoaded({});
         for (let file of files) { // check type
-            if (! allowedTypes.includes(file.type)) 
-                continue
+            debugger;
+            if (! allowedTypes.includes(file.type)) {
+                toast(`Incorrect File Type`)
+                return;
+            }
+               
             
             let reader = new FileReader();
             // handle svg
