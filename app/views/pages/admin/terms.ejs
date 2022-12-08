@@ -1,16 +1,14 @@
-<div class="card pd-20 pd-sm-40 mg-t-50">
-    <h6 class="card-body-title">Terms & Conditions</h6>
-    <p class="mg-b-20 mg-sm-b-30">Please enter the Terms & Conditions.</p>
-    <div id="summernote"></div>
-    <button  type="button" data-value="terms-conditions" class="btn btn-primary" id="btnSaveContent"> Save </button>
-  </div>
+<div class="card pd-20 mg-r-20 t-20">
+  <h6 class="card-body-title">Terms & Conditions</h6>
+  <p class="mg-b-20 ">Please enter the Terms & Conditions.</p>
+  <div id="summernote"></div>
+  <button  type="button" data-value="terms-conditions" class="btn btn-primary" id="btnSaveContent"> Save </button>
+</div>
   <script>
  $(document).ready(function() {
   $('#summernote').summernote({
     height:"300px"
   });
-  $(".am-mainpanel").attr("style","margin-left:75px;margin-top:91px");
-  $(".am-pagetitle").attr("style","left:73px");
   $('#summernote').summernote('editor.pasteHTML', '<%-content.content%>');
 
   
