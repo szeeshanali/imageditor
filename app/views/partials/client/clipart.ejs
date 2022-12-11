@@ -26,15 +26,13 @@
           </a>
        
             <div class="nav-sub" style="display: none;">
-              <div class="d-flex row">
+              <div class="row">
 
               <%clipart.items.forEach(item=>{ %>
-                <div class="nav-item col-lg-3 pd-0 bd clipart">
-                    <div class="card bg-gray-200 ht-130 ">
-                      <div class="">
-                        <img class="card-img-top img-fluid pd-b-10 " src="/uploads/admin/clipart/clipart-<%=item.code %><%=item.file_ext %>" alt="Image">
-                        <h5 class="card-body-title tx-12 tx-center" style="height:28px;overflow:hidden"><%=item.title %></h5>
-                      </div>
+                <div class="nav-item col-lg-3 pd-2  clipart " >
+                    <div class="card" style="height:100px; background-color:#ebebeb; border-radius: 5px; padding:5px">
+                      <img class="card-img-top img-fluid pd-b-10 " src="/uploads/admin/clipart/clipart-<%=item.code %><%=item.file_ext %>" alt="Image">
+                        <h5 class="tx-12 tx-center" style="height:28px;overflow:hidden"><%=item.title %></h5>
                     </div>
                 </div>
                 <%})%>

@@ -1343,6 +1343,7 @@ menuHighlighter("#menu-upload");
     $("#preview-design-heading").addClass("hidden");
 
     $("#ws-btn-save").removeClass("hidden");
+    $("#ws-btn-preview").removeClass("hidden");
     $("#ws-btn-back").addClass("hidden");
 
 
@@ -1422,6 +1423,7 @@ function renderPreview() {
             }
             $loader.addClass("hidden");
             $("#ws-btn-save").addClass("hidden");
+            $("#ws-btn-preview").addClass("hidden");
             $("#ws-btn-back").removeClass("hidden");
             //         closeRepeatDesignPreview();
         });
@@ -1843,7 +1845,7 @@ function downloadDesign() {
 
                 // let filename =
                 // pdf = addWaterMark(pdf);
-                pdf.save("download.pdf");
+                pdf.save("KakePrints.pdf");
                 $loader.addClass("hidden");
                 $(".step-item:nth-child(3)").removeClass("active");
                 $(".step-item:nth-child(4)").addClass("active");
