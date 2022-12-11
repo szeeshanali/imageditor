@@ -289,7 +289,7 @@ router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
    var cliparts = adminUploadItems.filter(function(item){ return item.type == 'clipart'});
    var customDesigns = adminUploadItems.filter(function(item){ return item.type == 'pre-designed'});
    var categories = await commonService.categoryService.getCategoriesAsync();
-  var customText = await commonService.contentService.getContentAsync('custom-text');
+   var customText = await commonService.contentService.getContentAsync('custom-text');
    var ca = [];
    categories.forEach(category => {
     var items = cliparts?.filter(i=>i.category == category.id);

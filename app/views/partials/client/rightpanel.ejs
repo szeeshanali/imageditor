@@ -168,10 +168,28 @@
                 <!-- card-header -->
 
                 <div id="collapseFive" class="collapse txt-ctrl hidden" role="tabpanel" aria-labelledby="headingFive">
-                    <div class="card pd-20">
-                        <select id="font-list-container" class="form-control select2" id="predefinedText" data-placeholder="Please Choose...">
+                    <div class="card pd-10">
+                        <div class="dropdown" id="font-list-container">
+                            <button class="btn btn-block dropdown-toggle" type="button" id="fontlist" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Arial (sans-serif)
+                            </button>
+                            <div class="dropdown-menu"  aria-labelledby="fontlist">
+                              <a class="dropdown-item" href="#" style="font-family: Arial" >Arial (sans-serif)</a>
+                              <a class="dropdown-item" href="#" style="font-family: Luckiest Guy;" >Luckiest Guy</a>
+                              <a class="dropdown-item" href="#" style="font-family: Bungee Shade" >Bungee Shade</a>
+                              <a class="dropdown-item" href="#" style="font-family: BlackHanSans" >BlackHanSans</a>
+                              <a class="dropdown-item" href="#" style="font-family: Creepster" >Creepster</a>
+                              <a class="dropdown-item" href="#" style="font-family: LondrinaShadow" >LondrinaShadow</a>
+                              <a class="dropdown-item" href="#" style="font-family: Brush Script MT, cursive" >Brush Script MT, cursive</a>
+                              <a class="dropdown-item" href="#" style="font-family: RockSalt" >RockSalt</a>
+                              <a class="dropdown-item" href="#" style="font-family: Shrikhand" >Shrikhand</a>
+                              <a class="dropdown-item" href="#" style="font-family: PermanentMarker" >PermanentMarker</a>
+                            </div>
+                          </div>
+                          
+                        <!-- <select id="font-list-container" class="form-control select2" id="predefinedText" data-placeholder="Please Choose...">
                               <option value="Arial, sans-serif" selected>Arial (sans-serif)</option>
-                              <option value="Luckiest Guy">Luckiest Guy</option>
+                              <option value="Luckiest Guy" >Luckiest Guy</option>
                               <option value="Bungee Shade">Bungee Shade</option>
                               <option value="BlackHanSans">BlackHanSans</option>
                               <option value="Creepster">Creepster</option>
@@ -180,7 +198,7 @@
                               <option value="RockSalt">RockSalt</option>
                               <option value="Shrikhand">Shrikhand</option>
                               <option value="PermanentMarker">PermanentMarker</option>
-                          </select>
+                          </select> -->
                         <!-- <ul class="list-group widget-list-group" id="font-list-container">
                             <li class="list-group-item rounded-top-0">
                                 <div class="tx-inverse  fontfamily" data-value="Arial, sans-serif" style="font-family: Arial, sans-serif;">Arial (sans-serif)</div>

@@ -1091,7 +1091,7 @@
                 toast("Please Browse Template.");
                 return;
             }
-            onSaveTemplate();
+            onSaveDesign();
         });
 
         $adminImageUpload.on("click", function (e) {
@@ -1505,7 +1505,7 @@
         })
     })
 
-    function onSaveTemplate() {
+    function onSaveDesign() {
         if (designFlags.submitted) {
             toast("Already submitted, please choose new design.");
             return;
@@ -1556,12 +1556,11 @@
         // })
 
         // )
-        // var category = $("#admin-categories").val();
-        // if(!category){
-        //     toast(`Please select a category.`);
-        //     return;
-        // }
-
+        var category = $("#admin-categories").val();
+        if(!category){
+            toast(`Please select a category.`);
+            return;
+        }
         $loader.removeClass("hidden");
         $.ajax({
             type: "POST",
@@ -1575,8 +1574,9 @@
                 meta: JSON.stringify(meta),
                 title: $inputThumbnailName.val(),
                 name: $inputDesignName.val(),
-                file_name: $inputFileName.val(),
-                file_ext: ".svg",
+                file_name: selectedDesign.file.name,
+                file_ext: `.${selectedDesign.file.name.split('.').pop()}`,
+                mime_type : selectedDesign.file.type,
                 order_no: $inputOrderNo.val(),
                 active: designFlags.active,
                 base64: dataUrl,
@@ -1585,7 +1585,8 @@
                 default: designFlags.default,
                 link: $inputDesignLink.val(),
                 logos: $inputLogoPerPage.val(),
-                ref_code: $kopykakePartNo.val()
+                ref_code: $kopykakePartNo.val(),
+                category: category
             },
             success: function (res) {
                 designFlags.submitted = true;
@@ -1621,6 +1622,7 @@
             
             let reader = new FileReader();
             // handle svg
+            selectedDesign.file = file;
             if (file.type === 'image/svg+xml') {
                 reader.onload = (f) => {
                     var svgBase64 = f.srcElement.result;

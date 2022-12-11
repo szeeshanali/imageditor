@@ -429,7 +429,7 @@ router.delete('/api/admin/template/:id', isAdmin, async (req,res)=>{
 
 
 router.post('/app/admin/save-template', function(req, res) {
-  const {desc, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
+  const {desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
  
   var filename = file_name || "na"; 
   filename = `${filename}-${_id}${file_ext}`;       
@@ -459,8 +459,11 @@ router.post('/app/admin/save-template', function(req, res) {
     ref_code        :   ref_code,
     
   };
-  var templatename = `../app/uploads/admin/${type}/${filename}`;
-    require("fs").writeFile(templatename, base64, 'base64', function(err) {
+
+  var _path = `../app/public/uploads/admin/${type}/${type}-${_id}.${file_name.split('.').pop()}`;  
+  var _base64Alter = base64.replace(`data:${mime_type};base64,`, "");
+  console.log(_base64Alter);
+  require("fs").writeFile(_path, _base64Alter, 'base64', function(err) {
       if(err){ console.log(err); }
        commonService.uploadService.upload(uploadModel,(err,msg)=>{
         if(!err)

@@ -681,6 +681,9 @@ function loadSVGTemplate(id) {
                   $(".canvas-container").first().append(`<div class='grid-lines h-gridlines' style='width:500px;top:${pos.top-22}px; left:0px; border-bottom: solid 1px #666;'></div>`);
                   $(".canvas-container").first().css({border:"solid 1px #666", width:"502px",height:"503px"})
                 }
+
+
+               // $("#client-main-canvas").removeClass('hidden');
         }, function (item, object) {
             object.set({fill:"#fff"});
             object.set({left: 8, top: 4});
@@ -983,9 +986,9 @@ function initUIEvents() {
 
     })
 
-    $("#font-list-container").on("change", function (e) {
-        var value = e.currentTarget.value || "Arial, sans-serif";
-      
+    $("#font-list-container a").on("click", function (e) {
+        var value = $(this).text() || "Arial, sans-serif";
+        $("#fontlist").text(value);
         //$("#selected-font").html($(this).html())
         canvas.getActiveObject().set("fontFamily", value);
         canvas.requestRenderAll();
@@ -1494,6 +1497,7 @@ function onObjectSelection(o) {
 
 
 function updateTextControls(e){
+    debugger;
    var item = e.selected[0]; 
    $("#btnTextSize").val(item.fontSize);
    if(item.charSpacing)
@@ -1507,6 +1511,7 @@ function updateTextControls(e){
    { document.querySelector('#strokecolor')?.jscolor.fromString(item.stroke); }
    document.querySelector('#fontColorBox').jscolor.fromString(item.fill);
    
+   $("#fontlist").text(item.fontFamily);
    
 }
 
