@@ -1275,7 +1275,6 @@ function previewDesign() { /*
    . Hide Ruler 
    . Hide Grid 
     */
-    state.isPreviewCanvas = true;
 
     $("#workarea").attr("style", "background-image:url('')");
     //$("#btnDisplayGrid").hide();
@@ -1425,6 +1424,8 @@ function renderPreview() {
             $("#ws-btn-save").addClass("hidden");
             $("#ws-btn-preview").addClass("hidden");
             $("#ws-btn-back").removeClass("hidden");
+            state.isPreviewCanvas = true;
+
             //         closeRepeatDesignPreview();
         });
     })
@@ -1739,7 +1740,7 @@ function addWaterMark(doc) {
 }
 function downloadDesign() {
 
-    if (! state.isPreviewCanvas) {
+    if (!state.isPreviewCanvas) {
         toast("Please preview your design before download.");
         return;
     }
@@ -1777,8 +1778,13 @@ function downloadDesign() {
             width = pdf.internal.pageSize.getWidth();
             height = pdf.internal.pageSize.getHeight();
             canvasPrev.clone(function (clonedCanvas) {
+
+                
                 var bg = clonedCanvas.backgroundImage;
                 clonedCanvas.backgroundImage = false;
+
+                clonedCanvas.setDimensions({ width: 612 * 3, height: 792 * 3 })
+                clonedCanvas.setZoom(3);
                 // let canvasJSON = clonedCanvas.toJSON();
                 // clonedCanvas.setDimensions({width:width,height:height});
                 // debugger;
