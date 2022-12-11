@@ -1,36 +1,46 @@
+<div id="accordion" class="accordion" role="tablist" aria-multiselectable="true">
+  <div class="card">
+    <div class="card-header" role="tab" id="headingOne">
+      <h6 class="mg-b-0">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="tx-gray-800 transition tx-bold">
+       <span class="design-steps tx">1</span> Add Photos
+        </a>
+      </h6>
+    </div><!-- card-header -->
 
-    <ul class="nav nav-tabs tx-14 tx-center tx-bold row pd-0 mg-0" role="tablist">
-      <li class="nav-item col-lg-4 pd-0" id="panel-photos">
-        <a class="nav-link active "  data-toggle="tab" href="#home">Photos</a>
-      </li>
-      <li class="nav-item col-lg-4 pd-0" id="menu-clipart">
-        <a class="nav-link " data-toggle="tab"  href="#clipartmenu"> Clip Arts</a>
-      </li>
-      <li class="nav-item col-lg-4 pd-0">
-        <a class="nav-link tx-bold" data-toggle="tab"  href="#menu2"> Text</a>
-      </li>
-    </ul>
-  
-    <!-- Tab panes -->
-    <div class="tab-content">
-      <div id="home" class="container tab-pane active">
-        <div class="card pd-t-20 pd-0 tx-center " >
-            <i class="tx-80  tx-gray-800 icon-imgupload ion-images" id="btn-upload-img"></i>
-            <p class="tx-12 pd-t-20 pd-x-30 tx-center">Upload Photos <br>You may also paste images from your clipboard.</p>
-            <input id="btn-upload-img-hidden" type="file" accept="image/*,application/pdf" multiple="multiple" hidden="hidden">
-        </div>
-      </div>
-      <div id="clipartmenu" class="container tab-pane fade"><%- include('../../partials/client/clipart'); %>
-
-      </div>
-      <div id="menu2" class="container tab-pane fade"><br>
-        <%- include('../../partials/client/typo'); %>           
-
-      </div>
-    </div>
-
+    <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne" style="">
+      <div class="card-body tx-center">
+        <p class="">Add Photos, Pdf or copy from Clipboard.</p>
+        <button type="button" class="btn btn-primary wd-100 " id="btn-upload-img" >Browse</button>
         
-
-
-   
- 
+        <input id="btn-upload-img-hidden" type="file" accept="image/*,application/pdf" multiple="multiple" hidden="hidden">      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" role="tab" id="headingTwo">
+      <h6 class="mg-b-0">
+        <a class="transition collapsed tx-bold" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          <span class="design-steps">2</span>  Choose Clip Arts       </a>
+      </h6>
+    </div>
+    <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo" style="">
+      <div class="card-body" id="clipartmenu">
+        <%- include('../../partials/client/clipart'); %>     
+       </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" role="tab" id="headingThree">
+      <h6 class="mg-b-0">
+        <a class="transition collapsed tx-bold"  data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          <span class="design-steps">3</span>  Add Text      </a>
+        </a>
+      </h6>
+    </div>
+    <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree" style="">
+      <div class="card-body">
+        <%- include('../../partials/client/typo'); %> 
+      </div>
+    </div><!-- collapse -->
+  </div><!-- card -->
+</div>

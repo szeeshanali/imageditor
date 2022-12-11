@@ -716,6 +716,7 @@ function loadSVGTemplate(id) {
             loadedObjects.center().setCoords();
             //loadgrid()
         }, function (item, object) {
+            object.set({fill:"#fff"});
             object.set('id', item.getAttribute('id'));
             // object.set('width', (object.width/72)*96);
             // object.set('height', (object.height/72)*96);

@@ -225,7 +225,7 @@
               height = pdf.internal.pageSize.getHeight();
               var imgData = canvas.toDataURL('image/png');
               pdf.addImage(imgData, 'PNG', 0, 0,width,height);
-              pdf.save("download.pdf");
+              pdf.save("KakePrints.pdf");
 
               return;
               if (type === 'svg') {
@@ -247,7 +247,7 @@
                   height = pdf.internal.pageSize.getHeight();
                   var imgData = canvas.toDataURL('image/png');
                   pdf.addImage(imgData, 'PNG', 0, 0,width,height);
-                  pdf.save("download.pdf");
+                  pdf.save("KakePrints.pdf");
 
                    // _self.canvas = canvas;
                   // $("#previewImage").append(canvas);

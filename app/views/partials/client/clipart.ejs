@@ -4,7 +4,7 @@
 
 <div class="row" >
 
-  <div class="col-lg-12 pd-0 bd " >
+  <div class="col-lg-12  " >
 
     <!-- <div class="dropdown">
       <button class="btn  dropdown-toggle" type="button" data-toggle="dropdown">Categories
@@ -20,7 +20,7 @@
     
       <%cliparts?.forEach(clipart=>{ %>
        
-        <div class="nav-item pd-x-15">
+        <div class="nav-item">
           <a href="#" class="nav-link with-sub text-primary">
             <span><%=clipart.categoryName%> (<%= clipart.items.length %>)</span>
           </a>
@@ -31,7 +31,7 @@
               <%clipart.items.forEach(item=>{ %>
                 <div class="nav-item col-lg-3 pd-0 bd clipart">
                     <div class="card bg-gray-200 ht-130 ">
-                      <div class="card-body pd-5">
+                      <div class="">
                         <img class="card-img-top img-fluid pd-b-10 " src="/uploads/admin/clipart/clipart-<%=item.code %><%=item.file_ext %>" alt="Image">
                         <h5 class="card-body-title tx-12 tx-center" style="height:28px;overflow:hidden"><%=item.title %></h5>
                       </div>
