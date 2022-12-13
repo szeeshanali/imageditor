@@ -431,8 +431,8 @@ router.delete('/api/admin/template/:id', isAdmin, async (req,res)=>{
 router.post('/app/admin/save-template', function(req, res) {
   const {desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
  
-  var filename = file_name || "na"; 
-  filename = `${filename}-${_id}${file_ext}`;       
+  //var filename = file_name || "na"; 
+  //filename = `${filename}-${_id}${file_ext}`;       
   var _id = mongoose.Types.ObjectId();
   
   var uploadModel = {

@@ -3,8 +3,12 @@ const router                = express.Router();
 const {isLoggedIn,isAdmin}  = require('../../config/auth');
 const categories            = require('../../models/categories');
 const uploads = require('../../models/uploads');
+const fs                    = require('fs');
+
 const commonService = require('../../services/common');
 PATH_USER_PROJECTS              = 'pages/client/myprojects';
+var formidable = require('formidable');
+
 PATH_TEMPLATES              = 'pages/client/templates';
 PATH_WORKSPACE              = 'pages/client/workspace';
 const { default: mongoose, mongo } = require('mongoose');
@@ -22,7 +26,19 @@ router.use( async (req, res, next) => {
     //res.locals.projects = await commonService.uploadService.getUserDesignsAsync(req.user._id);
     next();
 });
+// Use at least Nodemailer v4.1.0
+const nodemailer = require('nodemailer');
 
+
+
+const transporter = nodemailer.createTransport({
+    host: 'smtp.ethereal.email',
+    port: 587,
+    auth: {
+        user: 'mckayla72@ethereal.email',
+        pass: 'YjCFpVEFcnsNjCJf8w'
+    }
+});
 
 router.get(ROUTE_USER_PROFILE, isLoggedIn, (req,res)=>{    
     
@@ -319,10 +335,46 @@ router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
 
 
 
-// router.post('/app/workspace', isLoggedIn, (req,res)=>{
-//     const  {width, height, title} = req.body;
-//     res.render("pages/client/index",{ executescript: `callback({width:${width},height:${height},title:${title}});` })
-// })
+router.post('/api/rfq', isLoggedIn, async (req,res)=>{
+    const  {companyName, name, phoneNumber, file} = req.body;
+
+    var form = new formidable.IncomingForm();
+    var f ;
+    form.parse(req, function (err, fields, file) {
+        let filepath = file.file.filepath;
+    let newpath = `/public/uploads/client/attachments/`;
+    newpath += file.file.originalFilename;
+console.log(newpath)
+    //Copy the uploaded file to a custom folder
+    fs.rename(filepath, newpath, function () {
+      //Send a NodeJS file upload confirmation message
+      res.write('NodeJS File Upload Success!');
+      res.end();
+    });
+    })
+  
+console.log(file);
+
+    try{
+    await transporter.sendMail({
+        from: 'test@example.com',
+        to: 'unsamehak02@gmail.com',
+        subject: 'Test Email KopyKake',
+        html: '<h1>Example HTML Message Body</h1>',
+        
+    attachments: [
+        {   // utf-8 string as an attachment
+            filename: 'text1.pdf',
+            content: f
+        }]
+    });
+    res.status(200).send("Ok");
+   }catch(ex){
+    res.status(500).send("err");
+   }
+  
+    ///res.render("pages/client/index",{ executescript: `callback({width:${width},height:${height},title:${title}});` })
+})
 // router.get('/app/workspace',isLoggedIn, (req,res)=>{
 //     const  {width, height, title} = req.body;
 

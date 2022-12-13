@@ -1,0 +1,101 @@
+<div>
+<div id="rfq" class="modal fade" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg modal-dialog-vertical-center " role="document">
+        <form method="post" id="formRFQ" enctype="multipart/form-data" action="/api/rfq">
+            <div class="modal-content bd-0 tx-14">
+             
+                <div class="modal-body pd-0">
+                    <div class="form-layout">
+                        <div class="card pd-20 pd-sm-40">
+                            <h6 class="card-body-title">Request a Quote</h6>
+                            <p class="mg-b-20 mg-sm-b-30">Send us your PDF to Print.</p>
+                  
+                            <div class="form-layout">
+                              <div class="row mg-b-25">
+                                <div class="col-lg-4">
+                                  <div class="form-group">
+                                    <input class="form-control" type="text" name="name"  placeholder="Name">
+                                  </div>
+                                </div><!-- col-4 -->
+                                <div class="col-lg-4">
+                                  <div class="form-group">
+                                    <input class="form-control" type="text" name="companyName"  placeholder="Company Name">
+                                  </div>
+                                </div><!-- col-4 -->
+                                <div class="col-lg-4">
+                                  <div class="form-group">
+                                    <input class="form-control" type="text" name="email"  placeholder="Email Address">
+                                  </div>
+                                </div><!-- col-4 -->
+                                <div class="col-lg-4">
+                                  <div class="form-group mg-b-10-force">
+                                    <input class="form-control" type="text" name="phone"  placeholder="Phone Number">
+                                  </div>
+                                </div><!-- col-8 -->
+                                <div class="col-lg-4">
+                                  <div class="form-group mg-b-10-force">
+                                    <input class="form-control" min="1" placeholder="Total Sheets" oninput="this.value < 1?this.value=1:this.value" max="1000" type="number" name="phone" >
+
+                                  </div>
+                                </div><!-- col-4 -->
+                                <div class="col-lg-4">
+                                    <label class="ckbox ">
+                                        <input type="checkbox" ><span>Pick up in Torrance, or Ship?</span>
+                                      </label>
+                                  </div><!-- col-4 -->
+                                  <section class="hidden">
+                                  <div class="col-lg-6">
+                                    <div class="form-group">
+                                      <input class="form-control" type="text" name="name"  placeholder="Name">
+                                    </div>
+                                  </div><!-- col-4 -->
+                                  <div class="col-lg-6">
+                                    <div class="form-group">
+                                      <input class="form-control" type="text" name="companyName"  placeholder="Company Name">
+                                    </div>
+                                  </div><!-- col-4 -->
+                                  <div class="col-lg-4">
+                                    <div class="form-group">
+                                      <input class="form-control" type="text" name="email"  placeholder="Email Address">
+                                    </div>
+                                  </div><!-- col-4 -->
+                                  <div class="col-lg-4">
+                                    <div class="form-group mg-b-10-force">
+                                      <input class="form-control" type="text" name="phone"  placeholder="Phone Number">
+                                    </div>
+                                  </div><!-- col-8 -->
+                                  <div class="col-lg-4">
+                                    <div class="form-group mg-b-10-force">
+                                      <input class="form-control" type="text" name="phone"  placeholder="Phone Number">
+                                    </div>
+                                  </div><!-- col-8 -->
+                                </section>
+                                  <div class="col-lg-12">
+                                    <div class="form-group mg-b-10-force">
+                                        <textarea rows="3" class="form-control" placeholder="Additional Information" spellcheck="false"></textarea>
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group mg-b-10-force">
+                                        <p>Please attach your PDF file.</p>
+
+                                            <input type="file" accept="application/pdf" id="file2" name="attachments" class="">
+
+                                    </div>
+                                </div>
+                              </div><!-- row -->
+                  
+                              <div class="form-layout-footer">
+                                <button type="submit" class="btn  btn-primary mg-r-5">Submit</button>
+                                <button type="button" class="btn btn-secondary">Cancel</button>
+                              </div><!-- form-layout-footer -->
+                            </div><!-- form-layout -->
+                          </div>
+                </div>
+         </form>
+     </div>
+                            <!-- modal-dialog -->
+                        </div>
+                       
+</div>

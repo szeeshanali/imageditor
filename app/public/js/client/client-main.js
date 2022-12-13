@@ -601,22 +601,31 @@ function loadSVGTemplate(id) {
         hideWorkspaceControls();
         // loading Big display
         var logoDisplaySize = 500;
+        
 
         fabric.loadSVGFromURL(svgBase64, function (objects, options) {
 
             // / getting actual width and height of a logo
             // / setting canvas dimensions with logo width/height
             var logo = objects[objects.length-1];
+            var logoHeight = logoDisplaySize;
+            if(logo.height && logo.height < logo.width)
+            {
+                var ratio = (logo.width/logo.height);
+                logoHeight = logoDisplaySize/ratio;
+            }
+
             var w = Math.floor(logo.getScaledWidth());
             var h = Math.floor(logo.getScaledHeight());
-            canvas.setDimensions({width: logoDisplaySize, height: logoDisplaySize});
+            canvas.setDimensions({width: logoDisplaySize, height: logoHeight});
             canvas.setBackgroundImage(logo, canvas.renderAll.bind(canvas));
             
             canvas.renderAll();
             // canvas.setZoom(2);
-            var logoSize = (meta.objectWidth / dpi).toFixed(1);
-            $("#template-info-panel .template-name").text(data.name);
-            $("#template-info-panel .page-size").text(meta.pageSize);
+            var logoSize = `${(meta.objectWidth / dpi).toFixed(1)}" x ${((meta.objectHeight || meta.objectWidth) / dpi).toFixed(1)}`;
+            let pageSize = `${meta.width/dpi}" x ${meta.height/dpi}"`;
+            $("#template-info-panel .template-name").text(data.title);
+            $("#template-info-panel .page-size").text(pageSize);
             $("#template-info-panel .logo-size").text(logoSize + "''");
             $("#template-info-panel .total-logos").text(meta.objects);
             $("#template-info-panel .page-title").text(data.title);
@@ -645,7 +654,7 @@ function loadSVGTemplate(id) {
 
             $(".vRule, .hRule").remove();
             $('.canvas-container').first().ruler(rulerSettings);
-
+            $(".vRule").height(logoHeight+22);
             /// show grid lines 
             var labels   = $(".hRule .tickLabel");
             var vlabels   = $(".vRule .tickLabel");
@@ -668,7 +677,7 @@ function loadSVGTemplate(id) {
                   
                   var pos = $(labels[i]).position();
                   console.log(pos);
-                  $(".canvas-container").first().append(`<div class='grid-lines' style='height:500px;left:${pos.left-22}px; top:0px; '></div>`)
+                  $(".canvas-container").first().append(`<div class='grid-lines' style='height:${logoHeight}px;left:${pos.left-22}px; top:0px; '></div>`)
                 }
           // vlines 
           
@@ -679,7 +688,7 @@ function loadSVGTemplate(id) {
                  console.log(pos);
                 
                   $(".canvas-container").first().append(`<div class='grid-lines h-gridlines' style='width:500px;top:${pos.top-22}px; left:0px; border-bottom: solid 1px #666;'></div>`);
-                  $(".canvas-container").first().css({border:"solid 1px #666", width:"502px",height:"503px"})
+                  $(".canvas-container").first().css({border:"solid 1px #666", width:"502px",height:`${logoHeight}px`})
                 }
 
 
@@ -769,6 +778,31 @@ function menuPanelDisplay(itemToDisplay) {
 
 function initUIEvents() {
 
+
+
+    $("#formRFQ").submit(function(e) {
+
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+    
+        var form = $(this);
+        var actionUrl = form.attr('action');
+        debugger;
+        var data = new FormData($(this)[0]);
+        $.ajax({
+            type: "POST",
+            url: actionUrl,
+            data: data, // serializes the form's elements.
+            async: false,
+            success: function (data) {
+                alert(data)
+            },
+            cache: false,
+            contentType: false,
+            processData: false,
+           
+        });
+        
+    });
     $("#menu-save-design").on("click",function(e){
         e.preventDefault();
         e.stopPropagation(); return false;
@@ -1344,6 +1378,7 @@ menuHighlighter("#menu-upload");
     $("#ws-btn-save").removeClass("hidden");
     $("#ws-btn-preview").removeClass("hidden");
     $("#ws-btn-back").addClass("hidden");
+    $("#ws-btn-download").addClass("hidden");
 
 
     $(".step-item:nth-child(3)").removeClass("active");
@@ -1424,6 +1459,7 @@ function renderPreview() {
             $("#ws-btn-save").addClass("hidden");
             $("#ws-btn-preview").addClass("hidden");
             $("#ws-btn-back").removeClass("hidden");
+            $("#ws-btn-download").removeClass("hidden");
             state.isPreviewCanvas = true;
 
             //         closeRepeatDesignPreview();
