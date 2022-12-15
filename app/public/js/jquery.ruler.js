@@ -190,6 +190,7 @@
 					newTickLabel = "<div class='tickMinor'></div>";
 					$(newTickLabel).css( "top", tickLabelPos+"px" ).appendTo($vRule);
 				}
+				
 				tickLabelPos = ( tickLabelPos + 5 );				
 			}//vert ticks			
 			

@@ -778,7 +778,17 @@ function menuPanelDisplay(itemToDisplay) {
 
 function initUIEvents() {
 
-
+    $("#cbRfqShip").on("click", function (e) {
+      
+        if(e.target.checked)
+        {
+         $("#rfqShippingInfo").removeClass('hidden');
+        }else{
+            $("#rfqShippingInfo").addClass('hidden');
+        }
+         
+ 
+     })
 
     $("#formRFQ").submit(function(e) {
 
@@ -786,7 +796,6 @@ function initUIEvents() {
     
         var form = $(this);
         var actionUrl = form.attr('action');
-        debugger;
         var data = new FormData($(this)[0]);
         $.ajax({
             type: "POST",
@@ -794,7 +803,14 @@ function initUIEvents() {
             data: data, // serializes the form's elements.
             async: false,
             success: function (data) {
-                alert(data)
+                toast('Thank you, Your request has been submitted, we will contact you soon.');
+                form.trigger('reset');
+                $('#rfq').modal('toggle');
+            },error: function (request, status, error) {
+                toast('Server Error: Form could not be submitted.');
+                form.trigger('reset');
+                $('#rfq').modal('toggle');
+
             },
             cache: false,
             contentType: false,
@@ -970,6 +986,7 @@ function initUIEvents() {
         var style = !($(".ruler").is(':visible'));
         if (style) {
             $('.canvas-container').first().ruler(rulerSettings);
+            $(".vRule").height($(".vRule").height()+22);
             $(this).html($(this).html().replace("On", "Off"));
         } else {
             $(".vRule, .hRule").remove();

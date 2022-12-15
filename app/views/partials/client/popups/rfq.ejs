@@ -1,7 +1,7 @@
 <div>
 <div id="rfq" class="modal fade" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-lg modal-dialog-vertical-center " role="document">
-        <form method="post" id="formRFQ" enctype="multipart/form-data" action="/api/rfq">
+        <form method="post" id="formRFQ" enctype="multipart/form-data" action="/api/rfq" data-parsley-validate>
             <div class="modal-content bd-0 tx-14">
              
                 <div class="modal-body pd-0">
@@ -14,81 +14,80 @@
                               <div class="row mg-b-25">
                                 <div class="col-lg-4">
                                   <div class="form-group">
-                                    <input class="form-control" type="text" name="name"  placeholder="Name">
+                                    <input class="form-control" id="customerName" type="text" value="<%=user.fname%>&nbsp;<%=user.lname%>" name="name" required  placeholder="Name">
                                   </div>
                                 </div><!-- col-4 -->
                                 <div class="col-lg-4">
                                   <div class="form-group">
-                                    <input class="form-control" type="text" name="companyName"  placeholder="Company Name">
+                                    <input class="form-control" id="companyName" type="text" name="companyName" value="<%=user.company_name%>" required  placeholder="Company Name">
                                   </div>
                                 </div><!-- col-4 -->
                                 <div class="col-lg-4">
                                   <div class="form-group">
-                                    <input class="form-control" type="text" name="email"  placeholder="Email Address">
+                                    <input class="form-control" id="customerEmail" type="email" title="Please enter valid email" name="email" value="<%=user.email%>" required  placeholder="Email Address">
                                   </div>
                                 </div><!-- col-4 -->
                                 <div class="col-lg-4">
                                   <div class="form-group mg-b-10-force">
-                                    <input class="form-control" type="text" name="phone"  placeholder="Phone Number">
+                                    <input class="form-control" type="number"   title="Please enter valid phone number" id="customerPhone" name="phone" value="<%=user.phone%>" required  placeholder="Phone Number">
                                   </div>
                                 </div><!-- col-8 -->
                                 <div class="col-lg-4">
                                   <div class="form-group mg-b-10-force">
-                                    <input class="form-control" min="1" placeholder="Total Sheets" oninput="this.value < 1?this.value=1:this.value" max="1000" type="number" name="phone" >
+                                    <input class="form-control" min="1" required placeholder="Total Sheets" oninput="this.value < 1?this.value=1:this.value" max="1000" type="number" name="sheets" >
 
                                   </div>
                                 </div><!-- col-4 -->
                                 <div class="col-lg-4">
                                     <label class="ckbox ">
-                                        <input type="checkbox" ><span>Pick up in Torrance, or Ship?</span>
+                                        <input type="checkbox" id="cbRfqShip" ><span>Pick up in Torrance, or Ship?</span>
                                       </label>
                                   </div><!-- col-4 -->
-                                  <section class="hidden">
-                                  <div class="col-lg-6">
-                                    <div class="form-group">
-                                      <input class="form-control" type="text" name="name"  placeholder="Name">
+                                    <div class="row mg-0 hidden"  id="rfqShippingInfo">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                              <input class="form-control" type="text" name="street1"  placeholder="Street 1">
+                                            </div>
+                                          </div><!-- col-4 -->
+                                          <div class="col-lg-6">
+                                            <div class="form-group">
+                                              <input class="form-control" type="text" name="street2"  placeholder="Street 2">
+                                            </div>
+                                          </div><!-- col-4 -->
+                                          <div class="col-lg-4">
+                                            <div class="form-group">
+                                              <input class="form-control" type="text" name="city"  placeholder="City">
+                                            </div>
+                                          </div><!-- col-4 -->
+                                          <div class="col-lg-4">
+                                            <div class="form-group mg-b-10-force">
+                                              <input class="form-control" type="text" name="state"  placeholder="State">
+                                            </div>
+                                          </div><!-- col-8 -->
+                                          <div class="col-lg-4">
+                                            <div class="form-group mg-b-10-force">
+                                              <input class="form-control" type="text" name="zip"  placeholder="Zip">
+                                            </div>
+                                          </div><!-- col-8 -->
                                     </div>
-                                  </div><!-- col-4 -->
-                                  <div class="col-lg-6">
-                                    <div class="form-group">
-                                      <input class="form-control" type="text" name="companyName"  placeholder="Company Name">
-                                    </div>
-                                  </div><!-- col-4 -->
-                                  <div class="col-lg-4">
-                                    <div class="form-group">
-                                      <input class="form-control" type="text" name="email"  placeholder="Email Address">
-                                    </div>
-                                  </div><!-- col-4 -->
-                                  <div class="col-lg-4">
-                                    <div class="form-group mg-b-10-force">
-                                      <input class="form-control" type="text" name="phone"  placeholder="Phone Number">
-                                    </div>
-                                  </div><!-- col-8 -->
-                                  <div class="col-lg-4">
-                                    <div class="form-group mg-b-10-force">
-                                      <input class="form-control" type="text" name="phone"  placeholder="Phone Number">
-                                    </div>
-                                  </div><!-- col-8 -->
-                                </section>
+                                 
                                   <div class="col-lg-12">
                                     <div class="form-group mg-b-10-force">
-                                        <textarea rows="3" class="form-control" placeholder="Additional Information" spellcheck="false"></textarea>
+                                        <textarea rows="3" class="form-control" placeholder="Additional Information" name="additionalInfo" spellcheck="false"></textarea>
 
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group mg-b-10-force">
                                         <p>Please attach your PDF file.</p>
-
-                                            <input type="file" accept="application/pdf" id="file2" name="attachments" class="">
-
+                                            <input type="file" accept="application/pdf" required id="file2" name="attachments" class="">
                                     </div>
                                 </div>
                               </div><!-- row -->
                   
                               <div class="form-layout-footer">
                                 <button type="submit" class="btn  btn-primary mg-r-5">Submit</button>
-                                <button type="button" class="btn btn-secondary">Cancel</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="$('#formRFQ').trigger('reset')">Cancel</button>
                               </div><!-- form-layout-footer -->
                             </div><!-- form-layout -->
                           </div>
