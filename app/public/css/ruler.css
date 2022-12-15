@@ -19,18 +19,18 @@
 	font-size: 14px;
 	border-bottom: 1px solid;
 	z-index: 9;
-	background-color: #e7e7e7;
+	background-color: #dbdbdb;
 }
 .vRule {
 	font-size: 14px;
 	position: absolute;
-	min-height: 523px;
+	height: 524px;
 	width: 22px;
 	left: -21px;
 	top: -22px;
 	border-right: 1px solid;
 	z-index: 9;
-	background-color: #e7e7e7;
+	background-color: #dbdbdb;
 
 }
 .corner {
@@ -47,11 +47,14 @@
 }
 .hRule .tickLabel {
 	position: absolute;
-	top: 3px;
-	width: 1px;
-	height: 100%;
-	text-indent: 25px;
-	white-space: nowrap;
+    top: 3px;
+    width: 1px;
+    font-size: 14px;
+    height: 100%;
+    text-indent: 20px;
+    color: #494699;
+    white-space: nowrap;
+    font-weight: bold;
 }
 .hRule .tickMajor {
 	position: absolute;
@@ -71,12 +74,15 @@
 	height: 1px;
 	width: 100%;
 	text-indent: 1px;
+	font-size: 14px;
+	font-weight: bold;
+	color:#494699;
 }
 .vRule .tickLabel span {
 	display: block;
 	position: absolute;
 	
-	top: 26px;
+	top: 15px;
 	right: 5px;
 	margin-right: 18px;
 	

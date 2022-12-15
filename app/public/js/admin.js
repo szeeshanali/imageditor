@@ -592,7 +592,7 @@
             // let ratio = widthRatio > heightRatio ? heightRatio : widthRatio
             var imgData = clonedCanvas.toDataURL('image/jpeg', 1.0);
             pdf.addImage(imgData, 'JPEG', 0, 0);
-            pdf.save("download.pdf");
+            pdf.save("KakePrints.pdf");
             $loader.addClass("hidden");
 
         });
@@ -1091,7 +1091,7 @@
                 toast("Please Browse Template.");
                 return;
             }
-            onSaveTemplate();
+            onSaveDesign();
         });
 
         $adminImageUpload.on("click", function (e) {
@@ -1458,7 +1458,7 @@
             height: m.height,
             objects: m.logoCount,
             objectWidth: m.logoWidth,
-            objectWidth: m.logoHeight,
+            objectHeight: m.logoHeight,
             // /title: $templateTitle.val(),
             // pageSize: $selectPageSize.val(),
         }
@@ -1505,7 +1505,7 @@
         })
     })
 
-    function onSaveTemplate() {
+    function onSaveDesign() {
         if (designFlags.submitted) {
             toast("Already submitted, please choose new design.");
             return;
@@ -1516,7 +1516,7 @@
             height: m.height,
             objects: m.logoCount,
             objectWidth: m.logoWidth,
-            objectWidth: m.logoHeight,
+            objectHeight: m.logoHeight,
             title: $templateTitle.val(),
             pageSize: $selectPageSize.val()
         }
@@ -1531,7 +1531,7 @@
         }
         var MIME_TYPE = "image/png";
         var dataUrl = selectedDesign.base64;
-        const file = DataURIToBlob(dataUrl)
+       // const file = DataURIToBlob(dataUrl)
         // const formData = new FormData();
         // formData.append('upload', file, 'image.jpg');
         // formData.append('data', JSON.stringify({
@@ -1556,12 +1556,13 @@
         // })
 
         // )
-        // var category = $("#admin-categories").val();
-        // if(!category){
-        //     toast(`Please select a category.`);
-        //     return;
-        // }
 
+        let designType =  $("#design-type").val();
+        var category = $("#admin-categories").val();
+        if(!category && designType != 'template'){
+            toast(`Please select a category.`);
+            return;
+        }
         $loader.removeClass("hidden");
         $.ajax({
             type: "POST",
@@ -1575,17 +1576,19 @@
                 meta: JSON.stringify(meta),
                 title: $inputThumbnailName.val(),
                 name: $inputDesignName.val(),
-                file_name: $inputFileName.val(),
-                file_ext: ".svg",
+                file_name: selectedDesign.file.name,
+                file_ext: `.${selectedDesign.file.name.split('.').pop()}`,
+                mime_type : selectedDesign.file.type,
                 order_no: $inputOrderNo.val(),
                 active: designFlags.active,
                 base64: dataUrl,
-                type: $("#design-type").val(),
+                type: designType,
                 by_admin: true,
                 default: designFlags.default,
                 link: $inputDesignLink.val(),
                 logos: $inputLogoPerPage.val(),
-                ref_code: $kopykakePartNo.val()
+                ref_code: $kopykakePartNo.val(),
+                category: category
             },
             success: function (res) {
                 designFlags.submitted = true;
@@ -1621,6 +1624,7 @@
             
             let reader = new FileReader();
             // handle svg
+            selectedDesign.file = file;
             if (file.type === 'image/svg+xml') {
                 reader.onload = (f) => {
                     var svgBase64 = f.srcElement.result;

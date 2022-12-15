@@ -2,7 +2,7 @@
     <!--Workspace Left Panel-->
 <div class="col-lg-3 pd-l-0 pd-r-0">
   
-    <div class="card leftpanel" id="menu-panel" >
+    <div class="leftpanel" id="menu-panel" >
         <div class="tab-content">
             
             <div  id="templatepanel" class="tab-pane active"   >
@@ -11,7 +11,7 @@
                   <div class="media d-block d-sm-flex">
                   
                     <div class="media-body mg-t-10 mg-sm-t-0">
-                      <h6 class="mg-b-5 tx-18 tx-white">Choose Template</h6>
+                      <h6 class="mg-b-5 tx-12 tx-inverse tx-bold tx-white"><span class="ion-ios-lightbulb pd-r-5 text-warning"></span>Choose from the below templates and click next to create design.</h6>
                     </div>
                      
                     
@@ -30,7 +30,7 @@
                     <div class="col-lg-4 pd-0  bd template" id="<%=templates[i].code %>">
                       <div class="card" style="min-height: 200px">
                         <div class="card-body pd-10">
-                          <img class="card-img-top img-fluid pd-b-10 ht-140" src="<%=templates[i].base64 %>" alt="Image">
+                          <img class="card-img-top img-fluid pd-b-10 ht-140" src="/uploads/admin/template/template-<%=templates[i].code %><%=templates[i].file_ext %>" alt="Image">
                           <h5 class="tx-14 tx-inverse pd-x-5" style="height:45px;overflow:hidden" title="<%=templates[i].title %>"><%=templates[i].title %></h5>
                           <p class="card-subtitle tx-12  pd-x-5">Part # <%=templates[i].ref_code || "N/A" %></p>
                         </div>
@@ -58,7 +58,7 @@
                         <i class="ion-images tx-24 tx-white"></i>
                       </div> -->
                       <div class="media-body mg-t-10 mg-sm-t-0 ">
-                        <h6 class="mg-b-5 tx-18 tx-white ">Create Design</h6>
+                        <h6 class="mg-b-5 tx-12 tx-bold pd-x-5 tx-white "><span class="ion-ios-lightbulb pd-r-5 text-warning"></span>Now, create your design by adding Photos, Clip Arts and Text and click next to preview or save button to save your design.</h6>
                       </div><!-- media-body -->
                     </div><!-- media -->
                     <div class="btn-group mg-b-0 mg-l-auto">
@@ -75,7 +75,7 @@
                         <i class="ion-images tx-24 tx-white"></i>
                       </div> -->
                       <div class="media-body mg-t-10 mg-sm-t-0">
-                        <h6 class="mg-b-5 tx-18 tx-white">Preview Design</h6>
+                        <h6 class="mg-b-5 tx-12 tx-white"><span class="ion-ios-lightbulb pd-r-5 text-warning"></span>You are almost done! Click next to download or save button to save your design.</h6>
                       </div><!-- media-body -->
                     </div><!-- media -->
                     <div class="btn-group mg-b-0 mg-l-auto">
@@ -231,10 +231,13 @@
       </div>
       <div class="mg-l-auto">
         <div class="d-flex">
-          <button type="button" onclick="$('#menu-save-design').click()" class="btn btn-secondary bd-0 pd-x-20" id="ws-btn-save"><i class="fa fa-floppy-o mg-r-5"></i>Save</button>
-          <button type="button" onclick="$('#btnBack').click()" class="btn btn-secondary bd-0 pd-x-20 hidden" id="ws-btn-back">Back to Design</button>
+          <button type="button" onclick="$('#btn-menu-peview').click()" class="btn btn-primary tx-12 tx-uppercase tx-bold bd-0 pd-x-20 " id="ws-btn-preview">Preview</button>
+          <button type="button" onclick="$('#btn-download-pdf').click()" class="btn btn-primary tx-12 tx-uppercase tx-bold  bd-0 pd-x-20 hidden" id="ws-btn-download">Download</button>
 
-          <a href="#" id="btnStartOver" class="btn btn-success bd-0 pd-x-20 mg-l-1"><i class="ion-refresh mg-r-5"></i>Start Over</a>
+          <button type="button" onclick="$('#menu-save-design').click()" class="btn btn-secondary tx-12 tx-uppercase tx-bold bd-0 pd-x-20" id="ws-btn-save"><i class="fa fa-floppy-o mg-r-5"></i>Save</button>
+          <button type="button" onclick="$('#btnBack').click()" class="btn btn-secondary tx-12 tx-uppercase tx-bold  bd-0 pd-x-20 hidden" id="ws-btn-back">Back to Design</button>
+
+          <a href="#" id="btnStartOver" class="btn btn-secondary bd-0 pd-x-20 mg-l-1 tx-12 tx-uppercase tx-bold"><i class="ion-refresh mg-r-5"></i>Start Over</a>
         </div>
 
         <div class="btn-group mg-b-0">
@@ -264,10 +267,10 @@
 </div>
 <!--Workspace Right panel-->
 <div class="col-lg-3 pd-x-0" id="workspace-right-panel" >
-    <%- include('../../partials/client/rightpanel'); %>
+    <%- include('../../partials/client/popups/rfq.ejs',{user:user}); %>
 </div>
 </div>
-
+<%- include('../../partials/client/rightpanel'); %>
 <script> 
     // $(".tab-content .tab-pane").each((i,e)=>
     //    { $(e).removeClass("active"); })

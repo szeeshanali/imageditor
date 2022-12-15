@@ -42,7 +42,7 @@
                 <div class="mg-y-5" >
                     <small>Display order:</small>
                     <input class="form-control" oninput="this.value = 
-                    !!this.value  && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null"  id="admin-display-order" min="1" max="1000" type="number">
+                    !!this.value  && (Math.abs(this.value) >= 0 && Math.abs(this.value) <= 1000) ? Math.abs(this.value) : null"  id="admin-display-order" min="1" max="1000" type="number">
 
                 </div>
             </div>
@@ -63,8 +63,8 @@
             </div>
     </div>
         <div id="save-image-ctrl" >
-          <div>
-            <button type="button" id="save-design" class="btn  btn-primary mg-r-5" id="btnSave">Save Template</button>
+          <div class="btn-group" role="group">
+            <button type="button" id="save-design" class="btn  btn-primary " id="btnSave">Upload</button>
             <button type="button" id="cancel-design" class="btn btn-secondary" id="btnCancelSaveDesign">Cancel</button>
           </div>
 

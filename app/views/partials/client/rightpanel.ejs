@@ -1,3 +1,16 @@
+<div class="list-group widget-list-group bd-b">
+    <div class="list-group-item d-flex">
+      <div class="media d-block d-sm-flex">
+        
+        <div class="media-body mg-t-10 mg-sm-t-0">
+          <h6 class="mg-b-5 tx-14"><a href="#"  class="hover-primary tx-bold tx-primary">Request a Quote</a></h6>
+          <p class="mg-b-0 tx-12">Send us your PDF to  Print.</p>
+        </div><!-- media-body -->
+      </div><!-- media -->
+      <a href="#" data-toggle="modal" data-target="#rfq" class="btn btn-primary tx-uppercase tx-12 tx-bold pd-lg-x-20 mg-l-auto">Quote</a>
+    </div><!-- list-group-item -->
+  
+  </div>
 <div id="accordion" class="accordion" role="tablist" aria-multiselectable="true">
     <div class="card">
         <div class="card-header" role="tab" id="headingOne">
@@ -11,44 +24,24 @@
         <!-- card-header -->
 
         <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne">
-            <!-- <div class="card-block" id="template-info-panel">
-                                        <div class="d-flex mg-b-10 tx-center bd-r">
-                                            <div class="wd-100">
-                                                <div>
-                                                    <img id="imgSelectedTemplate" style="width:80%; "></div>
-                                                </div>
-                                                <div class="bd-r pd-r-10 ">
-                                                    <label class="tx-12 ">Page Size</label>
-                                                    <p class="tx-lato tx-inverse tx-bold page-size">-</p>
-                                                </div>
-                                                <div class="bd-r pd-x-10">
-                                                    <label class="tx-12 ">Logo Size</label>
-                                                    <p class="tx-lato tx-inverse tx-bold logo-size">-</p>
-                                                </div>
-                                                <div class="pd-l-10">
-                                                    <label class="tx-12 ">Total Logos</label>
-                                                    <p class="tx-lato tx-inverse tx-bold total-logos">-</p>
-                                                </div>
-                                            </div>
-                        
-                                        </div> -->
+          
             <div class="mail-item d-flex pd-10 bd-b bd-gray-200" id="template-info-panel">
                 <div>
                     <img id="imgSelectedTemplate" class="wd-80 " alt=""></div>
                     <div class="mg-l-10">
-                        <h6 class="tx-14 tx-bold">
-                            <span href="#" class="tx-inverse template-name"></span>
-                        </h6>
+                       
                         <p class="tx-13 mg-b-10">
-                            <span class="page-size tx-bold"></span>
-                            sheet of
-                            <span class="total-logos tx-bold"></span>
-                            logos, each logo size is
-                            <span class="logo-size tx-bold"></span>
+                            <p>
+                            <span class="template-name tx-bold"></span><br>
+                            <span >Sheet size:</span> <span class="page-size tx-bold"></span><br>
+                             Total Logos: <span class="total-logos tx-bold"></span><br>
+                             Logo Size: <span class="logo-size tx-bold"></span> <br>
+                             Part #: <span class="ref_code tx-bold"></span>
+                            </p>
+                          
+                           
                         </p>
-                        <p class="tx-13 mg-b-10">Code: #
-                            <span class="ref_code tx-bold"></span>
-                        </p>
+                      
                     </div>
                 </div>
 
@@ -168,10 +161,28 @@
                 <!-- card-header -->
 
                 <div id="collapseFive" class="collapse txt-ctrl hidden" role="tabpanel" aria-labelledby="headingFive">
-                    <div class="card pd-20">
-                        <select id="font-list-container" class="form-control select2" id="predefinedText" data-placeholder="Please Choose...">
+                    <div class="card pd-10">
+                        <div class="dropdown" id="font-list-container">
+                            <button class="btn btn-block dropdown-toggle" type="button" id="fontlist" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Arial (sans-serif)
+                            </button>
+                            <div class="dropdown-menu"  aria-labelledby="fontlist">
+                              <a class="dropdown-item" href="#" style="font-family: Arial" >Arial (sans-serif)</a>
+                              <a class="dropdown-item" href="#" style="font-family: Luckiest Guy;" >Luckiest Guy</a>
+                              <a class="dropdown-item" href="#" style="font-family: Bungee Shade" >Bungee Shade</a>
+                              <a class="dropdown-item" href="#" style="font-family: BlackHanSans" >BlackHanSans</a>
+                              <a class="dropdown-item" href="#" style="font-family: Creepster" >Creepster</a>
+                              <a class="dropdown-item" href="#" style="font-family: LondrinaShadow" >LondrinaShadow</a>
+                              <a class="dropdown-item" href="#" style="font-family: Brush Script MT, cursive" >Brush Script MT, cursive</a>
+                              <a class="dropdown-item" href="#" style="font-family: RockSalt" >RockSalt</a>
+                              <a class="dropdown-item" href="#" style="font-family: Shrikhand" >Shrikhand</a>
+                              <a class="dropdown-item" href="#" style="font-family: PermanentMarker" >PermanentMarker</a>
+                            </div>
+                          </div>
+                          
+                        <!-- <select id="font-list-container" class="form-control select2" id="predefinedText" data-placeholder="Please Choose...">
                               <option value="Arial, sans-serif" selected>Arial (sans-serif)</option>
-                              <option value="Luckiest Guy">Luckiest Guy</option>
+                              <option value="Luckiest Guy" >Luckiest Guy</option>
                               <option value="Bungee Shade">Bungee Shade</option>
                               <option value="BlackHanSans">BlackHanSans</option>
                               <option value="Creepster">Creepster</option>
@@ -180,7 +191,7 @@
                               <option value="RockSalt">RockSalt</option>
                               <option value="Shrikhand">Shrikhand</option>
                               <option value="PermanentMarker">PermanentMarker</option>
-                          </select>
+                          </select> -->
                         <!-- <ul class="list-group widget-list-group" id="font-list-container">
                             <li class="list-group-item rounded-top-0">
                                 <div class="tx-inverse  fontfamily" data-value="Arial, sans-serif" style="font-family: Arial, sans-serif;">Arial (sans-serif)</div>

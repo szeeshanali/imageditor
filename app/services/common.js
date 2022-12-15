@@ -59,13 +59,13 @@ const commonService = (function() {
             designs =   await uploads.find({ active:active, by_admin:by_admin, deleted:false},
             {
                 code:1,
-                base64:1,
                 title:1,
                 type:1,
                 name:1,
                 ref_code:1,
                 id:1,
-                category:1
+                category:1,
+                file_ext:1
             }).sort({order_no:1}); 
         }else{
             designs =   await uploads.find({type: type, active:active, by_admin:by_admin,deleted:false  },

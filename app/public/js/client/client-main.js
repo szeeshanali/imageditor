@@ -600,23 +600,32 @@ function loadSVGTemplate(id) {
         canvas.templateId = data.code;
         hideWorkspaceControls();
         // loading Big display
-        var logoDisplaySize = 500;
+        let logoDisplaySize = 500;
+        let logoHeight = 500;
 
         fabric.loadSVGFromURL(svgBase64, function (objects, options) {
 
             // / getting actual width and height of a logo
             // / setting canvas dimensions with logo width/height
-            var logo = objects[objects.length-1];
-            var w = Math.floor(logo.getScaledWidth());
-            var h = Math.floor(logo.getScaledHeight());
-            canvas.setDimensions({width: logoDisplaySize, height: logoDisplaySize});
+            var logo = objects[objects.length-1];  
+            if(logo.height && logo.height < logo.width)
+            {
+                var ratio = (logo.width/logo.height);
+                logoHeight = logoDisplaySize/ratio;
+                
+            }
+
+            logo.scaleToWidth(logoDisplaySize-2);
+            logo.scaleToHeight(logoHeight-2);
+            canvas.setDimensions({width: logoDisplaySize, height: logoHeight});
             canvas.setBackgroundImage(logo, canvas.renderAll.bind(canvas));
             
             canvas.renderAll();
             // canvas.setZoom(2);
-            var logoSize = (meta.objectWidth / dpi).toFixed(1);
-            $("#template-info-panel .template-name").text(data.name);
-            $("#template-info-panel .page-size").text(meta.pageSize);
+            var logoSize = `${(meta.objectWidth / dpi).toFixed(1)}" x ${((meta.objectHeight || meta.objectWidth) / dpi).toFixed(1)}`;
+            let pageSize = `${meta.width/dpi}" x ${meta.height/dpi}"`;
+            $("#template-info-panel .template-name").text(data.title);
+            $("#template-info-panel .page-size").text(pageSize);
             $("#template-info-panel .logo-size").text(logoSize + "''");
             $("#template-info-panel .total-logos").text(meta.objects);
             $("#template-info-panel .page-title").text(data.title);
@@ -645,7 +654,7 @@ function loadSVGTemplate(id) {
 
             $(".vRule, .hRule").remove();
             $('.canvas-container').first().ruler(rulerSettings);
-
+            $(".vRule").height(logoHeight+22);
             /// show grid lines 
             var labels   = $(".hRule .tickLabel");
             var vlabels   = $(".vRule .tickLabel");
@@ -668,7 +677,7 @@ function loadSVGTemplate(id) {
                   
                   var pos = $(labels[i]).position();
                   console.log(pos);
-                  $(".canvas-container").first().append(`<div class='grid-lines' style='height:500px;left:${pos.left-22}px; top:0px; '></div>`)
+                  $(".canvas-container").first().append(`<div class='grid-lines' style='height:${logoHeight}px;left:${pos.left-22}px; top:0px; '></div>`)
                 }
           // vlines 
           
@@ -679,13 +688,18 @@ function loadSVGTemplate(id) {
                  console.log(pos);
                 
                   $(".canvas-container").first().append(`<div class='grid-lines h-gridlines' style='width:500px;top:${pos.top-22}px; left:0px; border-bottom: solid 1px #666;'></div>`);
-                  $(".canvas-container").first().css({border:"solid 1px #666", width:"502px",height:"503px"})
+                  $(".canvas-container").first().css({border:"solid 1px #666", width:"502px",height:`${logoHeight}px`})
                 }
+
+
+               // $("#client-main-canvas").removeClass('hidden');
         }, function (item, object) {
             object.set({fill:"#fff"});
-            object.set({left: 8, top: 4});
-            object.scaleToWidth(logoDisplaySize);
-            
+            object.set({left: 6, top: 4});
+            //object.set({width: 500, top: 4});
+            //object.scaleToWidth(logoDisplaySize);
+           
+
             // 4in = 96 res
             // object.set('id', item.getAttribute('id'));
             // group.push(object);
@@ -713,6 +727,7 @@ function loadSVGTemplate(id) {
             loadedObjects.center().setCoords();
             //loadgrid()
         }, function (item, object) {
+            object.set({fill:"#fff"});
             object.set('id', item.getAttribute('id'));
             // object.set('width', (object.width/72)*96);
             // object.set('height', (object.height/72)*96);
@@ -765,6 +780,47 @@ function menuPanelDisplay(itemToDisplay) {
 
 function initUIEvents() {
 
+    $("#cbRfqShip").on("click", function (e) {
+      
+        if(e.target.checked)
+        {
+         $("#rfqShippingInfo").removeClass('hidden');
+        }else{
+            $("#rfqShippingInfo").addClass('hidden');
+        }
+         
+ 
+     })
+
+    $("#formRFQ").submit(function(e) {
+
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+    
+        var form = $(this);
+        var actionUrl = form.attr('action');
+        var data = new FormData($(this)[0]);
+        $.ajax({
+            type: "POST",
+            url: actionUrl,
+            data: data, // serializes the form's elements.
+            async: false,
+            success: function (data) {
+                toast('Thank you, Your request has been submitted, we will contact you soon.');
+                form.trigger('reset');
+                $('#rfq').modal('toggle');
+            },error: function (request, status, error) {
+                toast('Server Error: Form could not be submitted.');
+                form.trigger('reset');
+                $('#rfq').modal('toggle');
+
+            },
+            cache: false,
+            contentType: false,
+            processData: false,
+           
+        });
+        
+    });
     $("#menu-save-design").on("click",function(e){
         e.preventDefault();
         e.stopPropagation(); return false;
@@ -932,6 +988,7 @@ function initUIEvents() {
         var style = !($(".ruler").is(':visible'));
         if (style) {
             $('.canvas-container').first().ruler(rulerSettings);
+            $(".vRule").height($(".vRule").height()+22);
             $(this).html($(this).html().replace("On", "Off"));
         } else {
             $(".vRule, .hRule").remove();
@@ -983,9 +1040,9 @@ function initUIEvents() {
 
     })
 
-    $("#font-list-container").on("change", function (e) {
-        var value = e.currentTarget.value || "Arial, sans-serif";
-      
+    $("#font-list-container a").on("click", function (e) {
+        var value = $(this).text() || "Arial, sans-serif";
+        $("#fontlist").text(value);
         //$("#selected-font").html($(this).html())
         canvas.getActiveObject().set("fontFamily", value);
         canvas.requestRenderAll();
@@ -1271,7 +1328,6 @@ function previewDesign() { /*
    . Hide Ruler 
    . Hide Grid 
     */
-    state.isPreviewCanvas = true;
 
     $("#workarea").attr("style", "background-image:url('')");
     //$("#btnDisplayGrid").hide();
@@ -1339,7 +1395,9 @@ menuHighlighter("#menu-upload");
     $("#preview-design-heading").addClass("hidden");
 
     $("#ws-btn-save").removeClass("hidden");
+    $("#ws-btn-preview").removeClass("hidden");
     $("#ws-btn-back").addClass("hidden");
+    $("#ws-btn-download").addClass("hidden");
 
 
     $(".step-item:nth-child(3)").removeClass("active");
@@ -1418,7 +1476,11 @@ function renderPreview() {
             }
             $loader.addClass("hidden");
             $("#ws-btn-save").addClass("hidden");
+            $("#ws-btn-preview").addClass("hidden");
             $("#ws-btn-back").removeClass("hidden");
+            $("#ws-btn-download").removeClass("hidden");
+            state.isPreviewCanvas = true;
+
             //         closeRepeatDesignPreview();
         });
     })
@@ -1494,6 +1556,7 @@ function onObjectSelection(o) {
 
 
 function updateTextControls(e){
+    debugger;
    var item = e.selected[0]; 
    $("#btnTextSize").val(item.fontSize);
    if(item.charSpacing)
@@ -1507,6 +1570,7 @@ function updateTextControls(e){
    { document.querySelector('#strokecolor')?.jscolor.fromString(item.stroke); }
    document.querySelector('#fontColorBox').jscolor.fromString(item.fill);
    
+   $("#fontlist").text(item.fontFamily);
    
 }
 
@@ -1731,7 +1795,7 @@ function addWaterMark(doc) {
 }
 function downloadDesign() {
 
-    if (! state.isPreviewCanvas) {
+    if (!state.isPreviewCanvas) {
         toast("Please preview your design before download.");
         return;
     }
@@ -1769,8 +1833,13 @@ function downloadDesign() {
             width = pdf.internal.pageSize.getWidth();
             height = pdf.internal.pageSize.getHeight();
             canvasPrev.clone(function (clonedCanvas) {
+
+                
                 var bg = clonedCanvas.backgroundImage;
                 clonedCanvas.backgroundImage = false;
+
+                clonedCanvas.setDimensions({ width: 612 * 3, height: 792 * 3 })
+                clonedCanvas.setZoom(3);
                 // let canvasJSON = clonedCanvas.toJSON();
                 // clonedCanvas.setDimensions({width:width,height:height});
                 // debugger;
@@ -1837,7 +1906,7 @@ function downloadDesign() {
 
                 // let filename =
                 // pdf = addWaterMark(pdf);
-                pdf.save("download.pdf");
+                pdf.save("KakePrints.pdf");
                 $loader.addClass("hidden");
                 $(".step-item:nth-child(3)").removeClass("active");
                 $(".step-item:nth-child(4)").addClass("active");
