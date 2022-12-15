@@ -3,8 +3,12 @@ const router                = express.Router();
 const {isLoggedIn,isAdmin}  = require('../../config/auth');
 const categories            = require('../../models/categories');
 const uploads = require('../../models/uploads');
+const fs                    = require('fs');
+
 const commonService = require('../../services/common');
 PATH_USER_PROJECTS              = 'pages/client/myprojects';
+var formidable = require('formidable');
+
 PATH_TEMPLATES              = 'pages/client/templates';
 PATH_WORKSPACE              = 'pages/client/workspace';
 const { default: mongoose, mongo } = require('mongoose');
@@ -22,7 +26,19 @@ router.use( async (req, res, next) => {
     //res.locals.projects = await commonService.uploadService.getUserDesignsAsync(req.user._id);
     next();
 });
+// Use at least Nodemailer v4.1.0
+const nodemailer = require('nodemailer');
 
+
+
+const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 587,
+    auth: {
+        user: 'zeeshan01@gmail.com',
+        pass: 'mffxbxpxbntvcqxy'
+    }
+});
 
 router.get(ROUTE_USER_PROFILE, isLoggedIn, (req,res)=>{    
     
@@ -187,11 +203,15 @@ router.get("/app/main",   (req, res) => {
 router.post('/app/client/save-design', isLoggedIn, async function(req, res) {
 try{
 
-    const totalProjects =  await uploads.find({ uploaded_by:req.user._id,  deleted:false,active:true},{title:1}); 
+    const totalProjects =  await uploads.find({ 
+        uploaded_by:req.user._id,  
+        deleted:false, active:true,
+        type:'project'
+    },{title:1}); 
     const count = totalProjects.length;
     console.log(`total project count: ${count}`); 
     console.log(totalProjects);
-    if(count>req.user.project_limit){
+    if(count>=req.user.project_limit){
         return res.status(401).send({message:`You can not save more than ${req.user.project_limit} projects.`, error: `You can not save more than ${req.user.project_limit} projects.`});
     }  
     const {json,thumbBase64,title, desc, templateId} = req.body; 
@@ -289,7 +309,7 @@ router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
    var cliparts = adminUploadItems.filter(function(item){ return item.type == 'clipart'});
    var customDesigns = adminUploadItems.filter(function(item){ return item.type == 'pre-designed'});
    var categories = await commonService.categoryService.getCategoriesAsync();
-  var customText = await commonService.contentService.getContentAsync('custom-text');
+   var customText = await commonService.contentService.getContentAsync('custom-text');
    var ca = [];
    categories.forEach(category => {
     var items = cliparts?.filter(i=>i.category == category.id);
@@ -317,12 +337,114 @@ router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
     });
 });
 
+router.get('/app/rfq/pdf/:id', async function(req, res){
+    let code = req.params['id'];
+    try{
+        let attachment = await uploads.findOne({code:code,type:'rfq_attachments'});
+        if(!attachment || !attachment.path)
+        {res.status(400).send(`Error: File not found. Request id: ${code}`)};
+        const file = attachment.path;
+        res.download(file); // Set disposition and send it.
+    }catch(ex)
+    {
+       console.log(ex);
+       res.status(400).send(`Error: File not found. Request id: ${code}`)
+    }
+   
+  });
+
+router.post('/api/rfq', isLoggedIn, async (req,res)=>{
+    const  {companyName, name, phone, sheets, email, additionalInfo, file} = req.body;
+
+    var form = new formidable.IncomingForm();
+    var f ;
+    form.parse(req, async function (err, fields, file) {
+        console.log(fields);
+        try{
 
 
-// router.post('/app/workspace', isLoggedIn, (req,res)=>{
-//     const  {width, height, title} = req.body;
-//     res.render("pages/client/index",{ executescript: `callback({width:${width},height:${height},title:${title}});` })
-// })
+
+                let filepath = file.attachments.filepath;
+                let newpath = `../app/public/uploads/client/attachments/`;
+                newpath += file.attachments.originalFilename;
+                console.log(file.attachments)
+                //Copy the uploaded file to a custom folder
+               await fs.copyFile(filepath, newpath, async function (err) {
+                  //Send a NodeJS file upload confirmation message
+                  if (err) {
+                    console.log('err: ' + err);
+                } else {
+                    var _id = mongoose.Types.ObjectId();
+                    var model = {
+                    title           :   `${file.attachments.originalFilename}`,
+                    name            :   `${additionalInfo}`,
+                    code            :   _id,
+                    active          :   true,                   
+                    default         :   false,
+                    by_admin        :   false,
+                    type            :   "rfq_attachments",
+                    uploaded_by     :    req.user._id,
+                    path            :   newpath
+                    };
+
+                    commonService.uploadService.upload(model,(err,msg)=>{
+
+                        if(!err)
+                            {       console.log(msg); }
+                            else {  console.log(err); }
+                        })
+                     let appUrl = `${req.protocol}://${req.hostname}:${req.socket.localPort}`;
+                    await transporter.sendMail({
+                        from:       'test@example.com',
+                        to:         'zeeshan01@gmail.com',
+                        subject:    'KakePrint Request for Quote.',
+                        html:       `<strong>Hello Admin,</strong>
+                        <p>Please find the details with attached PDF.</p>
+                        <p>
+                           
+                            <strong>Name:                   </strong> ${fields.name}<br>
+                            <strong>Company name:           </strong> ${fields.companyName}<br>
+                            <strong>Email:                  </strong> ${fields.email}<br>
+                            <strong>Phone:                  </strong> ${fields.phone}<br>
+                            <strong>Number Of Sheets:       </strong> ${fields.sheets}<br>
+                            <p><strong>Shipping:</strong></p>
+                            <strong>Street 1:                   </strong> ${fields.street1}<br>
+                            <strong>Street 2:           </strong> ${fields.street2}<br>
+                            <strong>City:                  </strong> ${fields.city}<br>
+                            <strong>State:                  </strong> ${fields.state}<br>
+                            <strong>Zip:       </strong> ${fields.zip}<br>
+                            <strong>Additional Information: </strong> <p>${fields.additionalInfo}<p>
+                            <strong><a href="${appUrl}/app/rfq/pdf/${_id}">Download </a> &nbsp;&nbsp;${file.attachments.originalFilename}, (${((file.attachments.size/1000)/1000).toFixed(1)}mb).      </strong>                  
+                        </p>
+                        `
+                    });
+                    res.status(200).send("Ok");
+                }
+                })
+
+
+            
+           }catch(ex){
+            res.status(500).send(ex);
+           }
+//         let filepath = file.file.filepath;
+//     let newpath = `/public/uploads/client/attachments/`;
+//     newpath += file.file.originalFilename;
+// console.log(newpath)
+//     //Copy the uploaded file to a custom folder
+//     fs.rename(filepath, newpath, function () {
+//       //Send a NodeJS file upload confirmation message
+//       res.write('NodeJS File Upload Success!');
+//       res.end();
+//     });
+    })
+  
+console.log(file);
+
+    
+  
+    ///res.render("pages/client/index",{ executescript: `callback({width:${width},height:${height},title:${title}});` })
+})
 // router.get('/app/workspace',isLoggedIn, (req,res)=>{
 //     const  {width, height, title} = req.body;
 

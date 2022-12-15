@@ -56,7 +56,7 @@
 
 .workarea{
     width: 100%;
-    height: 800px;
+    min-height: 500px;
     /* background-image: url('/images/grid-trans.png'); */
 
 }
@@ -910,4 +910,17 @@ border-right: solid 0px #ccc;  }
 .card-subtitle{
   height:32px; 
   overflow: hidden;
+}
+.design-steps{
+  display: inline-block;
+    /* width: 30px; */
+    /* height: 30px; */
+    border-radius: 50%;
+    background-color: #494699;
+    line-height: 30px;
+    color: white;
+    padding: 0px 11px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 5px;
 }

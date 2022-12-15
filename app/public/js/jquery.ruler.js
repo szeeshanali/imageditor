@@ -57,7 +57,10 @@
 			var $vRule = $('.vRule');
 			$hRule.empty();
 			$vRule.empty().height(0).outerHeight($vRule.parent().outerHeight());
-			var logoSize = parseFloat($(".logo-size").text())
+			//var logoSize = parseFloat($(".logo-size").text())
+			var logoSize = $(".logo-size").text()?.split('x');
+			let logoWidth = parseFloat(logoSize[0]);
+			let logoHeight = parseFloat(logoSize[1]);
 
 			// Horizontal ruler ticks
 			var tickLabelPos = settings.vRuleSize;
@@ -67,7 +70,7 @@
 				if ((( tickLabelPos - settings.vRuleSize ) %50 ) == 0 ) {
 					hLabelValue += 1; 
 					console.log(hLabelValue);
-					var val = (logoSize*hLabelValue)/10;
+					var val = (logoWidth*hLabelValue)/10;
 				   console.log(val);
 					newTickLabel = "<div class='tickLabel'>" + val.toFixed(1) + "''</div>";
 					$(newTickLabel).css( "left", tickLabelPos+"px" ).appendTo($hRule);
@@ -91,7 +94,7 @@
 				if ((( tickLabelPos - settings.hRuleSize ) %50 ) == 0) {
 					vLabelValue += 1; 
 					console.log(vLabelValue);
-					var val = (logoSize*vLabelValue)/10;
+					var val = (logoHeight*vLabelValue)/10;
 				   console.log(val);
 					newTickLabel = "<div class='tickLabel'>" + val.toFixed(1) + "''</div>";
 					$(newTickLabel).css( "top", tickLabelPos+"px" ).appendTo($vRule);
@@ -140,7 +143,9 @@
 			var newTickLabel = "";
 			var hLabelValue = 0; 
 			var prevLogoSize = null; 
-			var logoSize = parseFloat($(".logo-size").text());
+			var logoSize = $(".logo-size").text()?.split('x');
+			let logoWidth = parseFloat(logoSize[0]);
+			let logoHeight = parseFloat(logoSize[1]);
 
 			console.log("tickLabelPos",tickLabelPos);
 			while ( tickLabelPos <= $hRule.width() ) {
@@ -149,7 +154,7 @@
 				if ((( tickLabelPos - settings.vRuleSize ) % 50 ) == 0 ) {
 					hLabelValue += 1; 
 					console.log("logoSize",logoSize);
-					var val = (logoSize*hLabelValue)/10;
+					var val = (logoWidth*hLabelValue)/10;
 				   console.log(val);
 					newTickLabel = "<div class='tickLabel'>" + val.toFixed(1) + "''</div>";
 					$(newTickLabel).css( "left", tickLabelPos+"px" ).appendTo($hRule);
@@ -173,7 +178,7 @@
 				if ((( tickLabelPos - settings.hRuleSize ) %50 ) == 0) {
 					vLabelValue += 1; 
 					console.log(vLabelValue);
-					var val = (logoSize*vLabelValue)/10;
+					var val = (logoHeight*vLabelValue)/10;
 				   console.log(vLabelValue)
 
 					newTickLabel = "<div class='tickLabel'><span>" + + val.toFixed(1) + "''</span></div>";
@@ -185,6 +190,7 @@
 					newTickLabel = "<div class='tickMinor'></div>";
 					$(newTickLabel).css( "top", tickLabelPos+"px" ).appendTo($vRule);
 				}
+				
 				tickLabelPos = ( tickLabelPos + 5 );				
 			}//vert ticks			
 			
