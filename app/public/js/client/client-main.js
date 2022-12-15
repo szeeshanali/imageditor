@@ -600,23 +600,23 @@ function loadSVGTemplate(id) {
         canvas.templateId = data.code;
         hideWorkspaceControls();
         // loading Big display
-        var logoDisplaySize = 500;
-        
+        let logoDisplaySize = 500;
+        let logoHeight = 500;
 
         fabric.loadSVGFromURL(svgBase64, function (objects, options) {
 
             // / getting actual width and height of a logo
             // / setting canvas dimensions with logo width/height
-            var logo = objects[objects.length-1];
-            var logoHeight = logoDisplaySize;
+            var logo = objects[objects.length-1];  
             if(logo.height && logo.height < logo.width)
             {
                 var ratio = (logo.width/logo.height);
                 logoHeight = logoDisplaySize/ratio;
+                
             }
 
-            var w = Math.floor(logo.getScaledWidth());
-            var h = Math.floor(logo.getScaledHeight());
+            logo.scaleToWidth(logoDisplaySize-2);
+            logo.scaleToHeight(logoHeight-2);
             canvas.setDimensions({width: logoDisplaySize, height: logoHeight});
             canvas.setBackgroundImage(logo, canvas.renderAll.bind(canvas));
             
@@ -695,9 +695,11 @@ function loadSVGTemplate(id) {
                // $("#client-main-canvas").removeClass('hidden');
         }, function (item, object) {
             object.set({fill:"#fff"});
-            object.set({left: 8, top: 4});
-            object.scaleToWidth(logoDisplaySize);
-            
+            object.set({left: 6, top: 4});
+            //object.set({width: 500, top: 4});
+            //object.scaleToWidth(logoDisplaySize);
+           
+
             // 4in = 96 res
             // object.set('id', item.getAttribute('id'));
             // group.push(object);
