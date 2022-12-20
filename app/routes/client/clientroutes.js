@@ -357,26 +357,24 @@ router.post('/api/rfq', isLoggedIn, async (req,res)=>{
     const  {companyName, name, phone, sheets, email, additionalInfo, file} = req.body;
 
     var form = new formidable.IncomingForm();
-    var f ;
     form.parse(req, async function (err, fields, file) {
-        console.log(fields);
         try{
 
 
-
+                const _id = mongoose.Types.ObjectId();
                 let filepath = file.attachments.filepath;
                 let newpath = `../app/public/uploads/client/attachments/`;
-                newpath += file.attachments.originalFilename;
-                console.log(file.attachments)
+                const filename = _id+file.attachments.originalFilename;
+                newpath += filename;
                 //Copy the uploaded file to a custom folder
                await fs.copyFile(filepath, newpath, async function (err) {
                   //Send a NodeJS file upload confirmation message
                   if (err) {
                     console.log('err: ' + err);
                 } else {
-                    var _id = mongoose.Types.ObjectId();
+                    
                     var model = {
-                    title           :   `${file.attachments.originalFilename}`,
+                    title           :   `${filename}`,
                     name            :   `${additionalInfo}`,
                     code            :   _id,
                     active          :   true,                   
@@ -400,23 +398,29 @@ router.post('/api/rfq', isLoggedIn, async (req,res)=>{
                         subject:    'KakePrint Request for Quote.',
                         html:       `<strong>Hello Admin,</strong>
                         <p>Please find the details with attached PDF.</p>
-                        <p>
-                           
-                            <strong>Name:                   </strong> ${fields.name}<br>
-                            <strong>Company name:           </strong> ${fields.companyName}<br>
-                            <strong>Email:                  </strong> ${fields.email}<br>
-                            <strong>Phone:                  </strong> ${fields.phone}<br>
-                            <strong>Number Of Sheets:       </strong> ${fields.sheets}<br>
-                            <p><strong>Shipping:</strong></p>
-                            <strong>Street 1:                   </strong> ${fields.street1}<br>
-                            <strong>Street 2:           </strong> ${fields.street2}<br>
-                            <strong>City:                  </strong> ${fields.city}<br>
-                            <strong>State:                  </strong> ${fields.state}<br>
-                            <strong>Zip:       </strong> ${fields.zip}<br>
-                            <strong>Additional Information: </strong> <p>${fields.additionalInfo}<p>
-                            <strong><a href="${appUrl}/app/rfq/pdf/${_id}">Download </a> &nbsp;&nbsp;${file.attachments.originalFilename}, (${((file.attachments.size/1000)/1000).toFixed(1)}mb).      </strong>                  
-                        </p>
-                        `
+                        <p>Please find the details with attached PDF.</p>
+                        <table style='font-family:Arial; color:#222; font-size:12px; text-align:left'>
+                            <tr><th width='150'>Name</th><td>${fields.name}</td></tr>
+                            <tr><th>Company Name</th><td>${fields.companyName}</td></tr>
+                            <tr><th>Email</th><td>${fields.email}</td></tr>
+                            <tr><th>Phone</th><td>${fields.phone}</td></tr>
+                            <tr><th># of Sheets</th><td>${fields.sheets}</td></tr>
+                            <tr><th>Pickup in Torrance</th><td>${fields.pickup}</td></tr>
+                            <tr><th colspan='2'>Shipping Details</tthd></tr>
+                            <tr><th>Street 1</th><td>${fields.street1}</td></tr>
+                            <tr><th>Street 2</th><td>${fields.street2}</td></tr>
+                            <tr><th>City</th><td></td>${fields.city}</tr>
+                            <tr><th>State</th><td>${fields.state}</td></tr>
+                            <tr><th>Zip</th><td>${fields.zip}</td></tr>
+                            <tr><th colspan='2'>Additional Information</th></tr>
+                            <tr><td colspan='2'><p>
+                            ${fields.additionalInfo}
+                            </p></td></tr>
+                            </table>
+                     <div style=''>
+                    <div> File: ${filename} </div>
+                      <div><a style='color:white;padding:10px;background-color:green;border-radius:3px;font-size:11px;text-decoration:none;font-family:Arial' href="${appUrl}/app/rfq/pdf/${_id}">DOWNLOAD (${((file.attachments.size/1000)/1000).toFixed(1)}mb) </a> </div>
+                     </div>`
                     });
                     res.status(200).send("Ok");
                 }

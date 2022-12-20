@@ -28,16 +28,7 @@ const commonService        = require('../app/services/common');
 //   console.log("Connected!");
 // });
 
-
-
 require("../app/config/passport")(passport);
-
-
-
-
-
-
-
 
 //mongoose
 mongoose.connect('mongodb+srv://dtimageeditor:Xcccccc123@cluster0.gte2f0n.mongodb.net/dtimageeditor',
@@ -59,10 +50,13 @@ app.use(express.static('uploads'))
 app.use(express.json({limit: '25mb'}));
 app.use(express.urlencoded({limit: '25mb', extended: true }));
 app.use(session(
-  {   secret            : 'secret',
+  {   secret            : 'this-is-a-kakeprint-secret',
       resave            : true,
       saveUninitialized : true,
-      cookie: { maxAge: 60 * 60 * 1000 } // 1 hour
+      cookie: {
+        maxAge: 24 * 60 * 60 * 1000
+     }
+
  })); 
 
 app.use(passport.initialize());
