@@ -93,9 +93,7 @@
 			while (tickLabelPos <= $vRule.height()) {
 				if ((( tickLabelPos - settings.hRuleSize ) %50 ) == 0) {
 					vLabelValue += 1; 
-					console.log(vLabelValue);
 					var val = (logoHeight*vLabelValue)/10;
-				   console.log(val);
 					newTickLabel = "<div class='tickLabel'>" + val.toFixed(1) + "''</div>";
 					$(newTickLabel).css( "top", tickLabelPos+"px" ).appendTo($vRule);
 				} else if (((tickLabelPos - settings.hRuleSize)%10) == 0) {

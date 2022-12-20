@@ -1,7 +1,7 @@
 const dpi = 72;
 const defaults = {
     fontSize:36,
-    fontFill:'#000',
+    fontFill: '#000',
     fontFamily:'Arial'
 }
 const letterPageSize = {
@@ -114,6 +114,10 @@ fabric.Object.prototype.cornerStrokeColor = '#000';
 fabric.Object.prototype.cornerSize = 10;
 fabric.Object.prototype.padding = 3;
 
+fabric.util.addListener(document.getElementsByClassName('upper-canvas')[0], 'contextmenu', function(e) {
+    e.preventDefault();
+});
+
 fabric.CurvedText = fabric.util.createClass(fabric.Object, {
     type: 'curved-text',
     diameter: 250,
@@ -128,6 +132,7 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
     cacheProperties: fabric.Object.prototype.cacheProperties.concat('diameter', 'kerning', 'flipped', 'fill', 'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'strokeStyle', 'strokeWidth'),
     strokeStyle: null,
     strokeWidth: 0,
+    paintFirst: "stroke",
     text: '',
 
     initialize: function (text, options) { // this = (typeof(text) ==='object')?text:this;
@@ -784,9 +789,10 @@ function initUIEvents() {
       
         if(e.target.checked)
         {
-         $("#rfqShippingInfo").removeClass('hidden');
-        }else{
             $("#rfqShippingInfo").addClass('hidden');
+        }else{
+            $("#rfqShippingInfo").removeClass('hidden');
+           
         }
          
  
@@ -798,16 +804,27 @@ function initUIEvents() {
     
         var form = $(this);
         var actionUrl = form.attr('action');
-        var data = new FormData($(this)[0]);
+        var formData = new FormData(form[0]);
+        let data = JSON.stringify(canvasPrev.toJSON());  
+       
+        
+        let blob = new Blob([data], {type: "octet/stream"});
+        var file = new File([blob], "name");
+        formData.append('file', file);
+        $loader.removeClass("hidden");
+
+       
+
         $.ajax({
             type: "POST",
             url: actionUrl,
-            data: data, // serializes the form's elements.
+            data: formData, // serializes the form's elements.
             async: false,
             success: function (data) {
                 toast('Thank you, Your request has been submitted, we will contact you soon.');
                 form.trigger('reset');
                 $('#rfq').modal('toggle');
+                $loader.addClass("hidden");
             },error: function (request, status, error) {
                 toast('Server Error: Form could not be submitted.');
                 form.trigger('reset');
@@ -825,18 +842,74 @@ function initUIEvents() {
         e.preventDefault();
         e.stopPropagation(); return false;
         
+        
     })
+/**
+ * Confirm Boxes
+ */
 
 
-    $("#btnStartOver").on("click",function(e){
-    e.preventDefault();
-    if(confirm("Your changes will be lost, do you want to continue?"))
-    { 
-        //window.location.reload(); 
-        const templateId  = selectedTemplateId || 'default';
-        loadSVGTemplate(templateId);
-    }
+
+$("#btnLibraryModal").on("click",function(e){
+    $("#btnModelContinue").text("Continue");
+    $("#confirmBoxBody").text("Your changes will be lost, do you want to continue?");
+    $("#btnModelContinue").unbind().on("click", function (e) {
+        e.preventDefault();       
+        canvas.clear();
+        canvasPrev.clear();
+        $layers.html();
+        getSharedProjects();
+        $("#libraryLink").click();
+        menuHighlighter("#btnLibrary");
     })
+
+})
+
+$("#btnMyProjectsModal").on("click",function(e){
+   
+    $("#btnModelContinue").text("Continue");
+    $("#confirmBoxBody").text("Your changes will be lost, do you want to continue?");
+    $("#btnModelContinue").unbind().on("click", function (e) {
+        e.preventDefault();
+        canvas.clear();
+        canvasPrev.clear();
+        $layers.html();
+        getUserProjects();
+        $("#myProjectLink").click();
+        menuHighlighter("#btnMyProjects");
+        
+    });
+   
+
+
+})
+
+    $("#btnSaveModel").on("click",function(e){
+        e.preventDefault();
+        $("#btnModelContinue").text("Save Changes");
+        $("#confirmBoxBody").text("Do you want to save your changes?");
+        $("#btnModelContinue").unbind().on("click",function(e){
+            e.preventDefault();
+            saveDesign();
+        })
+       
+    })
+    
+    $("#btnStartOverModel").on("click",function(e){
+        e.preventDefault();
+        $("#btnModelContinue").text("Continue"); 
+        $("#confirmBoxBody").text("Your changes will be lost, do you want to continue?"); 
+        $("#btnModelContinue").unbind().on("click",function(e){
+            const templateId  = selectedTemplateId || 'default';
+            loadSVGTemplate(templateId);
+        })
+        $("#btnSave").unbind().on("click",function(e){
+            const templateId  = selectedTemplateId || 'default';
+            loadSVGTemplate(templateId);
+        })
+    })
+
+ /********* */   
     $btnTemplate.on("click", function () {
         if (state.isPreviewCanvas) { backFromPreview(); }
         $(".step-item:nth-child(3)").removeClass("active");
@@ -908,12 +981,12 @@ function initUIEvents() {
     })
 
 
-    $btnSave.unbind().on("click", function (e) {
-        if(!confirm("Do you want to save your changes?"))
-        {  return; }
-        e.preventDefault();
-        saveDesign();
-    })
+    // $btnSave.unbind().on("click", function (e) {
+    //     if(!confirm("Do you want to save your changes?"))
+    //     {  return; }
+    //     e.preventDefault();
+    //     saveDesign();
+    // })
     $("#btn-step-preview, #btn-menu-peview").on("click", function (e) {
         e.preventDefault();
         previewDesign();
@@ -928,30 +1001,9 @@ function initUIEvents() {
         $(".step-item:nth-child(4)").removeClass("active");
         $(".step-item:nth-child(3)").addClass("active");
     });
-    $("#btnMyProjects").on("click", function (e) {
-        e.preventDefault();
-        if(!confirm("Your changes will be lost, do you want to continue?"))
-        {return;}
-        canvas.clear();
-        canvasPrev.clear();
-        $layers.html();
-        getUserProjects();
-        $("#myProjectLink").click();
-        
-        menuHighlighter("#btnMyProjects");
-    })
+  
 
-    $("#btnLibrary").on("click", function (e) {
-        e.preventDefault();
-        if(!confirm("Your changes will be lost, do you want to continue?"))
-        {return;}
-        canvas.clear();
-        canvasPrev.clear();
-        $layers.html();
-        getSharedProjects();
-        $("#libraryLink").click();
-        menuHighlighter("#btnLibrary");
-    })
+    
 
 
     rotateObject();
@@ -1009,7 +1061,6 @@ function initUIEvents() {
     $txtDecorationCtrl.on("click", function (e) {
         var value = $(this).attr("data-value");
         var o = canvas.getActiveObject();
-        debugger;
         if (o && o.type === 'i-text') {
 
             if (value === 'bold') {
@@ -1345,7 +1396,8 @@ function previewDesign() { /*
     $("#btnBack").removeClass("hidden");
     $("#btnFinalized").removeClass("hidden");
     $("#btn-step-preview").addClass("hidden");
-
+    $("#btn-step-preview").addClass("btnStartOver");
+    
 
     // 3.
     //    $("#btnSave").unbind().click(function(){
@@ -1398,8 +1450,8 @@ menuHighlighter("#menu-upload");
     $("#ws-btn-preview").removeClass("hidden");
     $("#ws-btn-back").addClass("hidden");
     $("#ws-btn-download").addClass("hidden");
-
-
+    $("#btnStartOver").removeClass("hidden");
+    
     $(".step-item:nth-child(3)").removeClass("active");
     $(".step-item:nth-child(2)").addClass("active");
 
@@ -1479,6 +1531,8 @@ function renderPreview() {
             $("#ws-btn-preview").addClass("hidden");
             $("#ws-btn-back").removeClass("hidden");
             $("#ws-btn-download").removeClass("hidden");
+            $("#btnStartOver").addClass("hidden");
+            
             state.isPreviewCanvas = true;
 
             //         closeRepeatDesignPreview();
@@ -1556,7 +1610,6 @@ function onObjectSelection(o) {
 
 
 function updateTextControls(e){
-    debugger;
    var item = e.selected[0]; 
    $("#btnTextSize").val(item.fontSize);
    if(item.charSpacing)
@@ -1793,7 +1846,7 @@ function addWaterMark(doc) {
 
     return doc;
 }
-function downloadDesign() {
+function downloadDesign(onServer) {
 
     if (!state.isPreviewCanvas) {
         toast("Please preview your design before download.");
@@ -1863,31 +1916,37 @@ function downloadDesign() {
                 // clonedCanvas.setHeight(height);
                 var imgData = clonedCanvas.toDataURL('image/jpeg', 1.0);
 
-                var img = document.createElement('img');
+                if(onServer)
+                {
 
-                // When the event "onload" is triggered we can resize the image.
-                img.onload = function()
-                    {        
-                        // We create a canvas and get its context.
-                        var canvas = document.createElement('canvas');
-                        var ctx = canvas.getContext('2d');
+                    return; 
+                }
+
+                //var img = document.createElement('img');
+
+                // // When the event "onload" is triggered we can resize the image.
+                // img.onload = function()
+                //     {        
+                //         // We create a canvas and get its context.
+                //         var canvas = document.createElement('canvas');
+                //         var ctx = canvas.getContext('2d');
         
-                        // We set the dimensions at the wanted size.
-                        canvas.width = wantedWidth;
-                        canvas.height = wantedHeight;
+                //         // We set the dimensions at the wanted size.
+                //         canvas.width = wantedWidth;
+                //         canvas.height = wantedHeight;
         
-                        // We resize the image with the canvas method drawImage();
-                        ctx.drawImage(this, 0, 0, wantedWidth, wantedHeight);
+                //         // We resize the image with the canvas method drawImage();
+                //         ctx.drawImage(this, 0, 0, wantedWidth, wantedHeight);
         
-                        var dataURI = canvas.toDataURL();
+                //         var dataURI = canvas.toDataURL();
         
-                        /////////////////////////////////////////
-                        // Use and treat your Data URI here !! //
-                        /////////////////////////////////////////
-                    };
+                //         /////////////////////////////////////////
+                //         // Use and treat your Data URI here !! //
+                //         /////////////////////////////////////////
+                //     };
         
-                // We put the Data URI in the image's src attribute
-                img.src = imgData;
+                // // We put the Data URI in the image's src attribute
+                // img.src = imgData;
 
                 
 
@@ -2230,7 +2289,7 @@ function initCanvasTextEvents() {
             left: (textLeft += 20),
             top: (textTop += 20),
             fontFamily: defaults.fontFamily || 'Arial',
-            fill: defaults.fontFill,
+            fill: $("#fontColorBox").val() || defaults.fontFill,
             fontSize: defaults.fontSize
         };
         var item = new fabric.IText(text, textInfo);

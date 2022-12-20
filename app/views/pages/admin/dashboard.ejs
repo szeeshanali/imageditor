@@ -6,93 +6,100 @@
     </div>
     </div>
   </div>
-    <div class="col-lg-6 ">
+    <div class="col-lg-9 ">
+      
+
+      <div class="card pd-20 pd-sm-40">
+        <div class="row row-sm ht-150 ">
+          <div class="col-lg-4">
+            <div class="card">
+              <div class="overlay-body pd-x-20 pd-t-20">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-5">Total Users</h6>
+                  </div>
+                  <a href="" class="tx-gray-600 hover-info"><i class="icon ion-more tx-16 lh-0"></i></a>
+                </div><!-- d-flex -->
+                <h2 class="mg-b-5 tx-inverse tx-lato"><%=report.todayUsers %></h2>
+                <p class="tx-12 mg-b-0">Only active users are <br>displayed here.</p>
+              </div>
+            </div><!-- card -->
+          </div><!-- col-4 -->
+          <div class="col-lg-4 mg-t-15 mg-sm-t-20 mg-lg-t-0">
+            <div class="card" >
+              <div class="overlay-body pd-x-20 pd-t-20">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-5">This Month's Users</h6>
+                  </div>
+                  <a href="" class="tx-gray-600 hover-info"><i class="icon ion-more tx-16 lh-0"></i></a>
+                </div><!-- d-flex -->
+                <h2 class="mg-b-5 tx-inverse tx-lato"><%=report.thisMonthUsers %></h2>
+                <p class="tx-12 mg-b-0">Active users this <br> month.</p>
+              </div>
+            </div><!-- card -->
+          </div><!-- col-4 -->
+          <div class="col-lg-4 ">
+            <div class="card">
+              <div class="overlay-body pd-x-20 pd-t-20">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-5">Admin Users</h6>
+                  </div>
+                  <a href="" class="tx-gray-600 hover-info"><i class="icon ion-more tx-16 lh-0"></i></a>
+                </div><!-- d-flex -->
+                <h2 class="mg-b-5 tx-inverse tx-lato"><%=report.adminUsers %></h2>
+                <p class="tx-12 mg-b-0">Only Admin active <br>users are displayed here.</p>
+              </div>
+            </div><!-- card -->
+          </div><!-- col-4 -->
+        </div>
+        <div class="card" style="max-height: 500px;
+        overflow-y: scroll;">
+          <div class="card-header bg-transparent pd-20">
+            <h6 class="card-body-title">Users</h6>
+                    </div><!-- card-header -->
+          <div class="table-responsive">
+            <table class="table table-white mg-b-0 tx-12">
+              <tbody>
+                  <%for(var i=0;i<users?.length;i++){%>
+                <tr>
+                  
+                  <td >
+                    <span class="tx-inverse tx-14 tx-bold d-block"><%=users[i].fname %>&nbsp;<%=users[i].lname %></span>
+                    <span class="tx-11 d-block"><%=users[i].email %></span>
+                  </td>
+                  
+                    <td>
+                      <span  class="tx-18 mg-r-5 fa fa-download"></span>
+                      <div class="tx-inverse tx-medium d-block"><%=users[i].download_count %></div>
+                    </td>
+                  <td class="tx-12">
+                    <span  class="square-8 <%=(users[i].active)?'bg-success':'bg-danger' %> mg-r-5 rounded-circle"></span> <%=(users[i].active)?"Active":"Disabled" %>
+                  </td>
+                  <td><%=users[i].created_dt.toLocaleString('en-US', { hour12: false, }) %></td>
+                  <td class="tx-20" id="user-ctrl">
+                      <i class="ion-edit pd-x-5 edit" data-meta="<%= JSON.stringify(users[i]) %>" data-target="#edituser" data-toggle="modal" title="Edit" id="edit<%=users[i]._id %>"></i>
+                      <i class="ion-trash-a pd-x-5 delete" id="delete<%=users[i]._id %>" title="Delete"></i>
+                      <i class="ion-eye<%=users[i].active?'-disabled':'' %> pd-x-5 active" id="active<%=users[i]._id %>" title="<%=users[i].active?'Disable':'Enable' %>" data-meta="<%= users[i].active %>"></i></td>
+                </tr>
+            <%}%>
+              </tbody>
+            </table>
+          </div><!-- table-responsive -->
+          <!-- <div class="card-footer tx-12 pd-y-15 bg-transparent bd-t bd-gray-200">
+            <a href=""><i class="fa fa-angle-down mg-r-5"></i>View All Users</a>
+          </div> -->
+        </div><!-- card -->
+      </div>
+      
       <div class="card pd-10 bd-b text-primary tx-bold">
         <%= locals.page.title %>
       </div>
 
-      <div class="card" style="max-height: 500px;
-      overflow-y: scroll;">
-        <div class="card-header bg-transparent pd-20">
-          <h6 class="card-title tx-uppercase tx-12 mg-b-0">User History</h6>
-        </div><!-- card-header -->
-        <div class="table-responsive">
-          <table class="table table-white mg-b-0 tx-12">
-            <tbody>
-                <%for(var i=0;i<users?.length;i++){%>
-              <tr>
-                <td class="pd-l-20 tx-center">
-                  <i class="ion-ios-person-outline tx-30"></i>
-                </td>
-                <td>
-                  <p class="tx-inverse tx-14 tx-medium d-block"><%=users[i].fname %>&nbsp;<%=users[i].lname %></p>
-                  <span class="tx-11 d-block"><%=users[i].email %></span>
-                </td>
-                <td>
-                  
-                  <span  class="tx-18 mg-r-5   <%=(users[i].is_admin == true)?'fa fa-user-secret':'fa fa-user' %>"></span>
-                    <p class="tx-inverse tx-medium d-block"><%=(users[i].is_admin == true)?"Admin":"User" %></p>
-                  </td>
-                  <td>
-                    <span  class="tx-18 mg-r-5 fa fa-download"></span>
-                    <p class="tx-inverse tx-medium d-block"><%=users[i].download_count %></p>
-                  </td>
-                <td class="tx-12">
-                  <span  class="square-8 <%=(users[i].active)?'bg-success':'bg-danger' %> mg-r-5 rounded-circle"></span> <%=(users[i].active)?"Active":"Disabled" %>
-                </td>
-                <td><%=users[i].date.toLocaleString('en-US', { hour12: false, }) %></td>
-                <td class="tx-20" id="user-ctrl">
-                    <i class="ion-edit pd-x-5 edit" data-meta="<%= JSON.stringify(users[i]) %>" data-target="#edituser" data-toggle="modal" title="Edit" id="edit<%=users[i]._id %>"></i>
-                    <i class="ion-trash-a pd-x-5 delete" id="delete<%=users[i]._id %>" title="Delete"></i>
-                    <i class="ion-eye<%=users[i].active?'-disabled':'' %> pd-x-5 active" id="active<%=users[i]._id %>" title="<%=users[i].active?'Disable':'Enable' %>" data-meta="<%= users[i].active %>"></i></td>
-              </tr>
-          <%}%>
-            </tbody>
-          </table>
-        </div><!-- table-responsive -->
-        <!-- <div class="card-footer tx-12 pd-y-15 bg-transparent bd-t bd-gray-200">
-          <a href=""><i class="fa fa-angle-down mg-r-5"></i>View All Users</a>
-        </div> -->
-      </div><!-- card -->
-    </div><!-- col-8 -->
-    <div class="col-lg-3 pd-0">
-      <div class="card tx-primary tx-14 tx-bold pd-x-15 pd-y-10 bd-b">
-        Customer Report
-      </div>
-      <div class="card pd-20">
-        
-        <div class="d-flex mg-b-10">
-          <div class="bd-r pd-r-10">
-            <label class="tx-12 wd-60">Today</label>
-            <div class="tx-lato tx-inverse tx-bold"><%=report.todayUsers %></div>
-          </div>
-          <div class="bd-r pd-x-10">
-            <label class="tx-12 wd-60">This Week</label>
-            <div class="tx-lato tx-inverse tx-bold"><%=report.thisWeekUsers %></div>
-          </div>
-          <div class="pd-l-10">
-            <label class="tx-12 wd-60">This Month</label>
-            <div class="tx-lato tx-inverse tx-bold"><%=report.thisMonthUsers %></div>
-          </div>
-          
-        </div><!-- d-flex -->
-        <div class="d-flex mg-b-10">
-            <div class="bd-r pd-r-10">
-              <label class="tx-12 wd-60">Active</label>
-              <div class="tx-lato tx-inverse tx-bold"><%=report.activeUsers %></div>
-            </div>
-            <div class="bd-r pd-x-10">
-              <label class="tx-12 wd-60">Admin</label>
-              <div class="tx-lato tx-inverse tx-bold"><%=report.adminUsers %></div>
-            </div>
-            
-            
-          </div><!-- d-flex -->
-
-      </div><!-- card -->
-
    
-    </div><!-- col-4 -->
+    </div><!-- col-8 -->
+   
   </div>
   <%- include('../../partials/admin/popups/edit-user'); %>
 
