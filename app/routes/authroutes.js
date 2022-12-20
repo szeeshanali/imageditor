@@ -3,13 +3,14 @@ const router                = express.Router();
 const passport              = require('passport');
 const bcrypt                = require('bcrypt');
 const commonService         = require("../services/common");
+
 require("../config/passport")(passport);
 const appusers              = require("../../app/models/appuser")
 
 const PATH_ADMIN_LOGIN      = 'pages/admin/login';
 const PATH_LOGIN            = 'pages/client/login';
-const PATH_REGISTER         = 'pages/client/register'; 
-const PATH_PROFILE          = 'pages/client/profile'; 
+const PATH_REGISTER         = 'pages/client/register';
+const PATH_PROFILE          = 'pages/client/profile';
 const ROUTE_LOGIN           = '/app/login';
 const ROUTE_ADMIN_LOGIN     = '/app/admin/login';
 const ROUTE_USER_PROFILE    = '/app/profile';
@@ -30,9 +31,7 @@ router.get(ROUTE_SIGNOUT,(req,res)=>{
 
 
 
-
-
-  router.get(ROUTE_USER_PROFILE,(req,res)=>{    
+  router.get(ROUTE_USER_PROFILE,(req,res)=>{
      // console.log(req);
    res.redirect(PATH_PROFILE);
   });
@@ -41,9 +40,40 @@ router.get(ROUTE_SIGNOUT,(req,res)=>{
     res.render(PATH_ADMIN_LOGIN,{layout: false});
   });
 
+  // storedHash = "$P$BsbMemV6Nti0Z7loZSYo7o.uUI2goJ.";
 
-  // admin dashboard 
+  // if (args.length < 2) {
+  //     password = args[0] ? args[0] : 'Abcd@1234';
+  // } else if (args.length >= 2) {
+  //     password = args[0];
+  //     storedHash = args[1];
+  // }
+
+  // const hasher = new PasswordHash(8, true);
+  // console.info(hasher);
+
+  // if (storedHash) {
+  //     console.log('check password = ', hasher.CheckPassword(password, storedHash) ? 'OK' : 'NOT OK');
+  // } else {
+  //     hasher.HashPassword(password, CRYPT_BLOWFISH)
+  //         .then(hash => console.log('Hash (Blowfish) = ', hash))
+  //         .catch(error => console.error(error));
+
+  //     hasher.HashPassword(password, CRYPT_EXT_DES)
+  //         .then(hash => console.log('Hash (DES) = ', hash))
+  //         .catch(error => console.error(error));
+
+  //     hasher.HashPassword(password)
+  //         .then(hash => console.log('Hash (Private) = ', hash))
+  //         .catch(error => console.error(error));
+  // }
+
+
+
+
+  // admin dashboard
   router.post(ROUTE_ADMIN_LOGIN, (req, res, next) => {
+
     req.params['mode'] = 'admin';
     passport.authenticate('local',{
       successRedirect : ROUTE_ADMIN_DASHBOARD,
@@ -52,23 +82,23 @@ router.get(ROUTE_SIGNOUT,(req,res)=>{
       })(req, res, next);
   });
 
-  
+
 router.get(ROUTE_USER_REGISTER,   (req, res) => {
-  res.render(PATH_REGISTER, {layout: false});  
-  
+  res.render(PATH_REGISTER, {layout: false});
+
   });
-    
-  
+
+
   router.get('/app/content',   (req, res) => {
     var content = req.query.content;
     console.log(content);
     commonService.contentService.getContentAsync(content).then((d)=>{
-      res.status(200).send(d.content);  
+      res.status(200).send(d.content);
     }).catch(()=>{
       console.error("Error loading terms and conditions.")
-      res.status(500).send("");  
+      res.status(500).send("");
     });
-    
+
     });
 
 router.get(ROUTE_LOGIN, (req, res) => {
@@ -82,8 +112,7 @@ router.get("/app/home", (req, res) => {
 });
 
 
-router.post(ROUTE_LOGIN, (req, res, next) => { 
-    
+router.post(ROUTE_LOGIN, (req, res, next) => {
     passport.authenticate('local',{
       successRedirect : "/app/workspace",
       failureRedirect : ROUTE_LOGIN,
@@ -102,7 +131,7 @@ router.post(ROUTE_USER_REGISTER, async (req, res) => {
 
       if(password !== password2) {
           errors.push({msg : "passwords don't match"});
-      } 
+      }
 
 
     if(fname?.length < 3 || fname?.length > 20) {
@@ -113,7 +142,7 @@ router.post(ROUTE_USER_REGISTER, async (req, res) => {
       errors.push({msg : "Last name should be less than 20 characters."})
     }
 
-  
+
     if(password.length < 6 ) {
       errors.push({msg : 'Password should be atleast 6 characters.'})
     }
@@ -122,9 +151,9 @@ router.post(ROUTE_USER_REGISTER, async (req, res) => {
       errors.push({msg : "Password should be less than 20 characters."})
     }
 
-  
 
-   
+
+
 
     if(errors.length > 0 ) {
         res.render(PATH_REGISTER, {
@@ -134,24 +163,24 @@ router.post(ROUTE_USER_REGISTER, async (req, res) => {
         email : email,
         password : password,
         password2 : password2});
-        
+
     } else {
        try {
-        
-       
-        var user = await appusers.findOne({email : email}); 
+
+
+        var user = await appusers.findOne({email : email});
         if(user)
-        { 
+        {
             errors.push({msg: 'Email already registered'});
             console.log('Email already registered');
             res.render(PATH_REGISTER, res, errors, fname, email, password, password2,{layout:false});
             return;
         }
 
-        // new user model. 
+        // new user model.
         var newUser = new appusers({
             fname : fname,
-            lname: lname,                
+            lname: lname,
             email : email,
             password : password,
             company_name: company_name
@@ -159,7 +188,7 @@ router.post(ROUTE_USER_REGISTER, async (req, res) => {
 
         // hashing password.
         bcrypt.genSalt(10,(err,salt)=> {
-            bcrypt.hash(newUser.password,salt, (err,hash)=> 
+            bcrypt.hash(newUser.password,salt, (err,hash)=>
             {
                 if(err) throw err;
                 newUser.password = hash;
@@ -168,7 +197,7 @@ router.post(ROUTE_USER_REGISTER, async (req, res) => {
                     req.flash('success_msg','You have now registered!')
                     res.redirect(ROUTE_LOGIN);
                 }).catch(value=> { console.log(value);});
-            }) 
+            })
         })
         } catch (error) {
           console.log(error);

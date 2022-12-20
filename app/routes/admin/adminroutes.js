@@ -8,6 +8,7 @@ const contents               = require("../../models/contents.js");
 
 const commonService         = require("../../services/common");
 const appusers              = require("../../models/appuser");
+var request = require('request');
 
 const {isLoggedIn,isAdmin}  = require('../../config/auth')
 const passport = require('passport');
@@ -23,6 +24,24 @@ const ROUTE_ADMIN_DASHBOARD           = `/app/admin/dashboard`;
 const ROUTE_ADMIN_HOME                = '/app/admin/';
 const ROUTE_ADMIN_SAVEDESIGN          = '/app/admin/savedesign';
  
+const mysql = require('mysql');
+const { PasswordHash, CRYPT_BLOWFISH, CRYPT_EXT_DES } = require('../../public/js/password-hash');
+
+// Prod
+// const mysqlSettings = {
+//   host: "104.154.144.42",
+//   user: "u8bvx965rzk53",
+//   password: "EJ67dAkZTuAhgYB",
+//   database: 'db4qgewmyrzq4v'
+// }
+
+const mysqlSettings = {
+  host: "localhost",
+  user: "root",
+  password: "abcd1234",
+  database: "kkdb",
+  port:"3306"
+}
 
 // layout. 
 router.use((req, res, next) => {
@@ -31,6 +50,60 @@ router.use((req, res, next) => {
 });
 
 var cached_layout_data = {};
+
+
+router.get('/app/sync-users', isAdmin, async (req,res)=>{
+  var con = mysql.createConnection(mysqlSettings);
+                 
+  con.connect(function(err) {
+     
+    if (err) {
+      console.log('Error: MySQL Connection Error:' + err);  
+      return done(null, false, { message : 'Server Error.'});
+     }
+
+     console.log("KopyKake DB Connected");
+     let queryFindUserByEmail = `select * from wp_users`; 
+     
+     con.query(queryFindUserByEmail, function (err, result, fields) {
+       
+      if (err) {
+        console.error("Error: Database Query Error: " + err);
+        return done(null, false, { message : 'Server Error.'});
+       }
+
+       if(result == null || result.length == 0){
+        console.error('Error: User email not found in KopyKake DB');  
+        return done(null, false, { message : 'Incorrect username or password'});   
+       }
+
+       result.forEach(item=>{
+        const {user_login, user_pass, user_nicename, user_email, user_url,  user_registered,  user_activation_key, user_status, display_name} = item;
+       
+        const kakePrintUser = {
+        
+             fname         : display_name,
+             lname         : null,
+             email         : user_email,
+             password      : user_pass,
+             company_name  : null,
+             created_dt    : new Date(user_registered)
+           };
+
+          new appusers(kakePrintUser).save().then(()=>{
+            console.log("user saved");
+          });
+           console.log(kakePrintUser)
+
+       })
+        
+
+     })
+
+    })
+})
+
+
 router.get('/app/admin/category/:categoryid/', isAdmin, async (req,res)=>{
     const categories = cached_layout_data.categories; 
     const categoryid =  req.params["categoryid"];   
@@ -234,8 +307,12 @@ router.get('/app/admin/workspace',(req,res)=>{
 /** Dashboard */
 
 router.get(ROUTE_ADMIN_DASHBOARD, isAdmin, async (req,res)=>{
+
+
+
+  var totalUsers = await appusers.count();
   var allusers = await appusers
-  .find({deleted:false},{password:0}).sort({date:-1});
+  .find({deleted:false, active:true},{password:0}).sort({created_on:-1}).limit(100);
 
   var report = {
     todayUsers:0,
@@ -248,9 +325,9 @@ start.setHours(0,0,0,0);
 var end = new Date();
 end.setHours(23,59,59,999);
 var today = new Date();
-report.todayUsers      = allusers.filter(function(value){ return value.date >= new Date(today.getFullYear(), today.getMonth(), today.getDate()-1);}).length || 0;
-report.thisWeekUsers   = allusers.filter(function(value){ return value.date >= new Date(today.getFullYear(), today.getMonth(), today.getDate()-7);}).length || 0;
-report.thisMonthUsers  = allusers.filter(function(value){ return value.date >= new Date(today.getFullYear(), today.getMonth(), today.getDate()-30);}).length || 0;
+report.todayUsers      = totalUsers;
+report.thisWeekUsers   = allusers.filter(function(value){ return value.created_dt >= new Date(today.getFullYear(), today.getMonth(), today.getDate()-7);}).length || 0;
+report.thisMonthUsers  = allusers.filter(function(value){ return value.created_dt >= new Date(today.getFullYear(), today.getMonth(), today.getDate()-30);}).length || 0;
 report.totalUsers      = allusers.length; 
 report.activeUsers = allusers.filter(function(value){ return value.active == true}).length || 0;
 report.adminUsers = allusers.filter(function(value){ return value.is_admin == true}).length || 0;
@@ -439,7 +516,7 @@ router.post('/app/admin/save-template', function(req, res) {
     title           :   title,
     name            :   name,
     desc            :   desc,
-    file_name       :   filename,
+    file_name       :   file_name,
     file_ext        :   file_ext,
     order_no        :   order_no,
     code            :   _id,
@@ -463,7 +540,7 @@ router.post('/app/admin/save-template', function(req, res) {
   var _path = `../app/public/uploads/admin/${type}/${type}-${_id}.${file_name.split('.').pop()}`;  
   var _base64Alter = base64.replace(`data:${mime_type};base64,`, "");
   console.log(_base64Alter);
-  require("fs").writeFile(_path, _base64Alter, 'base64', function(err) {
+  fs.writeFile(_path, _base64Alter, 'base64', function(err) {
       if(err){ console.log(err); }
        commonService.uploadService.upload(uploadModel,(err,msg)=>{
         if(!err)
