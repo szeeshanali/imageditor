@@ -1,3 +1,10 @@
+/**
+ * # Zeeshan
+ * # zeeshan01@gmail.com
+ * # 2022
+ * */
+
+require('dotenv').config();
 const express               = require('express')
 const app                   = express()
 var expressLayouts          = require('express-ejs-layouts');
@@ -12,6 +19,13 @@ const authroutes           = require("../app/routes/authroutes");
 const mainroutes           = require("../app/routes/mainroutes");
 const passport             = require('passport');
 const commonService        = require('../app/services/common');
+const {
+    PORT,
+    SESSION_SECRET,
+    MONGO_CONN 
+  } = process.env; 
+
+
 ///const monitoringService        = require('../app/services/monitor');
 
 // var mysql = require('mysql');
@@ -31,13 +45,16 @@ const commonService        = require('../app/services/common');
 require("../app/config/passport")(passport);
 
 //mongoose
-mongoose.connect('mongodb+srv://dtimageeditor:Xcccccc123@cluster0.gte2f0n.mongodb.net/dtimageeditor',
-{useNewUrlParser: true, useUnifiedTopology : true})
-.then(() => console.log('Connection Stablished.'))
-.catch((err)=> {
-  console.error(err);
-  // monitoringService.logError(`Error:Connector Failed. ${err}`);
-});
+mongoose.connect(MONGO_CONN,
+  {
+      
+    useNewUrlParser: true, 
+    useUnifiedTopology : true
+
+  }).then(() => console.log('Connection Established.'))
+    .catch((err)=> {
+      console.error(err);
+  });
 
 
 //app.use(bodyParser.urlencoded({ extended: true }));
@@ -50,7 +67,7 @@ app.use(express.static('uploads'))
 app.use(express.json({limit: '25mb'}));
 app.use(express.urlencoded({limit: '25mb', extended: true }));
 app.use(session(
-  {   secret            : 'this-is-a-kakeprint-secret',
+  {   secret            : SESSION_SECRET,
       resave            : true,
       saveUninitialized : true,
       cookie: {
@@ -84,8 +101,8 @@ app.use("/",  authroutes);
 app.use("/",  mainroutes);  
 
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+app.listen(PORT, () => {
+  console.log(`Example app listening on port ${PORT}`)
 })
 
 

@@ -1,55 +1,42 @@
-const express               = require('express');
-const router                = express.Router();
-const {isLoggedIn,isAdmin}  = require('../../config/auth');
-const categories            = require('../../models/categories');
-const uploads = require('../../models/uploads');
-const fs                    = require('fs');
+const express                       = require('express');
+const router                        = express.Router();
+const {isLoggedIn,isAdmin}          = require('../../config/auth');
+const uploads                       = require('../../models/uploads');
+const fs                            = require('fs');
+const commonService                 = require('../../services/common');
+const formidable                    = require('formidable');
+const { default: mongoose, mongo }  = require('mongoose');
+const appusers                      = require('../../models/appuser');
+const nodemailer                    = require('nodemailer');
 
-const commonService = require('../../services/common');
-PATH_USER_PROJECTS              = 'pages/client/myprojects';
-var formidable = require('formidable');
+const PATH_TEMPLATES                = 'pages/client/templates';
+const PATH_WORKSPACE                = 'pages/client/workspace';
+const PATH_USER_PROFILE             = 'pages/client/profile';
+const ROUTE_USER_HOME               = '/app'
+const ROUTE_USER_PROFILE            = '/app/profile';
+const cached_layout_data            = {}; 
+const config                        = process.env; 
 
-PATH_TEMPLATES              = 'pages/client/templates';
-PATH_WORKSPACE              = 'pages/client/workspace';
-const { default: mongoose, mongo } = require('mongoose');
-const appusers = require('../../models/appuser');
-
-PATH_USER_PROFILE           = 'pages/client/profile';
-ROUTE_USER_HOME             = '/app'
-ROUTE_USER_PROFILE          = '/app/profile';
-const cached_layout_data    = {}; 
-
-
-// layout. 
 router.use( async (req, res, next) => {
     req.app.set('layout', 'pages/client/layout');
-    //res.locals.projects = await commonService.uploadService.getUserDesignsAsync(req.user._id);
     next();
 });
-// Use at least Nodemailer v4.1.0
-const nodemailer = require('nodemailer');
-
 
 
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
+    host: config.SMTP_HOST,
+    port: config.SMTP_PORT,
     auth: {
-        user: 'zeeshan01@gmail.com',
-        pass: 'mffxbxpxbntvcqxy'
+        user: config.SMTP_USR,
+        pass: config.SMTP_PASS
     }
 });
 
 router.get(ROUTE_USER_PROFILE, isLoggedIn, (req,res)=>{    
-    
-
     res.render(PATH_USER_PROFILE,{
         user:req.user,
         categories:cached_layout_data.categories
     });
-
-
-
 })
 
 
@@ -357,94 +344,107 @@ router.post('/api/rfq', isLoggedIn, async (req,res)=>{
     const  {companyName, name, phone, sheets, email, additionalInfo, file} = req.body;
 
     var form = new formidable.IncomingForm();
-    form.parse(req, async function (err, fields, file) {
-        try{
 
+    var formfields = await new Promise(function (resolve, reject) {
+        form.parse(req, function (err, fields, _file) {
+            try{
+    
+                    let file = fields.file; 
+                    const _id = mongoose.Types.ObjectId();
+                    //let filepath = "file.filepath \";
+                    const filename = `KakePrint${_id}.pdf`
+                    let newpath = `../app/public/uploads/client/attachments/${filename}`;
+                   console.log(`Saving file to path: ${newpath}`);
 
-                const _id = mongoose.Types.ObjectId();
-                let filepath = file.attachments.filepath;
-                let newpath = `../app/public/uploads/client/attachments/`;
-                const filename = _id+file.attachments.originalFilename;
-                newpath += filename;
-                //Copy the uploaded file to a custom folder
-               await fs.copyFile(filepath, newpath, async function (err) {
-                  //Send a NodeJS file upload confirmation message
-                  if (err) {
-                    console.log('err: ' + err);
-                } else {
+                   fs.writeFile(newpath, file,"base64", function (err) {
                     
-                    var model = {
-                    title           :   `${filename}`,
-                    name            :   `${additionalInfo}`,
-                    code            :   _id,
-                    active          :   true,                   
-                    default         :   false,
-                    by_admin        :   false,
-                    type            :   "rfq_attachments",
-                    uploaded_by     :    req.user._id,
-                    path            :   newpath
-                    };
+                      //Send a NodeJS file upload confirmation message
+                      if (err) {
+                        reject(err);
+                        console.log(`Error saving file.`);
+                        console.log('err: ' + err);
+                       return res.status(500).send(err);
+                    } else {
+                        console.log(`File saved.`);
+                        console.log(`Adding entry to DB: ${newpath}`);
+                        var model = {
+                        title           :   `${filename}`,
+                        name            :   `${additionalInfo}`,
+                        code            :   _id,
+                        active          :   true,                   
+                        default         :   false,
+                        by_admin        :   false,
+                        type            :   "rfq_attachments",
+                        uploaded_by     :    req.user._id,
+                        path            :   newpath
+                        };
+    
+                        commonService.uploadService.upload(model,(err,msg)=>{
+    
+                            if(!err)
+                                { 
+                                    console.log(`Added entry to DB.`);
+                                    console.log(`Sending Email...`);
+                                    let appUrl = `${req.protocol}://${req.hostname}:${req.socket.localPort}`;
+                                    transporter.sendMail({
+                                        from:       config.RFQ_FROM,
+                                        to:         config.RFQ_TO,
+                                        subject:    config.RFQ_SUBJECT.replace("{user}",fields.name),
+                                        html:       `<strong>Hello Admin,</strong>
+                                        <p>Please find the details with attached PDF.</p>
+                                        <p>Please find the details with attached PDF.</p>
+                                        <table style='font-family:Arial; color:#222; font-size:12px; text-align:left'>
+                                            <tr><th width='150'>Name</th><td>${fields.name}</td></tr>
+                                            <tr><th>Company Name</th><td>${fields.companyName}</td></tr>
+                                            <tr><th>Email</th><td>${fields.email}</td></tr>
+                                            <tr><th>Phone</th><td>${fields.phone}</td></tr>
+                                            <tr><th># of Sheets</th><td>${fields.sheets}</td></tr>
+                                            <tr><th>Pickup in Torrance</th><td>${fields.pickup}</td></tr>
+                                            <tr><th colspan='2'>Shipping Details</tthd></tr>
+                                            <tr><th>Street 1</th><td>${fields.street1}</td></tr>
+                                            <tr><th>Street 2</th><td>${fields.street2}</td></tr>
+                                            <tr><th>City</th><td></td>${fields.city}</tr>
+                                            <tr><th>State</th><td>${fields.state}</td></tr>
+                                            <tr><th>Zip</th><td>${fields.zip}</td></tr>
+                                            <tr><th colspan='2'>Additional Information</th></tr>
+                                            <tr><td colspan='2'><p>
+                                            ${fields.additionalInfo}
+                                            </p></td></tr>
+                                            </table>
+                                     <div style=''>
+                                    <div> File: ${filename} </div>
+                                      <div><a style='color:white;padding:10px;background-color:green;border-radius:3px;font-size:11px;text-decoration:none;font-family:Arial' href="${appUrl}/app/rfq/pdf/${_id}">DOWNLOAD  </a> </div>
+                                     </div>`
+                                    });  
+                                    console.log(`Sending Sent!`);
+                                    resolve();
+                                    //return  res.status(200).send("Ok"); 
+                                }
+                                else { 
+                                    console.log(`Error adding entry to DB.`);
+                                    reject(err);
+                                   //  console.log(err);
+                                  // return  res.status(500).send(err);
+                                     }
+                            });
+                            
+                    }
+                    })
+    
+    
+                
+               }catch(ex){
+                res.status(500).send(ex);
+               }
+   
+        })
+    });
 
-                    commonService.uploadService.upload(model,(err,msg)=>{
 
-                        if(!err)
-                            {       console.log(msg); }
-                            else {  console.log(err); }
-                        })
-                     let appUrl = `${req.protocol}://${req.hostname}:${req.socket.localPort}`;
-                    await transporter.sendMail({
-                        from:       'test@example.com',
-                        to:         'zeeshan01@gmail.com',
-                        subject:    'KakePrint Request for Quote.',
-                        html:       `<strong>Hello Admin,</strong>
-                        <p>Please find the details with attached PDF.</p>
-                        <p>Please find the details with attached PDF.</p>
-                        <table style='font-family:Arial; color:#222; font-size:12px; text-align:left'>
-                            <tr><th width='150'>Name</th><td>${fields.name}</td></tr>
-                            <tr><th>Company Name</th><td>${fields.companyName}</td></tr>
-                            <tr><th>Email</th><td>${fields.email}</td></tr>
-                            <tr><th>Phone</th><td>${fields.phone}</td></tr>
-                            <tr><th># of Sheets</th><td>${fields.sheets}</td></tr>
-                            <tr><th>Pickup in Torrance</th><td>${fields.pickup}</td></tr>
-                            <tr><th colspan='2'>Shipping Details</tthd></tr>
-                            <tr><th>Street 1</th><td>${fields.street1}</td></tr>
-                            <tr><th>Street 2</th><td>${fields.street2}</td></tr>
-                            <tr><th>City</th><td></td>${fields.city}</tr>
-                            <tr><th>State</th><td>${fields.state}</td></tr>
-                            <tr><th>Zip</th><td>${fields.zip}</td></tr>
-                            <tr><th colspan='2'>Additional Information</th></tr>
-                            <tr><td colspan='2'><p>
-                            ${fields.additionalInfo}
-                            </p></td></tr>
-                            </table>
-                     <div style=''>
-                    <div> File: ${filename} </div>
-                      <div><a style='color:white;padding:10px;background-color:green;border-radius:3px;font-size:11px;text-decoration:none;font-family:Arial' href="${appUrl}/app/rfq/pdf/${_id}">DOWNLOAD (${((file.attachments.size/1000)/1000).toFixed(1)}mb) </a> </div>
-                     </div>`
-                    });
-                    res.status(200).send("Ok");
-                }
-                })
-
-
-            
-           }catch(ex){
-            res.status(500).send(ex);
-           }
-//         let filepath = file.file.filepath;
-//     let newpath = `/public/uploads/client/attachments/`;
-//     newpath += file.file.originalFilename;
-// console.log(newpath)
-//     //Copy the uploaded file to a custom folder
-//     fs.rename(filepath, newpath, function () {
-//       //Send a NodeJS file upload confirmation message
-//       res.write('NodeJS File Upload Success!');
-//       res.end();
-//     });
-    })
+    
   
 console.log(file);
-
+res.status(200).send("Ok")
     
   
     ///res.render("pages/client/index",{ executescript: `callback({width:${width},height:${height},title:${title}});` })
