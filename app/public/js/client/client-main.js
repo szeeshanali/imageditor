@@ -1526,11 +1526,11 @@ function renderPreview() {
 
             }
             $loader.addClass("hidden");
-            $("#ws-btn-save").addClass("hidden");
+            //$("#ws-btn-save").addClass("hidden");
             $("#ws-btn-preview").addClass("hidden");
             $("#ws-btn-back").removeClass("hidden");
             $("#ws-btn-download").removeClass("hidden");
-            $("#btnStartOver").addClass("hidden");
+            $("#btnStartOverModel").addClass("hidden");
             
             state.isPreviewCanvas = true;
 
@@ -1712,11 +1712,23 @@ function addLayer(o) {
     }
     if (layers != "") {
         $layers.html(layers);
-        $("#ws-btn-preview").removeClass('hidden');
+        $("#ws-btn-save").removeClass('hidden');
+        if(!state.isPreviewCanvas)
+        { 
+            
+          
+            $("#ws-btn-preview").removeClass('hidden'); 
+    
+    }
 
     } else {
         $layers.html("Empty! please upload an image.");
-        $("#ws-btn-preview").addClass('hidden');
+        $("#ws-btn-save").addClass('hidden');
+
+        if(!state.isPreviewCanvas)
+        { 
+            $("#ws-btn-preview").addClass('hidden'); 
+        }
 
     }
 
