@@ -114,9 +114,49 @@ fabric.Object.prototype.cornerStrokeColor = '#000';
 fabric.Object.prototype.cornerSize = 10;
 fabric.Object.prototype.padding = 3;
 
-fabric.util.addListener(document.getElementsByClassName('upper-canvas')[0], 'contextmenu', function(e) {
-    e.preventDefault();
-});
+setTimeout(function(){
+    fabric.util.addListener(document.getElementsByClassName('upper-canvas')[0], 'contextmenu', function(e) {
+        e.preventDefault();
+        var cnvsPos = $('#client-main-canvas').offset();
+        curX = e.clientX - cnvsPos.left+20;
+        curY = e.clientY - cnvsPos.top+80;
+        $('#myMenu').css({'position':'absolute', 'top': curY, 'left': curX, 'display':'block'});
+    });
+},2000)
+
+async function parseClipboardData() {
+    
+    const items = await navigator.clipboard.read().then((items)=>{
+        for (let item of items) {
+            for (let type of item.types) {
+              if (type.startsWith("image/")) {
+              
+              
+              item.getType(type).then((imageBlob) => {
+                let url = window.URL.createObjectURL(imageBlob);
+                fabric.Image.fromURL(url, function (img) {
+                    img.globalCompositeOperation = 'source-atop';
+
+                    canvas.add(img);
+                    canvas.renderAll();
+                })
+                  // const image = `<img src="${}" />`;
+                  // $container.innerHTML = image;
+                });
+                $('#myMenu').css({'display':'none'});
+                return true;
+              }
+            }
+          }
+          $('#myMenu').css({'display':'none'});
+
+    }).catch((err) => {
+      console.error(err);
+      $('#myMenu').css({'display':'none'});
+    });
+   
+    
+  }
 
 fabric.CurvedText = fabric.util.createClass(fabric.Object, {
     type: 'curved-text',
@@ -792,6 +832,20 @@ function initUIEvents() {
         cropImage();
     }); 
 
+
+    $("#btnCropDone").on("click",(e)=>{
+        let img = canvas.getActiveObject(); 
+        canvas.remove(img);
+        canvas.renderAll();
+        let url = cropCanvas.toDataURL();
+        fabric.Image.fromURL(url, function (img) {
+            canvas.add(img);
+            canvas.renderAll();
+        })
+
+
+    })
+
     $("#btnCorpModal").on("click",(e)=>{
         cropRect=null; 
         let img = canvas.getActiveObject(); 
@@ -800,10 +854,10 @@ function initUIEvents() {
             let imgSrc = img._element.src;
             fabric.Image.fromURL(imgSrc, function (img) {
                 cropCanvas.clear();
-                ///img.scaleToWidth(300);
-                let w = img.getScaledWidth(); 
-                let h = img.getScaledHeight(); 
-                cropCanvas.setDimensions({width:w,height:h})
+                ///img.scaleToHeight(250);
+                ///let w = img.getScaledWidth(); 
+                ///let h = img.getScaledHeight(); 
+                cropCanvas.setDimensions({width:500,height:500})
                 cropCanvas.add(img);
                 cropRect  = getCropRect();
                 cropCanvas.add(cropRect); 
@@ -1284,8 +1338,8 @@ $("#btnMyProjectsModal").on("click",function(e){
     })
 
 
-    $("#clipartmenu .clipart img").on("click", (e) => {
-        var id = e.currentTarget.src;
+    $("#clipartmenu .clipart h2").on("click", (e) => {
+        var id = $(e.currentTarget).attr("data-url");
         var _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
 
         fabric.Image.fromURL(id, function (img) {

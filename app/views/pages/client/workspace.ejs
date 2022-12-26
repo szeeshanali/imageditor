@@ -259,6 +259,10 @@
                 <canvas id="client-main-canvas-logo" style="max-width: 560px; max-height:740px"  ></canvas>                    
             </div>
         </div>
+      
+        <div class="myMenu " style="display: none;" id="myMenu">
+         <span  onclick="parseClipboardData();"> Paste</span>
+      </div>
     </div>
     </div>
   </div>
@@ -330,6 +334,8 @@
       </div>
       <div class="modal-footer justify-content-center">
         <button type="button"  id="btnCrop" class="btn btn-sm tx-12 tx-uppercase btn-primary pd-x-20" >Crop Image</button>
+        <button type="button"  id="btnCropDone" class="btn btn-sm tx-12 tx-uppercase btn-primary pd-x-20" data-dismiss="modal" >Done</button>
+
         <button type="button" class="btn btn-sm tx-12 tx-uppercase btn-secondary pd-x-20" data-dismiss="modal">Close</button>
       </div>
     </div>
