@@ -360,8 +360,10 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
 };
 
 
-var canvas = new fabric.Canvas("client-main-canvas", {preserveObjectStacking: true})
-var canvasPrev = new fabric.Canvas("client-main-canvas-logo", {preserveObjectStacking: true});
+var canvas      = new fabric.Canvas("client-main-canvas",       {preserveObjectStacking: true})
+var canvasPrev  = new fabric.Canvas("client-main-canvas-logo",  {preserveObjectStacking: true});
+var cropCanvas  = new fabric.Canvas("cropCanvas",  {preserveObjectStacking: true});
+
 fabric.util.addListener(canvas.upperCanvasEl, 'dblclick', function (e) {
     var target = canvas.findTarget(e);
     ungroup(e);
@@ -696,7 +698,9 @@ function loadSVGTemplate(id) {
                   $(".canvas-container").first().css({border:"solid 1px #666", width:"502px",height:`${logoHeight}px`})
                 }
 
-
+                //let rect = getCropRect();
+                //canvas.add(rect); 
+                //canvas.renderAll();
                // $("#client-main-canvas").removeClass('hidden');
         }, function (item, object) {
             object.set({fill:"#fff"});
@@ -782,8 +786,36 @@ function menuPanelDisplay(itemToDisplay) {
 
     $(itemToDisplay).addClass("active");
 }
-
+var cropRect;
 function initUIEvents() {
+    $("#btnCrop").on("click",(e)=>{
+        cropImage();
+    }); 
+
+    $("#btnCorpModal").on("click",(e)=>{
+        cropRect=null; 
+        let img = canvas.getActiveObject(); 
+        if(img)
+        {
+            let imgSrc = img._element.src;
+            fabric.Image.fromURL(imgSrc, function (img) {
+                cropCanvas.clear();
+                //var img1 = img.set({left: 0, top: 0, border:0, stroke:"white", strokeWidth:0});
+                img.scaleToWidth(300);
+                let w = img.getScaledWidth(); 
+                let h = img.getScaledHeight(); 
+                cropCanvas.setDimensions({width:w,height:h})
+                cropCanvas.add(img);
+                cropRect  = getCropRect();
+                cropCanvas.add(cropRect); 
+                cropCanvas.renderAll();
+                //mainControls(true);
+                // $("#menu-text > a").click();
+            });
+        }
+
+        //$("#cropImageHolder").attr("src");
+    })
 
     $("#cbRfqShip").on("click", function (e) {
       
@@ -901,11 +933,18 @@ $("#btnMyProjectsModal").on("click",function(e){
         $("#btnModelContinue").unbind().on("click",function(e){
             const templateId  = selectedTemplateId || 'default';
             loadSVGTemplate(templateId);
+            $("#ws-btn-preview").addClass("hidden");
+            $("#ws-btn-save").addClass("hidden");
         })
         $("#btnSave").unbind().on("click",function(e){
+            
             const templateId  = selectedTemplateId || 'default';
             loadSVGTemplate(templateId);
+           
         })
+
+       
+        
     })
 
  /********* */   
@@ -1006,7 +1045,6 @@ $("#btnMyProjectsModal").on("click",function(e){
 
 
     rotateObject();
-    cropObject();
     flipXYObject();
     grayscaleObject();
     brightnessObject();
@@ -1252,11 +1290,12 @@ $("#btnMyProjectsModal").on("click",function(e){
         var _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
 
         fabric.Image.fromURL(id, function (img) {
-            var img1 = img.set({left: 0, top: 0});
+            
+            var img1 = img.set({left: 0, top: 0, border:0, stroke:"white", strokeWidth:0});
             img1.scaleToHeight(250);
-
             img1.globalCompositeOperation = 'source-atop';
             _canvas.add(img1);
+            _canvas.renderAll();
             mainControls(true);
             // $("#menu-text > a").click();
         });
@@ -1264,7 +1303,78 @@ $("#btnMyProjectsModal").on("click",function(e){
     });
 
 
+
+
+    
 }
+
+function getCropRect(){
+    let rect = new fabric.Rect({
+        width: 200,
+        height: 200,
+        fill: 'rgb(178, 178, 178, 0.4)',
+        transparentCorners: false,
+        cornerColor: 'rgb(178, 178, 178, 0.8)',
+        strokeWidth: 1,
+        cornerStrokeColor: 'black',
+        borderColor: 'black',
+        borderDashArray: [5, 5],
+        cornerStyle: 'circle'
+      })
+      rect.setControlVisible('mtr', false);
+      return rect; 
+}
+
+
+function cropImage () {
+    
+    console.log('clip!')
+    const newImgCrop = cropRect.getBoundingRect()
+    console.log(newImgCrop);
+    cropCanvas.setWidth(newImgCrop.width);
+    cropCanvas.setHeight(newImgCrop.height);
+    
+    img = canvas.getActiveObject();
+    let dataURL = cropCanvas.toDataURL();
+    fabric.Image.fromURL(dataURL, (img) => {
+        img.set({
+            cropX: newImgCrop.left,
+            cropY: newImgCrop.top ,
+            width: newImgCrop.width,
+            height: newImgCrop.height
+          })  
+
+        img.setCoords();
+          cropRect.setCoords()
+          canvas.add(img); 
+          canvas.renderAll();
+      
+      
+    });
+    // 校正位置
+    //nowClip.x += newImgCrop.left
+    //nowClip.y += newImgCrop.top
+  
+  
+
+ 
+    
+    // img.set({
+    //   cropX: newImgCrop.left + nowClip.x,
+    //   cropY: newImgCrop.top + nowClip.y,
+    //   width: newImgCrop.width,
+    //   height: newImgCrop.height
+    // })  
+    
+    // nowClip.x += newImgCrop.left
+    // nowClip.y += newImgCrop.top
+  
+    // userClipPath.set({ left: 0, top: 0 }); 
+    // userClipPath.setCoords(); 
+    // canvas.renderAll(); 
+  
+}
+
 function setSelectedTextStyle(prop, value) {
     
     var txt = canvas.getActiveObject();
@@ -1274,28 +1384,6 @@ function setSelectedTextStyle(prop, value) {
     canvas.renderAll();
 
 }
-// function closeRepeatDesignPreview() {
-//     $repeatImageCtrl.show();
-//     $clientMainCanvas.parent().fadeIn();
-//     $canvasPrev.parent().fadeOut();
-//     state.isPreviewCanvas = false;
-
-//     $("#repeat-image-ctrl #previewdesign").show();
-//     $("#repeat-image-ctrl #backtodesign").hide();
-//     $btnDownloadPDF.addClass("hidden");
-//     $btnSaveDesign.addClass("hidden");
-//     var json = canvas.toJSON();
-//     canvasPrev.clear();
-//     canvas.clear();
-//     canvas.loadFromJSON(json, function() {
-//         canvas.renderAll();
-//      },function(o,object){
-//         addLayer(o);
-//         console.log(o,object)
-//      })
-
-// }
-
 
 function saveDesign() {
     /**
@@ -1449,7 +1537,7 @@ menuHighlighter("#menu-upload");
     $("#ws-btn-preview").removeClass("hidden");
     $("#ws-btn-back").addClass("hidden");
     $("#ws-btn-download").addClass("hidden");
-    $("#btnStartOver").removeClass("hidden");
+    $("#btnStartOverModel").removeClass("hidden");
     
     $(".step-item:nth-child(3)").removeClass("active");
     $(".step-item:nth-child(2)").addClass("active");
@@ -1471,6 +1559,9 @@ menuHighlighter("#menu-upload");
 
     $(".step-item:nth-child(4)").removeClass("active");
     $(".step-item:nth-child(3)").addClass("active");
+    
+    
+    
 
 }
 
@@ -2395,6 +2486,8 @@ function flipXYObject() {
     // $moveTopItem.on("click",function(){});
     // $moveBottomItem.on("click",function(){});
 }
+
+
 function rotateObject() {
     var curAngle = 0;
     $(`#rotate`).on("click", function (e) {

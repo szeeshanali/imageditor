@@ -189,7 +189,7 @@
             canvas.renderAll();
         })
     }
-    function cropObject() {
+    function cropObject() {w
         // $(`#crop`).on("click",function(e){
         // var selectedObj = canvas.getActiveObject();
         //     if(!selectedObj)
