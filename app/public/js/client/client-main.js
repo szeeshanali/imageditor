@@ -792,6 +792,20 @@ function initUIEvents() {
         cropImage();
     }); 
 
+
+    $("#btnCropDone").on("click",(e)=>{
+        let img = canvas.getActiveObject(); 
+        canvas.remove(img);
+        canvas.renderAll();
+        let url = cropCanvas.toDataURL();
+        fabric.Image.fromURL(url, function (img) {
+            canvas.add(img);
+            canvas.renderAll();
+        })
+
+
+    })
+
     $("#btnCorpModal").on("click",(e)=>{
         cropRect=null; 
         let img = canvas.getActiveObject(); 
@@ -800,10 +814,10 @@ function initUIEvents() {
             let imgSrc = img._element.src;
             fabric.Image.fromURL(imgSrc, function (img) {
                 cropCanvas.clear();
-                ///img.scaleToWidth(300);
-                let w = img.getScaledWidth(); 
-                let h = img.getScaledHeight(); 
-                cropCanvas.setDimensions({width:w,height:h})
+                ///img.scaleToHeight(250);
+                ///let w = img.getScaledWidth(); 
+                ///let h = img.getScaledHeight(); 
+                cropCanvas.setDimensions({width:500,height:500})
                 cropCanvas.add(img);
                 cropRect  = getCropRect();
                 cropCanvas.add(cropRect); 
@@ -1284,8 +1298,8 @@ $("#btnMyProjectsModal").on("click",function(e){
     })
 
 
-    $("#clipartmenu .clipart img").on("click", (e) => {
-        var id = e.currentTarget.src;
+    $("#clipartmenu .clipart h2").on("click", (e) => {
+        var id = $(e.currentTarget).attr("data-url");
         var _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
 
         fabric.Image.fromURL(id, function (img) {
