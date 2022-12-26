@@ -800,7 +800,6 @@ function initUIEvents() {
             let imgSrc = img._element.src;
             fabric.Image.fromURL(imgSrc, function (img) {
                 cropCanvas.clear();
-                //var img1 = img.set({left: 0, top: 0, border:0, stroke:"white", strokeWidth:0});
                 img.scaleToWidth(300);
                 let w = img.getScaledWidth(); 
                 let h = img.getScaledHeight(); 
@@ -1331,47 +1330,22 @@ function cropImage () {
     console.log('clip!')
     const newImgCrop = cropRect.getBoundingRect()
     console.log(newImgCrop);
-    cropCanvas.setWidth(newImgCrop.width);
-    cropCanvas.setHeight(newImgCrop.height);
-    
-    img = canvas.getActiveObject();
-    let dataURL = cropCanvas.toDataURL();
-    fabric.Image.fromURL(dataURL, (img) => {
-        img.set({
-            cropX: newImgCrop.left,
-            cropY: newImgCrop.top ,
-            width: newImgCrop.width,
-            height: newImgCrop.height
-          })  
-
-        img.setCoords();
-          cropRect.setCoords()
-          canvas.add(img); 
-          canvas.renderAll();
-      
-      
-    });
-    // 校正位置
-    //nowClip.x += newImgCrop.left
-    //nowClip.y += newImgCrop.top
-  
-  
-
  
-    
-    // img.set({
-    //   cropX: newImgCrop.left + nowClip.x,
-    //   cropY: newImgCrop.top + nowClip.y,
-    //   width: newImgCrop.width,
-    //   height: newImgCrop.height
-    // })  
-    
-    // nowClip.x += newImgCrop.left
-    // nowClip.y += newImgCrop.top
-  
-    // userClipPath.set({ left: 0, top: 0 }); 
-    // userClipPath.setCoords(); 
-    // canvas.renderAll(); 
+    img = cropCanvas.item(0);
+
+    ///let dataURL = cropCanvas.toDataURL();
+    img.set({
+        cropX   : newImgCrop.left,
+        cropY   : newImgCrop.top ,
+        width   : newImgCrop.width,
+        height  : newImgCrop.height
+      })     
+
+    cropCanvas.setWidth(newImgCrop.width);
+    cropCanvas.setHeight(newImgCrop.height);   
+    //   img.setCoords();
+      cropCanvas.renderAll();
+ 
   
 }
 
