@@ -800,7 +800,7 @@ function initUIEvents() {
             let imgSrc = img._element.src;
             fabric.Image.fromURL(imgSrc, function (img) {
                 cropCanvas.clear();
-                img.scaleToWidth(300);
+                ///img.scaleToWidth(300);
                 let w = img.getScaledWidth(); 
                 let h = img.getScaledHeight(); 
                 cropCanvas.setDimensions({width:w,height:h})
@@ -1328,22 +1328,23 @@ function getCropRect(){
 function cropImage () {
     
     console.log('clip!')
-    const newImgCrop = cropRect.getBoundingRect()
-    console.log(newImgCrop);
+    const rect = cropRect.getBoundingRect()
  
     img = cropCanvas.item(0);
 
     ///let dataURL = cropCanvas.toDataURL();
-    img.set({
-        cropX   : newImgCrop.left,
-        cropY   : newImgCrop.top ,
-        width   : newImgCrop.width,
-        height  : newImgCrop.height
-      })     
+ 
+    cropCanvas.setWidth(rect.width);
+    cropCanvas.setHeight(rect.height);   
 
-    cropCanvas.setWidth(newImgCrop.width);
-    cropCanvas.setHeight(newImgCrop.height);   
-    //   img.setCoords();
+    img.set({
+    cropX   : rect.left,
+    cropY   : rect.top ,
+    width   : rect.width,
+    height  : rect.height
+    })     
+
+    cropRect.setCoords();
       cropCanvas.renderAll();
  
   
