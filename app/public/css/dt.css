@@ -1036,3 +1036,13 @@ border-right: solid 0px #ccc;  }
   -ms-transform: scale(1);
   transform: scale(1);
 }
+
+
+#myMenu{
+  background-color: #efefef;
+    color: #4c4c4c;
+    padding: 10px 22px;
+    border: dashed 1px #666565;
+    font-weight: bold;
+    cursor: pointer;
+}
