@@ -189,7 +189,7 @@
             canvas.renderAll();
         })
     }
-    function cropObject() {
+    function cropObject() {w
         // $(`#crop`).on("click",function(e){
         // var selectedObj = canvas.getActiveObject();
         //     if(!selectedObj)
@@ -343,7 +343,7 @@
             type: "DELETE",
             url: `/api/admin/template/${templateId}`,
             success: function (res) {
-                debugger;
+
                 toast("Deleted successfully!");
                 setTimeout(function () {
                     window.location.reload();
@@ -925,7 +925,6 @@
                         }, 1000)
                     },
                     error: function (res) {
-                        debugger;
                         toast("Error while deleting.");
                     }
                 })
@@ -1323,7 +1322,6 @@
         designFlags.active = data.active;
         designFlags.default = data.default;
         $inputDesignLink.val(data.link);
-        debugger;
         $inputLogoPerPage.val(meta.objects || 0);
         $kopykakePartNo.val(data.ref_code);
 
@@ -1615,7 +1613,6 @@
         canvas.clear();
         onDesignLoaded({});
         for (let file of files) { // check type
-            debugger;
             if (! allowedTypes.includes(file.type)) {
                 toast(`Incorrect File Type`)
                 return;

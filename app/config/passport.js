@@ -3,22 +3,16 @@ const bcrypt = require('bcrypt');
 const User = require("../models/appuser");
 const mysql = require('mysql');
 const { PasswordHash, CRYPT_BLOWFISH, CRYPT_EXT_DES } = require('../public/js/password-hash');
-
 // Prod
-const mysqlSettings = {
-  host: "104.154.144.42",
-  user: "u8bvx965rzk53",
-  password: "EJ67dAkZTuAhgYB",
-  database: 'db4qgewmyrzq4v'
-}
-
 // const mysqlSettings = {
-//   host: "localhost",
-//   user: "root",
-//   password: "abcd1234",
-//   database: "kkdb",
-//   port:"3306"
+//   host: "104.154.144.42",
+//   user: "u8bvx965rzk53",
+//   password: "EJ67dAkZTuAhgYB",
+//   database: 'db4qgewmyrzq4v'
 // }
+
+const config = process.env;
+
 
 module.exports = function(passport) {
 
@@ -44,8 +38,15 @@ module.exports = function(passport) {
 
                  //let email = req.body.email;
                  //let password = req.body.password;
-                 
-                 var con = mysql.createConnection(mysqlSettings);
+                 console.log(config.MYSQL_USR)
+                 var con = mysql.createConnection({
+                       
+                       host     : config.MYSQL_HOST,
+                       user     : config.MYSQL_USR,
+                       password : "abcd1234",
+                       database : "kkdb"
+
+                 });
                  
                   con.connect(function(err) {
                      
@@ -120,10 +121,11 @@ module.exports = function(passport) {
                                 console.log("Adding New user in KakePrint DB");
                                 let newUser2 = new User(kakePrintUser).save().then((value)=>
                                 {
-                                  console.log(`User (${display_name}) Created On KakePrint DB.`)
+                                  console.log(`User (${display_name}) Created On KakePrint DB.`);
+                                  return done(null,kakePrintUser); 
                                 }).catch(value=> { console.log(value);});
 
-                              }); 
+                              });  
 
                             }
 
