@@ -43,8 +43,8 @@ module.exports = function(passport) {
                        
                        host     : config.MYSQL_HOST,
                        user     : config.MYSQL_USR,
-                       password : "abcd1234",
-                       database : "kkdb"
+                       password : config.MYSQL_PASS,
+                       database : config.MYSQL_DB
 
                  });
                  
