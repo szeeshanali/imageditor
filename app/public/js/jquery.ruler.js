@@ -51,61 +51,61 @@
 			}
 		}
 		
-		//resize
-		$(window).resize(function(e){
-			var $hRule = $('.hRule');
-			var $vRule = $('.vRule');
-			$hRule.empty();
-			$vRule.empty().height(0).outerHeight($vRule.parent().outerHeight());
-			//var logoSize = parseFloat($(".logo-size").text())
-			var logoSize = $(".logo-size").text()?.split('x');
-			let logoWidth = parseFloat(logoSize[0]);
-			let logoHeight = parseFloat(logoSize[1]);
+		// //resize
+		// $(window).resize(function(e){
+		// 	var $hRule = $('.hRule');
+		// 	var $vRule = $('.vRule');
+		// 	$hRule.empty();
+		// 	$vRule.empty().height(0).outerHeight($vRule.parent().outerHeight());
+		// 	//var logoSize = parseFloat($(".logo-size").text())
+		// 	var logoSize = $(".logo-size").text()?.split('x');
+		// 	let logoWidth = parseFloat(logoSize[0]);
+		// 	let logoHeight = parseFloat(logoSize[1]);
 
-			// Horizontal ruler ticks
-			var tickLabelPos = settings.vRuleSize;
-			var newTickLabel = "";
-			var hLabelValue =0;  
-			while ( tickLabelPos <= $hRule.width() ) {
-				if ((( tickLabelPos - settings.vRuleSize ) %50 ) == 0 ) {
-					hLabelValue += 1; 
-					console.log(hLabelValue);
-					var val = (logoWidth*hLabelValue)/10;
-				   console.log(val);
-					newTickLabel = "<div class='tickLabel'>" + val.toFixed(1) + "''</div>";
-					$(newTickLabel).css( "left", tickLabelPos+"px" ).appendTo($hRule);
-				} else if ((( tickLabelPos - settings.vRuleSize ) %10 ) == 0 ) {
-					newTickLabel = "<div class='tickMajor'></div>";
-					$(newTickLabel).css("left",tickLabelPos+"px").appendTo($hRule);
-				} else if ((( tickLabelPos - settings.vRuleSize ) %5 ) == 0 ) {
-					newTickLabel = "<div class='tickMinor'></div>";
-					$(newTickLabel).css( "left", tickLabelPos+"px" ).appendTo($hRule);
-				}
-				tickLabelPos = (tickLabelPos + 5);				
-			}//hz ticks
+		// 	// Horizontal ruler ticks
+		// 	var tickLabelPos = settings.vRuleSize;
+		// 	var newTickLabel = "";
+		// 	var hLabelValue =0;  
+		// 	while ( tickLabelPos <= $hRule.width() ) {
+		// 		if ((( tickLabelPos - settings.vRuleSize ) %50 ) == 0 ) {
+		// 			hLabelValue += 1; 
+		// 			console.log(hLabelValue);
+		// 			var val = (logoWidth*hLabelValue)/10;
+		// 		   console.log(val);
+		// 			newTickLabel = "<div class='tickLabel'>" + val.toFixed(1) + "''</div>";
+		// 			$(newTickLabel).css( "left", tickLabelPos+"px" ).appendTo($hRule);
+		// 		} else if ((( tickLabelPos - settings.vRuleSize ) %10 ) == 0 ) {
+		// 			newTickLabel = "<div class='tickMajor'></div>";
+		// 			$(newTickLabel).css("left",tickLabelPos+"px").appendTo($hRule);
+		// 		} else if ((( tickLabelPos - settings.vRuleSize ) %5 ) == 0 ) {
+		// 			newTickLabel = "<div class='tickMinor'></div>";
+		// 			$(newTickLabel).css( "left", tickLabelPos+"px" ).appendTo($hRule);
+		// 		}
+		// 		tickLabelPos = (tickLabelPos + 5);				
+		// 	}//hz ticks
 
 			
-			// Vertical ruler ticks
-			tickLabelPos = settings.hRuleSize;
+		// 	// Vertical ruler ticks
+		// 	tickLabelPos = settings.hRuleSize;
 
-			newTickLabel = "";
-			var vLabelValue = 0;
-			while (tickLabelPos <= $vRule.height()) {
-				if ((( tickLabelPos - settings.hRuleSize ) %50 ) == 0) {
-					vLabelValue += 1; 
-					var val = (logoHeight*vLabelValue)/10;
-					newTickLabel = "<div class='tickLabel'>" + val.toFixed(1) + "''</div>";
-					$(newTickLabel).css( "top", tickLabelPos+"px" ).appendTo($vRule);
-				} else if (((tickLabelPos - settings.hRuleSize)%10) == 0) {
-					newTickLabel = "<div class='tickMajor'></div>";
-					$(newTickLabel).css( "top", tickLabelPos+"px" ).appendTo($vRule);
-				} else if (((tickLabelPos - settings.hRuleSize)%5) == 0) {
-					newTickLabel = "<div class='tickMinor'></div>";
-					$(newTickLabel).css( "top", tickLabelPos+"px" ).appendTo($vRule);
-				}
-				tickLabelPos = ( tickLabelPos + 5 );				
-			}//vert ticks
-		});//resize
+		// 	newTickLabel = "";
+		// 	var vLabelValue = 0;
+		// 	while (tickLabelPos <= $vRule.height()) {
+		// 		if ((( tickLabelPos - settings.hRuleSize ) %50 ) == 0) {
+		// 			vLabelValue += 1; 
+		// 			var val = (logoHeight*vLabelValue)/10;
+		// 			newTickLabel = "<div class='tickLabel'>" + val.toFixed(1) + "''</div>";
+		// 			$(newTickLabel).css( "top", tickLabelPos+"px" ).appendTo($vRule);
+		// 		} else if (((tickLabelPos - settings.hRuleSize)%10) == 0) {
+		// 			newTickLabel = "<div class='tickMajor'></div>";
+		// 			$(newTickLabel).css( "top", tickLabelPos+"px" ).appendTo($vRule);
+		// 		} else if (((tickLabelPos - settings.hRuleSize)%5) == 0) {
+		// 			newTickLabel = "<div class='tickMinor'></div>";
+		// 			$(newTickLabel).css( "top", tickLabelPos+"px" ).appendTo($vRule);
+		// 		}
+		// 		tickLabelPos = ( tickLabelPos + 5 );				
+		// 	}//vert ticks
+		// });//resize
 		
 		return this.each(function() {
 			var $this = $(this);

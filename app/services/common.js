@@ -254,18 +254,19 @@ const commonService = (function() {
     }
 
     this.getContentAsync = async (type)=>{
-        if(type === 'custom-text')
+        if(type === 'custom-text' || type === 'fonts')
         {  return await contents.find({type:type, active:true, deleted:false}); }
+
         return await contents.findOne({type:type, active:true, deleted:false});    
     }
 
    
 
     this.addOrUpdateContentAsync = async (content,type,by_admin)=>{
-        if((content == null || content.length < 10) && type != 'custom-text')
+        if((content == null || content.length < 3) && type != 'custom-text' )
         {throw "Empty content."; }
 
-        if(type === 'custom-text')
+        if(type === 'custom-text' || type === 'fonts')
         {
             var content =  new contents({content:content,type:type,by_admin:by_admin});
             await content.save();

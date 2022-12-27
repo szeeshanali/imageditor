@@ -1,0 +1,43 @@
+<div class=" pd-20">
+  <div class="row row-sm mg-t-15 mg-sm-t-20">
+    <div class="col-md-6 card pd-20">
+      <div class="list-group widget-list-group" style="max-height: 350px; overflow-y:scroll">
+        <%if(!content || content?.length == 0){%>
+        <p class="pd-10">Add Fonts</p>
+        <%}%>
+        <%for(var i=0;i<content?.length;i++){%>
+        <div class="list-group-item pd-y-10 rounded-top-0 bd-0" id="fonts-<%=content[i]._id%>">
+          <div class="media">
+       
+            <div class="media-body">
+              <span class="tx-inverse tx-18"><%=content[i].content%></span>
+              <span class="pull-right"><button class="btn btn-secondary btnDelFont" type="button" id="<%=content[i]._id%>"><i class="icon ion-ios-trash-outline tx-18"></i></button></span>
+            </div><!-- media-body -->
+          </div><!-- media -->
+        </div><!-- list-group-item -->
+        <%}%>
+      </div><!-- list-group -->
+    </div><!-- col-md-6 -->
+  
+    <div class="col-md-6 mg-t-15 mg-sm-t-20 mg-md-t-0">
+      <div class="card pd-20 pd-sm-40 form-layout form-layout-5">
+        <h6 class="tx-gray-800 tx-uppercase tx-bold tx-14 mg-b-10" >Add  Fonts</h6>
+        <p class="mg-b-30 tx-gray-600">Fonts will be displayed as a list to the user in which user can choose their favorite fonts for the design.</p>
+        <div class="row row-xs">
+          <div class="col-sm-10 mg-t-10 mg-sm-t-0">
+            <input type="text" placeholder="Enter Font Name" id="inputFontName" class="form-control" maxlength="100" minlength="3" pattern=".{3,100}" title="Minimum 3 and maximum 100 characters." >
+          </div>
+        </div><!-- row -->
+     
+        <div class="row row-xs mg-t-30">
+          <div class="col-sm-8 mg-l-auto">
+            <div class="form-layout-footer">
+              <button type="button" id="btnAddFont" class="btn btn-primary mg-r-5">Add Text</button>
+              <button class="btn btn-secondary" id="btnFontClear">Clear</button>
+            </div><!-- form-layout-footer -->
+          </div><!-- col-8 -->
+        </div>
+      </div>
+    </div><!-- col-md-6 -->
+  </div>
+</div>
