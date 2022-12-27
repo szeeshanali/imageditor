@@ -661,7 +661,71 @@
                   toast("Error while saving Content.");
               }
           })
-      })
+        })
+
+        //@Add Fonts 
+        $(".btnDelFont").on("click",function(e){
+            var id = e.currentTarget.id;
+  
+            $.ajax({
+              type: "DELETE",
+              url: `/api/admin/fonts/${id}`,
+              success: function (res) {
+                  toast("Deleted successfully!");
+                  $(`#fonts-${id}`).remove();
+              },
+              error: function (res) {
+                  toast("Error while deleting.");
+              }
+          })
+  
+          
+           
+          });
+          $("#btnFontClear").on("click", function (e) {
+            $('#inputFontName').val("");
+          })
+          $("#btnAddFont").on("click", function (e) {
+            if(customTextInProgress){
+              toast("Please wait... ");
+              return;
+            }
+            var customTextInProgress = true;
+            var type = 'fonts';
+            var text = $('#inputFontName').val();
+  
+            if(!text || text === "" || text.length === 0)
+            {
+              toast("Please enter text.");
+              return; 
+            }
+  
+            if(text.length > 100)
+            {
+              toast("Custom text should not be greater than 100 characters.");
+              return; 
+            }
+            $.ajax({
+                type: "POST",
+                url: "/api/admin/content",
+                data: {
+                    content: text,
+                    type: type
+                },
+                success: function (res) {
+                  window.location.reload();
+                    designFlags.submitted = true;
+                    toast("Content has been saved successfully.");
+                },
+                error: function (res) {
+                    designFlags.submitted = false;
+                    toast("Error while saving Content.");
+                }
+            })
+          })
+  
+
+
 
         $("#menu-save-design").on("click", function () { /**
        * 1. validate - please create design before save.

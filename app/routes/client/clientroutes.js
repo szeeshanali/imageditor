@@ -287,17 +287,18 @@ router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
 
     const id = req.params.id;
     const type = req.params.type;
-    var template = {};
-    var meta = {};
+    let template = {};
+    let meta = {};
     
-   var customDesigns = await uploads.find({type:'pre-designed', active:true, deleted:false, base64:{$ne:null},json:{$ne:null}},{code:1,base64:1}) || [];
-   var adminUploadItems = await commonService.uploadService.getUploads('all',true,true);
-   var templates = adminUploadItems.filter(function(item){ return item.type == 'template'});
-   var cliparts = adminUploadItems.filter(function(item){ return item.type == 'clipart'});
-   var customDesigns = adminUploadItems.filter(function(item){ return item.type == 'pre-designed'});
-   var categories = await commonService.categoryService.getCategoriesAsync();
-   var customText = await commonService.contentService.getContentAsync('custom-text');
-   var ca = [];
+   ///let customDesigns = await uploads.find({type:'pre-designed', active:true, deleted:false, base64:{$ne:null},json:{$ne:null}},{code:1,base64:1}) || [];
+   let adminUploadItems = await commonService.uploadService.getUploads('all',true,true);
+   let templates = adminUploadItems.filter(function(item){ return item.type == 'template'});
+   let cliparts = adminUploadItems.filter(function(item){ return item.type == 'clipart'});
+   let customDesigns = adminUploadItems.filter(function(item){ return item.type == 'pre-designed'});
+   let categories = await commonService.categoryService.getCategoriesAsync();
+   let customText = await commonService.contentService.getContentAsync('custom-text');
+   let fonts = await commonService.contentService.getContentAsync('fonts');
+   let ca = [];
    categories.forEach(category => {
     var items = cliparts?.filter(i=>i.category == category.id);
     if(items != null && items.length > 0)
@@ -320,7 +321,8 @@ router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
         type:type,
         code:id,
         project_limit:req.user.project_limit,
-        customText:customText
+        customText:customText,
+        fonts:fonts
     });
 });
 

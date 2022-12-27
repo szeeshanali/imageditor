@@ -175,16 +175,10 @@
                                 Arial (sans-serif)
                             </button>
                             <div class="dropdown-menu"  aria-labelledby="fontlist">
-                              <a class="dropdown-item" href="#" style="font-family: Arial" >Arial (sans-serif)</a>
-                              <a class="dropdown-item" href="#" style="font-family: Luckiest Guy;" >Luckiest Guy</a>
-                              <a class="dropdown-item" href="#" style="font-family: Bungee Shade" >Bungee Shade</a>
-                              <a class="dropdown-item" href="#" style="font-family: BlackHanSans" >BlackHanSans</a>
-                              <a class="dropdown-item" href="#" style="font-family: Creepster" >Creepster</a>
-                              <a class="dropdown-item" href="#" style="font-family: LondrinaShadow" >LondrinaShadow</a>
-                              <a class="dropdown-item" href="#" style="font-family: Brush Script MT, cursive" >Brush Script MT, cursive</a>
-                              <a class="dropdown-item" href="#" style="font-family: RockSalt" >RockSalt</a>
-                              <a class="dropdown-item" href="#" style="font-family: Shrikhand" >Shrikhand</a>
-                              <a class="dropdown-item" href="#" style="font-family: PermanentMarker" >PermanentMarker</a>
+                                <%fonts?.forEach((item)=>{%>
+                                    <a class="dropdown-item" href="#" style="font-family: <%=item.content%>" ><%=item.content%></a>
+                                <%})%>
+                              
                             </div>
                           </div>
                           

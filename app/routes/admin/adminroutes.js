@@ -209,7 +209,6 @@ router.delete('/api/admin/custom-text/:id', isAdmin, async (req,res)=>{
   { return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."}); }
  
 }) 
-
 router.get("/app/admin/custom-text", isAdmin, async (req,res)=>{
   var content = await commonService.contentService.getContentAsync('custom-text') || {};
   res.locals.page = {
@@ -222,6 +221,32 @@ router.get("/app/admin/custom-text", isAdmin, async (req,res)=>{
 })
 
 
+router.delete('/api/admin/fonts/:id', isAdmin, async (req,res)=>{
+  var id = req.params["id"]; 
+  if(!id){
+    return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."});
+  }  
+  try{
+    await contents.findOneAndDelete({type:'fonts', by_admin:true, code:id }); 
+    return res.status(200).send({"status":400,"message":`Deleted successfully, Id:${id}`});
+  }catch(e)
+  { return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."}); }
+ 
+}) 
+router.get("/api/admin/fonts", async (req,res)=>{
+  var content = await commonService.contentService.getContentAsync('fonts') || {};
+  res.status(200).send(content);
+})
+router.get("/app/admin/fonts", isAdmin, async (req,res)=>{
+  var content = await commonService.contentService.getContentAsync('fonts') || {};
+  res.locals.page = {
+    title  : "Fonts",
+    id     : "__fonts",
+    user   : req.user,
+    content : content
+   } ;
+  res.render("pages/admin/fonts",res.locals.page);
+})
 
 router.post(ROUTE_ADMIN_SAVEDESIGN,  isAdmin,  (req,res)=>{
     const {title,description,categoryId,json,base64} = req.body;
@@ -282,7 +307,7 @@ router.post(ROUTE_ADMIN_SAVEDESIGN,  isAdmin,  (req,res)=>{
 
 router.post('/api/admin/content', isAdmin, async (req,res)=>{
   const  {content, type} = req.body;
-  var c  = await commonService.contentService.addOrUpdateContentAsync(content,type,true);
+  await commonService.contentService.addOrUpdateContentAsync(content,type,true);
   try{
     
     res.status(200).send({status:"success",message:"Content updated successfully!"})
