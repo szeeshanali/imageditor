@@ -170,8 +170,9 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
     fontWeight: 'normal',
     fontStyle: '', // "normal", "italic" or "oblique".
     cacheProperties: fabric.Object.prototype.cacheProperties.concat('diameter', 'kerning', 'flipped', 'fill', 'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'strokeStyle', 'strokeWidth'),
-    strokeStyle: null,
-    strokeWidth: 0,
+    //strokeStyle: null,
+    stroke: 'rgba(0, 0, 0, 1)',
+    strokeWidth: 3,
     paintFirst: "stroke",
     text: '',
 
@@ -321,12 +322,16 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
             // depending on inward or outward facing
 
             // Stroke
+            //const strokeStyle = this.strokeStyle;
+            //const strokeWidth = this.strokeWidth;
             const strokeStyle = this.strokeStyle;
             const strokeWidth = this.strokeWidth;
             if (strokeStyle && strokeWidth) {
                 ctx.strokeStyle = strokeStyle;
                 ctx.lineWidth = strokeWidth;
-                ctx.miterLimit = 2;
+                ctx.strokeWidth = strokeWidth;
+                ctx.stroke = strokeStyle;
+                //ctx.miterLimit = 2;
                 ctx.strokeText(text[x], 0, (inwardFacing ? 1 : -1) * (0 - diameter / 2 + textHeight / 2));
             }
 
@@ -2314,6 +2319,10 @@ function initCanvasTextEvents() {
                     fontWeight: obj.fontWeight,
                     fontStyle: obj.fontStyle,
                     cacheProperties: fabric.Object.prototype.cacheProperties.concat('diameter', 'kerning', 'flipped', 'fill', 'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'strokeStyle', 'strokeWidth','stroke'),
+                    stroke:$("#strokecolor").val(),
+                    strokeStyle:$("#strokecolor").val(),
+                    strokeWidth: parseInt($("#text-stroke-width").val())
+
                     //strokeStyle: obj.strokeStyle,
                     //stroke:obj.stroke,
                     //strokeWidth: 2
