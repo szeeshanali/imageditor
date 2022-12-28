@@ -215,12 +215,12 @@
           <div class="d-flex" id="ruler-ctrl">
             <div class=" mg-r-10">
               <label class="ckbox">
-                <input type="checkbox" checked="" id="btnDisplayGrid" ><span>Grid</span>
+                <input type="checkbox"  id="btnDisplayGrid" ><span>Grid</span>
               </label>
             </div>
             <div class="mg-r-10">
               <label class="ckbox">
-                <input type="checkbox" checked="" id="btnDisplayRuler" ><span>Ruler</span>
+                <input type="checkbox"  id="btnDisplayRuler" ><span>Ruler</span>
               </label>
             </div>
 
@@ -260,8 +260,8 @@
             </div>
         </div>
       
-        <div class="myMenu " style="display: none;" id="myMenu">
-         <span  onclick="parseClipboardData();"> Paste</span>
+        <div class="paste-clipboard"  style="display: none;"  id="pasteClipboard">
+         <span  onclick="parseClipboardData();"  > Paste</span>
       </div>
     </div>
     </div>
@@ -341,7 +341,7 @@
     </div>
   </div><!-- modal-dialog -->
 </div><!-- modal -->
-
+<%- include('../../partials/client/popups/popup-clipart'); %>
 <script> 
     // $(".tab-content .tab-pane").each((i,e)=>
     //    { $(e).removeClass("active"); })

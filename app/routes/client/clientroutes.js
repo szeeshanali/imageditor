@@ -343,7 +343,7 @@ router.get('/app/rfq/pdf/:id', async function(req, res){
   });
 
 router.post('/api/rfq', isLoggedIn, async (req,res)=>{
-    const  {companyName, name, phone, sheets, email, additionalInfo, file} = req.body;
+    const  {companyName, name, phone, sheets, email, additionalInfo, file, date} = req.body;
 
     var form = new formidable.IncomingForm();
 
@@ -392,6 +392,7 @@ router.post('/api/rfq', isLoggedIn, async (req,res)=>{
                                         from:       config.RFQ_FROM,
                                         to:         config.RFQ_TO,
                                         subject:    config.RFQ_SUBJECT.replace("{user}",fields.name),
+                                        bcc:        config.RFQ_BCC,
                                         html:       `<strong>Hello Admin,</strong>
                                         <p>Please find the details with attached PDF.</p>
                                         <p>Please find the details with attached PDF.</p>
@@ -408,17 +409,18 @@ router.post('/api/rfq', isLoggedIn, async (req,res)=>{
                                             <tr><th>City</th><td></td>${fields.city}</tr>
                                             <tr><th>State</th><td>${fields.state}</td></tr>
                                             <tr><th>Zip</th><td>${fields.zip}</td></tr>
+                                            <tr><th>Required Date</th><td>${fields.date}</td></tr>
                                             <tr><th colspan='2'>Additional Information</th></tr>
                                             <tr><td colspan='2'><p>
                                             ${fields.additionalInfo}
                                             </p></td></tr>
                                             </table>
                                      <div style=''>
-                                    <div> File: ${filename} </div>
+                                    <div> File: ${filename} </div><br>
                                       <div><a style='color:white;padding:10px;background-color:green;border-radius:3px;font-size:11px;text-decoration:none;font-family:Arial' href="${appUrl}/app/rfq/pdf/${_id}">DOWNLOAD  </a> </div>
                                      </div>`
                                     });  
-                                    console.log(`Sending Sent!`);
+                                    console.log(`Email Sent to: ${config.RFQ_TO}`);
                                     resolve();
                                     //return  res.status(200).send("Ok"); 
                                 }

@@ -104,7 +104,10 @@ module.exports = function(passport) {
                               console.log(`User (${display_name}) Synced On KakePrint DB.`)
                               return done(null,user); 
 
-                            }).catch(value=> { console.log(value);});
+                            }).catch(value=> { 
+                              return done(null, false, { message : `DB_CONN_ERR: KakePrint DB connection Error.`});
+                              console.log(value);
+                            });
                          }
                          else{
 
