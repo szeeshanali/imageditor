@@ -1587,6 +1587,7 @@ menuHighlighter("#menu-upload");
     $("#ws-btn-save").removeClass("hidden");
     $("#ws-btn-preview").removeClass("hidden");
     $("#ws-btn-back").addClass("hidden");
+    $("#previewMsg").addClass("hidden");
     $("#ws-btn-download").addClass("hidden");
     $("#btnStartOverModel").removeClass("hidden");
     
@@ -1673,6 +1674,7 @@ function renderPreview() {
             $("#ws-btn-back").removeClass("hidden");
             $("#ws-btn-download").removeClass("hidden");
             $("#btnStartOverModel").addClass("hidden");
+            $("#previewMsg").removeClass("hidden");
             
             state.isPreviewCanvas = true;
 
