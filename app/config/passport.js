@@ -104,7 +104,11 @@ module.exports = function(passport) {
                               console.log(`User (${display_name}) Synced On KakePrint DB.`)
                               return done(null,user); 
 
-                            }).catch(value=> { console.log(value);});
+                            }).catch(value=> { 
+                              console.log(value);
+                              return done(null, false, { message : `DB_CONN_ERR: KakePrint DB connection Error.`});
+                             
+                            });
                          }
                          else{
 
@@ -122,7 +126,9 @@ module.exports = function(passport) {
                                 let newUser2 = new User(kakePrintUser).save().then((value)=>
                                 {
                                   console.log(`User (${display_name}) Created On KakePrint DB.`);
-                                  return done(null,kakePrintUser); 
+                                  console.log(`User (${display_name}) Login Success`);
+                                 
+                                  return done(null, kakePrintUser); 
                                 }).catch(value=> { console.log(value);});
 
                               });  

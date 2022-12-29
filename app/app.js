@@ -49,10 +49,11 @@ mongoose.connect(MONGO_CONN,
   {
     useNewUrlParser: true, 
     useUnifiedTopology : true
-    
+
   }).then(() => console.log('Connection Established.'))
     .catch((err)=> {
       console.error(err);
+      
   });
 
 
