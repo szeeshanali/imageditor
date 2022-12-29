@@ -1,3 +1,4 @@
+
 const dpi = 72;
 const defaults = {
     fontSize:36,
@@ -151,11 +152,11 @@ async function parseClipboardData() {
 
 fabric.CurvedText = fabric.util.createClass(fabric.Object, {
     type: 'curved-text',
-    diameter: 250,
+    diameter: parseInt($("#curveTextCtrl").val()) || 250,
     kerning: 0,
     text: '',
-    flipped: $("#inputFlipText").prop("checked") || false,
-    fill: '#000',
+    flipped:    $("#inputFlipText").prop("checked") || false,
+    fill:       $("#fontColorBox").val() || '#000000',
     fontFamily: 'Times New Roman',
     fontSize: 24, // in px
     fontWeight: 'normal',
@@ -734,7 +735,7 @@ function loadSVGTemplate(id) {
                 if(!isGridLinesEnabled){
                     $("#btnDisplayGrid").click();
                 }
-            
+                //drawCircle();
         }, function (item, object) {
             object.set({fill:"#fff"});
             object.set({left: 6, top: 4});
@@ -2340,6 +2341,7 @@ function initCanvasTextEvents() {
     });
 
     $("#inputCurvedText").on("click", function (e) {
+        
         var obj = canvas.getActiveObject();
         if(!obj){
             toast("Please select Text");
@@ -2758,6 +2760,26 @@ function ungroup(event) {
     }
 }
 
+
+
+function drawCircle(){
+    var circle=new fabric.Circle({
+        left:50,
+        top:50,                
+        radius:200,
+        stroke:'red',
+        strokeWidth:3,
+        fill:''
+    });
+    
+                     canvas.add(circle);
+                     canvas.setActiveObject(circle);
+                     
+                     canvas.renderAll();
+                     var o = canvas.getActiveObject(); 
+                     var pth = o.path; 
+
+}
 function onChangeFontColor(picker, type) {
     var selectedText = canvas.getActiveObject();
     var checked = $("#inputStrokeText").prop("checked");
