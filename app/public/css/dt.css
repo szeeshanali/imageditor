@@ -968,13 +968,45 @@ border-right: solid 0px #ccc;  }
   font-size: 16px;
   padding: 16px 32px;
 } */
+.template {
+  transition: transform .2s; /* Animation */
 
-
-.clipart{
-  background-color: #f3f3f3;
-  border:solid 2px white;
 }
-.hovereffect {
+.template:hover{
+  border:solid 1px #494699; 
+  cursor: pointer;
+  
+}
+.accordion-left-menu:not(.collapsed)::after {
+  content: "\f3d1";
+    transform: rotate(90deg);
+}
+.accordion-left-menu::after {
+  content: "\f3d1";
+  font-family: 'Ionicons';
+  position: absolute;
+  font-size: 18px;
+  top: 18px;
+  right: 20px;
+  transition: transform .2s; /* Animation */
+}
+
+.clipart {
+  background-color: #f3f3f3;
+  border:solid 2px #ccc;
+  height:60px;
+  margin:5px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform .2s; /* Animation */
+  border-radius: 5px;
+
+}
+.clipart:hover {
+  transform: scale(1.2); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+
+}
+/* .hovereffect {
  
   float: left;
   overflow: hidden;
@@ -1035,14 +1067,14 @@ border-right: solid 0px #ccc;  }
   -webkit-transform: scale(1);
   -ms-transform: scale(1);
   transform: scale(1);
-}
+} */
 
 
-#myMenu{
+#pasteClipboard{
   background-color: #efefef;
-    color: #4c4c4c;
-    padding: 10px 22px;
-    border: dashed 1px #666565;
-    font-weight: bold;
-    cursor: pointer;
+  color: #4c4c4c;
+  padding: 5px 22px;
+  border: solid 1px #666565;
+  cursor: pointer;
+  z-index: 1;
 }

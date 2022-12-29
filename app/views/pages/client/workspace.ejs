@@ -209,18 +209,28 @@
     </div>
   </div>
   <div class="card pd-x-20 pd-y-15">
-
+    <div class="alert alert-primary pd-y-20 hidden" role="alert" id="previewMsg">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">×</span>
+      </button>
+      <div class="d-sm-flex align-items-center justify-content-start">
+        <i class="icon ion-ios-information alert-icon tx-52 mg-r-20"></i>
+        <div class="mg-t-20 mg-sm-t-0">
+          <p class="mg-b-0 tx-gray">You may edit individual Circle / Square by selecting the Layers on the Right. Alternatively you may also modify the overall sheet in order to get your desired output</p>
+        </div>
+      </div><!-- d-flex -->
+    </div>
     <div class="email-content-header">
       <div>
           <div class="d-flex" id="ruler-ctrl">
             <div class=" mg-r-10">
               <label class="ckbox">
-                <input type="checkbox" checked="" id="btnDisplayGrid" ><span>Grid</span>
+                <input type="checkbox"  id="btnDisplayGrid" ><span>Grid</span>
               </label>
             </div>
             <div class="mg-r-10">
               <label class="ckbox">
-                <input type="checkbox" checked="" id="btnDisplayRuler" ><span>Ruler</span>
+                <input type="checkbox"  id="btnDisplayRuler" ><span>Ruler</span>
               </label>
             </div>
 
@@ -231,13 +241,14 @@
       </div>
       <div class="mg-l-auto">
         <div class="d-flex">
-          <button type="button" onclick="$('#btn-menu-peview').click()" class="hidden btn btn-sm btn-primary tx-12 tx-uppercase tx-bold bd-0 pd-x-20 " id="ws-btn-preview">Preview</button>
-          <button type="button" data-toggle="modal" data-target="#downloadPDFModel" class="btn btn-sm btn-primary tx-12 tx-uppercase tx-bold  bd-0 pd-x-20 hidden" id="ws-btn-download" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?" data-toggle="popover" >Finalize</button>
+          <button type="button" onclick="$('#btn-menu-peview').click()" class="hidden btn btn-sm btn-success tx-12 tx-uppercase tx-bold bd-0 pd-x-20 " id="ws-btn-preview">Preview <br> Your Design</button>
 
-          <button type="button" onclick="$('#menu-save-design').click()" class=" hidden btn btn-primary btn-sm tx-12 tx-uppercase tx-bold bd-0 pd-x-20" id="ws-btn-save"><i class="fa fa-floppy-o mg-r-5"></i>Save</button>
-          <button type="button" onclick="$('#btnBack').click()" class="btn btn-primary tx-12 btn-sm tx-uppercase tx-bold  bd-0 pd-x-20 hidden" id="ws-btn-back">Back to Design</button>
+          <button type="button" data-toggle="modal" data-target="#downloadPDFModel" class="btn btn-sm btn-success tx-12 tx-uppercase tx-bold  bd-0 pd-x-20 hidden" id="ws-btn-download" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?" data-toggle="popover" ><i class="ion-checkmark-circled mg-r-5"></i> Finalize & Download <br> your PDF</button>
+          <button type="button" onclick="$('#menu-save-design').click()" class=" hidden btn btn-primary btn-sm tx-12 tx-uppercase tx-bold bd-0 pd-x-20" id="ws-btn-save"><i class="fa fa-floppy-o mg-r-5"></i>Save <br>  Design</button>
 
-          <a href="#" id="btnStartOverModel" data-toggle="modal" data-target="#confirmbox"  class="btn btn-sm btn-danger bd-0 pd-x-20 mg-l-1 tx-12 tx-uppercase tx-bold" ><i class="ion-refresh mg-r-5"></i>Start Over</a>
+          <button type="button" onclick="$('#btnBack').click()" class="btn btn-danger tx-12 btn-sm tx-uppercase tx-bold  bd-0 pd-x-20 hidden" id="ws-btn-back"><i class="fa fa-pencil-square-o mg-r-5"></i> Continue Editing <br> your Design</button>
+
+          <a href="#" id="btnStartOverModel" data-toggle="modal" data-target="#confirmbox"  class="btn btn-sm btn-danger bd-0 pd-x-20 mg-l-1 tx-12 tx-uppercase tx-bold" ><i class="ion-refresh mg-r-5"></i>Restart Designing from <br>the Beginning</a>
         </div>
 
         <div class="btn-group mg-b-0">
@@ -252,7 +263,7 @@
       
       <div class="workarea" id="workarea">
       
-
+     
         <div  id="canvas-holder">
             <div class="content tx-center">
                 <canvas id="client-main-canvas"   ></canvas>
@@ -260,8 +271,8 @@
             </div>
         </div>
       
-        <div class="myMenu " style="display: none;" id="myMenu">
-         <span  onclick="parseClipboardData();"> Paste</span>
+        <div class="paste-clipboard"  style="display: none;"  id="pasteClipboard">
+         <span  onclick="parseClipboardData();"  > Paste from Clipboard</span>
       </div>
     </div>
     </div>
@@ -303,18 +314,15 @@
   <div class="modal-dialog modal-md" role="document">
     <div class="modal-content bd-0 tx-14">
       <div class="modal-header pd-x-20">
-        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Finalize your Design</h6>
+        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Finalize And Download your Design </h6>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body pd-20">
-        <p class="mg-b-5" id="confirmBoxBody">Download your design in PDF format, or you can also send us design for Printing.</p>
-      </div>
+      
       <div class="modal-footer justify-content-center">
-        <button type="button" onclick="$('#btn-download-pdf').click()" data-dismiss="modal" class="btn-sm tx-12 tx-uppercase btn btn-primary pd-x-20">Download PDF</button>
-        <button type="button" data-toggle="modal" data-target="#rfq" class="btn btn-sm tx-12 tx-uppercase btn-primary pd-x-20" data-dismiss="modal">Send to KakePrint</button>
-        <button type="button" class="btn btn-sm tx-12 tx-uppercase btn-secondary pd-x-20" data-dismiss="modal">Close</button>
+        <button type="button" onclick="$('#btn-download-pdf').click()" data-dismiss="modal" class="btn-sm tx-12 tx-uppercase btn btn-success pd-x-20">Download your design <br> in PDF</button>
+        <button type="button" data-toggle="modal" data-target="#rfq" class="btn btn-sm tx-12 tx-uppercase btn-primary pd-x-20" data-dismiss="modal">Send to KakePrints <br> for a Quote.</button>
       </div>
     </div>
   </div><!-- modal-dialog -->
@@ -341,7 +349,7 @@
     </div>
   </div><!-- modal-dialog -->
 </div><!-- modal -->
-
+<%- include('../../partials/client/popups/popup-clipart'); %>
 <script> 
     // $(".tab-content .tab-pane").each((i,e)=>
     //    { $(e).removeClass("active"); })

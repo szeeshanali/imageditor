@@ -114,15 +114,6 @@ fabric.Object.prototype.cornerStrokeColor = '#000';
 fabric.Object.prototype.cornerSize = 10;
 fabric.Object.prototype.padding = 3;
 
-setTimeout(function(){
-    fabric.util.addListener(document.getElementsByClassName('upper-canvas')[0], 'contextmenu', function(e) {
-        e.preventDefault();
-        var cnvsPos = $('#client-main-canvas').offset();
-        curX = e.clientX - cnvsPos.left+20;
-        curY = e.clientY - cnvsPos.top+80;
-        $('#myMenu').css({'position':'absolute', 'top': curY, 'left': curX, 'display':'block'});
-    });
-},2000)
 
 async function parseClipboardData() {
     
@@ -143,16 +134,16 @@ async function parseClipboardData() {
                   // const image = `<img src="${}" />`;
                   // $container.innerHTML = image;
                 });
-                $('#myMenu').css({'display':'none'});
+                $('#pasteClipboard').css({'display':'none'});
                 return true;
               }
             }
           }
-          $('#myMenu').css({'display':'none'});
+          $('#pasteClipboard').css({'display':'none'});
 
     }).catch((err) => {
       console.error(err);
-      $('#myMenu').css({'display':'none'});
+      $('#pasteClipboard').css({'display':'none'});
     });
    
     
@@ -659,10 +650,10 @@ function loadSVGTemplate(id) {
 
             // / getting actual width and height of a logo
             // / setting canvas dimensions with logo width/height
-            var logo = objects[objects.length-1];  
+            let logo = objects[objects.length-1];  
             if(logo.height && logo.height < logo.width)
             {
-                var ratio = (logo.width/logo.height);
+                let ratio = (logo.width/logo.height);
                 logoHeight = logoDisplaySize/ratio;
                 
             }
@@ -674,7 +665,7 @@ function loadSVGTemplate(id) {
             
             canvas.renderAll();
             // canvas.setZoom(2);
-            var logoSize = `${(meta.objectWidth / dpi).toFixed(1)}" x ${((meta.objectHeight || meta.objectWidth) / dpi).toFixed(1)}`;
+            let logoSize = `${(meta.objectWidth / dpi).toFixed(1)}" x ${((meta.objectHeight || meta.objectWidth) / dpi).toFixed(1)}`;
             let pageSize = `${meta.width/dpi}" x ${meta.height/dpi}"`;
             $("#template-info-panel .template-name").text(data.title);
             $("#template-info-panel .page-size").text(pageSize);
@@ -688,9 +679,10 @@ function loadSVGTemplate(id) {
             $("#rulerLogoSize").text(`${logoSize} x ${logoSize} inches `)
 
 
-            var reg = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+            let reg = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
             $("#kp-link").attr("href", reg.test(data.link) ? data.link : "#");
-           
+            $("#template-info-panel .webstore-link").attr("href", (data.link || "#"));
+
             if(!reg.test(data.link))
             {
             $("#kpweblink-panel").addClass("hidden");
@@ -707,56 +699,46 @@ function loadSVGTemplate(id) {
             $(".vRule, .hRule").remove();
             $('.canvas-container').first().ruler(rulerSettings);
             $(".vRule").height(logoHeight+22);
+            
+            
+            
             /// show grid lines 
-            var labels   = $(".hRule .tickLabel");
-            var vlabels   = $(".vRule .tickLabel");
-            $("#btnDisplayGrid").prop("checked",true);
+            let labels   = $(".hRule .tickLabel");
+            let vlabels   = $(".vRule .tickLabel");
+           let isGridLinesEnabled =  $("#btnDisplayGrid").is(":checked");
+           let isRulerEnabled =  $("#btnDisplayRuler").is(":checked");
             $("#btnDisplayRuler").prop("checked",true);
-            // if(!$("#btnDisplayGrid").prop("checked")){
-            //     $("#btnDisplayGrid").click();
-            // }
-            // if(!$("#btnDisplayRuler").prop("checked")){
-            //     $("#btnDisplayRuler").click();
-            // }
-
-             //var hasGridLines = $(".canvas-container").find('.grid-lines').length > 0; 
-             //if(hasGridLines)
-             //{return;}
-            // hlines 
+            $("#btnDisplayGrid").prop("checked",true);
+           
             $(".grid-lines").remove();
                 for(var i=0;i<(labels.length);i++)
                 {
                   
-                  var pos = $(labels[i]).position();
+                  let pos = $(labels[i]).position();
                   console.log(pos);
                   $(".canvas-container").first().append(`<div class='grid-lines' style='height:${logoHeight}px;left:${pos.left-22}px; top:0px; '></div>`)
                 }
-          // vlines 
           
-                for(var i=0;i<(vlabels.length);i++)
+                for(let i=0;i<(vlabels.length);i++)
                 {
                   
-                  var pos = $(vlabels[i]).position();
-                 console.log(pos);
+                    let pos = $(vlabels[i]).position();
+                    console.log(pos);
                 
                   $(".canvas-container").first().append(`<div class='grid-lines h-gridlines' style='width:500px;top:${pos.top-22}px; left:0px; border-bottom: solid 1px #666;'></div>`);
                   $(".canvas-container").first().css({border:"solid 1px #666", width:"502px",height:`${logoHeight}px`})
                 }
-
-                //let rect = getCropRect();
-                //canvas.add(rect); 
-                //canvas.renderAll();
-               // $("#client-main-canvas").removeClass('hidden');
+                if(!isRulerEnabled){
+                    $("#btnDisplayRuler").click();
+                }
+                if(!isGridLinesEnabled){
+                    $("#btnDisplayGrid").click();
+                }
+            
         }, function (item, object) {
             object.set({fill:"#fff"});
             object.set({left: 6, top: 4});
-            //object.set({width: 500, top: 4});
-            //object.scaleToWidth(logoDisplaySize);
            
-
-            // 4in = 96 res
-            // object.set('id', item.getAttribute('id'));
-            // group.push(object);
         });
         // / load template - preview display
         fabric.loadSVGFromURL(svgBase64, function (objects, options) { // $canvasPrev.fadeOut();
@@ -831,22 +813,59 @@ function menuPanelDisplay(itemToDisplay) {
 
     $(itemToDisplay).addClass("active");
 }
+
+function initContextMenu()
+    {
+        let timeout = false;
+        fabric.util.addListener(document.getElementsByClassName('upper-canvas')[0], 'contextmenu', function(e) {
+            e.preventDefault();
+          
+            var cnvsPos = $('#client-main-canvas').offset();
+            curX = e.clientX - cnvsPos.left+50;
+            curY = e.clientY - cnvsPos.top+80;
+            $('#pasteClipboard').css({'position':'absolute', 'top': curY, 'left': curX, 'display':'block'});
+          
+          /// hide contextmenu in 3 seconds.
+          if(!timeout)
+          {
+            timeout = true; 
+            setTimeout(function(){
+                timeout = false; 
+                $('#pasteClipboard').css({'display':'none'});
+            },5000); 
+          }
+        });
+
+        $("#workarea").on("click",function(){
+            $('#pasteClipboard').css({'display':'none'});
+        })
+    }
+
 var cropRect;
 function initUIEvents() {
+   
+
+    initContextMenu();
+   
+
+
+
     $("#btnCrop").on("click",(e)=>{
         cropImage();
     }); 
 
 
     $("#btnCropDone").on("click",(e)=>{
-        let img = canvas.getActiveObject(); 
-        canvas.remove(img);
+        let originalImg = canvas.getActiveObject(); 
+        canvas.remove(originalImg); 
         canvas.renderAll();
-        let url = cropCanvas.toDataURL();
-        fabric.Image.fromURL(url, function (img) {
-            canvas.add(img);
-            canvas.renderAll();
-        })
+        let croppedImg = cropCanvas.item(0); 
+        croppedImg.globalCompositeOperation = 'source-atop';
+        canvas.add(croppedImg);
+        canvas.renderAll();
+        
+
+
 
 
     })
@@ -859,10 +878,11 @@ function initUIEvents() {
             let imgSrc = img._element.src;
             fabric.Image.fromURL(imgSrc, function (img) {
                 cropCanvas.clear();
-                ///img.scaleToHeight(250);
-                ///let w = img.getScaledWidth(); 
-                ///let h = img.getScaledHeight(); 
-                cropCanvas.setDimensions({width:500,height:500})
+               /// img.scaleToHeight(250);
+                
+              ///  let w = img.getScaledWidth(); 
+              ///  let h = img.getScaledHeight(); 
+              //  cropCanvas.setDimensions({width:w,height:h})
                 cropCanvas.add(img);
                 cropRect  = getCropRect();
                 cropCanvas.add(cropRect); 
@@ -1158,25 +1178,41 @@ $("#btnMyProjectsModal").on("click",function(e){
         var o = canvas.getActiveObject();
         if (o && o.type === 'i-text') {
 
+            let isTextSelection = o.getSelectionStyles().length > 0; 
             if (value === 'bold') {
                 var isTrue = o['fontWeight'] === 'bold';
-                o.set({
-                    "fontWeight": isTrue ? '' : 'bold'
-                })
+
+
+                
+               
+                if(isTextSelection)
+                { o.setSelectionStyles({"fontWeight":isTrue ? '' : 'bold'}) }
+                else{
+                    o.set({
+                        "fontWeight": isTrue ? '' : 'bold'
+                    })
+                }            
+                
 
 
             } else if (value === 'italic') {
                 var isTrue = o['fontStyle'] === 'italic';
+                if(isTextSelection)
+                { o.setSelectionStyles({"fontStyle":isTrue ? '' : 'italic'}) }
+                else{
                 o.set({
                     "fontStyle": isTrue ? '' : 'italic'
-                })
+                })}
 
             } else if (value === 'underline') {
                 var isTrue = !o['underline'];
+                if(isTextSelection)
+                { o.setSelectionStyles({"underline":isTrue}) }
+                else{
                 o.set({
                    "underline":isTrue
                 })
-
+                }
             } else if (value === "left" || value === "right" || value === "center") {
                 o.set({"textAlign": value})
             }
@@ -1343,20 +1379,25 @@ $("#btnMyProjectsModal").on("click",function(e){
     })
 
 
-    $("#clipartmenu .clipart h2").on("click", (e) => {
-        var id = $(e.currentTarget).attr("data-url");
-        var _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
+    $("#clipartmenu .clipart").on("click", (e) => {
+        const url = $(e.currentTarget).attr("data-url");
+        const title = $(e.currentTarget).attr("data-title");
+        $("#clipartTitle").text(title);
+        $("#clipartImage").attr("src",url);
 
-        fabric.Image.fromURL(id, function (img) {
-            
-            var img1 = img.set({left: 0, top: 0, border:0, stroke:"white", strokeWidth:0});
-            img1.scaleToHeight(250);
-            img1.globalCompositeOperation = 'source-atop';
-            _canvas.add(img1);
-            _canvas.renderAll();
-            mainControls(true);
-            // $("#menu-text > a").click();
-        });
+        $("#btnAddClipart").unbind().on("click",function(){
+            const _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
+            fabric.Image.fromURL(url, function (img) {
+                let img1 = img.set({left: 0, top: 0, border:0, stroke:"white", strokeWidth:0});
+                img1.scaleToWidth(250);
+                img1.globalCompositeOperation = 'source-atop';
+                _canvas.add(img1);
+                _canvas.renderAll();
+                mainControls(true);
+                // $("#menu-text > a").click();
+            });
+        })
+        
 
     });
 
@@ -1390,11 +1431,12 @@ function cropImage () {
     const rect = cropRect.getBoundingRect()
  
     img = cropCanvas.item(0);
-
+    //img.scaleToHeight(250);
+    //let w = img.getScaledWidth();
+    ///let h = img.getScaledHeight();
     ///let dataURL = cropCanvas.toDataURL();
  
-    cropCanvas.setWidth(rect.width);
-    cropCanvas.setHeight(rect.height);   
+    //cropCanvas.setDimensions({width:w,height:h});
 
     img.set({
     cropX   : rect.left,
@@ -1404,7 +1446,8 @@ function cropImage () {
     })     
 
     cropRect.setCoords();
-      cropCanvas.renderAll();
+    cropCanvas.remove(cropCanvas.item(1));
+    cropCanvas.renderAll();
  
   
 }
@@ -1570,6 +1613,7 @@ menuHighlighter("#menu-upload");
     $("#ws-btn-save").removeClass("hidden");
     $("#ws-btn-preview").removeClass("hidden");
     $("#ws-btn-back").addClass("hidden");
+    $("#previewMsg").addClass("hidden");
     $("#ws-btn-download").addClass("hidden");
     $("#btnStartOverModel").removeClass("hidden");
     
@@ -1656,6 +1700,7 @@ function renderPreview() {
             $("#ws-btn-back").removeClass("hidden");
             $("#ws-btn-download").removeClass("hidden");
             $("#btnStartOverModel").addClass("hidden");
+            $("#previewMsg").removeClass("hidden");
             
             state.isPreviewCanvas = true;
 
@@ -2716,10 +2761,16 @@ function ungroup(event) {
 function onChangeFontColor(picker, type) {
     var selectedText = canvas.getActiveObject();
     var checked = $("#inputStrokeText").prop("checked");
-    if(selectedText.type == "curved-text")
-    { return; }
+    //if(selectedText.type == "curved-text")
+    //{ return; }
     if (type === 'font-color') {
-        selectedText.set('fill', picker.toRGBAString());
+        let isTextSelection = (selectedText.getSelectionStyles().length >0);
+        if(isTextSelection) {
+            selectedText.setSelectionStyles({"fill":picker.toRGBAString()}) 
+        }else{
+            selectedText.set('fill', picker.toRGBAString());
+        }
+        
     } else if (type === 'stroke-color' && checked) {
         selectedText.set('stroke', picker.toRGBAString());
     }
