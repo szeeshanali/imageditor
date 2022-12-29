@@ -388,11 +388,14 @@ router.post('/api/rfq', isLoggedIn, async (req,res)=>{
                                     console.log(`Added entry to DB.`);
                                     console.log(`Sending Email...`);
                                     let appUrl = `${req.protocol}://${req.hostname}:${req.socket.localPort}`;
+
+                                   
+
                                     transporter.sendMail({
-                                        from:       config.RFQ_FROM,
+                                        from:       [{name:"KakePrints", address: config.RFQ_FROM}],
                                         to:         config.RFQ_TO,
                                         subject:    config.RFQ_SUBJECT.replace("{user}",fields.name),
-                                        bcc:        config.RFQ_BCC,
+                                        bcc:        [config.RFQ_BCC,config.RFQ_BCC2],
                                         html:       `<strong>Hello Admin,</strong>
                                         <p>Please find the details with attached PDF.</p>
                                         <p>Please find the details with attached PDF.</p>
