@@ -681,7 +681,8 @@ function loadSVGTemplate(id) {
 
             let reg = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
             $("#kp-link").attr("href", reg.test(data.link) ? data.link : "#");
-           
+            $("#template-info-panel .webstore-link").attr("href", (data.link || "#"));
+
             if(!reg.test(data.link))
             {
             $("#kpweblink-panel").addClass("hidden");
@@ -698,11 +699,16 @@ function loadSVGTemplate(id) {
             $(".vRule, .hRule").remove();
             $('.canvas-container').first().ruler(rulerSettings);
             $(".vRule").height(logoHeight+22);
+            
+            
+            
             /// show grid lines 
             let labels   = $(".hRule .tickLabel");
             let vlabels   = $(".vRule .tickLabel");
-            $("#btnDisplayGrid").prop("checked",true);
+           let isGridLinesEnabled =  $("#btnDisplayGrid").is(":checked");
+           let isRulerEnabled =  $("#btnDisplayRuler").is(":checked");
             $("#btnDisplayRuler").prop("checked",true);
+            $("#btnDisplayGrid").prop("checked",true);
            
             $(".grid-lines").remove();
                 for(var i=0;i<(labels.length);i++)
@@ -712,7 +718,6 @@ function loadSVGTemplate(id) {
                   console.log(pos);
                   $(".canvas-container").first().append(`<div class='grid-lines' style='height:${logoHeight}px;left:${pos.left-22}px; top:0px; '></div>`)
                 }
-          // vlines 
           
                 for(let i=0;i<(vlabels.length);i++)
                 {
@@ -723,7 +728,12 @@ function loadSVGTemplate(id) {
                   $(".canvas-container").first().append(`<div class='grid-lines h-gridlines' style='width:500px;top:${pos.top-22}px; left:0px; border-bottom: solid 1px #666;'></div>`);
                   $(".canvas-container").first().css({border:"solid 1px #666", width:"502px",height:`${logoHeight}px`})
                 }
-
+                if(!isRulerEnabled){
+                    $("#btnDisplayRuler").click();
+                }
+                if(!isGridLinesEnabled){
+                    $("#btnDisplayGrid").click();
+                }
             
         }, function (item, object) {
             object.set({fill:"#fff"});

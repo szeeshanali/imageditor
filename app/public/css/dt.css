@@ -973,7 +973,7 @@ border-right: solid 0px #ccc;  }
 
 }
 .template:hover{
-  border:solid 2px ; 
+  border:solid 1px #494699; 
   cursor: pointer;
   
 }
@@ -1075,7 +1075,6 @@ border-right: solid 0px #ccc;  }
   color: #4c4c4c;
   padding: 5px 22px;
   border: solid 1px #666565;
-  font-weight: bold;
   cursor: pointer;
   z-index: 1;
 }

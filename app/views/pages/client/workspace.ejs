@@ -272,7 +272,7 @@
         </div>
       
         <div class="paste-clipboard"  style="display: none;"  id="pasteClipboard">
-         <span  onclick="parseClipboardData();"  > Paste</span>
+         <span  onclick="parseClipboardData();"  > Paste from Clipboard</span>
       </div>
     </div>
     </div>
@@ -314,18 +314,15 @@
   <div class="modal-dialog modal-md" role="document">
     <div class="modal-content bd-0 tx-14">
       <div class="modal-header pd-x-20">
-        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Finalize your Design</h6>
+        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Finalize And Download your Design </h6>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body pd-20">
-        <p class="mg-b-5" id="confirmBoxBody">Download your design in PDF format, or you can also send us design for Printing.</p>
-      </div>
+      
       <div class="modal-footer justify-content-center">
-        <button type="button" onclick="$('#btn-download-pdf').click()" data-dismiss="modal" class="btn-sm tx-12 tx-uppercase btn btn-primary pd-x-20">Download PDF</button>
-        <button type="button" data-toggle="modal" data-target="#rfq" class="btn btn-sm tx-12 tx-uppercase btn-primary pd-x-20" data-dismiss="modal">Send to KakePrint</button>
-        <button type="button" class="btn btn-sm tx-12 tx-uppercase btn-secondary pd-x-20" data-dismiss="modal">Close</button>
+        <button type="button" onclick="$('#btn-download-pdf').click()" data-dismiss="modal" class="btn-sm tx-12 tx-uppercase btn btn-success pd-x-20">Download your design <br> in PDF</button>
+        <button type="button" data-toggle="modal" data-target="#rfq" class="btn btn-sm tx-12 tx-uppercase btn-primary pd-x-20" data-dismiss="modal">Send to KakePrints <br> for a Quote.</button>
       </div>
     </div>
   </div><!-- modal-dialog -->
