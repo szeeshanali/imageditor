@@ -1178,25 +1178,41 @@ $("#btnMyProjectsModal").on("click",function(e){
         var o = canvas.getActiveObject();
         if (o && o.type === 'i-text') {
 
+            let isTextSelection = o.getSelectionStyles().length > 0; 
             if (value === 'bold') {
                 var isTrue = o['fontWeight'] === 'bold';
-                o.set({
-                    "fontWeight": isTrue ? '' : 'bold'
-                })
+
+
+                
+               
+                if(isTextSelection)
+                { o.setSelectionStyles({"fontWeight":isTrue ? '' : 'bold'}) }
+                else{
+                    o.set({
+                        "fontWeight": isTrue ? '' : 'bold'
+                    })
+                }            
+                
 
 
             } else if (value === 'italic') {
                 var isTrue = o['fontStyle'] === 'italic';
+                if(isTextSelection)
+                { o.setSelectionStyles({"fontStyle":isTrue ? '' : 'italic'}) }
+                else{
                 o.set({
                     "fontStyle": isTrue ? '' : 'italic'
-                })
+                })}
 
             } else if (value === 'underline') {
                 var isTrue = !o['underline'];
+                if(isTextSelection)
+                { o.setSelectionStyles({"underline":isTrue}) }
+                else{
                 o.set({
                    "underline":isTrue
                 })
-
+                }
             } else if (value === "left" || value === "right" || value === "center") {
                 o.set({"textAlign": value})
             }
@@ -2745,10 +2761,16 @@ function ungroup(event) {
 function onChangeFontColor(picker, type) {
     var selectedText = canvas.getActiveObject();
     var checked = $("#inputStrokeText").prop("checked");
-    if(selectedText.type == "curved-text")
-    { return; }
+    //if(selectedText.type == "curved-text")
+    //{ return; }
     if (type === 'font-color') {
-        selectedText.set('fill', picker.toRGBAString());
+        let isTextSelection = (selectedText.getSelectionStyles().length >0);
+        if(isTextSelection) {
+            selectedText.setSelectionStyles({"fill":picker.toRGBAString()}) 
+        }else{
+            selectedText.set('fill', picker.toRGBAString());
+        }
+        
     } else if (type === 'stroke-color' && checked) {
         selectedText.set('stroke', picker.toRGBAString());
     }
