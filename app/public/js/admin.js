@@ -664,12 +664,31 @@
         })
 
         //@Add Fonts 
-        $(".btnDelFont").on("click",function(e){
-            var id = e.currentTarget.id;
-  
+        $("#cbFontEnabled > input").on("click",function(e){
+            let id = e.currentTarget.id;
+            let isActive = $(e.currentTarget).prop("checked");
+            $.ajax({
+              type: "PUT",
+            url: `/api/admin/fonts/${id}`,
+              data: {active:(isActive)},
+              success: function (res) {
+                  toast("Updated successfully!");
+              },
+              error: function (res) {
+                  toast("Error while deleting.");
+              }
+          })
+          
+          
+           
+          });
+
+          $(".btnDelFont").on("click",function(e){
+            let id = e.currentTarget.id;
+            let isActive = $(e.currentTarget).prop("checked");
             $.ajax({
               type: "DELETE",
-              url: `/api/admin/fonts/${id}`,
+            url: `/api/admin/fonts/${id}`,
               success: function (res) {
                   toast("Deleted successfully!");
                   $(`#fonts-${id}`).remove();
@@ -678,10 +697,7 @@
                   toast("Error while deleting.");
               }
           })
-  
-          
-           
-          });
+        })
           $("#btnFontClear").on("click", function (e) {
             $('#inputFontName').val("");
           })

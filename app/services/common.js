@@ -253,9 +253,18 @@ const commonService = (function() {
        
     }
 
-    this.getContentAsync = async (type)=>{
-        if(type === 'custom-text' || type === 'fonts')
+    this.getContentAsync = async (type, isAdmin)=>{
+
+        if(type === 'custom-text' )
         {  return await contents.find({type:type, active:true, deleted:false}); }
+
+        if( type === 'fonts')
+        {  
+            if(isAdmin)
+            {return await contents.find({type:type, deleted:false});}
+            return await contents.find({type:type, active:true, deleted:false});
+      }
+
 
         return await contents.findOne({type:type, active:true, deleted:false});    
     }

@@ -1,3 +1,14 @@
+<style>
+  <%fonts?.forEach((item)=>{%>
+    @font-face{
+      font-family:"<%=item.content%>";
+      src:url("../fonts/<%=item.content%>-Regular.ttf");
+      font-weight:normal;
+      font-style:normal;
+  }                     
+  <%})%>
+   
+   </style>
 <div class="row mg-r-0">
     <!--Workspace Left Panel-->
 <div class="col-lg-3 pd-l-0 pd-r-0">
@@ -272,7 +283,7 @@
         </div>
       
         <div class="paste-clipboard"  style="display: none;"  id="pasteClipboard">
-         <span  onclick="parseClipboardData();"  > Paste from Clipboard</span>
+         <span  onclick="parseClipboardData();"  > Copy from Clipboard</span>
       </div>
     </div>
     </div>

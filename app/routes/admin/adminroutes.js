@@ -220,15 +220,32 @@ router.get("/app/admin/custom-text", isAdmin, async (req,res)=>{
   res.render("pages/admin/custom-text",res.locals.page);
 })
 
-
 router.delete('/api/admin/fonts/:id', isAdmin, async (req,res)=>{
-  var id = req.params["id"]; 
+  const id = req.params["id"];
+ 
   if(!id){
     return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."});
   }  
   try{
-    await contents.findOneAndDelete({type:'fonts', by_admin:true, code:id }); 
-    return res.status(200).send({"status":400,"message":`Deleted successfully, Id:${id}`});
+    await contents.findOneAndUpdate({type:'fonts', _id:id },
+    { $set: { "deleted" : true}});
+
+    return res.status(200).send({"status":200,"message":`Updated successfully, Id:${id}`});
+  }catch(e)
+  { return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."}); }
+ 
+}) 
+router.put('/api/admin/fonts/:id', isAdmin, async (req,res)=>{
+  const id = req.params["id"];
+  let {active} = req.body;  
+  if(!id){
+    return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."});
+  }  
+  try{
+    await contents.findOneAndUpdate({type:'fonts', _id:id },
+    { $set: { "active" : active}});
+
+    return res.status(200).send({"status":200,"message":`Updated successfully, Id:${id}`});
   }catch(e)
   { return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."}); }
  
@@ -238,12 +255,12 @@ router.get("/api/admin/fonts", async (req,res)=>{
   res.status(200).send(content);
 })
 router.get("/app/admin/fonts", isAdmin, async (req,res)=>{
-  var content = await commonService.contentService.getContentAsync('fonts') || {};
+  var content = await commonService.contentService.getContentAsync('fonts', true) || {};
   res.locals.page = {
     title  : "Fonts",
     id     : "__fonts",
     user   : req.user,
-    content : content
+    fonts : content
    } ;
   res.render("pages/admin/fonts",res.locals.page);
 })

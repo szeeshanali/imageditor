@@ -735,6 +735,9 @@ function loadSVGTemplate(id) {
                 if(!isGridLinesEnabled){
                     $("#btnDisplayGrid").click();
                 }
+            
+              
+              
                 //drawCircle();
         }, function (item, object) {
             object.set({fill:"#fff"});
@@ -796,7 +799,70 @@ function applyFilterValue(index, prop, value) {
         canvas.renderAll();
     }
 }
+function crop(currentImage) {
+    let rect = new fabric.Rect({
+        left: selectionRect.left,
+        top: selectionRect.top,
+        width: selectionRect.getScaledWidth(),
+        height: selectionRect.getScaledHeight(),
+        absolutePositioned: true,
+    });
 
+    // add to the current image clicpPath property
+    currentImage.clipPath = rect;
+
+    // remove the mask layer
+    cropCanvas.remove(selectionRect);
+
+    // init new image instance
+    var cropped = new Image();
+    // set src value of canvas croped area as toDataURL
+    cropped.src = cropCanvas.toDataURL({
+        left: rect.left,
+        top: rect.top,
+        width: rect.width,
+        height: rect.height,
+    });
+
+ 
+    // after onload clear the canvas and add cropped image to the canvas
+    cropped.onload = function () {
+        //canvas.clear();
+        image = new fabric.Image(cropped);
+        image.left = rect.left;
+        image.top = rect.top;
+        image.setCoords();
+        //let originalImage = canvas.getActiveObject();
+        //canvas.remove(originalImage);
+        cropCanvas.add(image);
+        cropCanvas.renderAll();
+    };
+}
+function addSelectionRect(currentImage) {
+    selectionRect = new fabric.Rect({
+        fill: "rgba(0,0,0,0.3)",
+        originX: "left",
+        originY: "top",
+        stroke: "black",
+        opacity: 1,
+        width: currentImage.width,
+        height: currentImage.height,
+        hasRotatingPoint: false,
+        transparentCorners: false,
+        cornerColor: "white",
+        cornerStrokeColor: "black",
+        borderColor: "black",
+        cornerSize: 12,
+        padding: 0,
+        cornerStyle: "circle",
+        borderDashArray: [5, 5],
+        borderScaleFactor: 1.3,
+    });
+
+    selectionRect.scaleToWidth(200);
+    cropCanvas.centerObject(selectionRect);
+    cropCanvas.add(selectionRect);
+}
 
 function menuHighlighter(itemToHighlight) {
     $("#toolbar .nav-item").each(function (e) {
@@ -842,7 +908,7 @@ function initContextMenu()
         })
     }
 
-var cropRect;
+var selectionRect;
 function initUIEvents() {
    
 
@@ -852,18 +918,52 @@ function initUIEvents() {
 
 
     $("#btnCrop").on("click",(e)=>{
-        cropImage();
+        var img = cropCanvas.item(0);
+        crop(img);
     }); 
 
 
     $("#btnCropDone").on("click",(e)=>{
+
+        let rect = new fabric.Rect({
+            left: selectionRect.left,
+            top: selectionRect.top,
+            width: selectionRect.getScaledWidth(),
+            height: selectionRect.getScaledHeight(),
+            absolutePositioned: true,
+        });
+
+        
+        var cropped = new Image();
+    // set src value of canvas croped area as toDataURL
+    cropped.src = cropCanvas.toDataURL({
+        left: rect.left,
+        top: rect.top,
+        width: rect.width,
+        height: rect.height,
+    });
+
+ 
+    // after onload clear the canvas and add cropped image to the canvas
+    cropped.onload = function () {
+        //canvas.clear();
+        cropCanvas.clear();
+        image = new fabric.Image(cropped);
+        image.left = rect.left;
+        image.top = rect.top;
+        image.setCoords();      
         let originalImg = canvas.getActiveObject(); 
         canvas.remove(originalImg); 
+        canvas.add(image);
         canvas.renderAll();
-        let croppedImg = cropCanvas.item(0); 
-        croppedImg.globalCompositeOperation = 'source-atop';
-        canvas.add(croppedImg);
-        canvas.renderAll();
+    };
+        // let originalImg = canvas.getActiveObject(); 
+        // canvas.remove(originalImg); 
+        // canvas.renderAll();
+        // let croppedImg = cropCanvas.item(0); 
+        // croppedImg.globalCompositeOperation = 'source-atop';
+        // canvas.add(croppedImg);
+        // canvas.renderAll();
         
 
 
@@ -871,26 +971,38 @@ function initUIEvents() {
 
     })
 
-    $("#btnCorpModal").on("click",(e)=>{
+    $("#btnCropModal").on("click",(e)=>{
         cropRect=null; 
+        cropCanvas.clear();
         let img = canvas.getActiveObject(); 
         if(img)
         {
             let imgSrc = img._element.src;
             fabric.Image.fromURL(imgSrc, function (img) {
-                cropCanvas.clear();
-               /// img.scaleToHeight(250);
-                
-              ///  let w = img.getScaledWidth(); 
-              ///  let h = img.getScaledHeight(); 
-              //  cropCanvas.setDimensions({width:w,height:h})
+                img.scaleToWidth(250);
+                img.scaleToHeight(250);
+                let w = img.getScaledWidth(); 
+                let h = img.getScaledHeight();
+                cropCanvas.setDimensions({width:w,height:h})
                 cropCanvas.add(img);
-                cropRect  = getCropRect();
-                cropCanvas.add(cropRect); 
                 cropCanvas.renderAll();
-                //mainControls(true);
-                // $("#menu-text > a").click();
-            });
+                addSelectionRect(img);
+            })
+
+            // fabric.Image.fromURL(imgSrc, function (img) {
+            //     cropCanvas.clear();
+            //    /// img.scaleToHeight(250);
+                
+            //   ///  let w = img.getScaledWidth(); 
+            //   ///  let h = img.getScaledHeight(); 
+            //   //  cropCanvas.setDimensions({width:w,height:h})
+            //     cropCanvas.add(img);
+            //     cropRect  = getCropRect();
+            //     cropCanvas.add(cropRect); 
+            //     cropCanvas.renderAll();
+            //     //mainControls(true);
+            //     // $("#menu-text > a").click();
+            // });
         }
 
         //$("#cropImageHolder").attr("src");
@@ -1179,7 +1291,7 @@ $("#btnMyProjectsModal").on("click",function(e){
         var o = canvas.getActiveObject();
         if (o && o.type === 'i-text') {
 
-            let isTextSelection = o.getSelectionStyles().length > 0; 
+            let isTextSelection = o.getSelectionStyles()?.length > 0; 
             if (value === 'bold') {
                 var isTrue = o['fontWeight'] === 'bold';
 
@@ -1429,7 +1541,7 @@ function getCropRect(){
 function cropImage () {
     
     console.log('clip!')
-    const rect = cropRect.getBoundingRect()
+    const rect = selectionRect.getBoundingRect()
  
     img = cropCanvas.item(0);
     //img.scaleToHeight(250);
@@ -2445,17 +2557,27 @@ function initCanvasTextEvents() {
         canvas.renderAll();
     })
 
-    $("#curveTextCtrl").on("input", function (e) {
-        var val = e.currentTarget.value;
-        console.log(val);
-        var obj = canvas.getActiveObject();
-        if (obj) {
-            obj.set({diameter: val});
-        }
-        canvas.renderAll();
+    $("#curveTextCtrl").on("input", function (e) {   
+        let val = e.currentTarget.value;
+        updateCurveText({diameter:val});
     })
+    $("#curveTextKerning").on("input", function (e) {
+        let val = e.currentTarget.value;
+        updateCurveText({kerning:val});
+    })
+   
 
 }
+
+function updateCurveText(valueObj)
+{
+    var obj = canvas.getActiveObject();
+    if (obj) {
+        obj.set(valueObj);
+    }
+    canvas.renderAll();
+}
+
 
 function initLayerEvents($elem) {
     // var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
@@ -2590,80 +2712,6 @@ function rotateObject() {
 
     })
 }
-function cropObject() {
-    // $(`#crop`).on("click",function(e){
-    // var selectedObj = canvas.getActiveObject();
-    //     if(!selectedObj)
-    //     {
-    //         toast("Please select an object.");
-    //         return;
-    //     }
-
-
-    //     var pos = [0, 0];
-    //     var c = document.getElementById('admin-main-canvas');
-    //     var r = c.getBoundingClientRect();
-    //     pos[0] = r.left;
-    //     pos[1] = r.top;
-
-    //     var mousex = 0;
-    //     var mousey = 0;
-    //     var crop = false;
-    //     var disabled = false;
-
-    //     //console.log(pos);
-
-    //     var el = new fabric.Rect({
-    //         //left: 100,
-    //         //top: 100,
-    //         fill: 'transparent',
-    //         originX: 'left',
-    //         originY: 'top',
-    //         stroke: '#ccc',
-    //         strokeDashArray: [2, 2],
-    //         opacity: 1,
-    //         width: 1,
-    //         height: 1
-    //     });
-
-    //     el.visible = false;
-    //     canvas.add(el);
-    //     var object;
-
-
-    //     canvas.on("mouse:down", function (event) {
-    //         if (disabled) return;
-    //         el.left = event.e.pageX - pos[0];
-    //         el.top = event.e.pageY - pos[1];
-    //         //el.selectable = false;
-    //         el.visible = true;
-    //         mousex = event.e.pageX;
-    //         mousey = event.e.pageY;
-    //         crop = true;
-    //         canvas.bringToFront(el);
-    //     });
-
-    //     canvas.on("mouse:move", function (event) {
-    //         //console.log(event);
-    //         if (crop && !disabled) {
-    //             if (event.e.pageX - mousex > 0) {
-    //                 el.width = event.e.pageX - mousex;
-    //             }
-
-    //             if (event.e.pageY - mousey > 0) {
-    //                 el.height = event.e.pageY - mousey;
-    //             }
-    //         }
-    //     });
-
-    //     canvas.on("mouse:up", function (event) {
-    //         crop = false;
-    //    });
-
-
-    // })
-
-}
 
 
 function grayscaleObject() {
@@ -2786,7 +2834,7 @@ function onChangeFontColor(picker, type) {
     //if(selectedText.type == "curved-text")
     //{ return; }
     if (type === 'font-color') {
-        let isTextSelection = (selectedText.getSelectionStyles().length >0);
+        let isTextSelection = (selectedText?.getSelectionStyles()?.length >0);
         if(isTextSelection) {
             selectedText.setSelectionStyles({"fill":picker.toRGBAString()}) 
         }else{
