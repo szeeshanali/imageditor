@@ -4,7 +4,7 @@
 $(document).ready(function(){
 
   // Make the left sidebar scrollable
-  $('.am-sideleft .tab-pane').perfectScrollbar();
+  //$('.am-sideleft .tab-pane').perfectScrollbar();
 
   // Left Sidebar Tab
   $('.am-sideleft-tab .nav-link').on('click', function(e){
@@ -69,10 +69,10 @@ $(document).ready(function(){
   });
 
   // Toggles
-  $('.toggle').toggles({
-    on: false,
-    height: 22
-  });
+  // $('.toggle').toggles({
+  //   on: false,
+  //   height: 22
+  // });
 
   // highlight syntax highlighter
   $('pre code').each(function(i, block) {

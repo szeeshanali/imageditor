@@ -2,8 +2,8 @@
 <style>
   <%fonts?.forEach((item)=>{%>
   @font-face{
-    font-family:"<%=item.content%>";
-    src:url("/fonts/<%=item.content%>-Regular.ttf");
+    font-family:"<%=item.content.split('-')[0]%>";
+    src:url("/fonts/<%=(item.content.indexOf('-')==-1)?item.content+'-Regular.ttf':item.content%>");
     font-weight:normal;
     font-style:normal;
     
@@ -30,7 +30,7 @@
             <div class="media-body">
                 <label class="ckbox tx-bold "  id="cbFontEnabled" style="color:#494699">
                  
-                  <input type="checkbox" id="<%=fonts[i]._id%>" <%=fonts[i].active?'checked':''%>><span><%=fonts[i].content%></span>
+                  <input type="checkbox" id="<%=fonts[i]._id%>" <%=fonts[i].active?'checked':''%>><span><%=fonts[i].content.split('-')[0]%></span>
                 </label>
                 <button style="border-radius: 50%;
                 padding: 0 8px;" class="btn btn-sm btn-primary btnDelFont pull-right type="button" id="<%=fonts[i]._id%>"><i class="icon ion-ios-trash-outline tx-18"></i></button>

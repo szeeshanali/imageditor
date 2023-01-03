@@ -273,29 +273,39 @@
                         <div >
                             <label class="ckbox ">
                                 <input type="checkbox" id="inputStrokeText">
-                                    <span class="tx-14 tx-bold">Enable Stroke
+                                    <span class="tx-14 tx-bold">Show Stroke
                                     </span>
                                 </label>
                             </div>
                         </div>
                         <div class="col-lg-6 ">
                             <label>Stroke Color</label>
-                                <input id="strokecolor" style="height: 40px; width:100px; font-size:10px" data-jscolor="{preset:'dark', closeButton:'true',closeText:'Close', width:250, paletteCols:15, value:'#000', onChange:'onChangeFontColor(this,\'stroke-color\')'}">                         
-                            
-
-                            <!-- <button id="strokecolor" data-jscolor="{preset:'dark', closeButton:'true',closeText:'Close', width:250, paletteCols:15, value:'#000', onChange:'onChangeFontColor(this,\'stroke-color\')'}" ></button> -->
-                        </div>
-                      
-
+                                <input id="strokecolor" style="height: 40px; width:100px; font-size:10px" data-jscolor="{preset:'dark', closeButton:'true',closeText:'Close', width:250, paletteCols:15, value:'#FF70CE', onChange:'onChangeFontColor(this,\'stroke-color\')'}">                         
+                            </div>
                         <div class="col-lg-6 ">
                             <label>Stroke Size</label>
 
                             <select id="text-stroke-width" class="form-control select2 select2-hidden-accessible" data-placeholder="Choose one" tabindex="-1" aria-hidden="true">
-                                <option value="1" selected="selected" >1</option>
+                                <option value="1" >1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
                                 <option value="4" >4</option>
-                                <option value="5">5</option>                              
+                                <option value="5" >5</option>   
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8" >8</option>
+                                <option value="9">9</option>  
+                                <option value="10" selected>10</option>    
+                                <option value="11" >11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14" >14</option>
+                                <option value="15" >15</option>   
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                                <option value="18" >18</option>
+                                <option value="19">19</option>  
+                                <option value="20">20</option>                              
                             </select>
                             <!-- <input type="range" min="1" max="120" value="" step="1" class="slider" id="btnTextSize-range"> -->
 
@@ -431,7 +441,7 @@
                                                     </label>
                                                 </div>
                                                 <div >
-                                                    <input type="range"  value="250" min="200" max="2500" step="10" class="slider" id="curveTextCtrl"  >
+                                                    <input type="range"  value="500" min="200" max="2500" step="2" class="slider" id="curveTextCtrl"  >
                                                 </div>
                                                 </div>
                                     </div>

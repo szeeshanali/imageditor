@@ -3,7 +3,9 @@ const dpi = 72;
 const defaults = {
     fontSize:36,
     fontFill: '#000',
-    fontFamily:'Arial'
+    fontFamily:'Arial',
+    strokeWidth: 10,
+    logoDisplaySize:500
 }
 const letterPageSize = {
     width: (8.5 * dpi),
@@ -154,17 +156,16 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
     type: 'curved-text',
     diameter: parseInt($("#curveTextCtrl").val()) || 250,
     kerning: 0,
-    text: '',
     flipped:    $("#inputFlipText").prop("checked") || false,
     fill:       $("#fontColorBox").val() || '#000000',
-    fontFamily: 'Times New Roman',
-    fontSize: 24, // in px
+    fontFamily: $("#fontlist").text() || 'Arial',
+    fontSize: parseInt($("#btnTextSize").val()), // in px
     fontWeight: 'normal',
     fontStyle: '', // "normal", "italic" or "oblique".
     cacheProperties: fabric.Object.prototype.cacheProperties.concat('diameter', 'kerning', 'flipped', 'fill', 'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'strokeStyle', 'strokeWidth'),
     //strokeStyle: null,
-    stroke: 'rgba(0, 0, 0, 1)',
-    strokeWidth: 3,
+    stroke: $("#inputStrokeText").is(":checked")?(parseInt($("#strokecolor").val())):null,
+    strokeWidth: $("#inputStrokeText").is(":checked")?(parseInt($("#text-stroke-width").val())):null,
     paintFirst: "stroke",
     text: '',
 
@@ -316,7 +317,7 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
             // Stroke
             //const strokeStyle = this.strokeStyle;
             //const strokeWidth = this.strokeWidth;
-            const strokeStyle = this.strokeStyle;
+            const strokeStyle = this.stroke;
             const strokeWidth = this.strokeWidth;
             if (strokeStyle && strokeWidth) {
                 ctx.strokeStyle = strokeStyle;
@@ -644,8 +645,8 @@ function loadSVGTemplate(id) {
         canvas.templateId = data.code;
         hideWorkspaceControls();
         // loading Big display
-        let logoDisplaySize = 500;
-        let logoHeight = 500;
+        let logoDisplaySize = defaults.logoDisplaySize;
+        let logoHeight = defaults.logoDisplaySize;
 
         fabric.loadSVGFromURL(svgBase64, function (objects, options) {
 
@@ -736,7 +737,20 @@ function loadSVGTemplate(id) {
                     $("#btnDisplayGrid").click();
                 }
             
-              
+                //var canvas = document.getElementById('myCanvas'), 
+            //     debugger;
+            //     let context = canvas.getContext('2d');
+            //     let centerX = canvas.width / 2;
+            //     let centerY = canvas.height - 30;
+            //     let angle = Math.PI * 0.8;
+            //     radius = 150;
+            
+            // context.font = '30pt Calibri';
+            // context.textAlign = 'center';
+            // context.fillStyle = 'blue';
+            // context.strokeStyle = '#ccc';
+            // context.lineWidth = 1;
+             //drawTextAlongArc(context, 'Zeeshan1', centerX, centerY, radius, angle);
               
                 //drawCircle();
         }, function (item, object) {
@@ -908,7 +922,27 @@ function initContextMenu()
         })
     }
 
-var selectionRect;
+
+
+
+function drawTextAlongArc(context, str, centerX, centerY, radius, angle) {
+    var len = str.length, s;
+    context.save();
+    context.translate(centerX, centerY);
+    context.rotate(-1 * angle / 2);
+    context.rotate(-1 * (angle / len) / 2);
+    for(var n = 0; n < len; n++) {
+      context.rotate(angle / len);
+      context.save();
+      context.translate(0, -1 * radius);
+      s = str[n];
+      context.fillText(s, 0, 0);
+      context.restore();
+    }
+    context.restore();
+  }
+
+  var selectionRect;
 function initUIEvents() {
    
 
@@ -957,13 +991,7 @@ function initUIEvents() {
         canvas.add(image);
         canvas.renderAll();
     };
-        // let originalImg = canvas.getActiveObject(); 
-        // canvas.remove(originalImg); 
-        // canvas.renderAll();
-        // let croppedImg = cropCanvas.item(0); 
-        // croppedImg.globalCompositeOperation = 'source-atop';
-        // canvas.add(croppedImg);
-        // canvas.renderAll();
+
         
 
 
@@ -1185,6 +1213,7 @@ $("#btnMyProjectsModal").on("click",function(e){
             object.set("top", object.top + 5);
             object.set("left", object.left + 5);
             _canvas.add(object);
+            _canvas.renderAll();
         });
         $(this).on("click", ".delete", function (evt) {
             evt.stopPropagation();
@@ -1290,8 +1319,11 @@ $("#btnMyProjectsModal").on("click",function(e){
         var value = $(this).attr("data-value");
         var o = canvas.getActiveObject();
         if (o && o.type === 'i-text') {
-
-            let isTextSelection = o.getSelectionStyles()?.length > 0; 
+         
+            let isTextSelection; 
+            if(o.getSelectionStyles)
+            { isTextSelection  = o.getSelectionStyles().length > 0; }
+             
             if (value === 'bold') {
                 var isTrue = o['fontWeight'] === 'bold';
 
@@ -1359,17 +1391,19 @@ $("#btnMyProjectsModal").on("click",function(e){
         var checked = $("#inputStrokeText").prop("checked");
         if(checked)
         {
-            setSelectedTextStyle("stroke", this.value);
+            ///setSelectedTextStyle("stroke", this.value);
 
         }
 
     });
     $("#text-stroke-width").on("change", function () {
 
-        var checked = $("#inputStrokeText").prop("checked");
-        if(checked)
+        if($("#inputStrokeText").is(":checked"))
         {
-            setSelectedTextStyle("strokeWidth", this.value);
+            let obj = canvas.getActiveObject(); 
+            obj.strokeWidth = parseInt(this.value) || 10;
+            canvas.renderAll();
+            //setSelectedTextStyle("strokeWidth", this.value);
 
         }
 
@@ -1520,56 +1554,11 @@ $("#btnMyProjectsModal").on("click",function(e){
     
 }
 
-function getCropRect(){
-    let rect = new fabric.Rect({
-        width: 200,
-        height: 200,
-        fill: 'rgb(178, 178, 178, 0.4)',
-        transparentCorners: false,
-        cornerColor: 'rgb(178, 178, 178, 0.8)',
-        strokeWidth: 1,
-        cornerStrokeColor: 'black',
-        borderColor: 'black',
-        borderDashArray: [5, 5],
-        cornerStyle: 'circle'
-      })
-      rect.setControlVisible('mtr', false);
-      return rect; 
-}
-
-
-function cropImage () {
-    
-    console.log('clip!')
-    const rect = selectionRect.getBoundingRect()
- 
-    img = cropCanvas.item(0);
-    //img.scaleToHeight(250);
-    //let w = img.getScaledWidth();
-    ///let h = img.getScaledHeight();
-    ///let dataURL = cropCanvas.toDataURL();
- 
-    //cropCanvas.setDimensions({width:w,height:h});
-
-    img.set({
-    cropX   : rect.left,
-    cropY   : rect.top ,
-    width   : rect.width,
-    height  : rect.height
-    })     
-
-    cropRect.setCoords();
-    cropCanvas.remove(cropCanvas.item(1));
-    cropCanvas.renderAll();
- 
-  
-}
-
 function setSelectedTextStyle(prop, value) {
     
     var txt = canvas.getActiveObject();
- if(txt.type == 'curved-text')
- {return;}
+//  if(txt.type == 'curved-text')
+//  {return;}
     txt.set(prop, value);
     canvas.renderAll();
 
@@ -1897,7 +1886,13 @@ function updateTextControls(e){
    if(item.charSpacing)
    { $("#text-letter-spacing").val(item.charSpacing);}
    if(item.strokeWidth)
-   { $("#text-stroke-width").val(item.strokeWidth); }
+   { 
+    if($("#inputStrokeText").is(":checked"))
+    {
+        $("#text-stroke-width").val(item.strokeWidth); 
+    }
+    
+ }
 
    if(item.lineHeight)
    { $("#text-line-height").val(item.lineHeight); }
@@ -1997,12 +1992,7 @@ function addLayer(o) {
         $layers.html(layers);
         $("#ws-btn-save").removeClass('hidden');
         if(!state.isPreviewCanvas)
-        { 
-            
-          
-            $("#ws-btn-preview").removeClass('hidden'); 
-    
-    }
+        { $("#ws-btn-preview").removeClass('hidden');  }
 
     } else {
         $layers.html("Empty! please upload an image.");
@@ -2404,54 +2394,35 @@ function mainControls(show) {
 
 }
 function initCanvasTextEvents() {
-    let isDrawingText = false;
-    var textLeft = 50;
-    var textTop = 100;
+    
     $("#inputFlipText").on("click",function(){
-        var isCurvedCheckboxChecked = $("#inputCurvedText").prop('checked');
-        if(!isCurvedCheckboxChecked)
-        {
-            $("#inputFlipText").prop('checked',false);
-            toast("Curve Text must be checked!");
-            return;
-        }
-      
-        var checked = $(this).prop('checked');
-        var obj = canvas.getActiveObject();
-        if (obj) {
-
-            // converting curve text back to orignal text.
-            setTimeout(function(){
-                $("#inputCurvedText").click();
-            },0);
-            setSelectedTextStyle("flipped", checked);    
-            // converting curve text back to orignal text.
-            setTimeout(function(){
-                $("#inputCurvedText").click();
-            },0)
-            
-                  
-        }
-
+        var obj = canvas.getActiveObject(); 
+        const flipped = $("#inputFlipText").is(':checked'); 
+        obj.set("flipped",flipped);
+        canvas.renderAll();
     })
     $("#inputStrokeText").on("click", function (e) {
         var checked = $(this).prop('checked');
         var obj = canvas.getActiveObject();
-        if(obj.type == "curved-text")
-        { return; }
+        // if(obj.type == "curved-text")
+        // { return; }
 
-        var strokeWidth = $("#text-stroke-width").val();
+        var strokeWidth = parseInt($("#text-stroke-width").val());
         var strokeColor = $("#strokecolor").attr('data-current-color');
         if (obj && checked) {
-            setSelectedTextStyle("stroke", strokeColor);
-            setSelectedTextStyle("strokeWidth", strokeWidth);
+            obj.stroke      = strokeColor;
+            obj.strokeWidth = strokeWidth;
+            obj.paintFirst  = "stroke";
+          //  setSelectedTextStyle("stroke", strokeColor);
+          //  setSelectedTextStyle("paintFirst", "stroke");
+          //  setSelectedTextStyle("strokeWidth", strokeWidth);
         }else
         {
             obj.set('strokeWidth',0)
         }
         canvas.renderAll();
     });
-
+    
     $("#inputCurvedText").on("click", function (e) {
         
         var obj = canvas.getActiveObject();
@@ -2459,97 +2430,96 @@ function initCanvasTextEvents() {
             toast("Please select Text");
             return;
         }
-        var orginalText =  obj.text;
         if (e.target.checked) {
-          //  $("#curveTextCtrlPanel").removeClass("hidden");
           var flipped = $("#inputFlipText").prop("checked");
-            if (obj) {
-                var item = new fabric.CurvedText(obj.text, {
-                    type: 'curved-text',
-                    diameter: parseInt($("#curveTextCtrl").val()) || 250,
-                    left: obj.left,
-                    top: obj.top,
-                    fontFamily: obj.fontFamily,
-                    fontSize: obj.fontSize,
-                    kerning: 0,
-                    flipped: flipped,
-                    fill: obj.fill,
-                    fontSize: obj.fontSize, // in px
-                    fontWeight: obj.fontWeight,
-                    fontStyle: obj.fontStyle,
-                    cacheProperties: fabric.Object.prototype.cacheProperties.concat('diameter', 'kerning', 'flipped', 'fill', 'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'strokeStyle', 'strokeWidth','stroke'),
-                    stroke:$("#strokecolor").val(),
-                    strokeStyle:$("#strokecolor").val(),
-                    strokeWidth: parseInt($("#text-stroke-width").val())
+          obj.flipped = flipped;
+          var item = new fabric.CurvedText(obj.text, {
+            type: 'curved-text',
+            diameter: parseInt($("#curveTextCtrl").val()) || 500,
+            left: 100,
+            top: 40,
+            fontFamily: obj.fontFamily,
+            fontSize: obj.fontSize,
+            kerning: 0,
+            flipped: flipped,
+            fill: obj.fill,
+            fontSize: obj.fontSize, // in px
+            fontWeight: obj.fontWeight,
+            fontStyle: obj.fontStyle,
+            cacheProperties: fabric.Object.prototype.cacheProperties.concat('diameter', 'kerning', 'flipped', 'fill', 'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'strokeStyle', 'strokeWidth','stroke'),
+            stroke: $("#inputStrokeText").is(":checked")?$("#strokecolor").val():null,
+            strokeWidth: $("#inputStrokeText").is(":checked")?parseInt($("#text-stroke-width").val()):0
 
-                    //strokeStyle: obj.strokeStyle,
-                    //stroke:obj.stroke,
-                    //strokeWidth: 2
-                });
-                canvas.add(item);
-                canvas.renderAll();
-                canvas.remove(obj)
-                canvas.setActiveObject(item);
-                addLayer();
-               
-            }
-
+            //strokeStyle: obj.strokeStyle,
+            //stroke:obj.stroke,
+            //strokeWidth: 2
+        });
+        canvas.add(item);
+        canvas.renderAll();
+        canvas.remove(obj)
+        canvas.setActiveObject(item);
+       
         } else {
             //$("#inputFlipText").prop('checked',false);
-            $("#curveTextCtrl").val(250);
+            $("#curveTextCtrl").val(500);
             var obj = canvas.getActiveObject();
             
             var textInfo = {
-                left: obj.left,
-                top: obj.top,
-                fontFamily: obj.fontFamily,
-                fill: obj.fill,
-                fontSize: obj.fontSize,
-                flipped:flipped
+
+                left        :   (canvas.width/2)-obj.width/2,
+                top         :   canvas.height/2,
+                fontFamily  :   obj.fontFamily,
+                fill        :   obj.fill,
+                fontSize    :   obj.fontSize,
+                flipped     :   flipped,
+                stroke      :   obj.stroke,
+                strokeWidth :   obj.strokeWidth,
+                paintFirst  :   "stroke",
+                fontWeight  : obj.fontWeight,
+                fontStyle   : obj.fontStyle,
+
             };
             
         
             var item = new fabric.IText(obj.text, textInfo);
             canvas.remove(obj);
+            item.globalCompositeOperation = 'source-atop';
             canvas.add(item);            
             canvas.setActiveObject(item);
             canvas.renderAll();
-            addLayer();
-           
-          //  debugger;
-           // $("#inputFlipText").prop('checked',false);
-           // $("#curveTextCtrlPanel").addClass("hidden");
+ 
         }
+        addLayer();
     })
     $btnAddText.on("click", function () {
+        $("#inputCurvedText").prop("checked",false);
         var text = $textarea.val();
         if (! text || text.length == 0) { // /toast("Please enter text");
             return;
         }
 
         var textInfo = {
-            left: (textLeft += 20),
-            top: (textTop += 20),
+            left: (canvas.width/2)-(((text.length/2)*defaults.fontSize)/2),
+            top: (canvas.width/2),
             fontFamily: defaults.fontFamily || 'Arial',
             fill: $("#fontColorBox").val() || defaults.fontFill,
             fontSize: defaults.fontSize
         };
         var item = new fabric.IText(text, textInfo);
 
-        var isCurvedText = $("#inputCurvedText").prop("checked");
-        if (isCurvedText) {
-            textInfo.diameter = 360;
-            item = new fabric.CurvedText(text, textInfo);
-        }
         if (state.isPreviewCanvas) {
             canvasPrev.add(item);
+            canvasPrev.renderAll();
         } else {
             item.globalCompositeOperation = "source-atop";
-
             canvas.add(item);
-        } canvas.setActiveObject(item);
+            canvas.renderAll();
+        } 
+        canvas.setActiveObject(item);
         mainControls(true);
         textControls(true);
+
+        
     })
 
     $btnTextSize.on("change", function () {
@@ -2612,7 +2582,8 @@ function initLayerEvents($elem) {
     //     // e.stopPropagation();
     //     // var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
     //     // var obj = _canvas.getActiveObject();
-    //     // _canvas.bringForward(obj)
+    //     // _canvas.bringForward(obj)inputFlipText
+
     //     // _canvas.renderAll();
     //     // var elem = $(`#${id}`);
     //     // elem.prev().insertAfter(elem);
@@ -2810,31 +2781,18 @@ function ungroup(event) {
 
 
 
-function drawCircle(){
-    var circle=new fabric.Circle({
-        left:50,
-        top:50,                
-        radius:200,
-        stroke:'red',
-        strokeWidth:3,
-        fill:''
-    });
-    
-                     canvas.add(circle);
-                     canvas.setActiveObject(circle);
-                     
-                     canvas.renderAll();
-                     var o = canvas.getActiveObject(); 
-                     var pth = o.path; 
-
-}
 function onChangeFontColor(picker, type) {
-    var selectedText = canvas.getActiveObject();
-    var checked = $("#inputStrokeText").prop("checked");
+    debugger;
+    let selectedText = canvas.getActiveObject();
+    let checked = $("#inputStrokeText").prop("checked");
+    let strokeSize = parseInt($("#text-stroke-width").val());
+    let strokeColor = $("#strokecolor").val();
     //if(selectedText.type == "curved-text")
     //{ return; }
     if (type === 'font-color') {
-        let isTextSelection = (selectedText?.getSelectionStyles()?.length >0);
+        let isTextSelection; 
+        if(selectedText.getSelectionStyles)
+        { isTextSelection  = selectedText.getSelectionStyles().length > 0; }
         if(isTextSelection) {
             selectedText.setSelectionStyles({"fill":picker.toRGBAString()}) 
         }else{
@@ -2842,7 +2800,12 @@ function onChangeFontColor(picker, type) {
         }
         
     } else if (type === 'stroke-color' && checked) {
-        selectedText.set('stroke', picker.toRGBAString());
+      
+    
+        selectedText.stroke = picker.toRGBAString();
+        selectedText.strokeWidth= strokeSize;
+        selectedText.paintFirst= "stroke";
+        
     }
     
     canvas.renderAll();
