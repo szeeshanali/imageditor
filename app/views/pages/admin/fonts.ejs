@@ -2,8 +2,8 @@
 <style>
   <%fonts?.forEach((item)=>{%>
   @font-face{
-    font-family:"<%=item.content.split('-')[0]%>";
-    src:url("/fonts/<%=(item.content.indexOf('-')==-1)?item.content+'-Regular.ttf':item.content%>");
+    font-family:"<%=item.content.replace('.ttf','')%>";
+    src:url("/fonts/<%=item.content%>");
     font-weight:normal;
     font-style:normal;
     
@@ -34,7 +34,7 @@
                 </label>
                 <button style="border-radius: 50%;
                 padding: 0 8px;" class="btn btn-sm btn-primary btnDelFont pull-right type="button" id="<%=fonts[i]._id%>"><i class="icon ion-ios-trash-outline tx-18"></i></button>
-              <p class="tx-22" style="color:black;font-family:<%=fonts[i].content%>">The quick brown fox jumps over the lazy dog</p>
+              <p class="tx-22" style="color:black;font-family:<%=fonts[i].content.replace('.ttf','')%>">The quick brown fox jumps over the lazy dog</p>
               <span class="pull-right">
                 
               
@@ -50,30 +50,18 @@
         <h6 class="tx-gray-800 tx-uppercase tx-bold tx-14 mg-b-10" >Add New Fonts</h6>
         <p class="mg-b-30 tx-gray-600">Fonts will be displayed as a list to the user in which user can choose their favorite fonts for the design.</p>
         <div class="row row-xs">
-          <!-- <div class="col-sm-10 pd-b-10">
-            <label class="tx-bold">Choose from font list</label>
-            <select id="font-list-container" class="form-control select2" onchange="$('#inputFontName').val(this.value)"  data-placeholder="Please Choose...">
-              <option value="Arial, sans-serif" >Choose from ...</option>
-              <option value="Arial, sans-serif" selected>Arial (sans-serif)</option>
-              <option value="Luckiest Guy" >Luckiest Guy</option>
-              <option value="Bungee Shade">Bungee Shade</option>
-              <option value="BlackHanSans">BlackHanSans</option>
-              <option value="Creepster">Creepster</option>
-              <option value="LondrinaShadow">LondrinaShadow</option>
-              <option value="Brush Script MT, cursive">Brush Script MT (cursive)</option>
-              <option value="RockSalt">RockSalt</option>
-              <option value="Shrikhand">Shrikhand</option>
-              <option value="PermanentMarker">PermanentMarker</option>
-          </select>
-          </div> -->
+         
           <div class="col-sm-10 mg-t-10 mg-sm-t-0">
             <input type="text" placeholder="Enter Font Name" id="inputFontName" class="form-control" maxlength="100" minlength="3" pattern=".{3,100}" title="Minimum 3 and maximum 100 characters." >
           </div>
         </div><!-- row -->
      
         <div class="row row-xs mg-t-30">
-          <div class="col-sm-8 mg-l-auto">
+         
+          <div class="col-sm-8 mg-auto">
             <div class="form-layout-footer">
+              <input type="file" id="fontFile" name="font-file">
+              <p>Only .ttf font format is allowed.</p>
               <button type="button" id="btnAddFont" class="btn btn-primary mg-r-5">Add</button>
               <button class="btn btn-secondary" id="btnFontClear">Clear</button>
             </div><!-- form-layout-footer -->

@@ -1,7 +1,7 @@
 const express               = require('express');
 const router                = express.Router();
 const fs                    = require('fs');
-
+const formidable                    = require('formidable');
 const categories            = require("../../models/categories.js");
 const uploads               = require("../../models/uploads.js");
 const contents               = require("../../models/contents.js");
@@ -323,11 +323,32 @@ router.post(ROUTE_ADMIN_SAVEDESIGN,  isAdmin,  (req,res)=>{
 });
 
 router.post('/api/admin/content', isAdmin, async (req,res)=>{
-  const  {content, type} = req.body;
-  await commonService.contentService.addOrUpdateContentAsync(content,type,true);
+  const  {content, type, fontFile, label} = req.body;
+
   try{
+
+    //Create an instance of the form object
+  let form = new formidable.IncomingForm();
+
+  //Process the file upload in Node
+  form.parse(req, function (error, fields, file) {
+    let filepath = file.fontFile.filepath;
+    let newpath = `../app/public/fonts/${file.fontFile.originalFilename}`;
+    //newpath += file.fileupload.originalFilename;
+
+    //Copy the uploaded file to a custom folder
+    fs.readFile(file.fontFile.filepath, function (err, data) {
+      fs.writeFile(newpath, data, function () {
+        //Send a NodeJS file upload confirmation message
+        commonService.contentService.addOrUpdateContentAsync(fields.label,fields.content,fields.type,true);       
+        res.status(200).send({status:"success",message:"Content updated successfully!"})
+      });
+    })
+   
+  });
+
+     
     
-    res.status(200).send({status:"success",message:"Content updated successfully!"})
   }catch{
     res.status(500).send({status:"error",message:"Update Failed!"})
 

@@ -158,7 +158,7 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
     kerning: 0,
     flipped:    $("#inputFlipText").prop("checked") || false,
     fill:       $("#fontColorBox").val() || '#000000',
-    fontFamily: $("#fontlist").text() || 'Arial',
+    fontFamily: $("#fontlist").attr("data-value") || 'Arial',
     fontSize: parseInt($("#btnTextSize").val()), // in px
     fontWeight: 'normal',
     fontStyle: '', // "normal", "italic" or "oblique".
@@ -1371,7 +1371,7 @@ $("#btnMyProjectsModal").on("click",function(e){
         var value = $(this).text() || "Arial, sans-serif";
         $("#fontlist").text(value);
         //$("#selected-font").html($(this).html())
-        canvas.getActiveObject().set("fontFamily", value);
+        canvas.getActiveObject().set("fontFamily", $(this).attr("data-value"));
         canvas.requestRenderAll();
     })
 
@@ -2491,6 +2491,7 @@ function initCanvasTextEvents() {
         }
         addLayer();
     })
+    
     $btnAddText.on("click", function () {
         $("#inputCurvedText").prop("checked",false);
         var text = $textarea.val();

@@ -271,13 +271,13 @@ const commonService = (function() {
 
    
 
-    this.addOrUpdateContentAsync = async (content,type,by_admin)=>{
+    this.addOrUpdateContentAsync = async (label,content,type,by_admin)=>{
         if((content == null || content.length < 3) && type != 'custom-text' )
         {throw "Empty content."; }
 
         if(type === 'custom-text' || type === 'fonts')
         {
-            var content =  new contents({content:content,type:type,by_admin:by_admin});
+            var content =  new contents({content:content,type:type,by_admin:by_admin,label:label});
             await content.save();
             return;
         }

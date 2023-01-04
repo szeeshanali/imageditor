@@ -177,57 +177,12 @@
                             </button>
                             <div class="dropdown-menu"  aria-labelledby="fontlist">
                                 <%fonts?.forEach((item)=>{%>
-                                    <a class="dropdown-item" href="#" style="font-family: <%=item.content%>" ><%=item.content%></a>
+                                    <a class="dropdown-item" href="#" style="font-family: <%=item.content.replace('.ttf','')%>" data-value="<%=item.content.replace('.ttf','')%>" ><%=item.label%></a>
                                 <%})%>
                               
                             </div>
                           </div>
                           
-                        <!-- <select id="font-list-container" class="form-control select2" id="predefinedText" data-placeholder="Please Choose...">
-                              <option value="Arial, sans-serif" selected>Arial (sans-serif)</option>
-                              <option value="Luckiest Guy" >Luckiest Guy</option>
-                              <option value="Bungee Shade">Bungee Shade</option>
-                              <option value="BlackHanSans">BlackHanSans</option>
-                              <option value="Creepster">Creepster</option>
-                              <option value="LondrinaShadow">LondrinaShadow</option>
-                              <option value="Brush Script MT, cursive">Brush Script MT (cursive)</option>
-                              <option value="RockSalt">RockSalt</option>
-                              <option value="Shrikhand">Shrikhand</option>
-                              <option value="PermanentMarker">PermanentMarker</option>
-                          </select> -->
-                        <!-- <ul class="list-group widget-list-group" id="font-list-container">
-                            <li class="list-group-item rounded-top-0">
-                                <div class="tx-inverse  fontfamily" data-value="Arial, sans-serif" style="font-family: Arial, sans-serif;">Arial (sans-serif)</div>
-                            </li>
-                            <li class="list-group-item rounded-top-0">
-                                <div class="tx-inverse  fontfamily" data-value="Luckiest Guy" style="font-family: Luckiest Guy;">Luckiest Guy</div>
-                            </li>
-                            <li class="list-group-item rounded-top-0">
-                                <div class="tx-inverse  fontfamily" data-value="Bungee Shade" style="font-family:Bungee Shade">Bungee Shade</div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="tx-inverse fontfamily" data-value="BlackHanSans" style=" font-family: BlackHanSans">BlackHanSans</div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="tx-inverse fontfamily" data-value="Creepster" style="font-family: Creepster">Creepster</div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="tx-inverse  fontfamily" data-value="LondrinaSolid" style=" font-family: LondrinaSolid">LondrinaShadow</div>
-                            </li>
-                            <li class="list-group-item rounded-bottom-0">
-                                <div class="tx-inverse  fontfamily" data-value="Brush Script MT, cursive" style="font-family: Brush Script MT, cursive">Brush Script MT (cursive)</div>
-                            </li>
-                            <li class="list-group-item rounded-bottom-0">
-                                <div class="tx-inverse  fontfamily" data-value="RockSalt" style="font-family: RockSalt">RockSalt</div>
-                            </li>
-                            <li class="list-group-item rounded-bottom-0">
-                                <div class="tx-inverse  fontfamily" data-value="Shrikhand" style="font-family: Shrikhand">Shrikhand</div>
-                            </li>
-                            <li class="list-group-item rounded-bottom-0">
-                                <div class="tx-inverse  fontfamily" data-value="PermanentMarker" style="font-family: PermanentMarker">PermanentMarker</div>
-                            </li>
-                        </ul> -->
-
 
                     </div>
                 </div>

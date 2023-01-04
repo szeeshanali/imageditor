@@ -1,12 +1,13 @@
 <style>
   <%fonts?.forEach((item)=>{%>
-    @font-face{
-      font-family:"<%=item.content%>";
-      src:url("../fonts/<%=item.content%>-Regular.ttf");
-      font-weight:normal;
-      font-style:normal;
-  }                     
-  <%})%>
+  @font-face{
+    font-family:"<%=item.content.replace('.ttf','')%>";
+    src:url("/fonts/<%=item.content%>");
+    font-weight:normal;
+    font-style:normal;
+    
+}                     
+<%})%>
    
    </style>
 <div class="row mg-r-0">

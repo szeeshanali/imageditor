@@ -603,6 +603,23 @@
         $canvasPrev.parent().hide();
         var customTextInProgress = false;
 
+
+        $("#fontFile").on("change",function(e){
+
+            if(e.target.files.length>0)
+            {
+                let fn = e.target.files[0].name; 
+                fn = fn.split('.')[0].replace(/-/ig,"  ");
+                $("#inputFontName").val(fn);
+               
+            }
+
+           
+
+        });
+
+
+
         $(".btn-custom-text").on("click",function(e){
           var id = e.currentTarget.id;
 
@@ -721,13 +738,34 @@
               toast("Custom text should not be greater than 100 characters.");
               return; 
             }
+            let formData = new FormData();
+debugger
+            let files = $("#fontFile")[0].files;
+            if(files.length==0)
+            {
+                toast("Please browse a font file");
+                return;
+            }
+            let filename = files[0].name; 
+            if(filename.indexOf(".ttf") === -1)
+            {
+                toast("Please browse a (.ttf) font file");
+                return;
+            }
+
+            formData.append('fontFile',files[0]);
+            formData.append('content',filename);
+            formData.append('label',text)
+            formData.append('type',type)
             $.ajax({
                 type: "POST",
                 url: "/api/admin/content",
-                data: {
-                    content: text,
-                    type: type
-                },
+                enctype: 'multipart/form-data',
+                data: formData,
+                cache : false,
+                processData : false,
+                contentType: false,
+                dataType    : 'json',
                 success: function (res) {
                   window.location.reload();
                     designFlags.submitted = true;
