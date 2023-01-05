@@ -24,7 +24,7 @@
                                 </div><!-- col-4 -->
                                 <div class="col-lg-4">
                                   <div class="form-group">
-                                    <input class="form-control" id="customerEmail" type="email" title="Please enter valid email" name="email" value="<%=user.email%>" required  placeholder="Email Address">
+                                    <input class="form-control" id="customerEmail" readonly type="email" title="Please enter valid email" name="email" value="<%=user.email%>" required  placeholder="Email Address">
                                   </div>
                                 </div><!-- col-4 -->
                                 <div class="col-lg-4">
@@ -66,18 +66,18 @@
                                           </div><!-- col-8 -->
                                           <div class="col-lg-3">
                                             <div class="form-group mg-b-10-force">
-                                              <input class="form-control" type="text" name="zip"  placeholder="Zip">
-                                            </div>
-                                          </div>
-                                          <div class="col-lg-3">
-                                            <div class="input-group mg-b-10-force">
-                                              <input type="date" name="date" class="form-control" placeholder="MM/DD/YYYY">
+                                              <input class="form-control" type="number" name="zip"  placeholder="Zip">
                                             </div>
                                           </div>
                                          
+                                         
                                           <!-- col-8 -->
                                     </div>
-                                 
+                                    <div class="col-lg-3">
+                                      <div class="input-group mg-b-10-force">
+                                        <input type="date" name="date" class="form-control" min="<%= new Date().toLocaleString() %>" placeholder="Required By">
+                                      </div>
+                                    </div>
                                   <div class="col-lg-12">
                                     <div class="form-group mg-b-10-force">
                                         <textarea rows="3" class="form-control" placeholder="Additional Information" name="additionalInfo" spellcheck="false"></textarea>

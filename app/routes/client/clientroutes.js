@@ -297,7 +297,7 @@ router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
    let customDesigns = adminUploadItems.filter(function(item){ return item.type == 'pre-designed'});
    let categories = await commonService.categoryService.getCategoriesAsync();
    let customText = await commonService.contentService.getContentAsync('custom-text');
-   let fonts = await commonService.contentService.getContentAsync('fonts');
+   let fonts = await commonService.contentService.getContentAsync('fonts',false);
    let ca = [];
    categories.forEach(category => {
     var items = cliparts?.filter(i=>i.category == category.id);

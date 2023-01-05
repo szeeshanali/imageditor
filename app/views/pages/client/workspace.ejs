@@ -1,3 +1,15 @@
+<style>
+  <%fonts?.forEach((item)=>{%>
+  @font-face{
+    font-family:"<%=item.content.replace('.ttf','')%>";
+    src:url("/fonts/<%=item.content%>");
+    font-weight:normal;
+    font-style:normal;
+    
+}                     
+<%})%>
+   
+   </style>
 <div class="row mg-r-0">
     <!--Workspace Left Panel-->
 <div class="col-lg-3 pd-l-0 pd-r-0">
@@ -28,7 +40,7 @@
                   <div class="row mg-0">
                     <%for(var i=0; i<templates.length; i++){ %>
                     <div class="col-lg-4 pd-0  bd template" id="<%=templates[i].code %>">
-                      <div class="card" style="min-height: 200px">
+                      <div class="card" style="height: 220px">
                         <div class="card-body pd-10">
                           <img class="card-img-top img-fluid pd-b-10 ht-140" src="/uploads/admin/template/template-<%=templates[i].code %><%=templates[i].file_ext %>" alt="Image">
                           <h5 class="tx-14 tx-inverse pd-x-5" style="height:45px;overflow:hidden" title="<%=templates[i].title %>"><%=templates[i].title %></h5>
@@ -267,12 +279,12 @@
         <div  id="canvas-holder">
             <div class="content tx-center">
                 <canvas id="client-main-canvas"   ></canvas>
-                <canvas id="client-main-canvas-logo" style="max-width: 560px; max-height:740px"  ></canvas>                    
+                <canvas id="client-main-canvas-logo"   ></canvas>                    
             </div>
         </div>
       
         <div class="paste-clipboard"  style="display: none;"  id="pasteClipboard">
-         <span  onclick="parseClipboardData();"  > Paste from Clipboard</span>
+         <span  onclick="parseClipboardData();"  > Copy from Clipboard</span>
       </div>
     </div>
     </div>

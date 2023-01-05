@@ -1,23 +1,43 @@
+
+<style>
+  <%fonts?.forEach((item)=>{%>
+  @font-face{
+    font-family:"<%=item.content.replace('.ttf','')%>";
+    src:url("/fonts/<%=item.content%>");
+    font-weight:normal;
+    font-style:normal;
+    
+}                     
+<%})%>
+</style>
 <div class=" pd-20">
   <div class="row row-sm mg-t-15 mg-sm-t-20">
     
     <div class="col-md-6 card pd-20">
       <div class="list-group widget-list-group" style="max-height: 350px; overflow-y:scroll">
-        <%if(!content || content?.length == 0){%>
+        <%if(!fonts || fonts?.length == 0){%>
         <p class="pd-10">Add Fonts</p>
         <%}%>
         <div class="pd-x-20">
-          <h6 class="tx-gray-800 tx-uppercase tx-bold tx-14 mg-b-10" >Font List</h6>
+          <h6 class="tx-gray-800 tx-uppercase tx-bold tx-14 mg-b-10" >Font List (<%=fonts?.length || 0%>)</h6>
           <p class="mg-b-30 tx-gray-600">Below fonts are displayed to the user.</p>
         </div>
       
-        <%for(var i=0;i<content?.length;i++){%>
-        <div class="list-group-item pd-y-10 rounded-top-0 bd-0" id="fonts-<%=content[i]._id%>">
+        <%for(var i=0;i<fonts?.length;i++){%>
+        <div class="list-group-item pd-y-10 rounded-top-0 bd-0" id="fonts-<%=fonts[i]._id%>">
           <div class="media">
        
             <div class="media-body">
-              <span class="tx-inverse tx-18"><%=content[i].content%></span>
-              <span class="pull-right"><button class="btn btn-secondary btnDelFont" type="button" id="<%=content[i]._id%>"><i class="icon ion-ios-trash-outline tx-18"></i></button></span>
+                <label class="ckbox tx-bold "  id="cbFontEnabled" style="color:#494699">
+                 
+                  <input type="checkbox" id="<%=fonts[i]._id%>" <%=fonts[i].active?'checked':''%>><span><%=fonts[i].content.split('-')[0]%></span>
+                </label>
+                <button style="border-radius: 50%;
+                padding: 0 8px;" class="btn btn-sm btn-primary btnDelFont pull-right type="button" id="<%=fonts[i]._id%>"><i class="icon ion-ios-trash-outline tx-18"></i></button>
+              <p class="tx-22" style="color:black;font-family:<%=fonts[i].content.replace('.ttf','')%>">The quick brown fox jumps over the lazy dog</p>
+              <span class="pull-right">
+                
+              
             </div><!-- media-body -->
           </div><!-- media -->
         </div><!-- list-group-item -->
@@ -27,34 +47,22 @@
   
     <div class="col-md-6 mg-t-15 mg-sm-t-20 mg-md-t-0">
       <div class="card pd-20 pd-sm-40 form-layout form-layout-5">
-        <h6 class="tx-gray-800 tx-uppercase tx-bold tx-14 mg-b-10" >Add  Fonts</h6>
+        <h6 class="tx-gray-800 tx-uppercase tx-bold tx-14 mg-b-10" >Add New Fonts</h6>
         <p class="mg-b-30 tx-gray-600">Fonts will be displayed as a list to the user in which user can choose their favorite fonts for the design.</p>
         <div class="row row-xs">
-          <div class="col-sm-10 pd-b-10">
-            <label class="tx-bold">Choose from font list</label>
-            <select id="font-list-container" class="form-control select2" onchange="$('#inputFontName').val(this.value)"  data-placeholder="Please Choose...">
-              <option value="Arial, sans-serif" >Choose from ...</option>
-              <option value="Arial, sans-serif" selected>Arial (sans-serif)</option>
-              <option value="Luckiest Guy" >Luckiest Guy</option>
-              <option value="Bungee Shade">Bungee Shade</option>
-              <option value="BlackHanSans">BlackHanSans</option>
-              <option value="Creepster">Creepster</option>
-              <option value="LondrinaShadow">LondrinaShadow</option>
-              <option value="Brush Script MT, cursive">Brush Script MT (cursive)</option>
-              <option value="RockSalt">RockSalt</option>
-              <option value="Shrikhand">Shrikhand</option>
-              <option value="PermanentMarker">PermanentMarker</option>
-          </select>
-          </div>
+         
           <div class="col-sm-10 mg-t-10 mg-sm-t-0">
             <input type="text" placeholder="Enter Font Name" id="inputFontName" class="form-control" maxlength="100" minlength="3" pattern=".{3,100}" title="Minimum 3 and maximum 100 characters." >
           </div>
         </div><!-- row -->
      
         <div class="row row-xs mg-t-30">
-          <div class="col-sm-8 mg-l-auto">
+         
+          <div class="col-sm-8 mg-auto">
             <div class="form-layout-footer">
-              <button type="button" id="btnAddFont" class="btn btn-primary mg-r-5">Add Text</button>
+              <input type="file" id="fontFile" name="font-file">
+              <p>Only .ttf font format is allowed.</p>
+              <button type="button" id="btnAddFont" class="btn btn-primary mg-r-5">Add</button>
               <button class="btn btn-secondary" id="btnFontClear">Clear</button>
             </div><!-- form-layout-footer -->
           </div><!-- col-8 -->

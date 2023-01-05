@@ -603,6 +603,23 @@
         $canvasPrev.parent().hide();
         var customTextInProgress = false;
 
+
+        $("#fontFile").on("change",function(e){
+
+            if(e.target.files.length>0)
+            {
+                let fn = e.target.files[0].name; 
+                fn = fn.split('.')[0].replace(/-/ig,"  ");
+                $("#inputFontName").val(fn);
+               
+            }
+
+           
+
+        });
+
+
+
         $(".btn-custom-text").on("click",function(e){
           var id = e.currentTarget.id;
 
@@ -664,12 +681,31 @@
         })
 
         //@Add Fonts 
-        $(".btnDelFont").on("click",function(e){
-            var id = e.currentTarget.id;
-  
+        $("#cbFontEnabled > input").on("click",function(e){
+            let id = e.currentTarget.id;
+            let isActive = $(e.currentTarget).prop("checked");
+            $.ajax({
+              type: "PUT",
+            url: `/api/admin/fonts/${id}`,
+              data: {active:(isActive)},
+              success: function (res) {
+                  toast("Updated successfully!");
+              },
+              error: function (res) {
+                  toast("Error while deleting.");
+              }
+          })
+          
+          
+           
+          });
+
+          $(".btnDelFont").on("click",function(e){
+            let id = e.currentTarget.id;
+            let isActive = $(e.currentTarget).prop("checked");
             $.ajax({
               type: "DELETE",
-              url: `/api/admin/fonts/${id}`,
+            url: `/api/admin/fonts/${id}`,
               success: function (res) {
                   toast("Deleted successfully!");
                   $(`#fonts-${id}`).remove();
@@ -678,10 +714,7 @@
                   toast("Error while deleting.");
               }
           })
-  
-          
-           
-          });
+        })
           $("#btnFontClear").on("click", function (e) {
             $('#inputFontName').val("");
           })
@@ -705,13 +738,34 @@
               toast("Custom text should not be greater than 100 characters.");
               return; 
             }
+            let formData = new FormData();
+debugger
+            let files = $("#fontFile")[0].files;
+            if(files.length==0)
+            {
+                toast("Please browse a font file");
+                return;
+            }
+            let filename = files[0].name; 
+            if(filename.indexOf(".ttf") === -1)
+            {
+                toast("Please browse a (.ttf) font file");
+                return;
+            }
+
+            formData.append('fontFile',files[0]);
+            formData.append('content',filename);
+            formData.append('label',text)
+            formData.append('type',type)
             $.ajax({
                 type: "POST",
                 url: "/api/admin/content",
-                data: {
-                    content: text,
-                    type: type
-                },
+                enctype: 'multipart/form-data',
+                data: formData,
+                cache : false,
+                processData : false,
+                contentType: false,
+                dataType    : 'json',
                 success: function (res) {
                   window.location.reload();
                     designFlags.submitted = true;
@@ -952,7 +1006,7 @@
                 }
 
 
-                selectedUser.is_admin = $("#edit-user-container .is_admin").prop("checked");
+                //selectedUser.is_admin = $("#edit-user-container .is_admin").prop("checked");
                 selectedUser.active = $("#edit-user-container .is_active").prop("checked");
                 selectedUser.watermark = $("#edit-user-container .watermark").prop("checked");
                 selectedUser.project_limit = parseInt($("#edit-user-container .project_lmt").val());

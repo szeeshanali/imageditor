@@ -253,22 +253,31 @@ const commonService = (function() {
        
     }
 
-    this.getContentAsync = async (type)=>{
-        if(type === 'custom-text' || type === 'fonts')
+    this.getContentAsync = async (type, isAdmin)=>{
+
+        if(type === 'custom-text' )
         {  return await contents.find({type:type, active:true, deleted:false}); }
+
+        if( type === 'fonts')
+        {  
+            if(isAdmin)
+            {return await contents.find({type:type, deleted:false});}
+            return await contents.find({type:type, active:true, deleted:false});
+      }
+
 
         return await contents.findOne({type:type, active:true, deleted:false});    
     }
 
    
 
-    this.addOrUpdateContentAsync = async (content,type,by_admin)=>{
+    this.addOrUpdateContentAsync = async (label,content,type,by_admin)=>{
         if((content == null || content.length < 3) && type != 'custom-text' )
         {throw "Empty content."; }
 
         if(type === 'custom-text' || type === 'fonts')
         {
-            var content =  new contents({content:content,type:type,by_admin:by_admin});
+            var content =  new contents({content:content,type:type,by_admin:by_admin,label:label});
             await content.save();
             return;
         }

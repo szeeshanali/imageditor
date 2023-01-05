@@ -1,7 +1,7 @@
 const express               = require('express');
 const router                = express.Router();
 const fs                    = require('fs');
-
+const formidable                    = require('formidable');
 const categories            = require("../../models/categories.js");
 const uploads               = require("../../models/uploads.js");
 const contents               = require("../../models/contents.js");
@@ -220,15 +220,32 @@ router.get("/app/admin/custom-text", isAdmin, async (req,res)=>{
   res.render("pages/admin/custom-text",res.locals.page);
 })
 
-
 router.delete('/api/admin/fonts/:id', isAdmin, async (req,res)=>{
-  var id = req.params["id"]; 
+  const id = req.params["id"];
+ 
   if(!id){
     return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."});
   }  
   try{
-    await contents.findOneAndDelete({type:'fonts', by_admin:true, code:id }); 
-    return res.status(200).send({"status":400,"message":`Deleted successfully, Id:${id}`});
+    await contents.findOneAndUpdate({type:'fonts', _id:id },
+    { $set: { "deleted" : true}});
+
+    return res.status(200).send({"status":200,"message":`Updated successfully, Id:${id}`});
+  }catch(e)
+  { return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."}); }
+ 
+}) 
+router.put('/api/admin/fonts/:id', isAdmin, async (req,res)=>{
+  const id = req.params["id"];
+  let {active} = req.body;  
+  if(!id){
+    return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."});
+  }  
+  try{
+    await contents.findOneAndUpdate({type:'fonts', _id:id },
+    { $set: { "active" : active}});
+
+    return res.status(200).send({"status":200,"message":`Updated successfully, Id:${id}`});
   }catch(e)
   { return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."}); }
  
@@ -238,12 +255,12 @@ router.get("/api/admin/fonts", async (req,res)=>{
   res.status(200).send(content);
 })
 router.get("/app/admin/fonts", isAdmin, async (req,res)=>{
-  var content = await commonService.contentService.getContentAsync('fonts') || {};
+  var content = await commonService.contentService.getContentAsync('fonts', true) || {};
   res.locals.page = {
     title  : "Fonts",
     id     : "__fonts",
     user   : req.user,
-    content : content
+    fonts : content
    } ;
   res.render("pages/admin/fonts",res.locals.page);
 })
@@ -306,11 +323,32 @@ router.post(ROUTE_ADMIN_SAVEDESIGN,  isAdmin,  (req,res)=>{
 });
 
 router.post('/api/admin/content', isAdmin, async (req,res)=>{
-  const  {content, type} = req.body;
-  await commonService.contentService.addOrUpdateContentAsync(content,type,true);
+  const  {content, type, fontFile, label} = req.body;
+
   try{
+
+    //Create an instance of the form object
+  let form = new formidable.IncomingForm();
+
+  //Process the file upload in Node
+  form.parse(req, function (error, fields, file) {
+    let filepath = file.fontFile.filepath;
+    let newpath = `../app/public/fonts/${file.fontFile.originalFilename}`;
+    //newpath += file.fileupload.originalFilename;
+
+    //Copy the uploaded file to a custom folder
+    fs.readFile(file.fontFile.filepath, function (err, data) {
+      fs.writeFile(newpath, data, function () {
+        //Send a NodeJS file upload confirmation message
+        commonService.contentService.addOrUpdateContentAsync(fields.label,fields.content,fields.type,true);       
+        res.status(200).send({status:"success",message:"Content updated successfully!"})
+      });
+    })
+   
+  });
+
+     
     
-    res.status(200).send({status:"success",message:"Content updated successfully!"})
   }catch{
     res.status(500).send({status:"error",message:"Update Failed!"})
 
@@ -337,7 +375,7 @@ router.get(ROUTE_ADMIN_DASHBOARD, isAdmin, async (req,res)=>{
 
   var totalUsers = await appusers.count();
   var allusers = await appusers
-  .find({deleted:false, active:true},{password:0}).sort({created_on:-1}).limit(100);
+  .find({deleted:false, active:true},{password:0}).sort({created_on:-1});
 
   var report = {
     todayUsers:0,
@@ -354,8 +392,8 @@ report.todayUsers      = totalUsers;
 report.thisWeekUsers   = allusers.filter(function(value){ return value.created_dt >= new Date(today.getFullYear(), today.getMonth(), today.getDate()-7);}).length || 0;
 report.thisMonthUsers  = allusers.filter(function(value){ return value.created_dt >= new Date(today.getFullYear(), today.getMonth(), today.getDate()-30);}).length || 0;
 report.totalUsers      = allusers.length; 
-report.activeUsers = allusers.filter(function(value){ return value.active == true}).length || 0;
-report.adminUsers = allusers.filter(function(value){ return value.is_admin == true}).length || 0;
+report.activeUsers      = allusers.filter(function(value){ return value.active == true}).length || 0;
+report.adminUsers     = allusers.filter(function(value){ return value.is_admin == true}).length || 0;
 
 
   res.locals.page = {
@@ -608,16 +646,16 @@ router.delete('/api/admin/user/:id', isAdmin, async (req,res)=>{
   { return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."}); }
  
 }) 
-
-router.put('/api/admin/user-active/:id?', isAdmin, async (req,res)=>{
-  var id = req.params["id"]; 
-  const {active} = req.body;   
-  if(!id){
-    return res.status(400).send({"status":400,"message":"Can't Update. Id is missing."});
-  } 
-  await appusers.findOneAndUpdate({ _id:id}, {active:active}); 
-  return res.status(200).send({"status":400,"message":`Updated successfully, Id:${id}`});
-})
+/// do not allow admin activation from api. 
+// router.put('/api/admin/user-active/:id?', isAdmin, async (req,res)=>{
+//   var id = req.params["id"]; 
+//   const {active} = req.body;   
+//   if(!id){
+//     return res.status(400).send({"status":400,"message":"Can't Update. Id is missing."});
+//   } 
+//   await appusers.findOneAndUpdate({ _id:id}, {active:active}); 
+//   return res.status(200).send({"status":400,"message":`Updated successfully, Id:${id}`});
+// })
 router.put('/api/admin/user/:id?', isAdmin, async (req,res)=>{
   var id = req.params["id"]; 
   const {project_limit, active, is_admin,  watermark} = req.body; 

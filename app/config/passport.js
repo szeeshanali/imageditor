@@ -9,6 +9,7 @@ const { PasswordHash, CRYPT_BLOWFISH, CRYPT_EXT_DES } = require('../public/js/pa
 //   user: "u8bvx965rzk53",
 //   password: "EJ67dAkZTuAhgYB",
 //   database: 'db4qgewmyrzq4v'
+
 // }
 
 const config = process.env;

@@ -54,7 +54,10 @@ mongoose.connect(MONGO_CONN,
     .catch((err)=> {
       console.error(err);
       
+
+      
   });
+
 
 
 //app.use(bodyParser.urlencoded({ extended: true }));
