@@ -8,6 +8,7 @@ const schema  = new mongoose.Schema({
     created_dt     :    {   type    :   Date,   default : Date.now },
     modified_dt    :    {   type    :   Date,   default : null },
     by_admin       :    {   type    :   Boolean },
+    label           :   {   type    :   String },
     });
 
 const contents   = mongoose.model('contents',schema);
