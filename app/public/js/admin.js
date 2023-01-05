@@ -1006,7 +1006,7 @@ debugger
                 }
 
 
-                selectedUser.is_admin = $("#edit-user-container .is_admin").prop("checked");
+                //selectedUser.is_admin = $("#edit-user-container .is_admin").prop("checked");
                 selectedUser.active = $("#edit-user-container .is_active").prop("checked");
                 selectedUser.watermark = $("#edit-user-container .watermark").prop("checked");
                 selectedUser.project_limit = parseInt($("#edit-user-container .project_lmt").val());

@@ -28,6 +28,9 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/1.8.349/pdf.min.js"></script>
 <script src="/js/jscolor.js"></script>
+<script src="/js/jquery.dataTables.js"></script>
+<script src="/js/dataTables.responsive.js"></script>
+<script src="/js/select2.min.js"></script>
 <script>
 jscolor.presets.default = {
     position: 'right',
@@ -40,5 +43,24 @@ jscolor.presets.default = {
     paletteCols: 12,
     hideOnPaletteClick: true,
 };
+
+
+$(function(){
+        'use strict';
+
+        $('#datatable').DataTable({
+          responsive: true,
+          language: {
+            searchPlaceholder: 'Search...',
+            sSearch: '',
+            lengthMenu: '_MENU_ items/page',
+          }
+        });
+
+       
+
+        // Select2
+
+      });
 
 </script>

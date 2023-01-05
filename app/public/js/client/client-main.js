@@ -563,6 +563,8 @@ function loadProject(id) {
             canvasPrev.renderAll();
             loadedObjects.center().setCoords();
 
+           
+
 
         }, function (item, object) {
             object.set('id', item.getAttribute('id'));
@@ -765,17 +767,26 @@ function loadSVGTemplate(id) {
             let templateWidth = options.viewBoxWidth;
             let templateHeight = options.viewBoxHeight;
             let isLandspace = (templateWidth > templateHeight);
+            let __f = 0.9;
             if (isLandspace) {
+              
                 templateWidth = options.viewBoxHeight;
                 templateHeight = options.viewBoxWidth;
             }
 
 
             canvasPrev.setDimensions({width: templateWidth, height: templateHeight});
+            
             canvasPrev.setBackgroundImage(loadedObjects, canvasPrev.renderAll.bind(canvasPrev));
             // loadedObjects.scaleToWidth(templateWidth);
             // loadedObjects.scaleToHeight((templateHeight/72)*96);
+            //canvasPrev.setZoom(0.9);
+           
+            let __w = parseInt(templateWidth*__f); 
+            let __h = parseInt(templateHeight*__f);
 
+            $("#client-main-canvas-logo").css({"width":`${__w}px`,"height":`${__h}px`,"padding":"1px"})
+           
             canvasPrev.renderAll();
 
             loadedObjects.center().setCoords();
@@ -1056,7 +1067,7 @@ function initUIEvents() {
         var actionUrl = form.attr('action');
         var formData = new FormData(form[0]);
 
-        previewToPDF(true,(pdfBase64)=>{
+        generatePDFfromPreview(true,(pdfBase64)=>{
 
             formData.append('file', pdfBase64);
             $loader.removeClass("hidden");
@@ -1535,10 +1546,10 @@ $("#btnMyProjectsModal").on("click",function(e){
         $("#btnAddClipart").unbind().on("click",function(){
             const _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
             fabric.Image.fromURL(url, function (img) {
-                let img1 = img.set({left: 0, top: 0, border:0, stroke:"white", strokeWidth:0});
-                img1.scaleToWidth(250);
-                img1.globalCompositeOperation = 'source-atop';
-                _canvas.add(img1);
+               img.set({left: 150, top: 150, border:10, borderColor:"black"});
+               img.scaleToWidth(250);
+               img.globalCompositeOperation = 'source-atop';
+                _canvas.add(img);
                 _canvas.renderAll();
                 mainControls(true);
                 // $("#menu-text > a").click();
@@ -1772,14 +1783,15 @@ function renderPreview() {
         });
 
         var logos = canvasPrev.backgroundImage._objects;
+     
         fabric.Image.fromURL(dataURL, (img) => {
             canvasPrev.remove(... canvasPrev.getObjects());
             for (var i = 0; i < logos.length; i++) {
                 var logo = logos[i];
                 var object = fabric.util.object.clone(img);
-                var left = logo.left + logo.group.left + logo.group.width / 2;
-                var top = logo.top + logo.group.top + logo.group.height / 2;
-                object.scaleToWidth(logo.width + 10);
+                var left = logo.left + logo.group.left + (logo.group.width / 2);
+                var top = logo.top + logo.group.top + (logo.group.height / 2);
+                object.scaleToWidth(logo.width);
 
                 object.set("top", top);
                 object.set("left", left);
@@ -2127,7 +2139,7 @@ function addWaterMark(doc) {
 
     return doc;
 }
-function previewToPDF(onServer, callback) {
+function generatePDFfromPreview(onServer, callback) {
 
     if (!state.isPreviewCanvas) {
         toast("Please preview your design before download.");
@@ -2166,7 +2178,7 @@ function previewToPDF(onServer, callback) {
             });
             width = pdf.internal.pageSize.getWidth();
             height = pdf.internal.pageSize.getHeight();
-            const factor = 2; 
+            const factor = 1.3; 
             canvasPrev.clone(function (clonedCanvas) {
                 var bg = clonedCanvas.backgroundImage;
                 clonedCanvas.backgroundImage = false;
@@ -2179,9 +2191,9 @@ function previewToPDF(onServer, callback) {
                 bg.globalCompositeOperation = "destination-in";
                 clonedCanvas.add(bg);
                 clonedCanvas.renderAll();
-                var imgData = clonedCanvas.toDataURL('image/jpeg', 1.0);
-                pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
-                
+                var imgData = clonedCanvas.toDataURL('image/png');
+                pdf.addImage(imgData, 'png', 0, 0);
+
                 if(onServer)
                 {
                     callback(btoa(pdf.output(),"base64"));
@@ -2207,7 +2219,7 @@ function previewToPDF(onServer, callback) {
 }
 
 $btnDownloadPDF.on("click", () => {
-    previewToPDF();
+    generatePDFfromPreview();
 });
 
 $btnUploadImage.on("click", () => {
@@ -2783,7 +2795,6 @@ function ungroup(event) {
 
 
 function onChangeFontColor(picker, type) {
-    debugger;
     let selectedText = canvas.getActiveObject();
     let checked = $("#inputStrokeText").prop("checked");
     let strokeSize = parseInt($("#text-stroke-width").val());

@@ -375,7 +375,7 @@ router.get(ROUTE_ADMIN_DASHBOARD, isAdmin, async (req,res)=>{
 
   var totalUsers = await appusers.count();
   var allusers = await appusers
-  .find({deleted:false, active:true},{password:0}).sort({created_on:-1}).limit(100);
+  .find({deleted:false, active:true},{password:0}).sort({created_on:-1});
 
   var report = {
     todayUsers:0,
@@ -392,8 +392,8 @@ report.todayUsers      = totalUsers;
 report.thisWeekUsers   = allusers.filter(function(value){ return value.created_dt >= new Date(today.getFullYear(), today.getMonth(), today.getDate()-7);}).length || 0;
 report.thisMonthUsers  = allusers.filter(function(value){ return value.created_dt >= new Date(today.getFullYear(), today.getMonth(), today.getDate()-30);}).length || 0;
 report.totalUsers      = allusers.length; 
-report.activeUsers = allusers.filter(function(value){ return value.active == true}).length || 0;
-report.adminUsers = allusers.filter(function(value){ return value.is_admin == true}).length || 0;
+report.activeUsers      = allusers.filter(function(value){ return value.active == true}).length || 0;
+report.adminUsers     = allusers.filter(function(value){ return value.is_admin == true}).length || 0;
 
 
   res.locals.page = {
@@ -646,16 +646,16 @@ router.delete('/api/admin/user/:id', isAdmin, async (req,res)=>{
   { return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."}); }
  
 }) 
-
-router.put('/api/admin/user-active/:id?', isAdmin, async (req,res)=>{
-  var id = req.params["id"]; 
-  const {active} = req.body;   
-  if(!id){
-    return res.status(400).send({"status":400,"message":"Can't Update. Id is missing."});
-  } 
-  await appusers.findOneAndUpdate({ _id:id}, {active:active}); 
-  return res.status(200).send({"status":400,"message":`Updated successfully, Id:${id}`});
-})
+/// do not allow admin activation from api. 
+// router.put('/api/admin/user-active/:id?', isAdmin, async (req,res)=>{
+//   var id = req.params["id"]; 
+//   const {active} = req.body;   
+//   if(!id){
+//     return res.status(400).send({"status":400,"message":"Can't Update. Id is missing."});
+//   } 
+//   await appusers.findOneAndUpdate({ _id:id}, {active:active}); 
+//   return res.status(200).send({"status":400,"message":`Updated successfully, Id:${id}`});
+// })
 router.put('/api/admin/user/:id?', isAdmin, async (req,res)=>{
   var id = req.params["id"]; 
   const {project_limit, active, is_admin,  watermark} = req.body; 
