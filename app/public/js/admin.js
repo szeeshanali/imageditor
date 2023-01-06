@@ -739,7 +739,6 @@
               return; 
             }
             let formData = new FormData();
-debugger
             let files = $("#fontFile")[0].files;
             if(files.length==0)
             {
@@ -1480,8 +1479,15 @@ debugger
                 meta = JSON.parse(data.meta);
                 // meta.objects = parseInt($inputLogoPerPage.val() || (meta.objects || 0));
             }canvas.clear();
+            if(canvas.templateId)
+            {
+                $(`#${canvas.templateId}`).removeClass("bg-light-blue");
+            }
+           
             canvas.templateId = data.code;
             loadTemplateInfo(data);
+            
+            $(`#${id}`).addClass("bg-light-blue");
         })
 
     }
@@ -1589,7 +1595,7 @@ debugger
 
         $.ajax({
             type: "POST",
-            url: "/app/admin/save-template",
+            url: "/app/admin/uploads",
             data: {
 
                 desc: $inputThumbnailName.val(),
@@ -1645,44 +1651,20 @@ debugger
             toast("Please should not greater than 50 characters.");
             return;
         }
-        var MIME_TYPE = "image/png";
-        var dataUrl = selectedDesign.base64;
-       // const file = DataURIToBlob(dataUrl)
-        // const formData = new FormData();
-        // formData.append('upload', file, 'image.jpg');
-        // formData.append('data', JSON.stringify({
-
-        //     file      : formData,
-        //     desc      : "",
-        //     meta      : JSON.stringify(meta) ,
-        //     title     : $inputThumbnailName.val(),
-        //     name      : $inputDesignName.val(),
-        //     file_name : $inputFileName.val(),
-        //     file_ext  : ".svg",
-        //     order_no  : $inputOrderNo.val(),
-        //     active    : designFlags.active,
-        //     base64    : dataUrl,
-        //     type      : $("#design-type").val(),
-        //     by_admin  : true,
-        //     default   : designFlags.default,
-        //     link      : $inputDesignLink.val(),
-        //     logos     : $inputLogoPerPage.val(),
-        //     ref_code  : $kopykakePartNo.val(),
-        //     category  : category
-        // })
-
-        // )
-
+        const validateCategoryFor = ['clipart'];
+        let MIME_TYPE = "image/png";
+        let dataUrl = selectedDesign.base64;       
         let designType =  $("#design-type").val();
-        var category = $("#admin-categories").val();
-        if(!category && designType != 'template'){
+        let category = $("#admin-categories").val();
+        
+        if(!category && validateCategoryFor.find(i=>i === designType) ){
             toast(`Please select a category.`);
             return;
         }
         $loader.removeClass("hidden");
         $.ajax({
             type: "POST",
-            url: "/app/admin/save-template",
+            url: "/app/admin/uploads",
             // contentType: false,
             // enctype: 'multipart/form-data',
             // processData: false,

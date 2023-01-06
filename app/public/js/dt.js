@@ -539,7 +539,7 @@ function toPNG(id, desc){
         var imgURL = canvasElement.toDataURL(MIME_TYPE);    
         $.ajax({
             type: "POST",
-            url: "/app/admin/save-template",
+            url: "/app/admin/uploads",
             data: {  
                 imgBase64: imgURL,
                 desc:desc,

@@ -461,6 +461,19 @@ router.get('/app/admin/cliparts', isAdmin, async (req,res)=>{
   res.locals.page);
 })
 
+
+
+router.get('/app/admin/banners', isAdmin, async (req,res)=>{
+
+  res.locals.page = {
+    id: "__banners",
+    title: "Upload Banners",
+    user: req.user
+  }
+  res.render("pages/admin/banners",
+  res.locals.page);
+})
+
 //****Save Design */
 router.post('/app/admin/save-design', isAdmin, async function(req, res) {
   try{
@@ -539,16 +552,26 @@ res.render('pages/admin/pre-designed',{
 
 })
 router.put('/api/admin/template/:id?', isAdmin, async (req,res)=>{
-  var id = req.params["id"]; 
+  try{
+    var id = req.params["id"]; 
+    if(!id){
+      return res.status(400).send({"status":400,"message":"Can't Update. Id is missing."});
+    }    
+    await uploads.updateMany({type:'template', by_admin:true }, {$set: {default: false} });
   
-  if(!id){
-    return res.status(400).send({"status":400,"message":"Can't Update. Id is missing."});
+    /// find document by new Order no. 
+    let findDocumentByOrderNo = await uploads.findOne({type:'template', by_admin:true, order_no:req.body.order_no });
+    let updateDocument  = await uploads.findOneAndUpdate({type:'template', by_admin:true, code:id }, req.body,{returnDocument:'before'}); 
+    if(findDocumentByOrderNo){
+      findDocumentByOrderNo.order_no = updateDocument.order_no;
+      findDocumentByOrderNo.save();
+    }
+    return res.status(200).send({"status":400,"message":`Updated successfully, Id:${id}`});
+  }catch(ex)
+  {
+    return res.status(500).send({"status":500,"message":`Error while updating template, Id:${id}`});
   }
   
-  await uploads.updateMany({type:'template', by_admin:true }, {$set: {default: false} });
-  await uploads.findOneAndUpdate({type:'template', by_admin:true, code:id }, req.body); 
-  
-  return res.status(200).send({"status":400,"message":`Updated successfully, Id:${id}`});
 
 })
 
@@ -568,7 +591,7 @@ router.delete('/api/admin/template/:id', isAdmin, async (req,res)=>{
 
 
 
-router.post('/app/admin/save-template', function(req, res) {
+router.post('/app/admin/uploads', function(req, res) {
   const {desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
  
   //var filename = file_name || "na"; 
