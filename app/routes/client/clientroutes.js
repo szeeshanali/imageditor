@@ -181,8 +181,9 @@ router.get("/app/templates",  isLoggedIn, async (req, res) => {
 }); 
 
 
-router.get("/app/main",   (req, res) => {
-    res.render('pages/client/main',{layout:false});
+router.get("/app/main",  async (req, res) => {
+   const banners = await commonService.uploadService.getUploads('banner',true, true)
+    res.render('pages/client/main',{layout:false, banners:banners});
 }); 
 
 

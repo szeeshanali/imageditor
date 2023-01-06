@@ -539,7 +539,7 @@ function loadProject(id) {
     $loader.removeClass("hidden");
     state.isPreviewCanvas = false;
     var group = [];
-    $("#btnBack").click();
+    $("#btnBack").trigger("click");
     $.get(`/api/project/${id}`, function (res) {
         $loader.addClass("hidden");
         const json = JSON.parse(res.data.json);
@@ -557,7 +557,21 @@ function loadProject(id) {
             var templateWidth = options.viewBoxWidth;
             var templateHeight = options.viewBoxHeight;
 
+        
 
+
+
+            let isLandspace = (templateWidth > templateHeight);
+            let __f = 0.9;
+            if (isLandspace) {
+              
+                templateWidth = options.viewBoxHeight;
+                templateHeight = options.viewBoxWidth;
+            }
+            let __w = parseInt(templateWidth*__f); 
+            let __h = parseInt(templateHeight*__f);
+            $("#client-main-canvas-logo").css({"width":`${__w}px`,"height":`${__h}px`,"padding":"1px"});
+            
             canvasPrev.setDimensions({width: templateWidth, height: templateHeight});
             canvasPrev.setBackgroundImage(loadedObjects, canvasPrev.renderAll.bind(canvasPrev));
             canvasPrev.renderAll();
@@ -567,6 +581,7 @@ function loadProject(id) {
 
 
         }, function (item, object) {
+            object.set({fill:"#fff"});
             object.set('id', item.getAttribute('id'));
             group.push(object);
         });
@@ -1113,7 +1128,7 @@ function initUIEvents() {
 
 $("#btnLibraryModal").on("click",function(e){
     $("#btnModelContinue").text("Continue");
-    $("#confirmBoxBody").text("Your changes will be lost, do you want to continue?");
+    $("#confirmBoxBody").text("Do you want to discard your changes?");
     $("#btnModelContinue").unbind().on("click", function (e) {
         e.preventDefault();       
         canvas.clear();
@@ -1129,7 +1144,7 @@ $("#btnLibraryModal").on("click",function(e){
 $("#btnMyProjectsModal").on("click",function(e){
    
     $("#btnModelContinue").text("Continue");
-    $("#confirmBoxBody").text("Your changes will be lost, do you want to continue?");
+    $("#confirmBoxBody").text("Do you want to discard your changes?");
     $("#btnModelContinue").unbind().on("click", function (e) {
         e.preventDefault();
         canvas.clear();
@@ -1159,7 +1174,7 @@ $("#btnMyProjectsModal").on("click",function(e){
     $("#btnStartOverModel").on("click",function(e){
         e.preventDefault();
         $("#btnModelContinue").text("Continue"); 
-        $("#confirmBoxBody").text("Your changes will be lost, do you want to continue?"); 
+        $("#confirmBoxBody").text("Do you want to discard your changes?"); 
         $("#btnModelContinue").unbind().on("click",function(e){
             const templateId  = selectedTemplateId || 'default';
             loadSVGTemplate(templateId);
@@ -1785,6 +1800,7 @@ function renderPreview() {
         var logos = canvasPrev.backgroundImage._objects;
      
         fabric.Image.fromURL(dataURL, (img) => {
+            state.isPreviewCanvas = true;
             canvasPrev.remove(... canvasPrev.getObjects());
             for (var i = 0; i < logos.length; i++) {
                 var logo = logos[i];
@@ -1797,15 +1813,11 @@ function renderPreview() {
                 object.set("left", left);
                 object.globalCompositeOperation = "source-atop";
                 canvasPrev.add(object).renderAll();
-                // $btnDownloadPDF.removeClass("hidden");
-                // $btnSaveDesign.removeClass("hidden");
-                //$(".vRule, .hRule").hide();
+               
                 $("#create-design-heading").addClass("hidden");
                 $("#preview-design-heading").removeClass("hidden");
                 $("#ruler-ctrl").attr("style", "display:none !important");;
-                //$("#btnDisplayGrid").hide();
-                ///$("#btnDisplayRuler").hide();
-                // canvasPrev.setZoom(.8);
+              
 
             }
             $loader.addClass("hidden");
@@ -1815,10 +1827,10 @@ function renderPreview() {
             $("#ws-btn-download").removeClass("hidden");
             $("#btnStartOverModel").addClass("hidden");
             $("#previewMsg").removeClass("hidden");
-            
-            state.isPreviewCanvas = true;
+          
+           
 
-            //         closeRepeatDesignPreview();
+          
         });
     })
 }
