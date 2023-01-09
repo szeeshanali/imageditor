@@ -37,9 +37,6 @@ module.exports = function(passport) {
                  
                   }
 
-                 //let email = req.body.email;
-                 //let password = req.body.password;
-                 console.log(config.MYSQL_USR)
                  var con = mysql.createConnection({
                        
                        host     : config.MYSQL_HOST,
@@ -106,7 +103,6 @@ module.exports = function(passport) {
                               return done(null,user); 
 
                             }).catch(value=> { 
-                              console.log(value);
                               return done(null, false, { message : `DB_CONN_ERR: KakePrint DB connection Error.`});
                              
                             });
@@ -136,7 +132,15 @@ module.exports = function(passport) {
 
                             }
 
-                          console.info("KopyKake user found in KakePrint DB, No need to Sync.");
+                      // bcrypt.compare(password, user.password, (err,isMatch)=>{
+                      //                   if(err) throw err;
+                      //                   if(isMatch) {
+                      //                       return done(null,user);
+                      //                   } else {
+                      //                       return done(null,false,{ message : 'Incorrect username or password'});
+                      //                   }
+                      //               });
+                          //console.info("KopyKake user found in KakePrint DB, No need to Sync.");
                           return done(null,user); 
                         }
                       //});       

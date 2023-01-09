@@ -53,10 +53,12 @@ const commonService = (function() {
 
     this.getUploads = async (type, active, by_admin)=>
     { 
+        active = (active == null)?null:!active;
         var designs = [];
         if(type == 'all')
         {
-            designs =   await uploads.find({ active:active, by_admin:by_admin, deleted:false},
+            designs =   await uploads.find({ active:{$ne:active}, by_admin:by_admin, deleted:false},
+
             {
                 code:1,
                 title:1,
@@ -68,7 +70,9 @@ const commonService = (function() {
                 file_ext:1
             }).sort({order_no:1}); 
         }else{
-            designs =   await uploads.find({type: type, active:active, by_admin:by_admin,deleted:false  },
+
+            //let query = await uploads.find({type: type, active:active, by_admin:by_admin,deleted:false }; 
+            designs =   await uploads.find({type: type, active:{$ne:active}, by_admin:by_admin,deleted:false },
             {
                 code:1,
                 base64:1,
@@ -124,7 +128,7 @@ const commonService = (function() {
         { designs = await uploads.find({
             active:true, 
             type:'pre-designed', 
-            by_admin:true, 
+           
             active:true,
             deleted:false
         },{code:1,thumbBase64:1,title:1,created_dt:1,templateId:1}); 
@@ -139,7 +143,6 @@ const commonService = (function() {
             designs = await uploads.findOne({
                 active:true, 
                 type:'pre-designed', 
-                by_admin:true, 
                 code: designId
              });
 

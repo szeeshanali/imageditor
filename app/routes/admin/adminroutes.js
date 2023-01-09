@@ -375,7 +375,7 @@ router.get(ROUTE_ADMIN_DASHBOARD, isAdmin, async (req,res)=>{
 
   var totalUsers = await appusers.count();
   var allusers = await appusers
-  .find({deleted:false, active:true},{password:0}).sort({created_on:-1});
+  .find({deleted:false, active:true},{password:0,is_admin:0,deleted:0,date:0,lname:0});
 
   var report = {
     todayUsers:0,
@@ -400,7 +400,7 @@ report.adminUsers     = allusers.filter(function(value){ return value.is_admin =
    title  : "Dashboard",
    id     : "__dashboard",
    user   : req.user,
-   users : allusers,
+   users  : allusers,
    report: report
 
   } ;
@@ -464,11 +464,12 @@ router.get('/app/admin/cliparts', isAdmin, async (req,res)=>{
 
 
 router.get('/app/admin/banners', isAdmin, async (req,res)=>{
-
+  const banners = await commonService.uploadService.getUploads('banner',null,true)
   res.locals.page = {
     id: "__banners",
     title: "Upload Banners",
-    user: req.user
+    user: req.user,
+    banners: banners
   }
   res.render("pages/admin/banners",
   res.locals.page);
@@ -515,17 +516,19 @@ router.get('/app/admin/pre-designed', isAdmin, async (req,res)=>{
 
 const id = req.params.id;
 const type = req.params.type;
-var template = {};
-var meta = {};
+let template = {};
+let meta = {};
 
-var customDesigns = await uploads.find({type:'pre-designed', active:true, deleted:false, base64:{$ne:null},json:{$ne:null}},{code:1,base64:1}) || [];
-var adminUploadItems = await commonService.uploadService.getUploads('all',true,true);
-var templates = adminUploadItems.filter(function(item){ return item.type == 'template'});
-var cliparts = adminUploadItems.filter(function(item){ return item.type == 'clipart'});
-var customDesigns = adminUploadItems.filter(function(item){ return item.type == 'pre-designed'});
-var categories = await commonService.categoryService.getCategoriesAsync();
+//let customDesigns = await uploads.find({type:'pre-designed', active:true, deleted:false, base64:{$ne:null},json:{$ne:null}},{code:1,base64:1}) || [];
+let adminUploadItems = await commonService.uploadService.getUploads('all',true,true);
+let templates = adminUploadItems.filter(function(item){ return item.type == 'template'});
+let cliparts = adminUploadItems.filter(function(item){ return item.type == 'clipart'});
+let customDesigns = adminUploadItems.filter(function(item){ return item.type == 'pre-designed'});
+let categories = await commonService.categoryService.getCategoriesAsync();
+let fonts = await commonService.contentService.getContentAsync('fonts',false);
+let customText = await commonService.contentService.getContentAsync('custom-text');
 
-var ca = [];
+let ca = [];
 categories.forEach(category => {
 var items = cliparts?.filter(i=>i.category == category.id);
 if(items != null && items.length > 0)
@@ -548,6 +551,9 @@ res.render('pages/admin/pre-designed',{
     type:type,
     code:id,
     project_limit:req.user.project_limit,
+    fonts:fonts,
+    customText:customText
+
 });
 
 })
@@ -592,9 +598,9 @@ router.delete('/api/admin/template/:id', isAdmin, async (req,res)=>{
 
 
 router.post('/app/admin/uploads', function(req, res) {
-  const {desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
+  let {desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
  
-  //var filename = file_name || "na"; 
+  file_name = file_name || "pd.png"; 
   //filename = `${filename}-${_id}${file_ext}`;       
   var _id = mongoose.Types.ObjectId();
   
@@ -623,14 +629,14 @@ router.post('/app/admin/uploads', function(req, res) {
     
   };
 
-  var _path = `../app/public/uploads/admin/${type}/${type}-${_id}.${file_name.split('.').pop()}`;  
+  var _path = file_name?`../app/public/uploads/admin/${type}/${type}-${_id}.${file_name.split('.').pop()}`:'';  
   var _base64Alter = base64.replace(`data:${mime_type};base64,`, "");
   console.log(_base64Alter);
   fs.writeFile(_path, _base64Alter, 'base64', function(err) {
       if(err){ console.log(err); }
        commonService.uploadService.upload(uploadModel,(err,msg)=>{
         if(!err)
-        {res.status(200).send({message:`Success`, error: msg}); }
+        {res.status(200).send({message:`Success`, error: null}); }
         res.status(400).send({message:`Unable to upload file.`, error: msg}); 
        });
        

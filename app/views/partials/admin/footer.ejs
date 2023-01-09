@@ -49,7 +49,8 @@ $(function(){
         'use strict';
 
         $('#datatable').DataTable({
-          responsive: true,
+          responsive: false,
+          deferRender: true,
           language: {
             searchPlaceholder: 'Search...',
             sSearch: '',
