@@ -40,14 +40,31 @@
     <div class="col-lg-9 pd-x-15">
         <div class="card pd-10 tx-primary tx-bold bd-b">PREVIEW</div>
 
-        <div class="card">
-            <div class="workarea" style="height:800px">
+        <div class="card ht-300 grid-bg">
+            <div class="workarea" >
                 <div  id="canvas-holder">
                     <div class="content tx-center">
                         <canvas id="admin-main-canvas" width="612" height="792" ></canvas>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="card ht-300">
+          <div class="d-flex">
+          <%banners?.forEach((item)=>{%>
+            
+              <div class="card bd-0 wd-xs-300 " >
+                <img class="card-img-top img-fluid"   src="<%=item.base64%>" alt="Image">
+                <div class="card-body bd bd-t-0">
+                  <h6 class="mg-b-3"><a href="" class="tx-dark"><%=item.title%></a></h6>
+                  <span class="tx-12"><%=item.create_dt%></span>
+                </div>
+              </div>
+           
+        
+          <%})%>
+        </div>
+        </div>
         </div>
      
     </div>

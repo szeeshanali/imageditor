@@ -16,11 +16,11 @@ var state = {
     isPreviewCanvas: false
 
 }
-const rulerSettings = {
+var rulerSettings = {
     vRuleSize: 28, hRuleSize: 25, showCrosshair: false, showMousePos: false
 }
 
-const layerHtml = `<div class="media d-block d-flex layer-item object-options" data-index='{index}' id='{id}'  >
+var layerHtml = `<div class="media d-block d-flex layer-item object-options" data-index='{index}' id='{id}'  >
     <div class="d-block mg-sm-r-10 img"> <img src="{src}" class="wd-30" alt="Image" ></div>
     <div class="d-sm-flex layer-label tx-bold">Layer {index}</div>
     <div class="d-sm-flex layers-controls" style="display:none !important">
@@ -31,7 +31,7 @@ const layerHtml = `<div class="media d-block d-flex layer-item object-options" d
     </div>
    </div>`;
 
-const projectHtml = `<div class='my-projects'><div class="list-group-item d-flex">
+var projectHtml = `<div class='my-projects'><div class="list-group-item d-flex">
 <div class="media d-block d-sm-flex">
   <div class="d-block d-sm-flex mg-sm-r-20">
     <img src="{base64}" class="rounded-circle wd-40" alt="Image">
@@ -59,8 +59,6 @@ const designHtml = `<div class='pre-designed'><div class="list-group-item d-flex
 
 // vars
 $btnDownloadPDF = $("#btn-download-pdf");
-// $btnSaveDesign = $("#btn-save-design");
-
 $btnUploadImage = $("#btn-upload-img");
 $btnUploadImageHidden = $("#btn-upload-img-hidden");
 $layers = $("#layers");
@@ -465,11 +463,16 @@ function getSharedProjects() {
 
         var temp = "";
         $("#preDesignedContainer").html("<p>No projects found.</p>");
-        for (var i = 0; i < projects.length; i++) {
-            var p = projects[i];
-            temp += designHtml.replace(/{code}/ig, p.code).replace(/{base64}/ig, p.thumbBase64).replace(/{title}/ig, p.title).replace(/{created_dt}/ig, new Date(p.created_dt).toDateString());
-            $("#preDesignedContainer").html(temp);
-        }
+
+        projects?.forEach(item=>{
+            temp += designHtml
+            .replace(/{code}/ig, item.code)
+            .replace(/{base64}/ig, item.thumbBase64)
+            .replace(/{title}/ig, item.title)
+            .replace(/{created_dt}/ig, new Date(item.created_dt).toDateString());
+        })
+       
+        $("#preDesignedContainer").html(temp);
 
     }).fail(function (ex) {
         console.log(ex);
@@ -547,21 +550,22 @@ function loadProject(id) {
             return;
         }
         canvas.clear();
+        /// loading design 
         canvas.loadFromJSON(json, function () {
             $("#menu-upload > a").click();
-        }, function (o, object) { // console.log(o,object)
+            
+        }, function (o, object) {
         })
 
+        /// loading template 
         fabric.loadSVGFromURL(res.template.base64, function (objects, options) { // $canvasPrev.fadeOut();
             var loadedObjects = new fabric.Group(group);
             var templateWidth = options.viewBoxWidth;
             var templateHeight = options.viewBoxHeight;
 
-        
-
-
-
             let isLandspace = (templateWidth > templateHeight);
+            canvasPrev.setDimensions({width: templateWidth, height: templateHeight});
+
             let __f = 0.9;
             if (isLandspace) {
               
@@ -572,7 +576,6 @@ function loadProject(id) {
             let __h = parseInt(templateHeight*__f);
             $("#client-main-canvas-logo").css({"width":`${__w}px`,"height":`${__h}px`,"padding":"1px"});
             
-            canvasPrev.setDimensions({width: templateWidth, height: templateHeight});
             canvasPrev.setBackgroundImage(loadedObjects, canvasPrev.renderAll.bind(canvasPrev));
             canvasPrev.renderAll();
             loadedObjects.center().setCoords();
@@ -619,11 +622,29 @@ function loadDesign(id) {
             var templateWidth = options.viewBoxWidth;
             var templateHeight = options.viewBoxHeight;
             canvasPrev.setDimensions({width: templateWidth, height: templateHeight});
+            let isLandspace = (templateWidth > templateHeight);
+            let __f = 0.9;
+            if (isLandspace) {
+              
+                templateWidth = options.viewBoxHeight;
+                templateHeight = options.viewBoxWidth;
+            }
+
+
+            
+            canvasPrev.setBackgroundImage(loadedObjects, canvasPrev.renderAll.bind(canvasPrev));
+           
+            let __w = parseInt(templateWidth*__f); 
+            let __h = parseInt(templateHeight*__f);
+
+            $("#client-main-canvas-logo").css({"width":`${__w}px`,"height":`${__h}px`,"padding":"1px"})
+
             canvasPrev.setBackgroundImage(loadedObjects, canvasPrev.renderAll.bind(canvasPrev));
             canvasPrev.renderAll();
             loadedObjects.center().setCoords();
 
         }, function (item, object) {
+            object.set({"fill":"#fff"});
             object.set('id', item.getAttribute('id'));
             group.push(object);
         });
@@ -754,22 +775,6 @@ function loadSVGTemplate(id) {
                     $("#btnDisplayGrid").click();
                 }
             
-                //var canvas = document.getElementById('myCanvas'), 
-            //     debugger;
-            //     let context = canvas.getContext('2d');
-            //     let centerX = canvas.width / 2;
-            //     let centerY = canvas.height - 30;
-            //     let angle = Math.PI * 0.8;
-            //     radius = 150;
-            
-            // context.font = '30pt Calibri';
-            // context.textAlign = 'center';
-            // context.fillStyle = 'blue';
-            // context.strokeStyle = '#ccc';
-            // context.lineWidth = 1;
-             //drawTextAlongArc(context, 'Zeeshan1', centerX, centerY, radius, angle);
-              
-                //drawCircle();
         }, function (item, object) {
             object.set({fill:"#fff"});
             object.set({left: 6, top: 4});
@@ -793,9 +798,6 @@ function loadSVGTemplate(id) {
             canvasPrev.setDimensions({width: templateWidth, height: templateHeight});
             
             canvasPrev.setBackgroundImage(loadedObjects, canvasPrev.renderAll.bind(canvasPrev));
-            // loadedObjects.scaleToWidth(templateWidth);
-            // loadedObjects.scaleToHeight((templateHeight/72)*96);
-            //canvasPrev.setZoom(0.9);
            
             let __w = parseInt(templateWidth*__f); 
             let __h = parseInt(templateHeight*__f);
@@ -809,8 +811,7 @@ function loadSVGTemplate(id) {
         }, function (item, object) {
             object.set({fill:"#fff"});
             object.set('id', item.getAttribute('id'));
-            // object.set('width', (object.width/72)*96);
-            // object.set('height', (object.height/72)*96);
+         
             group.push(object);
         });
     })
@@ -1043,23 +1044,8 @@ function initUIEvents() {
                 addSelectionRect(img);
             })
 
-            // fabric.Image.fromURL(imgSrc, function (img) {
-            //     cropCanvas.clear();
-            //    /// img.scaleToHeight(250);
-                
-            //   ///  let w = img.getScaledWidth(); 
-            //   ///  let h = img.getScaledHeight(); 
-            //   //  cropCanvas.setDimensions({width:w,height:h})
-            //     cropCanvas.add(img);
-            //     cropRect  = getCropRect();
-            //     cropCanvas.add(cropRect); 
-            //     cropCanvas.renderAll();
-            //     //mainControls(true);
-            //     // $("#menu-text > a").click();
-            // });
         }
 
-        //$("#cropImageHolder").attr("src");
     })
 
     $("#cbRfqShip").on("click", function (e) {
@@ -1116,7 +1102,8 @@ function initUIEvents() {
     });
     $("#menu-save-design").on("click",function(e){
         e.preventDefault();
-        e.stopPropagation(); return false;
+        e.stopPropagation(); 
+        return false;
         
         
     })
@@ -1160,7 +1147,7 @@ $("#btnMyProjectsModal").on("click",function(e){
 
 })
 
-    $("#btnSaveModel").on("click",function(e){
+ $("#btnSaveModel").on("click",function(e){
         e.preventDefault();
         $("#btnModelContinue").text("Save Changes");
         $("#confirmBoxBody").text("Do you want to save your changes?");
@@ -1169,9 +1156,9 @@ $("#btnMyProjectsModal").on("click",function(e){
             saveDesign();
         })
        
-    })
+})
     
-    $("#btnStartOverModel").on("click",function(e){
+$("#btnStartOverModel").on("click",function(e){
         e.preventDefault();
         $("#btnModelContinue").text("Continue"); 
         $("#confirmBoxBody").text("Do you want to discard your changes?"); 
@@ -1190,7 +1177,7 @@ $("#btnMyProjectsModal").on("click",function(e){
 
        
         
-    })
+})
 
  /********* */   
     $btnTemplate.on("click", function () {
@@ -1256,21 +1243,12 @@ $("#btnMyProjectsModal").on("click",function(e){
         $(".step-item:nth-child(2)").removeClass("active");
         $(".step-item:nth-child(3)").addClass("active");
     })
-
     $("#btnCancelSaveDesign").on("click", function () {
         $("#input-project-title").val("");
         $("#input-project-desc").val("");
         $("#btnTemplate").click();
        
     })
-
-
-    // $btnSave.unbind().on("click", function (e) {
-    //     if(!confirm("Do you want to save your changes?"))
-    //     {  return; }
-    //     e.preventDefault();
-    //     saveDesign();
-    // })
     $("#btn-step-preview, #btn-menu-peview").on("click", function (e) {
         e.preventDefault();
         previewDesign();
@@ -1302,11 +1280,6 @@ $("#btnMyProjectsModal").on("click",function(e){
         })
         $(this).find('.arrow').first().addClass("down");
     })
-
-    // $("#menu-clipart").on("click",function(){
-    //     menuHighlighter(this);
-    // })
-
     $("#btnDisplayGrid").on("click", function (e) {
       
        if(e.target.checked)
@@ -1340,7 +1313,6 @@ $("#btnMyProjectsModal").on("click",function(e){
         }
 
     })
-
     $txtDecorationCtrl.on("click", function (e) {
         var value = $(this).attr("data-value");
         var o = canvas.getActiveObject();
@@ -1392,7 +1364,6 @@ $("#btnMyProjectsModal").on("click",function(e){
         }
 
     })
-
     $("#font-list-container a").on("click", function (e) {
         var value = $(this).text() || "Arial, sans-serif";
         $("#fontlist").text(value);
@@ -1400,10 +1371,6 @@ $("#btnMyProjectsModal").on("click",function(e){
         canvas.getActiveObject().set("fontFamily", $(this).attr("data-value"));
         canvas.requestRenderAll();
     })
-
-    // $("#text-color").on("click",function() {
-    //     setSelectedTextStyle("fill",this.value);
-    // });
     $("#text-letter-spacing, #text-letter-spacing-range").on("change", function () {
         setSelectedTextStyle("charSpacing", this.value);
 
@@ -1436,13 +1403,9 @@ $("#btnMyProjectsModal").on("click",function(e){
 
 
     });
-
-
     $('#text-line-height').on("change", function () {
         setSelectedTextStyle("lineHeight", this.value);
     });
-
-
     $btnUndo.on("click", () => {
 
         // try {
@@ -1457,7 +1420,6 @@ $("#btnMyProjectsModal").on("click",function(e){
         // }
 
     })
-
     $btnRedo.on("click", () => {
 
         // alert("undo");
@@ -1472,11 +1434,7 @@ $("#btnMyProjectsModal").on("click",function(e){
         canvas.renderAll();
     });
 
-    // $btnFlipY.click(() => {
-    //     canvas.activeSelection.set('flipY', !canvas.activeSelection.flipY);
-    //     this.canvas.renderAll();
-    // });
-
+  
     $btnRotate.on("click", function () {
         var selectedObj = canvas.getActiveObject();
         if (! selectedObj) {
@@ -1488,45 +1446,14 @@ $("#btnMyProjectsModal").on("click",function(e){
         canvas.renderAll();
     })
 
-    // $btnTemplate.on("click", function (e) {
-    //     //$("#templatepanel").hide();
-    //     //canvas.discardActiveObject().renderAll();
-    // })
-
-    // $btnMyProject.on("click", function (e) {
-
-
-    //     // $.get("",)
-    //     $loader.removeClass("hidden")
-    //     window.location.href = '/app/projects';
-    // })
+   
 
     $btnTextMenu.on("click", function (e) {
         canvas.discardActiveObject().renderAll();
         // textControls(false);
     })
 
-    // $btnUploadpanel.on("click", function (e) {
-    //     canvas.discardActiveObject().renderAll();
-    //     $("#workspace-right-panel .img-ctrl").each(function () {
-    //         $(this).removeClass("hidden");
-    //     })
-    // })
-
-
-    // $repeatImageCtrl.hide();
     $canvasPrev.parent().hide();
-
-    // $btnRepeatDesign.on("click", function (e) {
-    //     openRepeatDesignPreview(e);
-    // })
-
-    // $btnCancelRepeatDesign.on("click", function (e) {
-    //     // $("#repeatdesign .toggle-on").removeClass("active");
-    //     // $("#repeatdesign .toggle-off").addClass("active");
-    //     closeRepeatDesignPreview();
-    //     // closeRepeatDesignPreview();
-    // })
 
     $("#templatepanel .template").on("click", (e) => {
         enabledTextMode = false;
@@ -1710,7 +1637,8 @@ function previewDesign() { /*
 
     menuHighlighter("#menu-preview");
 }
-function backFromPreview() { /**
+function backFromPreview() { 
+    /**
      * . Hide Back and Finalized Button and show Preview button. 
      * . Enable Save button
      * . Hide Preview Canvas 
@@ -1721,30 +1649,23 @@ function backFromPreview() { /**
      * . Set Wizard 
      */
 
-menuHighlighter("#menu-upload");
-    $("#workarea").removeAttr("style");
-    //$("#btnDisplayGrid").show();
-    //$("#btnDisplayRuler").show();
-    //$(".ruler-line").show();
-    $("#ruler-ctrl").removeAttr("style");
-
-
+    menuHighlighter("#menu-upload");
     state.isPreviewCanvas = false;
-
+   
     // 1.
+    $("#workarea").removeAttr("style");
+    $("#ruler-ctrl").removeAttr("style");
     $("#btnBack").addClass("hidden");
     $("#btnFinalized").addClass("hidden");
     $("#btn-step-preview").removeClass("hidden");
     $("#create-design-heading").removeClass("hidden");
     $("#preview-design-heading").addClass("hidden");
-
     $("#ws-btn-save").removeClass("hidden");
     $("#ws-btn-preview").removeClass("hidden");
     $("#ws-btn-back").addClass("hidden");
     $("#previewMsg").addClass("hidden");
     $("#ws-btn-download").addClass("hidden");
-    $("#btnStartOverModel").removeClass("hidden");
-    
+    $("#btnStartOverModel").removeClass("hidden");    
     $(".step-item:nth-child(3)").removeClass("active");
     $(".step-item:nth-child(2)").addClass("active");
 
@@ -1765,9 +1686,6 @@ menuHighlighter("#menu-upload");
 
     $(".step-item:nth-child(4)").removeClass("active");
     $(".step-item:nth-child(3)").addClass("active");
-    
-    
-    
 
 }
 
@@ -1811,6 +1729,7 @@ function renderPreview() {
 
                 object.set("top", top);
                 object.set("left", left);
+              
                 object.globalCompositeOperation = "source-atop";
                 canvasPrev.add(object).renderAll();
                
@@ -1845,36 +1764,7 @@ function renderMainCanvasOnBackButton() {
     })
 
 }
-// function openRepeatDesignPreview(e) {
-//     var txt = $(e.currentTarget).find(".active").text();
-//     var factor = 2;
-//     if (txt == "ON") {
-//         state.isPreviewCanvas = true;
-//         var canvasSVGLogo = canvas.backgroundImage._objects[0];
-//         // canvasSVGLogo.scaleToWidth(canvasPrev.width);
-//         if (! canvasSVGLogo || canvas._objects.length == 0) {
-//             alert("No logo found in SVG template");
-//             return;
-//         }
 
-//         $repeatImageCtrl.show();
-//         $clientMainCanvas.parent().fadeOut();
-//         $canvasPrev.parent().fadeIn();
-//         canvasPrev.loadFromJSON(JSON.stringify(canvas), function (o) {
-//             var object = fabric.util.object.clone(canvasSVGLogo);
-//             object.scaleToWidth(object.width * factor)
-//             canvasPrev.setDimensions({
-//                 width: object.width - object.left,
-//                 height: object.height - object.top
-//             })
-//             canvasPrev.setBackgroundImage(object, canvasPrev.renderAll.bind(canvasPrev));
-//             canvasPrev.renderAll();
-
-//         });
-//     } else {
-//         closeRepeatDesignPreview();
-//     }
-// }
 
 function onObjectSelectionCleared(o) {
     hideObjectControls();
@@ -1970,14 +1860,7 @@ function onCanvasModified(o) {
         return;
     }
 
-    setTimeout(function () {
-
-        saveInBrowser.save('kp-editor', canvas.toJSON());
-        $saveBrowserTxt.fadeIn();
-        setTimeout(function () {
-            $saveBrowserTxt.fadeOut("slow");
-        }, 2000)
-    }, 2000)
+    
 
 }
 
@@ -1986,13 +1869,10 @@ function onObjectAdded(o) {
     // $("#maintools > .image-tools").removeClass("hidden");
 
     addLayer(o);
-    enabledRepeatDesignButton(o);
 }
 
 
-function enabledRepeatDesignButton(o) {
-    $btnRepeatDesign.find(".disabled").removeClass("disabled");
-}
+
 
 // Layers:
 function addLayer(o) {
@@ -2030,10 +1910,7 @@ function addLayer(o) {
     }
 
 }
-
 function layerSelectEventHandler($elem, selected) {
-
-
     selectedObjectBySelectLayer($elem, selected);
 }
 function clearLayerSelection() {
@@ -2073,70 +1950,9 @@ function showLayerControls($elem, selected) {
     $(`#${
         target.id
     }`).addClass("selected-layer");
-    // $elem.click();
-    /*
-    var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
-    var target = $elem;
-  
-    var index = parseInt($elem.getAttribute("data-index")) - 1;
-    var preObj = _canvas.selectedObj ?. target;
-    if (preObj?. id != target.id) {
-        $(`#${target.id} .layers-controls`).show();
-        $(`#${target.id}`).addClass("selected-layer");
-
-        _canvas.discardActiveObject();
-        _canvas.requestRenderAll();
-        _canvas.setActiveObject(_canvas.item(index));
-        if (preObj) {
-            $(`#${preObj.id} .layers-controls`).attr("style", "display:none !important");
-            $(`#${preObj.id}`).removeClass("selected-layer");
-        }
-       _canvas.selectedObj = _canvas.item(index);
-
-    }
-*/
-    // initLayerEvents($elem)
+   
 
 }
-
-
-// UI events:
-
-// $("#btnSaveDesignPopup").on("click",function(){
-
-//     var projectName = $("#projectname").val();
-//     var projectDesc = $("#projectdesc").val();
-//     var base64 = canvasPrev.toDataURL({format: 'jpg', quality: 0.8});
-
-//     $.ajax({
-//         type: "POST",
-//         url: "/app/client/save-design",
-
-//         data: {
-//             title : projectName || "N/A",
-//             desc :  projectDesc || "N/A",
-//             thumbBase64:base64 ,
-//             json: JSON.stringify(canvasPrev.toJSON())
-//         },
-//         success: function (res) {
-
-//             toast("Design has been Saved.");
-//         },
-//         error: function (res) {
-//             if (res.status === 401) {
-//                 toast(`${res.statusText}:${res.responseJSON.message}`);
-//             } else {}
-
-//         }
-//     })
-
-
-// })
-
-// $btnSaveDesign.on("click", () => {
-//     var base64 = canvas.toDataURL({format: 'jpg', quality: 0.8});
-//     $("#prevesavdesign").attr("src",base64);
-// })
 
 
 function addWaterMark(doc) {
@@ -2249,18 +2065,9 @@ $btnUploadImageHidden.on("change", (e) => {
 
 
 function triggerNextStep(stepId) {
-    // var curStep = $(".setup-content"),
-    // curStepBtn = curStep.attr("id"),
+  
     nextStepWizard = $('div.setup-panel div a[href="#' + stepId + '"]').parent().next().children("a"),
-    // curInputs = curStep.find("input[type='text'],input[type='url']"),
     isValid = true;
-    // $(".form-group").removeClass("has-error");
-    // for (var i = 0; i < curInputs.length; i++) {
-    //     if (!curInputs[i].validity.valid) {
-    //         isValid = false;
-    //         $(curInputs[i]).closest(".form-group").addClass("has-error");
-    //     }
-    // }
     if (isValid) 
         nextStepWizard.removeAttr('disabled').trigger('click');
     
@@ -2574,68 +2381,6 @@ function updateCurveText(valueObj)
 }
 
 
-function initLayerEvents($elem) {
-    // var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
-    // var id = $elem.id;
-    // $(`#${id} .delete`).on("click", function (e) {
-    //     _canvas.remove(_canvas.getActiveObject()).renderAll();
-    //     addLayer();
-    // })
-
-    // $(`#${id} .duplicate`).on("click", function (e) {
-    //     var object = fabric.util.object.clone(_canvas.getActiveObject());
-    //     object.set("top", object.top + 5);
-    //     object.set("left", object.left + 5);
-    //     _canvas.add(object);
-    // })
-
-    // $(`#${id} .bring-fwd`)().on("click", function (e) {
-    //     e.stopPropagation();
-    //     alert(1);
-    //     // var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
-    //     // var obj = _canvas.getActiveObject();
-    //     // _canvas.bringForward(obj)
-    //     // _canvas.renderAll();
-    //     // debugger;
-    //     // var $selectedLayer = $(this).parent().parent();
-    //     // var $nextItem = $selectedLayer.next($(".layer-item"))
-    //     // $selectedLayer.insertAfter($nextItem);
-    //     //
-    //     //var x = selectedLayer.closest('layer-item');
-    //     //insertBefore( x.prev() )
-    //     //alert(index);
-    //     // e.stopPropagation();
-    //     // var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
-    //     // var obj = _canvas.getActiveObject();
-    //     // _canvas.bringForward(obj)inputFlipText
-
-    //     // _canvas.renderAll();
-    //     // var elem = $(`#${id}`);
-    //     // elem.prev().insertAfter(elem);
-    // })
-
-
-}
-this.configUndoRedoStack = () => {
-    this.history = window.UndoRedoStack();
-    const ctrZY = (e) => {
-        const key = e.which || e.keyCode;
-
-        if (e.ctrlKey && document.querySelectorAll('textarea:focus, input:focus').length === 0) {
-            if (key === 90) 
-                this.undo()
-
-            
-
-            if (key === 89) 
-                this.redo()
-
-            
-
-        }
-    }
-    document.addEventListener('keydown', ctrZY)
-}
 
 
 function flipXYObject() {

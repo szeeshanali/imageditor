@@ -17,6 +17,9 @@
     background-image: url('/images/grid-trans.png');
 
 }
+.grid-bg {
+  background-image: url('/images/grid-trans.png');
+}
 .drag-drop-input:hover{
 
    color:#333;
@@ -845,7 +848,7 @@ font-weight: bold;
 border-right: solid 0px #ccc;  }
 
 
- #client-main-canvas, #client-main-canvas-logo{
+ #client-main-canvas, #client-main-canvas-logo,#admin-main-canvas, #admin-main-canvas-logo{
    background-color: #6b68c9;
 } 
 
@@ -975,4 +978,12 @@ border-right: solid 0px #ccc;  }
 }
 .dataTables_length{
   margin-top:20px;
+}
+.user-action{
+  cursor:pointer;
+  padding: 2px 6px;
+  background-color: #494699;
+  color: white;
+  border-radius: 3px;
+  margin: 0px 5px;
 }

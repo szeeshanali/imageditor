@@ -1,4 +1,17 @@
-<div id="accordion" class="accordion" role="tablist" aria-multiselectable="true">
+<!-- <div class="list-group widget-list-group bd-b">
+    <div class="list-group-item d-flex">
+      <div class="media d-block d-sm-flex">
+        
+        <div class="media-body mg-t-10 mg-sm-t-0">
+          <h6 class="mg-b-5 tx-14"><a href="#"  class="hover-primary tx-bold tx-primary">Request a Quote</a></h6>
+          <p class="mg-b-0 tx-12">Send us your PDF to  Print.</p>
+        </div>
+      </div>
+      <a href="#" data-toggle="modal" data-target="#rfq" class="btn btn-primary tx-uppercase tx-12 tx-bold pd-lg-x-20 mg-l-auto">Quote</a>
+    </div>
+  
+  </div> -->
+  <div id="accordion" class="accordion" role="tablist" aria-multiselectable="true">
     <div class="card">
         <div class="card-header" role="tab" id="headingOne">
             <h6 class="mg-b-0 tx-14">
@@ -11,44 +24,25 @@
         <!-- card-header -->
 
         <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne">
-            <!-- <div class="card-block" id="template-info-panel">
-                                        <div class="d-flex mg-b-10 tx-center bd-r">
-                                            <div class="wd-100">
-                                                <div>
-                                                    <img id="imgSelectedTemplate" style="width:80%; "></div>
-                                                </div>
-                                                <div class="bd-r pd-r-10 ">
-                                                    <label class="tx-12 ">Page Size</label>
-                                                    <p class="tx-lato tx-inverse tx-bold page-size">-</p>
-                                                </div>
-                                                <div class="bd-r pd-x-10">
-                                                    <label class="tx-12 ">Logo Size</label>
-                                                    <p class="tx-lato tx-inverse tx-bold logo-size">-</p>
-                                                </div>
-                                                <div class="pd-l-10">
-                                                    <label class="tx-12 ">Total Logos</label>
-                                                    <p class="tx-lato tx-inverse tx-bold total-logos">-</p>
-                                                </div>
-                                            </div>
-                        
-                                        </div> -->
+          
             <div class="mail-item d-flex pd-10 bd-b bd-gray-200" id="template-info-panel">
                 <div>
                     <img id="imgSelectedTemplate" class="wd-80 " alt=""></div>
                     <div class="mg-l-10">
-                        <h6 class="tx-14 tx-bold">
-                            <a href="#" class="tx-inverse template-name"></a>
-                        </h6>
+                       
                         <p class="tx-13 mg-b-10">
-                            <span class="page-size tx-bold"></span>
-                            sheet of
-                            <span class="total-logos tx-bold"></span>
-                            logos, each logo size is
-                            <span class="logo-size tx-bold"></span>
+                            <p>
+                            <span class="template-name tx-bold"></span><br>
+                            <span >Sheet size:</span> <span class="page-size tx-bold"></span><br>
+                             Total Logos: <span class="total-logos tx-bold"></span><br>
+                             Logo Size: <span class="logo-size tx-bold"></span> <br>
+                             Part #: <span class="ref_code tx-bold"></span><br>
+                             <a href="" class="webstore-link underline tx-bold" style="text-decoration: underline;"> KopyKake Web Store</a> 
+                            </p>
+                          
+                           
                         </p>
-                        <p class="tx-13 mg-b-10">Code: #
-                            <span class="ref_code tx-bold"></span>
-                        </p>
+                      
                     </div>
                 </div>
 
@@ -114,14 +108,14 @@
                 <div class="card-header" role="tab" id="headingFour">
                     <h6 class="mg-b-0 tx-14">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="true" aria-controls="headingFour" class="tx-gray-800 transition">
-                            <b>Size & Transform</b>
+                            <b>Resize Image</b>
                             <div class="arrow pull-right"></div>
                         </a>
                     </h6>
                 </div>
                 <!-- card-header -->
 
-                <div id="collapseFour" class="collapse img-ctrl hidden" role="tabpanel" aria-labelledby="headingFour">
+                <div id="collapseFour" class="collapse " role="tabpanel" aria-labelledby="headingFour">
                     <div class="card pd-20 mg-t-1 ">
                         <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Size</h6>
                         <div
@@ -139,18 +133,27 @@
                                     <i class="ion-loop " id="rotate"></i>
                                 </p>
                             </div>
-                            <div class="pd-x-10 bd-r">
+                            <div class="bd-r pd-x-10">
+                                <label class="tx-12 ">Crop</label>
+                                <p class="tx-center tx-22">
+                                    <i class="ion-crop" data-toggle="modal" id="btnCropModal" data-target="#cropModal" ></i>
+                                </p>
+                            </div>
+                            
+
+                            <div class="pd-x-10 img-ctrl bd-r">
                                 <label class="tx-12">FlipX</label>
                                 <p class="tx-center tx-22">
                                     <i class="ion-arrow-swap" id="flipW"></i>
                                 </p>
                             </div>
-                            <div class="pd-l-10">
+                            <div class="pd-l-10 img-ctrl">
                                 <label class="tx-12">FlipY</label>
                                 <p class="tx-center tx-22" style="transform:rotate(90deg)">
                                     <i class="ion-arrow-swap" id="flipH"></i>
                                 </p>
                             </div>
+                         
                         </div>
                     </div>
                 </div>
@@ -167,41 +170,19 @@
                 <!-- card-header -->
 
                 <div id="collapseFive" class="collapse txt-ctrl hidden" role="tabpanel" aria-labelledby="headingFive">
-                    <div class="card">
-
-                        <ul class="list-group widget-list-group" id="font-list-container">
-                            <li class="list-group-item rounded-top-0">
-                                <div class="tx-inverse  fontfamily" data-value="Arial, sans-serif" style="font-family: Arial, sans-serif;">Arial (sans-serif)</div>
-                            </li>
-                            <li class="list-group-item rounded-top-0">
-                                <div class="tx-inverse  fontfamily" data-value="Luckiest Guy" style="font-family: Luckiest Guy;">Luckiest Guy</div>
-                            </li>
-                            <li class="list-group-item rounded-top-0">
-                                <div class="tx-inverse  fontfamily" data-value="Bungee Shade" style="font-family:Bungee Shade">Bungee Shade</div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="tx-inverse fontfamily" data-value="BlackHanSans" style=" font-family: BlackHanSans">BlackHanSans</div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="tx-inverse fontfamily" data-value="Creepster" style="font-family: Creepster">Creepster</div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="tx-inverse  fontfamily" data-value="LondrinaSolid" style=" font-family: LondrinaSolid">LondrinaShadow</div>
-                            </li>
-                            <li class="list-group-item rounded-bottom-0">
-                                <div class="tx-inverse  fontfamily" data-value="Brush Script MT, cursive" style="font-family: Brush Script MT, cursive">Brush Script MT (cursive)</div>
-                            </li>
-                            <li class="list-group-item rounded-bottom-0">
-                                <div class="tx-inverse  fontfamily" data-value="RockSalt" style="font-family: RockSalt">RockSalt</div>
-                            </li>
-                            <li class="list-group-item rounded-bottom-0">
-                                <div class="tx-inverse  fontfamily" data-value="Shrikhand" style="font-family: Shrikhand">Shrikhand</div>
-                            </li>
-                            <li class="list-group-item rounded-bottom-0">
-                                <div class="tx-inverse  fontfamily" data-value="PermanentMarker" style="font-family: PermanentMarker">PermanentMarker</div>
-                            </li>
-                        </ul>
-
+                    <div class="card pd-10">
+                        <div class="dropdown" id="font-list-container">
+                            <button class="btn btn-block dropdown-toggle" type="button" id="fontlist" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Arial (sans-serif)
+                            </button>
+                            <div class="dropdown-menu"  aria-labelledby="fontlist">
+                                <%fonts?.forEach((item)=>{%>
+                                    <a class="dropdown-item" href="#" style="font-family: <%=item.content.replace('.ttf','')%>" data-value="<%=item.content.replace('.ttf','')%>" ><%=item.label%></a>
+                                <%})%>
+                              
+                            </div>
+                          </div>
+                          
 
                     </div>
                 </div>
@@ -247,19 +228,16 @@
                         <div >
                             <label class="ckbox ">
                                 <input type="checkbox" id="inputStrokeText">
-                                    <span class="tx-14 tx-bold">Enable Stroke
+                                    <span class="tx-14 tx-bold">Show Stroke
                                     </span>
                                 </label>
                             </div>
                         </div>
-                        <div class="col-lg-6 pd-10">
+                        <div class="col-lg-6 ">
                             <label>Stroke Color</label>
-                            <div>
-                            <button id="strokecolor" data-jscolor="{preset:'dark', closeButton:'true',closeText:'Close', width:250, paletteCols:15, value:'#000', onChange:'onChangeFontColor(this,\'stroke-color\')'}" ></button>
-                        </div>
-                        </div>
-
-                        <div class="col-lg-6 pd-10">
+                                <input id="strokecolor" style="height: 40px; width:100px; font-size:10px" data-jscolor="{preset:'dark', closeButton:'true',closeText:'Close', width:250, paletteCols:15, value:'#FF70CE', onChange:'onChangeFontColor(this,\'stroke-color\')'}">                         
+                            </div>
+                        <div class="col-lg-6 ">
                             <label>Stroke Size</label>
 
                             <select id="text-stroke-width" class="form-control select2 select2-hidden-accessible" data-placeholder="Choose one" tabindex="-1" aria-hidden="true">
@@ -267,12 +245,22 @@
                                 <option value="2">2</option>
                                 <option value="3">3</option>
                                 <option value="4" >4</option>
-                                <option value="5" selected>5</option>   
+                                <option value="5" >5</option>   
                                 <option value="6">6</option>
                                 <option value="7">7</option>
                                 <option value="8" >8</option>
                                 <option value="9">9</option>  
-                                <option value="10">10</option>                            
+                                <option value="10" selected>10</option>    
+                                <option value="11" >11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14" >14</option>
+                                <option value="15" >15</option>   
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                                <option value="18" >18</option>
+                                <option value="19">19</option>  
+                                <option value="20">20</option>                              
                             </select>
                             <!-- <input type="range" min="1" max="120" value="" step="1" class="slider" id="btnTextSize-range"> -->
 
@@ -299,9 +287,8 @@
                                     <span class="swatchy-button-top">Select a Color</span>
                                   </button> -->
                                   <!-- <input type="text" class="swatchy-button swatchy-output swatchy-display swatchy-trigger" data-id="text-color" > -->
-                                  <button id="fontColorBox" data-jscolor="{preset:'dark', closeButton:'true',closeText:'Close', width:250, paletteCols:15, value:'#000', onChange:'onChangeFontColor(this,\'font-color\')'}" ></button>
-    
-                            </div>
+                                  <!-- <button id="fontColorBox" data-jscolor="{preset:'dark', closeButton:'true',closeText:'Close', width:250, paletteCols:15, value:'#000', onChange:'onChangeFontColor(this,\'font-color\')'}" ></button> -->
+                                  <input id="fontColorBox" style="height: 40px; width:100px; font-size:10px" data-jscolor="{preset:'dark', closeButton:'true',closeText:'Close', width:250, paletteCols:15, value:'#000', onChange:'onChangeFontColor(this,\'font-color\')'}">                            </div>
     
     
                             <div class="col-lg-4 pd-10">
@@ -396,29 +383,50 @@
                         <!-- card-header -->
     
                         <div id="collapse12" class="collapse txt-ctrl hidden" role="tabpanel" aria-labelledby="collapse12">
-                            <div class="card pd-15">
-
-                                <div >
-                                    <div class="pd-y-15">
-                                
-                                
-                                    <div>
-                                        <label class="ckbox ">
-                                            <input type="checkbox" id="inputCurvedText">
-                                                <span class="tx-14 tx-bold">Circular Text
-                                                </span>
-                                            </label>
-                                        </div>
-                                        <div >
-                                            <input type="range"  value="500" min="100" max="2500" step="0.1" class="slider" id="curveTextCtrl"  ></div>
-                                        </div>
-                                    </div>                            </div>
+                            <div class="row mg-0">
+                                    <div class="col-lg-6 ">
+                                        <div class="pd-y-15">
+                                            
+                                            
+                                            <div>
+                                                <label class="ckbox ">
+                                                    <input type="checkbox" id="inputCurvedText">
+                                                        <span class="tx-14 tx-bold">Circular Text
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                                <div >
+                                                    <input type="range"  value="500" min="200" max="2500" step="2" class="slider" id="curveTextCtrl"  >
+                                                </div>
+                                                </div>
+                                    </div>
+                                    <div class="col-lg-3 pd-0">
+                                        <div class="pd-y-15" >
+                                            <label class="ckbox ">
+                                                <input type="checkbox" id="inputFlipText">
+                                                    <span class="tx-14 tx-bold">Flip
+                                                    </span>
+                                                </label>
+                                            </div>
+                                    </div>
+                                    <div class="col-lg-3 pd-0">
+                                        <div class="pd-y-15" >
+                                            <div class="bd-r pd-x-10 tx-center">
+                                                <label class="tx-14 tx-bold ">Rotate</label>
+                                                <p class="tx-center tx-24">
+                                                    <i class="ion-loop " id="rotateText"></i>
+                                                </p>
+                                            </div>
+                                            </div>
+                                    </div>
+                            </div>
+                           
                         </div>
                             </div>
                             
 
                         </div>
-                        <div class="card" id="kpweblink-panel">
+                        <div class="card hidden" id="kpweblink-panel">
                             <div class="list-group-item pd-y-20">
                                 <div class="media">
                                     <div class="d-flex mg-r-10 wd-50">
@@ -426,7 +434,7 @@
                                     </div>
                                     <!-- d-flex -->
                                     <div class="media-body">
-                                        <h6 class="tx-inverse tx-14">Kake Prints Web link</h6>
+                                        <h6 class="tx-inverse tx-14">KakePrints Web link</h6>
                                         <p class="mg-b-0">
                                             <a href="#" id="kp-link">Here's a link to order more.</a>
                                         </p>
