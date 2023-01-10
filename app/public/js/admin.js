@@ -716,7 +716,6 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
    //    });
 
    // 4.
-   debugger;
    $adminMainCanvas.parent().fadeOut();
    // 5.
    $canvasPrev.parent().fadeIn();
@@ -1736,41 +1735,8 @@ function saveDesign() {
         }
 
 
-        $("#user-ctrl .edit").on("click", function (e) {
-            var userId = e.currentTarget.id.replace("edit", "");
-            var meta = $(e.currentTarget).attr("data-meta");
-            meta = JSON.parse(meta);
-            loadUserInfo(meta);
-            // $.ajax({
-            //     type: "PUT",
-            //     url: `/api/admin/user/${userId}`,
-            //     data:{
-            //       active:isActive
-            //     },
-            //     success:function(res){
-            //       toast("Updated successfully!");
-            //       setTimeout(function(){
-            //         window.location.reload();
-            //       },1000)
-            //     },
-            //     error:function(res){
-            //       toast("Error while Updating.");
-            //     }
-            // })
-        });
-        var selectedUser = {};
-        function loadUserInfo(meta) {
-            selectedUser = meta;
-            $("#edit-user-container .fname").val(meta.fname);
-            $("#edit-user-container .lname").val(meta.lname);
-            $("#edit-user-container .email").val(meta.email);
-            $("#edit-user-container .company").val(meta.company_name);
-            $("#edit-user-container .project_lmt").val(meta.project_limit);
-            $("#edit-user-container .created_dt").val(meta.date);
-            $("#edit-user-container .is_admin").prop("checked", meta.is_admin);
-            $("#edit-user-container .is_active").prop("checked", meta.active);
-            $("#edit-user-container .watermark").prop("checked", meta.watermark);
-        }
+       
+        
 
 
         $("#btnEditUser").on("click", function (e) {
@@ -1804,53 +1770,10 @@ function saveDesign() {
             }
         });
 
-        $("#user-ctrl .delete").on("click", function (e) {
-            if (confirm("Do you want to delete this user?")) {
-
-                var userId = e.currentTarget.id.replace("delete", "");
-                $.ajax({
-                    type: "DELETE",
-                    url: `/api/admin/user/${userId}`,
-                    success: function (res) {
-
-                        toast("Deleted successfully!");
-                        setTimeout(function () {
-                            window.location.reload();
-                        }, 1000)
-                    },
-                    error: function (res) {
-                        toast("Error while deleting.");
-                    }
-                })
-            }
-        });
+       
 
 
-        $("#user-ctrl .active").on("click", function (e) {
-            var userId = e.currentTarget.id.replace("active", "");
-            var isActive = $(e.currentTarget).attr("data-meta");
-            isActive = !(isActive == "true");
-            var enableDisableText = isActive ? "enable" : "disable";
-            if (confirm(`do you want to ${enableDisableText} this user?`)) {
-
-                $.ajax({
-                    type: "PUT",
-                    url: `/api/admin/user-active/${userId}`,
-                    data: {
-                        active: isActive
-                    },
-                    success: function (res) {
-                        toast("Updated successfully!");
-                        setTimeout(function () {
-                            window.location.reload();
-                        }, 1000)
-                    },
-                    error: function (res) {
-                        toast("Error while Updating.");
-                    }
-                })
-            }
-        });
+      
 
         $("#admin-delete-template").on("click", function (e) {
             deleteTemplate();
@@ -3041,4 +2964,65 @@ function saveDesign() {
         }
         canvas.renderAll();
     }
+    var selectedUser = {};
+  
+    function editCustomer(user)
+    {
+        selectedUser = user;
+        $("#edit-user-container .fname").val(user.fname);
+        $("#edit-user-container .lname").val(user.lname);
+        $("#edit-user-container .email").val(user.email);
+        $("#edit-user-container .company").val(user.company_name);
+        $("#edit-user-container .project_lmt").val(user.project_limit);
+        $("#edit-user-container .created_dt").val(user.created_dt);
+        $("#edit-user-container .is_admin").prop("checked", user.is_admin);
+        $("#edit-user-container .is_active").prop("checked", user.active);
+        $("#edit-user-container .watermark").prop("checked", user.watermark);
+    }
+    function deleteCustomer(id)
+    {
+        if (confirm("Do you want to delete this user?")) {
 
+            $.ajax({
+                type: "DELETE",
+                url: `/api/admin/user/${id}`,
+                success: function (res) {
+
+                    toast("Deleted successfully!");
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 1000)
+                },
+                error: function (res) {
+                    toast("Error while deleting.");
+                }
+            })
+        }
+    }
+
+    function enableCustomer(id,active)
+    {
+            var userId = id;
+            var isActive = active;
+            isActive = !(isActive == "true");
+            var enableDisableText = isActive ? "enable" : "disable";
+            if (confirm(`do you want to ${enableDisableText} this user?`)) {
+
+                $.ajax({
+                    type: "PUT",
+                    url: `/api/admin/user-active/${userId}`,
+                    data: {
+                        active: isActive
+                    },
+                    success: function (res) {
+                        toast("Updated successfully!");
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1000)
+                    },
+                    error: function (res) {
+                        toast("Error while Updating.");
+                    }
+                })
+            }
+    }

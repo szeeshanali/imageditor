@@ -485,7 +485,6 @@ $saveTemplate.on("click",()=>{
 
     //  canvas.clipPath = clipPath;
 //     var background;
-//     debugger;
 //     fabric.Image.fromURL('https://i.ibb.co/1n8xj1J/test-4.png', function (objects, options) {
 //       background = objects;
 //       background.set({
