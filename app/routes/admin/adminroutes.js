@@ -450,12 +450,14 @@ router.get('/app/admin/categories', isAdmin, async (req,res)=>{
 
 router.get('/app/admin/cliparts', isAdmin, async (req,res)=>{
 
+  const cliparts = await commonService.uploadService.getUploads('clipart',null,true)
   var categories = await commonService.categoryService.getCategoriesAsync(); 
   res.locals.page = {
     id: "__cliparts",
     title: "Upload Cliparts",
     user: req.user, 
-    categories: categories
+    categories: categories,
+    cliparts:cliparts
   }
   res.render("pages/admin/cliparts",
   res.locals.page);
@@ -581,6 +583,8 @@ router.put('/api/admin/template/:id?', isAdmin, async (req,res)=>{
 
 })
 
+
+
 // per
 router.delete('/api/admin/template/:id', isAdmin, async (req,res)=>{
   var id = req.params["id"]; 
@@ -594,10 +598,32 @@ router.delete('/api/admin/template/:id', isAdmin, async (req,res)=>{
   { return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."}); }
  
 }) 
+router.delete('/api/admin/banner/:id', isAdmin, async (req,res)=>{
+  var id = req.params["id"]; 
+  if(!id){
+    return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."});
+  }  
+  try{
+    await uploads.findOneAndDelete({type:'banner', by_admin:true, code:id }); 
+    return res.status(200).send({"status":400,"message":`Deleted successfully, Id:${id}`});
+  }catch(e)
+  { return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."}); }
+ 
+}) 
 
-
-
-router.post('/app/admin/uploads', function(req, res) {
+router.delete('/api/admin/clipart/:id', isAdmin, async (req,res)=>{
+  var id = req.params["id"]; 
+  if(!id){
+    return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."});
+  }  
+  try{
+    await uploads.findOneAndDelete({type:'clipart', by_admin:true, code:id }); 
+    return res.status(200).send({"status":400,"message":`Deleted successfully, Id:${id}`});
+  }catch(e)
+  { return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."}); }
+ 
+}) 
+router.post('/app/admin/uploads',  function(req, res) {
   let {desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
  
   file_name = file_name || "pd.png"; 
@@ -629,18 +655,24 @@ router.post('/app/admin/uploads', function(req, res) {
     
   };
 
-  var _path = file_name?`../app/public/uploads/admin/${type}/${type}-${_id}.${file_name.split('.').pop()}`:'';  
-  var _base64Alter = base64.replace(`data:${mime_type};base64,`, "");
-  console.log(_base64Alter);
+  let _path = file_name?`../app/public/uploads/admin/${type}/${type}-${_id}.${file_name.split('.').pop()}`:'';  
+  let _base64Alter = base64.replace(`data:${mime_type};base64,`, "");
+
+  
   fs.writeFile(_path, _base64Alter, 'base64', function(err) {
-      if(err){ console.log(err); }
+      if(err){ 
+        console.log(err);
+        return res.status(500).send({message:`Error uploading file.`, error: err}); 
+       }
+
        commonService.uploadService.upload(uploadModel,(err,msg)=>{
         if(!err)
         {res.status(200).send({message:`Success`, error: null}); }
-        res.status(400).send({message:`Unable to upload file.`, error: msg}); 
+         res.status(400).send({message:`Unable to upload file.`, error: msg}); 
        });
        
   });
+  res.status(200).send({message:`Success`, error: null});
  // commonService.uploadService.clear();
  // res.redirect('/app/admin/template-designer');
 })
