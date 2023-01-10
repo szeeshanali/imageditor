@@ -2237,13 +2237,14 @@ function initCanvasTextEvents() {
         var obj = canvas.getActiveObject();
         // if(obj.type == "curved-text")
         // { return; }
-
         var strokeWidth = parseInt($("#text-stroke-width").val());
         var strokeColor = $("#strokecolor").attr('data-current-color');
         if (obj && checked) {
-            obj.stroke      = strokeColor;
+           // obj.stroke      = strokeColor;
+            obj.set('stroke',strokeColor);
             obj.strokeWidth = strokeWidth;
             obj.paintFirst  = "stroke";
+           
           //  setSelectedTextStyle("stroke", strokeColor);
           //  setSelectedTextStyle("paintFirst", "stroke");
           //  setSelectedTextStyle("strokeWidth", strokeWidth);

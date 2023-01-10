@@ -122,7 +122,7 @@ async function parseClipboardData() {
     
   }
 
-fabric.CurvedText = fabric.util.createClass(fabric.Object, {
+  fabric.CurvedText = fabric.util.createClass(fabric.Object, {
     type: 'curved-text',
     diameter: parseInt($("#curveTextCtrl").val()) || 250,
     kerning: 0,
@@ -281,12 +281,7 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
             // half letter
             // rotate half letter
             ctx.rotate((cw / 2) / (diameter / 2 - textHeight) * clockwise);
-            // draw the character at "top" or "bottom"
-            // depending on inward or outward facing
-
-            // Stroke
-            //const strokeStyle = this.strokeStyle;
-            //const strokeWidth = this.strokeWidth;
+          
             const strokeStyle = this.stroke;
             const strokeWidth = this.strokeWidth;
             if (strokeStyle && strokeWidth) {
@@ -579,17 +574,20 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
 
     function pasteImage(event) { // get the raw clipboardData
         var cbData = event.clipboardData;
-
+    
         for (var i = 0; i < cbData.items.length; i++) { // get the clipboard item
             var cbDataItem = cbData.items[i];
             var type = cbDataItem.type;
-
+    
             // warning: most browsers don't support image data type
             if (type.indexOf("image") != -1) { // grab the imageData (as a blob)
                 var imageData = cbDataItem.getAsFile();
                 // format the imageData into a URL
                 var imageURL = window.webkitURL.createObjectURL(imageData);
                 fabric.Image.fromURL(imageURL, (img) => { // img.scaleToWidth(300);
+                    img.scaleToHeight(300);
+    
+                    img.globalCompositeOperation = "source-atop";
                     canvas.add(img).renderAll();
                 })
                 // We've got an imageURL, add code to use it as needed
@@ -998,6 +996,8 @@ function saveDesign() {
     }
   
     function InitUIEvents() {
+
+        initContextMenu();
 
         $("#bannerThumbs .delete").on("click",function(e){
             let target = e.currentTarget; 
@@ -2471,23 +2471,29 @@ function saveDesign() {
         textControls(false);
     }
 
+    
+
     function onObjectSelection(o) {
-        if (canvas.getActiveObject().get('type') == "image") {
+        var _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
+        var t = _canvas.getActiveObject().get('type');
+        if (t == "i-text" || t == "curved-text") {
+    
+            textControls(true);
+            updateTextControls(o);
+            imageControls(false);
+    
+        } else {
             textControls(false);
             imageControls(true);
-
-        } else {
-            textControls(true);
-            imageControls(false);
         }
-
-
+    
+    
         const id = o.selected[0].id;
         var elem = $(`#${id}`)[0];
         clearLayerSelection();
-
-        $(`#${id} .layers-controls`).show();
+        // showLayerControls(elem);
         $(`#${id}`).addClass("selected-layer");
+    
     }
     function initCanvasEvents() {
       
@@ -2818,7 +2824,8 @@ function saveDesign() {
             var strokeWidth = parseInt($("#text-stroke-width").val());
             var strokeColor = $("#strokecolor").attr('data-current-color');
             if (obj && checked) {
-                obj.stroke      = strokeColor;
+                obj.set('stroke',strokeColor)
+                //obj.stroke      = strokeColor;
                 obj.strokeWidth = strokeWidth;
                 obj.paintFirst  = "stroke";
               //  setSelectedTextStyle("stroke", strokeColor);
@@ -3026,3 +3033,166 @@ function saveDesign() {
                 })
             }
     }
+    function updateTextControls(e){
+        var item = e.selected[0]; 
+        $("#btnTextSize").val(item.fontSize);
+        if(item.charSpacing)
+        { $("#text-letter-spacing").val(item.charSpacing);}
+        if(item.strokeWidth)
+        { 
+         if($("#inputStrokeText").is(":checked"))
+         {
+             $("#text-stroke-width").val(item.strokeWidth); 
+         }
+         
+      }
+     
+        if(item.lineHeight)
+        { $("#text-line-height").val(item.lineHeight); }
+        if(item.stroke)
+        { document.querySelector('#strokecolor')?.jscolor.fromString(item.stroke); }
+        document.querySelector('#fontColorBox').jscolor.fromString(item.fill);
+        
+        $("#fontlist").text(item.fontFamily);
+        
+     }
+    async function parseClipboardData() {
+    
+        const items = await navigator.clipboard.read().then((items)=>{
+            for (let item of items) {
+                for (let type of item.types) {
+                  if (type.startsWith("image/")) {
+                  
+                  
+                  item.getType(type).then((imageBlob) => {
+                    let url = window.URL.createObjectURL(imageBlob);
+                    fabric.Image.fromURL(url, function (img) {
+                        img.globalCompositeOperation = 'source-atop';
+    
+                        canvas.add(img);
+                        canvas.renderAll();
+                    })
+                      // const image = `<img src="${}" />`;
+                      // $container.innerHTML = image;
+                    });
+                    $('#pasteClipboard').css({'display':'none'});
+                    return true;
+                  }
+                }
+              }
+              $('#pasteClipboard').css({'display':'none'});
+    
+        }).catch((err) => {
+          console.error(err);
+          $('#pasteClipboard').css({'display':'none'});
+        });
+       
+        
+      }
+
+ 
+function generatePDFfromPreview(onServer, callback) {
+
+    if (!state.isPreviewCanvas) {
+        toast("Please preview your design before download.");
+        return;
+    }
+
+    if (canvasPrev.getObjects().length == 0) {
+        toast("Please create your design before download.");
+        return;
+    }
+
+
+    $loader.removeClass("hidden");
+    menuHighlighter("#menu-download");
+    $.ajax({
+        type: "GET",
+        url: `/api/client/download/`,
+        success: function (res) {
+            if (! res.data) {
+                window.location.reload();
+                return;
+            }
+            const {watermark, download} = res.data;
+            if (!download) {
+                throw "You are not eligible to download. please contact admin";
+            }
+            var width = canvasPrev.backgroundImage.width;
+            var height = canvasPrev.backgroundImage.height;
+
+
+            var pdf = new jsPDF({
+                orientation: (width > height) ? 'l' : 'p',
+                unit: 'pt',
+                format: 'letter',
+                putOnlyUsedFonts: true
+            });
+            width = pdf.internal.pageSize.getWidth();
+            height = pdf.internal.pageSize.getHeight();
+            const factor = 1.3; 
+            canvasPrev.clone(function (clonedCanvas) {
+                var bg = clonedCanvas.backgroundImage;
+                clonedCanvas.backgroundImage = false;
+                clonedCanvas.setDimensions({ width: 612 * factor, height: 792 * factor })
+                clonedCanvas.setZoom(factor);
+                for (var i = 0; i < clonedCanvas._objects.length; i++) {
+                    clonedCanvas._objects[i].globalCompositeOperation = null;
+                    canvasPrev.renderAll.bind(clonedCanvas)
+                }
+                bg.globalCompositeOperation = "destination-in";
+                clonedCanvas.add(bg);
+                clonedCanvas.renderAll();
+                var imgData = clonedCanvas.toDataURL('image/png');
+                pdf.addImage(imgData, 'png', 0, 0);
+
+                if(onServer)
+                {
+                    callback(btoa(pdf.output(),"base64"));
+                }else{
+                    if (res.data.watermark) {
+                        var watermark = "/images/wm-sample.png";
+                        pdf.addImage(watermark, 'PNG', 0, 0, 150, 150)
+                    }
+                    pdf.save("KakePrints.pdf");
+                }
+
+                $loader.addClass("hidden");
+                $(".step-item:nth-child(3)").removeClass("active");
+                $(".step-item:nth-child(4)").addClass("active");
+
+            });
+
+        },
+        error: function (res) {
+            toast("Error while downloading.");
+        }
+    })
+}
+     
+function initContextMenu()
+{
+    let timeout = false;
+    fabric.util.addListener(document.getElementsByClassName('upper-canvas')[0], 'contextmenu', function(e) {
+        e.preventDefault();
+      
+        var cnvsPos = $('#admin-main-canvas').offset();
+        curX = e.clientX - cnvsPos.left+50;
+        curY = e.clientY - cnvsPos.top+80;
+        $('#pasteClipboard').css({'position':'absolute', 'top': curY, 'left': curX, 'display':'block'});
+      
+      /// hide contextmenu in 3 seconds.
+      if(!timeout)
+      {
+        timeout = true; 
+        setTimeout(function(){
+            timeout = false; 
+            $('#pasteClipboard').css({'display':'none'});
+        },5000); 
+      }
+    });
+
+    $("#workarea").on("click",function(){
+        $('#pasteClipboard').css({'display':'none'});
+    })
+}
