@@ -87,10 +87,9 @@
         download_count: i.download_count,
         active: i.active?'Active':'InActive',
         created_dt: (new Date(i.created_dt).toLocaleString('en-US', { hour12: false, })),
-        action: `<div class="d-flex" id="user-ctrl">
-                     <i class="ion-edit pd-x-5 edit user-action"  data-meta="${JSON.stringify(i)}" data-target="#edituser" data-toggle="modal" title="Edit" id="edit${i._id}"></i>
-                     <i class="ion-trash-a pd-x-5 delete user-action"  id="delete${i._id}" title="Delete"></i>
-                     <i class="ion-eye${i.active?'-disabled':''} pd-x-5 active user-action"  id="active${i._id}" title="${i.active?'Disable':'Enable'}" data-meta="${i.active}"></i>
+        action: `<div class="d-flex" >
+                     <i class="ion-edit pd-x-5 edit user-action" onclick="editCustomer(${JSON.stringify(i).replace(/"/g, "'")})"  data-target="#edituser" data-toggle="modal" title="Edit" id="edit${i._id}"></i>
+                     <i class="ion-trash-a pd-x-5 delete user-action" onclick="deleteCustomer('${i._id}')" id="delete${i._id}" title="Delete"></i>
                    </div>`
       }
    }).map(i=>Object.values(i));
