@@ -49,22 +49,27 @@
                 </div>
             </div>
         </div>
-        <!-- <div class="card ht-300">
-          <div class="d-flex">
+        <div class="card ht-300">
+          <div class="row" id="bannerThumbs">
           <%banners?.forEach((item)=>{%>
-            
-              <div class="card bd-0 wd-xs-300 " >
+            <div class="col-lg-3">
+              <div class="card bd-0"  >
+                <div style="height:200px;overflow:hidden;padding:10px;text-align: center;">
                 <img class="card-img-top img-fluid"   src="<%=item.base64%>" alt="Image">
+              </div>
                 <div class="card-body bd bd-t-0">
                   <h6 class="mg-b-3"><a href="" class="tx-dark"><%=item.title%></a></h6>
                   <span class="tx-12"><%=item.create_dt%></span>
+                  <button type="button" id="<%=item.code%>" class="btn btn-sm btn-primary tx-12 tx-bold tx-uppercase delete">Delete</button>
                 </div>
               </div>
+            </div>
+              
            
         
           <%})%>
         </div>
-        </div> -->
+        </div>
         </div>
      
     </div>

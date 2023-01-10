@@ -638,8 +638,46 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
             }
         })
     }
+    function deleteBanner(id,onSuccess,onError) {
+        if (!confirm("do you want to delete this template?")) {
+            return;
+        }
+       
+        $.ajax({
+            type: "DELETE",
+            url: `/api/admin/banner/${id}`,
+            success: function (res) {
 
+                toast("Deleted successfully!");
+                setTimeout(function () {
+                    window.location.reload();
+                }, 1000)
+            },
+            error: function (res) {
+                toast("Error while deleting.");
+            }
+        })
+    }
+    function deleteClipart(id,onSuccess,onError) {
+        if (!confirm("do you want to delete this template?")) {
+            return;
+        }
+       
+        $.ajax({
+            type: "DELETE",
+            url: `/api/admin/clipart/${id}`,
+            success: function (res) {
 
+                toast("Deleted successfully!");
+                setTimeout(function () {
+                    window.location.reload();
+                }, 1000)
+            },
+            error: function (res) {
+                toast("Error while deleting.");
+            }
+        })
+    }
     function previewDesign() { /*
     . Check Design can be previewed. 
    . Hide create design heading and show preview design heading. 
@@ -961,6 +999,18 @@ function saveDesign() {
     }
   
     function InitUIEvents() {
+
+        $("#bannerThumbs .delete").on("click",function(e){
+            let target = e.currentTarget; 
+            let id = target.id; 
+            deleteBanner(id);
+        })
+
+        $("#clipartThumbs .delete").on("click",function(e){
+            let target = e.currentTarget; 
+            let id = target.id; 
+            deleteClipart(id);
+        })
         $("#btnLibraryModal").on("click",function(e){
             $("#btnModelContinue").text("Continue");
             $("#confirmBoxBody").text("Do you want to discard your changes?");
