@@ -574,7 +574,7 @@ function loadProject(id) {
             }
             let __w = parseInt(templateWidth*__f); 
             let __h = parseInt(templateHeight*__f);
-            $("#client-main-canvas-logo").css({"width":`${__w}px`,"height":`${__h}px`,"padding":"1px"});
+            $("#client-main-canvas-logo").css({"width":`${__w}px`,"height":`${__h}px`,"padding":"1px","left":"21px"});
             
             canvasPrev.setBackgroundImage(loadedObjects, canvasPrev.renderAll.bind(canvasPrev));
             canvasPrev.renderAll();
@@ -637,7 +637,7 @@ function loadDesign(id) {
             let __w = parseInt(templateWidth*__f); 
             let __h = parseInt(templateHeight*__f);
 
-            $("#client-main-canvas-logo").css({"width":`${__w}px`,"height":`${__h}px`,"padding":"1px"})
+            $("#client-main-canvas-logo").css({"width":`${__w}px`,"height":`${__h}px`,"padding":"1px","left":"-21px"})
 
             canvasPrev.setBackgroundImage(loadedObjects, canvasPrev.renderAll.bind(canvasPrev));
             canvasPrev.renderAll();
@@ -766,7 +766,7 @@ function loadSVGTemplate(id) {
                     console.log(pos);
                 
                   $(".canvas-container").first().append(`<div class='grid-lines h-gridlines' style='width:500px;top:${pos.top-22}px; left:0px; border-bottom: solid 1px #666;'></div>`);
-                  $(".canvas-container").first().css({border:"solid 1px #666", width:"502px",height:`${logoHeight}px`})
+                  $(".canvas-container").first().css({width:"502px",height:`${logoHeight}px`})
                 }
                 if(!isRulerEnabled){
                     $("#btnDisplayRuler").click();
@@ -802,7 +802,7 @@ function loadSVGTemplate(id) {
             let __w = parseInt(templateWidth*__f); 
             let __h = parseInt(templateHeight*__f);
 
-            $("#client-main-canvas-logo").css({"width":`${__w}px`,"height":`${__h}px`,"padding":"1px"})
+            $("#client-main-canvas-logo").css({"width":`${__w}px`,"height":`${__h}px`,"padding":"1px","left":"-21px"})
            
             canvasPrev.renderAll();
 
@@ -1219,8 +1219,8 @@ $("#btnStartOverModel").on("click",function(e){
                 selected = selected + 1;
             }
         });
-
         $(this).on("click", ".duplicate", function (evt) {
+           
             evt.stopPropagation();
             var object = fabric.util.object.clone(_canvas.getActiveObject());
             object.set("top", object.top + 5);
@@ -1599,7 +1599,7 @@ function previewDesign() { /*
    . Hide Grid 
     */
 
-    $("#workarea").attr("style", "background-image:url('')");
+    //$("#workarea").attr("style", "background-image:url('')");
     //$("#btnDisplayGrid").hide();
     //$(".ruler-line").hide();
 
@@ -1653,7 +1653,7 @@ function backFromPreview() {
     state.isPreviewCanvas = false;
    
     // 1.
-    $("#workarea").removeAttr("style");
+    //$("#workarea").removeAttr("style");
     $("#ruler-ctrl").removeAttr("style");
     $("#btnBack").addClass("hidden");
     $("#btnFinalized").addClass("hidden");
@@ -1676,7 +1676,6 @@ function backFromPreview() {
 
     // 3.
     $clientMainCanvas.parent().fadeIn();
-    // 4.
     $canvasPrev.parent().fadeOut();
     // 5.
     // canvasPrev.clear();
@@ -1752,6 +1751,8 @@ function renderPreview() {
           
         });
     })
+
+    
 }
 function renderMainCanvasOnBackButton() {
     var json = canvas.toJSON();

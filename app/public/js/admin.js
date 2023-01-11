@@ -895,7 +895,7 @@ function saveDesign() {
                 desc: desc || "N/A",
                 thumbBase64: thumbBase64,
                 active: active,
-                json: JSON.stringify(canvas.toDatalessJSON()),
+                json: JSON.stringify(canvas.toJSON()),
                 templateId: canvas.templateId
             },
             success: function (res) {
