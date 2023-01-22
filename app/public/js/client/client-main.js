@@ -38,6 +38,7 @@ var projectHtml = `<div class='my-projects'><div class="list-group-item d-flex">
   </div><!-- d-flex -->
   <div class="media-body mg-t-10 mg-sm-t-0">
     <h6 class="mg-b-5 tx-14"><a href="#" class="tx-inverse hover-primary tx-bold" onclick="loadProject('{code}')" id='{code}' >{title}</a></h6>
+    <p class='tx-12'>{desc}</p>
     <p class="mg-b-0 tx-12">{created_dt}</p>
   </div><!-- media-body -->
 </div><!-- media -->
@@ -446,7 +447,12 @@ function getUserProjects() {
         $("#myProjectContainer").html("<p>No projects found.</p>");
         for (var i = 0; i < projects.length; i++) {
             var p = projects[i];
-            temp += projectHtml.replace(/{code}/ig, p.code).replace(/{base64}/ig, p.thumbBase64).replace(/{title}/ig, p.title).replace(/{created_dt}/ig, new Date(p.created_dt).toDateString());
+            var desc = p.name.lenght>50?p.name.substring(0, p.name.lenght):p.name;
+            temp += projectHtml.replace(/{code}/ig, p.code)
+            .replace(/{base64}/ig, p.thumbBase64)
+            .replace(/{title}/ig, p.title)
+            .replace(/{created_dt}/ig, new Date(p.created_dt).toDateString())
+            .replace(/{desc}/ig, p.name);
             $("#myProjectContainer").html(temp);
         }
 
@@ -664,6 +670,7 @@ function loadSVGTemplate(id) {
     selectedTemplateId = id;
     var group = [];
     state.isPreviewCanvas = false;
+   
     $.get(`/api/svg-templates/${id}`, function (data) {
         if (typeof(data) === 'string') {
             window.location.reload();
@@ -674,6 +681,7 @@ function loadSVGTemplate(id) {
             toast("Error loading Template.");
             return;
         }
+        
         var meta = {};
         if (data.meta) {
             meta = JSON.parse(data.meta);
@@ -1015,6 +1023,7 @@ function initUIEvents() {
         image.setCoords();      
         let originalImg = canvas.getActiveObject(); 
         canvas.remove(originalImg); 
+        image.globalCompositeOperation = 'source-atop';
         canvas.add(image);
         canvas.renderAll();
     };
@@ -1187,9 +1196,11 @@ $("#btnStartOverModel").on("click",function(e){
     });
     var layers = $("#layers");
 
+   
     $("#predefinedText").on("change",function(){
         var selectedValue = $(this).val();
         $("#textarea").val(selectedValue);
+        $(this).val("");
     })
     $("#collapse-layers").on("click", ".layer-item", function (e) {
         var _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
@@ -1715,7 +1726,10 @@ function renderPreview() {
         });
 
         var logos = canvasPrev.backgroundImage._objects;
-     
+        var w = logos[0].width; 
+        var h = logos[0].height;
+      
+
         fabric.Image.fromURL(dataURL, (img) => {
             state.isPreviewCanvas = true;
             canvasPrev.remove(... canvasPrev.getObjects());
@@ -1724,10 +1738,13 @@ function renderPreview() {
                 var object = fabric.util.object.clone(img);
                 var left = logo.left + logo.group.left + (logo.group.width / 2);
                 var top = logo.top + logo.group.top + (logo.group.height / 2);
-                object.scaleToWidth(logo.width);
+                object.scaleToWidth(logo.width+3);
+
+
 
                 object.set("top", top);
                 object.set("left", left);
+                
               
                 object.globalCompositeOperation = "source-atop";
                 canvasPrev.add(object).renderAll();
@@ -2028,10 +2045,17 @@ function generatePDFfromPreview(onServer, callback) {
                     callback(btoa(pdf.output(),"base64"));
                 }else{
                     if (res.data.watermark) {
-                        var watermark = "/images/wm-sample.png";
-                        pdf.addImage(watermark, 'PNG', 0, 0, 150, 150)
+                        var watermark = "/uploads/admin/watermark/watermark.png";
+                        for(var i=0;i<5;i++)
+                        {
+                            pdf.addImage(watermark, 'PNG', width/2-75, 150*i, 150, 150);
+                        }
+                       
                     }
-                    pdf.save("KakePrints.pdf");
+                    var fn = $("#downloadFileName").val(); 
+                    fn = fn || "KakePrints.pdf";
+                    fn = (fn.indexOf('.pdf') === -1)?(fn+".pdf"):fn;
+                    pdf.save(fn);
                 }
 
                 $loader.addClass("hidden");
@@ -2287,6 +2311,7 @@ function initCanvasTextEvents() {
             //stroke:obj.stroke,
             //strokeWidth: 2
         });
+        item.globalCompositeOperation = "source-atop";
         canvas.add(item);
         canvas.renderAll();
         canvas.remove(obj)

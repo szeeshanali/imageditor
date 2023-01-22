@@ -1535,11 +1535,13 @@ function saveDesign() {
           $("#btnFontClear").on("click", function (e) {
             $('#inputFontName').val("");
           })
-          $("#btnAddFont").on("click", function (e) {
+          $("#btnAddContent").on("click", function (e) {
             if(customTextInProgress){
               toast("Please wait... ");
               return;
             }
+
+            
             var customTextInProgress = true;
             var type = 'fonts';
             var text = $('#inputFontName').val();
@@ -1569,7 +1571,7 @@ function saveDesign() {
                 return;
             }
 
-            formData.append('fontFile',files[0]);
+            formData.append('contentFile',files[0]);
             formData.append('content',filename);
             formData.append('label',text)
             formData.append('type',type)
@@ -1594,7 +1596,58 @@ function saveDesign() {
             })
           })
   
+          $("#btnUploadWatermark").on("click", function (e) {
+            if(customTextInProgress){
+              toast("Please wait... ");
+              return;
+            }
 
+            
+            var customTextInProgress = true;
+            var type = 'watermark';
+  
+          
+  
+           
+            let formData = new FormData();
+            let files = $("#watermarkFile")[0].files;
+            if(files.length==0)
+            {
+                toast("Please browse an image.");
+                return;
+            }
+            let filename = files[0].name; 
+            if(filename.indexOf(".png") === -1)
+            {
+                toast("Please browse a (.png) file");
+                return;
+            }
+
+            formData.append('contentFile',files[0]);
+            formData.append('content',filename);
+            formData.append('label',"watermark")
+            formData.append('type',type)
+            $.ajax({
+                type: "POST",
+                url: "/api/admin/content",
+                enctype: 'multipart/form-data',
+                data: formData,
+                cache : false,
+                processData : false,
+                contentType: false,
+                dataType    : 'json',
+                success: function (res) {
+                  window.location.reload();
+                    designFlags.submitted = true;
+                    toast("Content has been saved successfully.");
+                },
+                error: function (res) {
+                    designFlags.submitted = false;
+                    toast("Error while saving Content.");
+                }
+            })
+          })
+  
 
 
         $("#menu-save-design").on("click", function () { /**

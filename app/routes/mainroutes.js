@@ -79,7 +79,10 @@ router.get('/app/404',(req,res)=>{
     res.redirect("pages/admin/404.ejs")
 })
 
-
+router.get('/app/terms',async (req,res)=>{
+    var content = await commonService.contentService.getContentAsync('terms-conditions') || {};
+   res.send(content.content);
+})
 
 router.get('*',(req,res)=>{
     res.render("pages/admin/404.ejs",{layout:false})

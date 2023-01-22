@@ -26,7 +26,7 @@ router.get(ROUTE_SIGNOUT,(req,res)=>{
     req.session.destroy(function(){
       console.log("user logged out.")
    });
-   res.redirect('/app/home');
+   res.redirect('/app/');
   });
 
 
