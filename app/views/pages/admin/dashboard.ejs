@@ -84,12 +84,14 @@
    users = users.map(i=>{
       return {
         fname : i.fname,
+        email : i.email,
         download_count: i.download_count,
-        active: i.active?'Active':'InActive',
+       
+        project_limit:i.project_limit,
+        watermark:i.watermark?'Enabled':'Disabled',
         created_dt: (new Date(i.created_dt).toLocaleString('en-US', { hour12: false, })),
         action: `<div class="d-flex" >
-                     <i class="ion-edit pd-x-5 edit user-action" onclick="editCustomer(${JSON.stringify(i).replace(/"/g, "'")})"  data-target="#edituser" data-toggle="modal" title="Edit" id="edit${i._id}"></i>
-                     <i class="ion-trash-a pd-x-5 delete user-action" onclick="deleteCustomer('${i._id}')" id="delete${i._id}" title="Delete"></i>
+                     <i class="ion-edit pd-x-5 edit user-action" onclick="editCustomer(${JSON.stringify(i).replace(/"/g, "'")})"  data-target="#edituser" data-toggle="modal" title="Edit" id="edit${i._id}"></i>                    
                    </div>`
       }
    }).map(i=>Object.values(i));
@@ -97,10 +99,13 @@
     var t = $('#usertable').DataTable({data:users,
       columns: [
             { title: 'Name' },
+            { title: 'Email' },
             { title: 'PDF <br>Downloads' },
-            { title: 'Status' },
-            { title: 'Date <br> Registration.' },
-            { title: 'Actions' },
+           
+            { title: 'Project <br> Limit' },
+            { title: 'Watermark' },
+            { title: 'Date <br> Registered' },
+            { title: 'Edit' },
             
         ],});
     

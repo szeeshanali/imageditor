@@ -59,7 +59,7 @@
                     <!-- <img src="/images/img4.png" alt=""> -->
                     <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
                         <div class="carousel-inner">
-                            <%for(var i=0;i<banners.length;i++){ let banner = banners[i]; %>
+                            <%for(var i=0;i<banners?.length;i++){ let banner = banners[i]; %>
                             <div class="carousel-item <%=i==0?'active':''%>">
                                 <img class="d-block w-100" src="<%=banner.base64%>" >
                             </div>                           

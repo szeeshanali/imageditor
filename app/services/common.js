@@ -97,7 +97,7 @@ const commonService = (function() {
             uploaded_by: userId,
             active:true,
             deleted:false
-        },{code:1,thumbBase64:1,title:1,created_dt:1}); 
+        },{code:1,thumbBase64:1,title:1,created_dt:1,name:1}); 
         }else if(designId == "default")
         {
             designs = await uploads.findOne({active:true, 
@@ -278,7 +278,7 @@ const commonService = (function() {
         if((content == null || content.length < 3) && type != 'custom-text' )
         {throw "Empty content."; }
 
-        if(type === 'custom-text' || type === 'fonts')
+        if(type === 'custom-text' || type === 'fonts' )
         {
             var content =  new contents({content:content,type:type,by_admin:by_admin,label:label});
             await content.save();

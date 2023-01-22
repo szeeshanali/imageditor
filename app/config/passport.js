@@ -184,7 +184,7 @@ module.exports = function(passport) {
     
       passport.serializeUser(function(user, done) {
         console.log("passport.serializeUser", user);
-        done(null, user.id);
+        done(null, user);
       });
       
       passport.deserializeUser(function(id, done) {

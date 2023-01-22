@@ -265,6 +265,17 @@ router.get("/app/admin/fonts", isAdmin, async (req,res)=>{
   res.render("pages/admin/fonts",res.locals.page);
 })
 
+router.get("/app/admin/watermark", isAdmin, async (req,res)=>{
+  var content = await commonService.contentService.getContentAsync('fonts', true) || {};
+  res.locals.page = {
+    title  : "Watermark",
+    id     : "__watermark",
+    user   : req.user,
+    fonts : content
+   } ;
+  res.render("pages/admin/watermark",res.locals.page);
+})
+
 router.post(ROUTE_ADMIN_SAVEDESIGN,  isAdmin,  (req,res)=>{
     const {title,description,categoryId,json,base64} = req.body;
     let errors = [];
@@ -324,23 +335,39 @@ router.post(ROUTE_ADMIN_SAVEDESIGN,  isAdmin,  (req,res)=>{
 
 router.post('/api/admin/content', isAdmin, async (req,res)=>{
   const  {content, type, fontFile, label} = req.body;
-
   try{
-
+    if(type === 'faq' || type === 'privacy-policy' || type === "terms-conditions")
+    { 
+      await commonService.contentService.addOrUpdateContentAsync(label,content,type,true);       
+      return res.status(200).send({status:"success",message:"Content updated successfully!"});      
+    }
     //Create an instance of the form object
   let form = new formidable.IncomingForm();
-
   //Process the file upload in Node
+  
+
   form.parse(req, function (error, fields, file) {
-    let filepath = file.fontFile.filepath;
-    let newpath = `../app/public/fonts/${file.fontFile.originalFilename}`;
+    let filepath = file.contentFile.filepath;
+    let containingFolder = '';
+    let type = fields.type;
+    let filename = file.contentFile.originalFilename;
+    if(type === 'fonts')
+    { containingFolder = 'fonts' }
+    else if(type === 'watermark')
+    { containingFolder = "uploads/admin/watermark"
+    filename = 'watermark.png'; }
+
+
+
+
+    let newpath = `../app/public/${containingFolder}/${filename}`;
     //newpath += file.fileupload.originalFilename;
 
     //Copy the uploaded file to a custom folder
-    fs.readFile(file.fontFile.filepath, function (err, data) {
-      fs.writeFile(newpath, data, function () {
+    fs.readFile(file.contentFile.filepath, function (err, data) {
+      fs.writeFile(newpath, data, async function () {
         //Send a NodeJS file upload confirmation message
-        commonService.contentService.addOrUpdateContentAsync(fields.label,fields.content,fields.type,true);       
+        await commonService.contentService.addOrUpdateContentAsync(fields.label,fields.content,fields.type,true);       
         res.status(200).send({status:"success",message:"Content updated successfully!"})
       });
     })
