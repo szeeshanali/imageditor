@@ -826,8 +826,8 @@ function loadSVGTemplate(id) {
 }
 
 function applyFilter(index, filter) {
-
-    var obj = canvas.getActiveObject();
+let __canvas =  state.isPreviewCanvas?canvasPrev:canvas;
+    var obj = __canvas.getActiveObject();
     obj.filters[index] = filter;
     // if (!obj.filterIndex && obj.filterIndex != 0) {
     //     obj.filters[index] = true && filter;
@@ -837,7 +837,7 @@ function applyFilter(index, filter) {
     //     obj.filterIndex = null;
     // }
     obj.applyFilters();
-    canvas.renderAll();
+    __canvas.renderAll();
 }
 
 function applyFilterValue(index, prop, value) {
@@ -1325,8 +1325,9 @@ $("#btnStartOverModel").on("click",function(e){
 
     })
     $txtDecorationCtrl.on("click", function (e) {
+        let __canvas = state.isPreviewCanvas?canvasPrev:canvas;
         var value = $(this).attr("data-value");
-        var o = canvas.getActiveObject();
+        var o = __canvas.getActiveObject();
         if (o && o.type === 'i-text') {
          
             let isTextSelection; 
@@ -1371,16 +1372,17 @@ $("#btnStartOverModel").on("click",function(e){
                 o.set({"textAlign": value})
             }
 
-            canvas.renderAll();
+            __canvas.renderAll();
         }
 
     })
     $("#font-list-container a").on("click", function (e) {
+        let __canvas = state.isPreviewCanvas?canvasPrev:canvas;
         var value = $(this).text() || "Arial, sans-serif";
         $("#fontlist").text(value);
         //$("#selected-font").html($(this).html())
-        canvas.getActiveObject().set("fontFamily", $(this).attr("data-value"));
-        canvas.requestRenderAll();
+        __canvas.getActiveObject().set("fontFamily", $(this).attr("data-value"));
+        __canvas.requestRenderAll();
     })
     $("#text-letter-spacing, #text-letter-spacing-range").on("change", function () {
         setSelectedTextStyle("charSpacing", this.value);
@@ -1404,9 +1406,10 @@ $("#btnStartOverModel").on("click",function(e){
 
         if($("#inputStrokeText").is(":checked"))
         {
-            let obj = canvas.getActiveObject(); 
+            let __canvas = state.isPreviewCanvas?canvasPrev:canvas;
+            let obj = __canvas.getActiveObject(); 
             obj.strokeWidth = parseInt(this.value) || 10;
-            canvas.renderAll();
+            __canvas.renderAll();
             //setSelectedTextStyle("strokeWidth", this.value);
 
         }
@@ -1440,21 +1443,23 @@ $("#btnStartOverModel").on("click",function(e){
 
 
     $btnFlipX.on("click", () => {
-        var selectedObj = canvas.getActiveObject();
+        let __canvas = state.isPreviewCanvas?canvasPrev:canvas;
+        var selectedObj = __canvas.getActiveObject();
         selectedObj.set('flipX', ! selectedObj.flipX);
-        canvas.renderAll();
+        __canvas.renderAll();
     });
 
   
     $btnRotate.on("click", function () {
-        var selectedObj = canvas.getActiveObject();
+        let __canvas = state.isPreviewCanvas?canvasPrev:canvas;
+        var selectedObj = __canvas.getActiveObject();
         if (! selectedObj) {
             toast("Please select an object.");
             return;
         }
         var curAngle = selectedObj.angle;
         selectedObj.rotate(curAngle + 90);
-        canvas.renderAll();
+        __canvas.renderAll();
     })
 
    
@@ -1716,34 +1721,44 @@ function renderPreview() {
             clonedCanvas._objects[i].globalCompositeOperation = null;
             canvas.renderAll.bind(clonedCanvas)
         }
-        clonedCanvas.renderAll()
+        clonedCanvas.renderAll();
+        let _w = canvas.width; 
+        let _h = canvas.height;
+        if(_w>_h)
+        {
+            _w = _h;
+            _h = _w;
+            canvasPrev.setDimensions({width:_w,height:_h})
+        }
         var dataURL = clonedCanvas.toDataURL({
             format: "png",
             left: 0,
             top: 0,
-            width: canvas.width,
-            height: canvas.height
+            width: _w,
+            height: _h
         });
 
-        var logos = canvasPrev.backgroundImage._objects;
-        var w = logos[0].width; 
-        var h = logos[0].height;
+        let logos = canvasPrev.backgroundImage._objects;
+        let w = logos[0].width; 
+        let h = logos[0].height;
       
+       
 
         fabric.Image.fromURL(dataURL, (img) => {
             state.isPreviewCanvas = true;
             canvasPrev.remove(... canvasPrev.getObjects());
-            for (var i = 0; i < logos.length; i++) {
-                var logo = logos[i];
-                var object = fabric.util.object.clone(img);
-                var left = logo.left + logo.group.left + (logo.group.width / 2);
-                var top = logo.top + logo.group.top + (logo.group.height / 2);
+            for (let i = 0; i < logos.length; i++) {
+                    
+                let logo    = logos[i];
+                let object  = fabric.util.object.clone(img);
+                let left    = logo.left + logo.group.left + (logo.group.width / 2);
+                let top     = logo.top + logo.group.top + (logo.group.height / 2);
+               
+
                 object.scaleToWidth(logo.width+3);
-
-
-
                 object.set("top", top);
                 object.set("left", left);
+              
                 
               
                 object.globalCompositeOperation = "source-atop";
@@ -2014,8 +2029,8 @@ function generatePDFfromPreview(onServer, callback) {
             }
             var width = canvasPrev.backgroundImage.width;
             var height = canvasPrev.backgroundImage.height;
-
-
+            let pageFormat = 'letter';
+         
             var pdf = new jsPDF({
                 orientation: (width > height) ? 'l' : 'p',
                 unit: 'pt',
@@ -2028,7 +2043,11 @@ function generatePDFfromPreview(onServer, callback) {
             canvasPrev.clone(function (clonedCanvas) {
                 var bg = clonedCanvas.backgroundImage;
                 clonedCanvas.backgroundImage = false;
-                clonedCanvas.setDimensions({ width: 612 * factor, height: 792 * factor })
+                if(width>height)
+                { clonedCanvas.setDimensions({ width: 792 * factor, height: 612 * factor }); }
+                else
+                { clonedCanvas.setDimensions({ width: 612 * factor, height: 792 * factor }); }
+
                 clonedCanvas.setZoom(factor);
                 for (var i = 0; i < clonedCanvas._objects.length; i++) {
                     clonedCanvas._objects[i].globalCompositeOperation = null;
