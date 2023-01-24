@@ -1724,12 +1724,7 @@ function renderPreview() {
         clonedCanvas.renderAll();
         let _w = canvas.width; 
         let _h = canvas.height;
-        if(_w>_h)
-        {
-            _w = _h;
-            _h = _w;
-            canvasPrev.setDimensions({width:_w,height:_h})
-        }
+      
         var dataURL = clonedCanvas.toDataURL({
             format: "png",
             left: 0,
