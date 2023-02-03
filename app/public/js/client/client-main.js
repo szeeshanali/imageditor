@@ -984,7 +984,11 @@ function initUIEvents() {
     initContextMenu();
    
 
-
+    $("#btnFaqPopup").on("click",(e)=>{
+        $.get('/app/faq',(res)=>{
+            $("#faq-contanier").html(res);
+          })
+    })
 
     $("#btnCrop").on("click",(e)=>{
         var img = cropCanvas.item(0);
@@ -1104,10 +1108,7 @@ function initUIEvents() {
             });
         
         });
-
-       
-
-         
+  
     });
     $("#menu-save-design").on("click",function(e){
         e.preventDefault();
@@ -1176,7 +1177,9 @@ $("#btnStartOverModel").on("click",function(e){
             loadSVGTemplate(templateId);
             $("#ws-btn-preview").addClass("hidden");
             $("#ws-btn-save").addClass("hidden");
-        })
+            $btnTemplate.click();
+        }); 
+
         $("#btnSave").unbind().on("click",function(e){
             
             const templateId  = selectedTemplateId || 'default';
@@ -2032,6 +2035,7 @@ function generatePDFfromPreview(onServer, callback) {
                 format: 'letter',
                 putOnlyUsedFonts: true
             });
+
             width = pdf.internal.pageSize.getWidth();
             height = pdf.internal.pageSize.getHeight();
             const factor = 1.3; 
@@ -2043,7 +2047,7 @@ function generatePDFfromPreview(onServer, callback) {
                 else
                 { clonedCanvas.setDimensions({ width: 612 * factor, height: 792 * factor }); }
 
-                clonedCanvas.setZoom(factor);
+                clonedCanvas.setZoom(1.3);
                 for (var i = 0; i < clonedCanvas._objects.length; i++) {
                     clonedCanvas._objects[i].globalCompositeOperation = null;
                     canvasPrev.renderAll.bind(clonedCanvas)
@@ -2052,7 +2056,7 @@ function generatePDFfromPreview(onServer, callback) {
                 clonedCanvas.add(bg);
                 clonedCanvas.renderAll();
                 var imgData = clonedCanvas.toDataURL('image/png');
-                pdf.addImage(imgData, 'png', 0, 0);
+                 pdf.addImage(imgData, 'png', 0, 0);
 
                 if(onServer)
                 {
@@ -2066,10 +2070,12 @@ function generatePDFfromPreview(onServer, callback) {
                         }
                        
                     }
+                   
                     var fn = $("#downloadFileName").val(); 
                     fn = fn || "KakePrints.pdf";
                     fn = (fn.indexOf('.pdf') === -1)?(fn+".pdf"):fn;
                     pdf.save(fn);
+                    $.post('/api/logs',{level:1,type:'download_pdf',content:fn},(data)=>{})
                 }
 
                 $loader.addClass("hidden");
@@ -2079,8 +2085,10 @@ function generatePDFfromPreview(onServer, callback) {
             });
 
         },
-        error: function (res) {
+        error: function (xhr, ajaxOptions, thrownError) {
+            let msg = "Error while downloading.".
             toast("Error while downloading.");
+            commonService.logger.log(2,'download_pdf',thrownError,null,null,false);
         }
     })
 }

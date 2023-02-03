@@ -39,7 +39,15 @@ router.get('/api/templates', async (req,res)=>{
     {console.log(`category items not found against ${itemid}`)}
     res.send(items);
 })
+router.post('/api/logs', (req,res)=>{
+    if(!process.env.ENABLED_LOG != "true")
+    { return res.status(403).send("Ok"); }
 
+    const {level,message,type,content,path,is_admin} = req.body;
+    commonService.logger.log(req.user._id,level,type,message,content,path,is_admin);
+    res.status(200).send("Ok");
+
+})
 router.put('/api/design/:id', async (req,res)=>{
     const {code, desc, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link} = req.body; 
 
@@ -82,6 +90,13 @@ router.get('/app/404',(req,res)=>{
 router.get('/app/terms',async (req,res)=>{
     var content = await commonService.contentService.getContentAsync('terms-conditions') || {};
    res.send(content.content);
+})
+
+router.get('/app/faq',async (req,res)=>{
+    
+    var content = await commonService.contentService.getContentAsync('faq') || {};
+    res.send(content.content);
+
 })
 
 router.get('*',(req,res)=>{

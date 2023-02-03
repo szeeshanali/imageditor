@@ -70,10 +70,11 @@ app.use(express.static('uploads'))
 app.use(express.json({limit: '25mb'}));
 app.use(express.urlencoded({limit: '25mb', extended: true }));
 app.use(session(
-  {   secret            : SESSION_SECRET,
-      resave            : true,
-      saveUninitialized : true,
-      cookie: {
+  {   
+    secret            : SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+      cookie: { 
         maxAge: 24 * 60 * 60 * 1000
      }
 

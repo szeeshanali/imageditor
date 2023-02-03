@@ -116,10 +116,6 @@ router.get("/api/pre-designed/:id?", isLoggedIn,  async (req, res) => {
     }
 });
 
-
-
-
-
 router.delete("/api/client/project/:id?", isLoggedIn,  async (req, res) => {
     var id = req.params["id"]; 
     var data  =  await commonService.uploadService.deleteUploadAsync(id, 'project' , req.user._id);
@@ -170,7 +166,6 @@ router.get('/app/cliparts/', isLoggedIn,  async (req,res)=>{
 
 router.get("/app/templates",  isLoggedIn, async (req, res) => {
     var templates = await commonService.uploadService.getTemplatesAsync();
-
     res.locals.page = {
         id: "__templates",
         title: "Templates",
@@ -270,11 +265,13 @@ router.get("/api/client/download",  isLoggedIn, async (req, res) => {
     var enableDownload = true; 
     try {
         await appusers.findOneAndUpdate({_id: req.user._id},{ $inc: { download_count: 1, },upsert:true});
+        res.status(200).send({data:{watermark:watermark,download:enableDownload}});
     } catch (error) {
 
         console.log(`Error while updating download count for user ${req.user._id}`);
+        res.status(500).send({data:{watermark:watermark,download:enableDownload,error:`Error while updating download count for user ${req.user._id}`}});
     }
-    res.status(200).send({data:{watermark:watermark,download:enableDownload}});
+    
 });
 
 router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
@@ -296,10 +293,12 @@ router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
    let templates = adminUploadItems.filter(function(item){ return item.type == 'template'});
    let cliparts = adminUploadItems.filter(function(item){ return item.type == 'clipart'});
    let customDesigns = adminUploadItems.filter(function(item){ return item.type == 'pre-designed'});
-   let categories = await commonService.categoryService.getCategoriesAsync();
+   
    let customText = await commonService.contentService.getContentAsync('custom-text');
    let fonts = await commonService.contentService.getContentAsync('fonts',false);
    let ca = [];
+   
+   let categories = await commonService.categoryService.getCategoriesAsync();
    categories.forEach(category => {
     var items = cliparts?.filter(i=>i.category == category.id);
     if(items != null && items.length > 0)

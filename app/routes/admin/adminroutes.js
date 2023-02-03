@@ -422,6 +422,8 @@ report.totalUsers      = allusers.length;
 report.activeUsers      = allusers.filter(function(value){ return value.active == true}).length || 0;
 report.adminUsers     = allusers.filter(function(value){ return value.is_admin == true}).length || 0;
 
+let projects = await uploads.find({"type":"project","by_admin":false},{projection:{"json":0,"base64":0}}); 
+
 
   res.locals.page = {
    title  : "Dashboard",
@@ -477,14 +479,36 @@ router.get('/app/admin/categories', isAdmin, async (req,res)=>{
 
 router.get('/app/admin/cliparts', isAdmin, async (req,res)=>{
 
-  const cliparts = await commonService.uploadService.getUploads('clipart',null,true)
-  var categories = await commonService.categoryService.getCategoriesAsync(); 
+  let categoriesWithItems = []; 
+  let cliparts = await commonService.uploadService.getUploads('clipart',true)    
+  let categories = await commonService.categoryService.getCategoriesAsync(true);
+  
+  categories.forEach(category => {
+   var items = cliparts?.filter(i=>i.category == category.id);
+   if(items != null && items.length > 0)
+   {
+    categoriesWithItems.push({
+          categoryName:category.name,
+          categoryId:category._id,
+          items: items,
+          count: categories.length
+       })
+   }else{
+    categoriesWithItems.push({
+      categoryName: category.name,
+      categoryId:category._id,
+      items:[],
+      count: categories.length
+    })
+   }
+  
+  });
   res.locals.page = {
     id: "__cliparts",
     title: "Upload Cliparts",
     user: req.user, 
     categories: categories,
-    cliparts:cliparts
+    cliparts:categoriesWithItems
   }
   res.render("pages/admin/cliparts",
   res.locals.page);
@@ -553,9 +577,9 @@ let adminUploadItems = await commonService.uploadService.getUploads('all',true,t
 let templates = adminUploadItems.filter(function(item){ return item.type == 'template'});
 let cliparts = adminUploadItems.filter(function(item){ return item.type == 'clipart'});
 let customDesigns = adminUploadItems.filter(function(item){ return item.type == 'pre-designed'});
-let categories = await commonService.categoryService.getCategoriesAsync();
-let fonts = await commonService.contentService.getContentAsync('fonts',false);
-let customText = await commonService.contentService.getContentAsync('custom-text');
+let categories  = await commonService.categoryService.getCategoriesAsync();
+let fonts       = await commonService.contentService.getContentAsync('fonts',false);
+let customText  = await commonService.contentService.getContentAsync('custom-text');
 
 let ca = [];
 categories.forEach(category => {
@@ -644,20 +668,19 @@ router.delete('/api/admin/clipart/:id', isAdmin, async (req,res)=>{
     return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."});
   }  
   try{
-    await uploads.findOneAndDelete({type:'clipart', by_admin:true, code:id }); 
+    await uploads.findOneAndDelete({_id:id }); 
     return res.status(200).send({"status":400,"message":`Deleted successfully, Id:${id}`});
   }catch(e)
   { return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."}); }
  
 }) 
 router.post('/app/admin/uploads',  function(req, res) {
-  let {desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
+  let {id, desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
  
   file_name = file_name || "pd.png"; 
   //filename = `${filename}-${_id}${file_ext}`;       
-  var _id = mongoose.Types.ObjectId();
-  
-  var uploadModel = {
+  let _id = mongoose.Types.ObjectId();
+  let uploadModel = {
     title           :   title,
     name            :   name,
     desc            :   desc,
@@ -680,19 +703,20 @@ router.post('/app/admin/uploads',  function(req, res) {
     type            :   type,
     ref_code        :   ref_code,
     
+    
   };
 
   let _path = file_name?`../app/public/uploads/admin/${type}/${type}-${_id}.${file_name.split('.').pop()}`:'';  
   let _base64Alter = base64.replace(`data:${mime_type};base64,`, "");
 
   
-  fs.writeFile(_path, _base64Alter, 'base64', function(err) {
+  fs.writeFile(_path, _base64Alter, 'base64', async function(err) {
       if(err){ 
         console.log(err);
         return res.status(500).send({message:`Error uploading file.`, error: err}); 
        }
 
-       commonService.uploadService.upload(uploadModel,(err,msg)=>{
+       await commonService.uploadService.upload(uploadModel, id, (err,msg)=>{
         if(!err)
         {res.status(200).send({message:`Success`, error: null}); }
          res.status(400).send({message:`Unable to upload file.`, error: msg}); 

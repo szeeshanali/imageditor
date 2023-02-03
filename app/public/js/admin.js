@@ -657,7 +657,7 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
         })
     }
     function deleteClipart(id,onSuccess,onError) {
-        if (!confirm("do you want to delete this template?")) {
+        if (!confirm("do you want to delete this Clipart?")) {
             return;
         }
        
@@ -999,15 +999,49 @@ function saveDesign() {
 
         initContextMenu();
 
+
+        $("#clipartAdminContainer .clipart").on("click",function(e){
+            let $item = $(e.currentTarget); 
+            let url = $item.attr("data-url");
+            let title = $item.attr("data-title");
+            let category = $item.attr("data-category");
+            let active =  ($item.attr("data-active") === "true");
+            let id = $item.attr("id");
+            let fn =  url.substring(url.lastIndexOf('/')+1);
+            selectedDesign.file = {
+                name:fn,
+                
+            }
+            canvas.clear();
+            fabric.Image.fromURL(url, function (img) {
+                img.scaleToWidth(250);
+                img.set({left:150, top:50})
+                canvas.add(img).renderAll();
+               
+                selectedDesign.base64 = canvas.item(0).toDataURL();
+                selectedDesign.meta ={
+                    width   :img.width,
+                    height  :img.height
+
+                }
+                //selectedDesign.base64 = 
+                $("#selectedClipartId").val(id);
+                $("#admin-categories").val(category);
+                $("#admin-design-title").val(title);
+                $("#design-active").prop("checked", active);
+                $("#btnDeleteClipart").removeClass("hidden");
+            });
+        });
+
         $("#bannerThumbs .delete").on("click",function(e){
             let target = e.currentTarget; 
             let id = target.id; 
             deleteBanner(id);
         })
 
-        $("#clipartThumbs .delete").on("click",function(e){
+        $("#btnDeleteClipart").on("click",function(e){
             let target = e.currentTarget; 
-            let id = target.id; 
+            let id = $("#selectedClipartId").val(); 
             deleteClipart(id);
         })
         $("#btnLibraryModal").on("click",function(e){
@@ -1956,8 +1990,9 @@ function saveDesign() {
         })
 
         $btnSaveDesign.on("click", function () {
-            if (! selectedDesign.base64) {
-                toast("Please Browse Template.");
+            let selectedDesignId = $("#selectedClipartId").val();
+            if (!selectedDesign.base64 && !selectedDesignId) {
+                toast("Please Browse and select a file.");
                 return;
             }
             onSaveDesign();
@@ -1973,6 +2008,10 @@ function saveDesign() {
                 return;
             
             var pageid = $(this).attr("data-page-id");
+            canvas.clear();
+            $("#admin-categories").val("");
+            $("#admin-design-title").val("");
+            $("#selectedClipartId").val("");
             processFiles(e.target.files, pageid);
             $btnImageUploadHidden.val('');
         })
@@ -2186,7 +2225,6 @@ function saveDesign() {
                 var height = 400;
                 // canvas.orignalBackgroundImage = loadedObjects;
                 var logo = objects[0];
-                // debugger;
                 // var diff = templateWidth - logo.width;
                 // var logoWidth = logo.width + diff;
                 logo.scaleToWidth(width);
@@ -2297,6 +2335,7 @@ function saveDesign() {
         $("#template-info-panel .logo-size").text(logoSize);
         $("#template-info-panel .total-logos").text(o.logoCount);
         $("#admin-file-name").val(o.filename);
+        $("#btnDeleteClipart").addClass("hidden");
 
     }
 
@@ -2377,10 +2416,11 @@ function saveDesign() {
             return;
         }
         const validateCategoryFor = ['clipart'];
-        let MIME_TYPE = "image/png";
-        let dataUrl = selectedDesign.base64;       
-        let designType =  $("#design-type").val();
-        let category = $("#admin-categories").val();
+        let MIME_TYPE       = "image/png";
+        let dataUrl         = selectedDesign.base64;       
+        let designType      =  $("#design-type").val();
+        let category        = $("#admin-categories").val();
+        let active          = $("#design-active").prop("checked");
         
         if(!category && validateCategoryFor.find(i=>i === designType) ){
             toast(`Please select a category.`);
@@ -2403,7 +2443,7 @@ function saveDesign() {
                 file_ext: `.${selectedDesign.file.name.split('.').pop()}`,
                 mime_type : selectedDesign.file.type,
                 order_no: $inputOrderNo.val(),
-                active: designFlags.active,
+                active: active,
                 base64: dataUrl,
                 type: designType,
                 by_admin: true,
@@ -2411,7 +2451,8 @@ function saveDesign() {
                 link: $inputDesignLink.val(),
                 logos: $inputLogoPerPage.val(),
                 ref_code: $kopykakePartNo.val(),
-                category: category
+                category: category,
+                id:$("#selectedClipartId").val()
             },
             success: function (res) {
                 designFlags.submitted = true;
