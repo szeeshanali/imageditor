@@ -17,7 +17,31 @@ const commonService = (function() {
         else 
         {  return categoryModel.find({active:true,deleted:false}); }
     },
+    this.getCategoriesByFilterAsync = (filter) =>
+    { 
+        filter['deleted'] = false;
+        return categoryModel.find(filter);
+    },
+    this.deleteCategoriesByFilterAsync = async (filter) =>
+    { 
+        let itemExists = await uploads.find({type:"clipart", category:filter.id}); 
+        if(itemExists != null && itemExists.length > 0)
+        {throw 403};
 
+        return await categoryModel.findOneAndUpdate({_id:filter.id},{deleted:true},{
+            returnOriginal: false
+        });
+    },
+    this.addCategoryAsync = async (categoryName) =>
+    { 
+        var category = new categoryModel();
+        category.name = categoryName;
+        category.active = true; 
+        category.deleted = false; 
+
+        
+        return category.save();
+    },
     this.getTemplatesAsync = async (active)=> { 
      
         return  await uploads.find({type: 'template', active:true, by_admin:true  },
@@ -60,7 +84,11 @@ const commonService = (function() {
         let projection = {code:1,title:1,type:1,name:1,ref_code:1,id:1,category:1,file_ext:1,active:1 };
 
         if(all)
-        { filter = {type:type, deleted:false}; }
+        { 
+            filter = {deleted:false};
+            if(type != "all")
+            {filter["type"] = type}
+        }
         else 
         { filter = {type: type, active:true, deleted:false }; }
 
@@ -325,7 +353,10 @@ const commonService = (function() {
         categoryService: {
             getCategoriesAsync  :   this.getCategoriesAsync,
             getCategoryAsync    :   this.getCategoryAsync,
-            addCategoryItemAsync     :   this.addCategoryItemAsync
+            addCategoryItemAsync     :   this.addCategoryItemAsync,
+            addCategoryAsync        : this.addCategoryAsync,
+            getCategoriesByFilterAsync:this.getCategoriesByFilterAsync,
+            deleteCategoriesByFilterAsync:this.deleteCategoriesByFilterAsync
         },
         uploadService:{
             upload                  :   this.upload,

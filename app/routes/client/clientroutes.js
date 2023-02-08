@@ -297,7 +297,7 @@ router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
    let customText = await commonService.contentService.getContentAsync('custom-text');
    let fonts = await commonService.contentService.getContentAsync('fonts',false);
    let ca = [];
-   
+
    let categories = await commonService.categoryService.getCategoriesAsync();
    categories.forEach(category => {
     var items = cliparts?.filter(i=>i.category == category.id);
@@ -381,7 +381,7 @@ router.post('/api/rfq', isLoggedIn, async (req,res)=>{
                         path            :   newpath
                         };
     
-                        commonService.uploadService.upload(model,(err,msg)=>{
+                        commonService.uploadService.upload(model,null,(err,msg)=>{
     
                             if(!err)
                                 { 

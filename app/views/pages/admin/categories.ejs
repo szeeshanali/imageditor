@@ -1,1 +1,49 @@
-Category
+<div class="row">
+    <div class="col-lg-3 col-md-3 col-sm-3 pd-l-0">
+      <div class="card">
+        <%- include('../../partials/admin/dashboard-panel'); %>
+      </div>
+    </div>
+    <div class="col-lg-9 col-md-9 col-sm-9 pd-l-0">
+        <div class="card bd-b pd-10 tx-uppercase tx-bold tx-inverse">Add Categories</div>
+
+      <div class="card pd-20">
+      
+        <div class="row row-xs">
+          <div class="wd-300">
+            <div>Category Name:</div>
+            <input type="text" placeholder="Enter Category Name" id="inputCategoryName" class="form-control" maxlength="100" minlength="3" pattern=".{3,100}" title="Minimum 3 and maximum 100 characters." >
+          </div>
+        </div><!-- row -->
+        <div class="form-layout-footer pd-t-20" >
+          <button type="button" id="btnAddCategory" class="btn btn-primary tx-uppercase tx-bold">Add Category</button>
+          <button class="btn btn-secondary tx-uppercase tx-bold " id="btnClearCategory">Clear</button>
+        </div>
+      </div>
+      <div>
+
+        <div class="list-group widget-list-group mg-t-15" style="height: 400px; overflow-y:scroll" id="categoryContainer">
+            <div class="card bd-b pd-10 tx-uppercase tx-bold tx-inverse">Categories (<%=categories?.length%>)</div>
+
+          <%if(!categories || categories?.length == 0){%>
+          <p class="pd-10">No Category Found</p>
+          <%}%>
+          <%for(var i=0;i<categories?.length;i++){%>
+          <div class="list-group-item pd-y-10 rounded-top-0 bd-0" id="custom-text-<%=categories[i]._id%>">
+            <div class="media">
+         
+              <div class="media-body">
+                <span class="tx-inverse tx-14 tx-bold"><%=categories[i].name%></span>
+                <span class="pull-right"><button class="btn btn-secondary btnDelCategory  pd-0 pd-x-10" type="button" id="<%=categories[i]._id%>"><i class="icon ion-ios-trash-outline tx-14"></i></button></span>
+              </div><!-- media-body -->
+            </div><!-- media -->
+          </div><!-- list-group-item -->
+          <%}%>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  
+  

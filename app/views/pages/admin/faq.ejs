@@ -1,20 +1,29 @@
-<div class="card pd-20 pd-sm-40 mg-t-50">
-    <h6 class="card-body-title">FAQs</h6>
-    <p class="mg-b-20 mg-sm-b-30">Please enter the FAQs.</p>
-    <div id="summernote"></div>
-    <button  type="button" data-value="faq" class="btn btn-primary" id="btnSaveContent"> Save </button>
+<div class="row">
+  <div class="col-lg-3 col-md-3 col-sm-3 pd-0">
+    <div class="card">
+      <%- include('../../partials/admin/dashboard-panel'); %>
+    </div>
   </div>
+  <div class="col-lg-9 col-md-9 col-sm-9">
+    <div class="card bd-b pd-10 tx-uppercase tx-bold tx-inverse">Add FAQs</div>
+
+    <div class="card pd-20 mg-t-20">
+      <div id="summernote"></div>
+      <button  type="button" data-value="faq" class="hidden btn btn-primary tx-uppercase tx-bold" id="btnSaveContent"> Save Content </button>
+      <button  type="button"  class="btn btn-primary tx-uppercase tx-bold" id="btnEditContent"> Edit Content </button>
+    </div>
+  </div>
+</div>
+
   <script>
  $(document).ready(function() {
+
   $('#summernote').summernote({
     height:"300px"
   });
-  $(".am-mainpanel").attr("style","margin-left:75px;margin-top:91px");
   $(".am-pagetitle").attr("style","left:73px");
   $('#summernote').summernote('editor.pasteHTML', '<%-content.content%>');
-
-  
-
+  $('#summernote').summernote('disable');
 
 });
 </script>

@@ -848,7 +848,6 @@ function renderPreview() {
          canvas.renderAll();
      }, function (o, object) {
          addLayer(o);
-         console.log(o, object)
      })
  
  }
@@ -999,6 +998,62 @@ function saveDesign() {
 
         initContextMenu();
 
+
+        $("#categoryContainer .btnDelCategory").on("click",function(e){
+            let categoryId = e.currentTarget.id; 
+            $loader.removeClass("hidden");
+            $.ajax({
+                type: "DELETE",
+                url: `/api/admin/category/${categoryId}`,
+                
+                success: function (res) {
+                    toast(`Category deleted Successfully ${categoryId}`);
+                    window.location.reload();
+                    $loader.addClass("hidden");
+                },
+                error: function (res) {
+                   
+                    if(res.status === 403)
+                    { toast(`Category is associated with some of your cliparts, please remove associated cliparts and try again`,5000); }
+                    else{
+                        toast(`Error Deleting Category ${categoryId}`);
+                    }
+                    
+                    $loader.addClass("hidden");
+                },
+                complete: function (){
+                    $loader.addClass("hidden");
+                }
+            })
+
+        })
+
+        $("#btnAddCategory").on("click",function(){
+           let categoryText = $("#inputCategoryName").val();
+           $loader.removeClass("hidden");
+           $.ajax({
+            type: "POST",
+            url: "/api/admin/category",
+            data: {
+                name: categoryText
+            },
+            success: function (res) {
+                
+              window.location.reload();
+                toast("Category has been saved successfully.");
+            },
+            error: function (res) {
+                toast("Error while saving Category.");
+            }, 
+            complete: function (){
+                $loader.addClass("hidden");
+            }
+        })
+        })
+
+        $("#btnClearCategory").on("click",function(){
+            $("#inputCategoryName").val("");
+        })
 
         $("#clipartAdminContainer .clipart").on("click",function(e){
             let $item = $(e.currentTarget); 
@@ -1981,6 +2036,7 @@ function saveDesign() {
                 success: function (res) {
                     designFlags.submitted = true;
                     toast("Template information saved successfully!");
+                    window.location.reload();
                 },
                 error: function (res) {
                     designFlags.submitted = false;
@@ -2016,7 +2072,21 @@ function saveDesign() {
             $btnImageUploadHidden.val('');
         })
 
+        $("#btnEditContent").on("click",function(){
+            $('#summernote').summernote('enable');
+
+            $("#btnSaveContent").removeClass("hidden");
+            $(this).addClass("hidden");
+        })
+
         $("#btnSaveContent").on("click", function (e) {
+            $('#summernote').summernote('disable');
+            if(!confirm("Do you want to save Content?"))
+            {return;}
+           $loader.removeClass("hidden");
+            $("#btnEditContent").removeClass("hidden");
+            $(this).addClass("hidden");
+
             var type = $(this).attr("data-value");
             var html = $('#summernote').summernote('code');
 
@@ -2028,10 +2098,13 @@ function saveDesign() {
                     type: type
                 },
                 success: function (res) {
+                    $loader.addClass("hidden");
                     designFlags.submitted = true;
                     toast("Content has been successfully saved.");
                 },
                 error: function (res) {
+                    $loader.addClass("hidden");
+
                     designFlags.submitted = false;
                     toast("Error while saving Content");
                 }
@@ -2141,7 +2214,6 @@ function saveDesign() {
                     {
                       
                       let pos = $(labels[i]).position();
-                      console.log(pos);
                       $(".canvas-container").first().append(`<div class='grid-lines' style='height:${logoHeight}px;left:${pos.left-22}px; top:0px; '></div>`)
                     }
               
@@ -2149,7 +2221,6 @@ function saveDesign() {
                     {
                       
                         let pos = $(vlabels[i]).position();
-                        console.log(pos);
                     
                       $(".canvas-container").first().append(`<div class='grid-lines h-gridlines' style='width:500px;top:${pos.top-22}px; left:0px; border-bottom: solid 1px #666;'></div>`);
                       $(".canvas-container").first().css({border:"solid 1px #666", width:"502px",height:`${logoHeight}px`})
@@ -2396,6 +2467,7 @@ function saveDesign() {
             toast("Already submitted, please choose new design.");
             return;
         }
+        debugger;
         var m = selectedDesign.meta;
         var meta = {
             width: m.width,
@@ -2811,6 +2883,14 @@ function saveDesign() {
             $toast.removeClass("show")
 
         }, 3000);
+    }
+    function toast(message, delayInMS) {
+        var $toast = $("#snackbar").addClass("show");
+        $toast.text(message);
+        setTimeout(function () {
+            $toast.removeClass("show")
+
+        }, delayInMS);
     }
     function crop(currentImage) {
         let rect = new fabric.Rect({

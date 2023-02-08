@@ -6,8 +6,9 @@ const schema  = new mongoose.Schema({
     level          :    {   type    :   String },
     parent         :    {   type    :   String },
     order          :    {   type    :   String },
-    active         :    {   type    :   Boolean },
+    active         :    {   type    :   Boolean,   default : true },
     items          :    [{  type    :   mongoose.Types.ObjectId}], 
+    deleted        :    {   type    :   Boolean,   default : false }
     });
 
 const categories   = mongoose.model('categories',schema);

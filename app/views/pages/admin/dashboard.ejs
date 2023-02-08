@@ -1,117 +1,151 @@
 
-<div class="row mg-r-0">
+<div class="row">
   <div class="col-lg-3 pd-0">
     <div class="card">
-      <div id="dashboard-panel" class="tab-pane">
-        <%- include('../../partials/admin/dashboard-panel'); %>
+      <%- include('../../partials/admin/dashboard-panel'); %>
     </div>
-    </div>
+    
   </div>
-    <div class="col-lg-9 ">
-      
+  <div class="col-lg-9 ">
+    <div class="card bd-b pd-10 tx-uppercase tx-bold tx-inverse">Dashboard</div>
 
-      <div class="card pd-20 pd-sm-40">
-        <div class="row row-sm ht-150 ">
-          <div class="col-lg-4">
-            <div class="card">
-              <div class="overlay-body pd-x-20 pd-t-20">
-                <div class="d-flex justify-content-between">
-                  <div>
-                    <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-5">Total Users</h6>
-                  </div>
-                  <a href="" class="tx-gray-600 hover-info"><i class="icon ion-more tx-16 lh-0"></i></a>
-                </div><!-- d-flex -->
-                <h2 class="mg-b-5 tx-inverse tx-lato"><%=report.todayUsers %></h2>
-                <p class="tx-12 mg-b-0">Only active users are <br>displayed here.</p>
+    <div class="card">
+      <div class="row row-sm">
+        <div class="col-lg-4">
+          <div class="card pd-20">
+            <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Users (<%=report.totalUsers%>)</h6>
+            <div class="d-flex mg-b-10">
+              <div class="bd-r pd-r-10">
+                <label class="tx-12">Today</label>
+                <p class="tx-lato tx-inverse tx-bold"><%=report.todayUsers%></p>
               </div>
-            </div><!-- card -->
-          </div><!-- col-4 -->
-          <div class="col-lg-4 mg-t-15 mg-sm-t-20 mg-lg-t-0">
-            <div class="card" >
-              <div class="overlay-body pd-x-20 pd-t-20">
-                <div class="d-flex justify-content-between">
-                  <div>
-                    <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-5">This Month's Users</h6>
-                  </div>
-                  <a href="" class="tx-gray-600 hover-info"><i class="icon ion-more tx-16 lh-0"></i></a>
-                </div><!-- d-flex -->
-                <h2 class="mg-b-5 tx-inverse tx-lato"><%=report.thisMonthUsers %></h2>
-                <p class="tx-12 mg-b-0">Active users this <br> month.</p>
+              <div class="bd-r pd-x-10">
+                <label class="tx-12">This Week</label>
+                <p class="tx-lato tx-inverse tx-bold"><%=report.thisWeekUsers%></p>
               </div>
-            </div><!-- card -->
-          </div><!-- col-4 -->
-          <div class="col-lg-4 ">
-            <div class="card">
-              <div class="overlay-body pd-x-20 pd-t-20">
-                <div class="d-flex justify-content-between">
-                  <div>
-                    <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-5">Admin Users</h6>
-                  </div>
-                  <a href="" class="tx-gray-600 hover-info"><i class="icon ion-more tx-16 lh-0"></i></a>
-                </div><!-- d-flex -->
-                <h2 class="mg-b-5 tx-inverse tx-lato">1</h2>
-                <p class="tx-12 mg-b-0">Only Admin active <br>users are displayed here.</p>
+              <div class="pd-l-10">
+                <label class="tx-12">This Month</label>
+                <p class="tx-lato tx-inverse tx-bold"><%=report.thisMonthUsers%></p>
               </div>
-            </div><!-- card -->
-          </div><!-- col-4 -->
-        </div>
-      
-      </div>
-      <input type="hidden" value="<%-JSON.stringify(users)%>" >
-      <div class="table-responsive pd-b-50">
-     
-          <table id="usertable" class="display" style="width:100%"></table>
-        </div>
-   
-    </div><!-- col-8 -->
-   
-  </div>
-  <%- include('../../partials/admin/popups/edit-user'); %>
-
-
-<script>
-  let users =  <%-JSON.stringify(users)%>;
-  let temp = "";
-  let page_number = 1; 
-  let page_size= 100;
-
-  
-  
-
-    $(".tab-content .tab-pane").each((i,e)=>
-    { $(e).removeClass("active"); })    
-   $("#dashboard-panel").addClass("active");
-   users = users.map(i=>{
-      return {
-        fname : i.fname,
-        email : i.email,
-        download_count: i.download_count,
-       
-        project_limit:i.project_limit,
-        watermark:i.watermark?'Enabled':'Disabled',
-        created_dt: (new Date(i.created_dt).toLocaleString('en-US', { hour12: false, })),
-        action: `<div class="d-flex" >
-                     <i class="ion-edit pd-x-5 edit user-action" onclick="editCustomer(${JSON.stringify(i).replace(/"/g, "'")})"  data-target="#edituser" data-toggle="modal" title="Edit" id="edit${i._id}"></i>                    
-                   </div>`
-      }
-   }).map(i=>Object.values(i));
-   $(document).ready(function () {
-    var t = $('#usertable').DataTable({data:users,
-      columns: [
-            { title: 'Name' },
-            { title: 'Email' },
-            { title: 'PDF <br>Downloads' },
-           
-            { title: 'Project <br> Limit' },
-            { title: 'Watermark' },
-            { title: 'Date <br> Registered' },
-            { title: 'Edit' },
+            </div><!-- d-flex -->
             
-        ],});
-    
-    
-});
+            <p class="tx-12 mg-b-0">Total number of Registered Users (<%=report.totalUsers%>)</p>
+          </div><!-- card -->
+        </div><!-- col-4 -->
+        <div class="col-lg-4 mg-t-15 mg-sm-t-20 mg-lg-t-0">
+          <div class="card pd-20">
+            <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">PDF Downloads (<%=report.totalDownloads%>)</h6>
+            <div class="d-flex mg-b-10">
+              <div class="bd-r pd-r-10">
+                <label class="tx-12">Today</label>
+                <p class="tx-lato tx-inverse tx-bold"><%=report.todayDownloads%></p>
+              </div>
+              <div class="bd-r pd-x-10">
+                <label class="tx-12">This Week</label>
+                <p class="tx-lato tx-inverse tx-bold"><%=report.thisWeekDownloads%></p>
+              </div>
+              <div class="pd-l-10">
+                <label class="tx-12">This Month</label>
+                <p class="tx-lato tx-inverse tx-bold"><%=report.thisMonthDownloads%></p>
+              </div>
+            </div><!-- d-flex -->
+          
+            <p class="tx-12 mg-b-0">Total numbers of PDF Downloads (<%=report.totalDownloads%>)</p>
+          </div><!-- card -->
+        </div><!-- col-4 -->
+        <div class="col-lg-4 mg-t-15 mg-sm-t-20 mg-lg-t-0">
+          <div class="card pd-20">
+            <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">User Projects (<%=report.totalProjects%>)</h6>
+            <div class="d-flex mg-b-10">
+              <div class="bd-r pd-r-10">
+                <label class="tx-12">Today</label>
+                <p class="tx-lato tx-inverse tx-bold"><%=report.todayProjects%></p>
+              </div>
+              <div class="bd-r pd-x-10">
+                <label class="tx-12">This Week</label>
+                <p class="tx-lato tx-inverse tx-bold"><%=report.thisWeekProjects%></p>
+              </div>
+              <div class="pd-l-10">
+                <label class="tx-12">This Month</label>
+                <p class="tx-lato tx-inverse tx-bold"><%=report.thisMonthProjects%></p>
+              </div>
+            </div><!-- d-flex -->
+          
+            <p class="tx-12 mg-b-0">Total Number of Porjects saved by users (<%=report.totalProjects%>)</p>
+          </div><!-- card -->
+        </div><!-- col-4 -->
+      </div>
+    </div>
+    <div class="card bd-t pd-20 mg-t-20">
+      <table id="usertable" class="display" style="width:100%"></table>
+    </div>
+  </div>
+
+</div>
+<script>
+  let users = <%-JSON.stringify(users)%>;
+  let userProjects = <%-JSON.stringify(userProjects)%>;
+  let downloads = <%-JSON.stringify(downloads)%>;
+  let temp = "";
+  let page_number = 1;
+  let page_size = 100;
 
 
+  $(".tab-content .tab-pane").each((i, e) => {
+      $(e).removeClass("active");
+  })
+  $("#dashboard-panel").addClass("active");
+  users = users.map(i => {
+      return {
+          fname: i.fname,
+          email: i.email,
+          download_count:  downloads.filter(function(v){ return v.user_id == i._id })?.length ||0,
+
+          project_limit: i.project_limit,
+          saved_projects: 
+          `<a href='' class='tx-bold text-primary tx-underline'>${ userProjects.filter(function(v){ return v.uploaded_by == i._id })?.length ||0}</a>`,
+          watermark: i.watermark ? 'Enabled' : 'Disabled',
+          created_dt: (new Date(i.created_dt).toLocaleString('en-US', {hour12: false})),
+          action: `<div class="d-flex" >
+   <i class="ion-edit pd-x-5 edit user-action" onclick="editCustomer(${
+              JSON.stringify(i).replace(/"/g, "'")
+          })"  data-target="#edituser" data-toggle="modal" title="Edit" id="edit${
+              i._id
+          }"></i>                    
+ </div>`
+      }
+  }).map(i => Object.values(i));
+  $(document).ready(function () {
+      var t = $('#usertable').DataTable({
+          data: users,
+          columns: [
+              {
+                  title: 'Name'
+              },
+              {
+                  title: 'Email'
+              },
+              {
+                  title: 'PDF <br>Downloads'
+              },
+
+              {
+                  title: 'Project <br> Limit'
+              }, 
+              {
+                  title: 'Saved <br> Projects'
+              },
+              {
+                  title: 'Watermark'
+              }, {
+                  title: 'Date <br> Registered'
+              }, {
+                  title: 'Edit'
+              },
+
+          ]
+      });
+
+
+  });
 </script>
-

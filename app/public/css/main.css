@@ -45210,7 +45210,9 @@ a.hover-white-8:hover, a.hover-white-8:focus {
 .tx-bold {
   font-weight: 700;
 }
-
+.tx-underline {
+  text-decoration: underline;
+}
 .tx-semibold {
   font-weight: 600;
 }
