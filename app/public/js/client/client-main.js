@@ -710,7 +710,6 @@ function loadSVGTemplate(id) {
             logo.scaleToHeight(logoHeight-2);
             canvas.setDimensions({width: logoDisplaySize, height: logoHeight});
             canvas.setBackgroundImage(logo, canvas.renderAll.bind(canvas));
-            debugger;
             canvas.renderAll();
             // canvas.setZoom(2);
             let logoSize = `${(meta.objectWidth / dpi).toFixed(1)}" x ${((meta.objectHeight || meta.objectWidth) / dpi).toFixed(1)}`;
@@ -2627,8 +2626,8 @@ function onChangeFontColor(picker, type) {
     let checked = $("#inputStrokeText").prop("checked");
     let strokeSize = parseInt($("#text-stroke-width").val());
     let strokeColor = $("#strokecolor").val();
-    //if(selectedText.type == "curved-text")
-    //{ return; }
+  
+
     if (type === 'font-color') {
         let isTextSelection; 
         if(selectedText.getSelectionStyles)
@@ -2642,7 +2641,7 @@ function onChangeFontColor(picker, type) {
     } else if (type === 'stroke-color' && checked) {
       
     
-        selectedText.stroke = picker.toRGBAString();
+        selectedText.set('stroke',picker.toRGBAString()); ;
         selectedText.strokeWidth= strokeSize;
         selectedText.paintFirst= "stroke";
         

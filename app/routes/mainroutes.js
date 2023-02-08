@@ -40,8 +40,8 @@ router.get('/api/templates', async (req,res)=>{
     res.send(items);
 })
 router.post('/api/logs', (req,res)=>{
-    if(!process.env.ENABLED_LOG != "true")
-    { return res.status(403).send("Ok"); }
+    // if(!process.env.ENABLED_LOG != "true")
+    // { return res.status(403).send("Ok"); }
 
     const {level,message,type,content,path,is_admin} = req.body;
     commonService.logger.log(req.user._id,level,type,message,content,path,is_admin);
