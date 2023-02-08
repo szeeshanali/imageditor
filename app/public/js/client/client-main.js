@@ -710,7 +710,7 @@ function loadSVGTemplate(id) {
             logo.scaleToHeight(logoHeight-2);
             canvas.setDimensions({width: logoDisplaySize, height: logoHeight});
             canvas.setBackgroundImage(logo, canvas.renderAll.bind(canvas));
-            
+            debugger;
             canvas.renderAll();
             // canvas.setZoom(2);
             let logoSize = `${(meta.objectWidth / dpi).toFixed(1)}" x ${((meta.objectHeight || meta.objectWidth) / dpi).toFixed(1)}`;
@@ -718,9 +718,9 @@ function loadSVGTemplate(id) {
             $("#template-info-panel .template-name").text(data.title);
             $("#template-info-panel .page-size").text(pageSize);
             $("#template-info-panel .logo-size").text(logoSize + "''");
-            $("#template-info-panel .total-logos").text(meta.objects);
+            $("#template-info-panel .total-logos").text(objects.length);
             $("#template-info-panel .page-title").text(data.title);
-            $("#template-info-panel .ref_code").text(data.ref_code | "NA");
+            $("#template-info-panel .ref_code").text(data.ref_code);
             $("#template-info-panel #imgSelectedTemplate").attr("src", svgBase64)
             $(".kk-part-no").text(data.ref_code || "N/A");
             $(".kk-part-link").text(data.link || "N/A");
@@ -763,7 +763,6 @@ function loadSVGTemplate(id) {
                 {
                   
                   let pos = $(labels[i]).position();
-                  console.log(pos);
                   $(".canvas-container").first().append(`<div class='grid-lines' style='height:${logoHeight}px;left:${pos.left-22}px; top:0px; '></div>`)
                 }
           
@@ -771,7 +770,6 @@ function loadSVGTemplate(id) {
                 {
                   
                     let pos = $(vlabels[i]).position();
-                    console.log(pos);
                 
                   $(".canvas-container").first().append(`<div class='grid-lines h-gridlines' style='width:500px;top:${pos.top-22}px; left:0px; border-bottom: solid 1px #666;'></div>`);
                   $(".canvas-container").first().css({width:"502px",height:`${logoHeight}px`})
@@ -981,10 +979,28 @@ function drawTextAlongArc(context, str, centerX, centerY, radius, angle) {
 function initUIEvents() {
    
 
+    /// disable previous date in rfq calandar.
+    $(function(){
+        var dtToday = new Date();    
+        var month = dtToday.getMonth() + 1;
+        var day = dtToday.getDate();
+        var year = dtToday.getFullYear();
+        if(month < 10)
+            month = '0' + month.toString();
+        if(day < 10)
+         day = '0' + day.toString();
+        var maxDate = year + '-' + month + '-' + day;
+        $('#rfqRequiredByDt').attr('min', maxDate);
+    });
+
     initContextMenu();
    
 
-
+    $("#btnFaqPopup").on("click",(e)=>{
+        $.get('/app/faq',(res)=>{
+            $("#faq-contanier").html(res);
+          })
+    })
 
     $("#btnCrop").on("click",(e)=>{
         var img = cropCanvas.item(0);
@@ -1076,7 +1092,8 @@ function initUIEvents() {
         var form = $(this);
         var actionUrl = form.attr('action');
         var formData = new FormData(form[0]);
-
+       
+          
         generatePDFfromPreview(true,(pdfBase64)=>{
 
             formData.append('file', pdfBase64);
@@ -1087,15 +1104,16 @@ function initUIEvents() {
                 data: formData, // serializes the form's elements.
                 async: false,
                 success: function (data) {
-                    toast('Thank you, Your request has been submitted, we will contact you soon.');
+                    //toast('Thank you, Your request has been submitted, we will contact you soon.');
                     form.trigger('reset');
                     $('#rfq').modal('toggle');
                     $loader.addClass("hidden");
+                    $("#rfq_confirm").modal();
                 },error: function (request, status, error) {
                     toast('Server Error: Form could not be submitted.');
                     form.trigger('reset');
                     $('#rfq').modal('toggle');
-    
+                    $loader.addClass("hidden");
                 },
                 cache: false,
                 contentType: false,
@@ -1104,10 +1122,7 @@ function initUIEvents() {
             });
         
         });
-
-       
-
-         
+  
     });
     $("#menu-save-design").on("click",function(e){
         e.preventDefault();
@@ -1176,7 +1191,9 @@ $("#btnStartOverModel").on("click",function(e){
             loadSVGTemplate(templateId);
             $("#ws-btn-preview").addClass("hidden");
             $("#ws-btn-save").addClass("hidden");
-        })
+            $btnTemplate.click();
+        }); 
+
         $("#btnSave").unbind().on("click",function(e){
             
             const templateId  = selectedTemplateId || 'default';
@@ -1765,6 +1782,15 @@ function renderPreview() {
               
 
             }
+            var watermark = "/uploads/admin/watermark/watermark.png";
+
+            // fabric.Image.fromURL(watermark, function (img) {
+                
+            //     canvasPrev.add(img);
+                       
+            // });
+            // canvasPrev.renderAll();
+
             $loader.addClass("hidden");
             //$("#ws-btn-save").addClass("hidden");
             $("#ws-btn-preview").addClass("hidden");
@@ -1788,7 +1814,6 @@ function renderMainCanvasOnBackButton() {
         canvas.renderAll();
     }, function (o, object) {
         addLayer(o);
-        console.log(o, object)
     })
 
 }
@@ -2032,6 +2057,7 @@ function generatePDFfromPreview(onServer, callback) {
                 format: 'letter',
                 putOnlyUsedFonts: true
             });
+
             width = pdf.internal.pageSize.getWidth();
             height = pdf.internal.pageSize.getHeight();
             const factor = 1.3; 
@@ -2043,7 +2069,7 @@ function generatePDFfromPreview(onServer, callback) {
                 else
                 { clonedCanvas.setDimensions({ width: 612 * factor, height: 792 * factor }); }
 
-                clonedCanvas.setZoom(factor);
+                clonedCanvas.setZoom(1.3);
                 for (var i = 0; i < clonedCanvas._objects.length; i++) {
                     clonedCanvas._objects[i].globalCompositeOperation = null;
                     canvasPrev.renderAll.bind(clonedCanvas)
@@ -2052,7 +2078,7 @@ function generatePDFfromPreview(onServer, callback) {
                 clonedCanvas.add(bg);
                 clonedCanvas.renderAll();
                 var imgData = clonedCanvas.toDataURL('image/png');
-                pdf.addImage(imgData, 'png', 0, 0);
+                 pdf.addImage(imgData, 'png', 0, 0);
 
                 if(onServer)
                 {
@@ -2066,10 +2092,12 @@ function generatePDFfromPreview(onServer, callback) {
                         }
                        
                     }
+                   
                     var fn = $("#downloadFileName").val(); 
                     fn = fn || "KakePrints.pdf";
                     fn = (fn.indexOf('.pdf') === -1)?(fn+".pdf"):fn;
                     pdf.save(fn);
+                    $.post('/api/logs',{level:1,type:'download_pdf',content:fn},(data)=>{})
                 }
 
                 $loader.addClass("hidden");
@@ -2079,8 +2107,10 @@ function generatePDFfromPreview(onServer, callback) {
             });
 
         },
-        error: function (res) {
+        error: function (xhr, ajaxOptions, thrownError) {
+            let msg = "Error while downloading.".
             toast("Error while downloading.");
+            commonService.logger.log(2,'download_pdf',thrownError,null,null,false);
         }
     })
 }

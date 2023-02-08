@@ -37,41 +37,71 @@
             <input id="design-type" value="clipart" hidden="hidden">
         </div> -->
     </div>
-    <div class="col-lg-9 pd-x-15">
-        <div class="card pd-10 tx-primary tx-bold bd-b">PREVIEW</div>
+    <div class="col-lg-6 pd-x-15">
 
-        <div class="card grid-bg" style="height:600px">
+        <div class="card " >
             <div class="workarea" >
                 <div  id="canvas-holder">
                     <div class="content tx-center">
-                        <canvas id="admin-main-canvas" width="500" height="500" style="margin:20px;background-color:transparent;border:dashed 1px #000" ></canvas>
+                        <canvas id="admin-main-canvas" width="500" height="400" style="margin-top:20px; background-color:transparent; border:solid 1px #ccc;  box-shadow: 3px 5px #ccc;" ></canvas>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="card ht-300">
-          <div class="row pd-0 mg-0" id="clipartThumbs" style="height:400px; overflow-y:scroll">
-          <%cliparts?.forEach((item)=>{%>
-            <div class="col-lg-2 pd-0">
-              <div class="card bd-0"  >
-                <div style="height:150px;overflow:hidden;padding:10px;text-align: center;">
-                <img class="card-img-top img-fluid"   src="<%=item.base64%>" alt="Image">
-              </div>
-                <div class="card-body bd bd-t-0">
-                  <h6 class="mg-b-3"><a href="" class="tx-dark tx-12 tx-uppercase"><%=item.title%></a></h6>
-                  <span class="tx-12"><%=item.create_dt%></span>
-                  <button type="button" id="<%=item.code%>" class="btn btn-sm btn-primary tx-12 tx-bold tx-uppercase delete">Delete</button>
-                </div>
+        
+    </div>
+  <div class="col-lg-3 pd-0">
+    <div class="list-group widget-list-group bg-app-primary">
+      <div class="list-group-item ">
+        <div class="media d-block ">
+       
+          <div class="media-body mg-t-20 mg-sm-t-0">
+            <span class=" tx-14 tx-uppercase">ClipArts </span>
+            <span class="pull-right" style="background: white;
+            color: #494699;
+            border-radius: 50%;
+            padding: 2px 5px;
+            font-weight: bold;
+            font-size: 12px;"><%=cliparts[0]?.count%></span>
+          </div><!-- media-body -->
+        </div><!-- media -->
+
+      </div>
+    </div>
+    <div class="card" id="clipartAdminContainer" style="max-height: 500px; overflow-y: scroll;">
+      <%cliparts?.forEach(clipart=>{ %>
+       
+        <div class="nav-item bd">
+          <a href="#" class="nav-link with-sub text-primary tx-uppercase tx-12 tx-bold">
+            <span><%=clipart.categoryName%> </span>
+            <span class="pull-right badge badge-primary " ><%= clipart.items.length %></span>
+          </a>
+       
+            <div class="nav-sub " style="display: none;">
+              <div class="row mg-15" >
+
+              <%clipart.items.forEach(item=>{ %>
+                  <div id="<%=item.id %>" class=" nav-item col-lg-3 col-md-2 col-sm-6 col-xs-12 pd-0 clipart" data-active="<%=item.active %>" data-category="<%=clipart.categoryId %>" data-title="<%=item.title %>" data-url="/uploads/admin/clipart/clipart-<%=item.code %><%=item.file_ext %>" data-target="#clipartModal" data-toggle="modal">
+                    <div>
+                      <%if(!item.active){%>
+                       <div class="tx-center tx-11 tx-uppercase tx-bold " style="color:red">Disabled</div>
+                       <%}%> 
+                       <img class="card-img-top img-fluid pd-b-10 " src="/uploads/admin/clipart/clipart-<%=item.code %><%=item.file_ext %>" alt="">
+
+                      </div>
+                  </div>
+                <%})%>
               </div>
             </div>
+
+       
               
-           
-        
-          <%})%>
-        </div>
-        </div>
+            </div>
+       
+    
+   <%})%>
     </div>
-  
+  </div>
     </div>
 <script>
     $(".tab-content .tab-pane").each((i,e)=>

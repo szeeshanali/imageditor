@@ -8,6 +8,7 @@ const contents               = require("../../models/contents.js");
 
 const commonService         = require("../../services/common");
 const appusers              = require("../../models/appuser");
+const logs              = require("../../models/logs");
 var request = require('request');
 
 const {isLoggedIn,isAdmin}  = require('../../config/auth')
@@ -388,7 +389,40 @@ router.post('/app/admin/workspace',(req,res)=>{
   res.render("pages/admin/index",{ executescript: `callback({width:${width},height:${height},title:${title}});` })
 })
 
+router.post('/api/admin/category', isAdmin , async (req,res)=>{
+  const  {name} = req.body;
+  try{
 
+    let nameAlreadyExists = await commonService.categoryService.getCategoriesByFilterAsync({name:name});
+
+    if(nameAlreadyExists && nameAlreadyExists.length > 0)
+    { return res.status(409).send(`DUPLICATE: ${name}`) }
+
+    await commonService.categoryService.addCategoryAsync(name);
+    res.status(200).send(`CREATED: ${name}`)
+
+  }catch(ex)
+  {
+    res.status(500).send(`ERROR: ${name}`)
+  }
+ 
+})
+router.delete('/api/admin/category/:id', isAdmin , async (req,res)=>{
+  const  {categoryId} = req.params.id;
+  try{
+
+    await commonService.categoryService.deleteCategoriesByFilterAsync({id:req.params.id});
+    res.status(200).send(`OK: ${req.params.id}`);
+
+  }catch(ex)
+  {
+    if(ex === 403)
+    { return res.status(403).send(`FORBIDDEN: Category is associated with cliparts, please remove associated cliparts and try again.`) }else
+    res.status(500).send(`ERROR: ${req.params.id}`)
+   
+  }
+ 
+})
 router.get('/app/admin/workspace',(req,res)=>{
   const  {width, height, title} = req.body;
   res.render("pages/admin/index",);``
@@ -400,10 +434,10 @@ router.get(ROUTE_ADMIN_DASHBOARD, isAdmin, async (req,res)=>{
 
 
 
-  var totalUsers = await appusers.count();
-  var allusers = await appusers
-  .find({deleted:false, active:true},{password:0,is_admin:0,deleted:0,date:0,lname:0});
-
+  let totalUsers = await appusers.count();
+  let allusers = await appusers.find({deleted:false, active:true},{password:0,is_admin:0,deleted:0,date:0,lname:0});
+  let allDownloads = await logs.find({"type":"download_pdf"},{ user_id:1,created_dt:1 });
+  let allProjects = await uploads.find({"type":"project"},{ _id:1,created_dt:1,uploaded_by:1 })
   var report = {
     todayUsers:0,
     thisWeekUsers:0,
@@ -415,19 +449,48 @@ start.setHours(0,0,0,0);
 var end = new Date();
 end.setHours(23,59,59,999);
 var today = new Date();
-report.todayUsers      = totalUsers;
-report.thisWeekUsers   = allusers.filter(function(value){ return value.created_dt >= new Date(today.getFullYear(), today.getMonth(), today.getDate()-7);}).length || 0;
-report.thisMonthUsers  = allusers.filter(function(value){ return value.created_dt >= new Date(today.getFullYear(), today.getMonth(), today.getDate()-30);}).length || 0;
+var year = today.getFullYear();
+var month = today.getMonth();
+var date = today.getDate();
+report.todayUsers      = allusers.filter(todayFilter).length || 0;
+report.thisWeekUsers   = allusers.filter(thisWeekFilter).length || 0;
+report.thisMonthUsers  = allusers.filter(thisMonthFilter).length || 0;
 report.totalUsers      = allusers.length; 
 report.activeUsers      = allusers.filter(function(value){ return value.active == true}).length || 0;
-report.adminUsers     = allusers.filter(function(value){ return value.is_admin == true}).length || 0;
+report.adminUsers     =   allusers.filter(function(value){ return value.is_admin == true}).length || 0;
 
+/// download filter 
+report.todayDownloads =   allDownloads.filter(todayFilter).length || 0;;
+report.thisWeekDownloads = allDownloads.filter(thisWeekFilter).length || 0;
+report.thisMonthDownloads =allDownloads.filter(thisMonthFilter).length || 0;
+report.totalDownloads      = allDownloads.length;
+
+/// project filter 
+report.totalProjects = allProjects.length;
+report.todayProjects =   allProjects.filter(todayFilter).length || 0;;
+report.thisWeekProjects = allProjects.filter(thisWeekFilter).length || 0;
+report.thisMonthProjects =allProjects.filter(thisMonthFilter).length || 0;
+
+
+//let projects = await uploads.find({"type":"project","deleted":false, "active":true},{projection:{"json":0,"base64":0}}); 
+
+
+function todayFilter(value)
+{ return value.created_dt >= new Date(year, month, date); }
+
+function thisWeekFilter(value)
+{ return value.created_dt >= new Date(year, month, date-7); }
+
+function thisMonthFilter(value)
+{ return value.created_dt >= new Date(year, month, date-30); }
 
   res.locals.page = {
    title  : "Dashboard",
    id     : "__dashboard",
    user   : req.user,
    users  : allusers,
+   userProjects: allProjects,
+   downloads:allDownloads,
    report: report
 
   } ;
@@ -466,10 +529,13 @@ router.get('/app/admin/templates', isAdmin, async (req,res)=>{
 
 router.get('/app/admin/categories', isAdmin, async (req,res)=>{
   const  {width, height, title} = req.body;
-  res.locals.pagetitle ="Categories";
-  res.render("pages/admin/templates",{
-    user      : req.user });
+  var categories = await commonService.categoryService.getCategoriesAsync(true)
+
+
+  res.render("pages/admin/categories",{
+    categories      : categories });
 })
+
 /** End Template */
 
 
@@ -477,14 +543,36 @@ router.get('/app/admin/categories', isAdmin, async (req,res)=>{
 
 router.get('/app/admin/cliparts', isAdmin, async (req,res)=>{
 
-  const cliparts = await commonService.uploadService.getUploads('clipart',null,true)
-  var categories = await commonService.categoryService.getCategoriesAsync(); 
+  let categoriesWithItems = []; 
+  let cliparts = await commonService.uploadService.getUploads('clipart',true)    
+  let categories = await commonService.categoryService.getCategoriesAsync(true);
+  
+  categories.forEach(category => {
+   var items = cliparts?.filter(i=>i.category == category.id);
+   if(items != null && items.length > 0)
+   {
+    categoriesWithItems.push({
+          categoryName:category.name,
+          categoryId:category._id,
+          items: items,
+          count: categories.length
+       })
+   }else{
+    categoriesWithItems.push({
+      categoryName: category.name,
+      categoryId:category._id,
+      items:[],
+      count: categories.length
+    })
+   }
+  
+  });
   res.locals.page = {
     id: "__cliparts",
     title: "Upload Cliparts",
     user: req.user, 
     categories: categories,
-    cliparts:cliparts
+    cliparts:categoriesWithItems
   }
   res.render("pages/admin/cliparts",
   res.locals.page);
@@ -553,9 +641,9 @@ let adminUploadItems = await commonService.uploadService.getUploads('all',true,t
 let templates = adminUploadItems.filter(function(item){ return item.type == 'template'});
 let cliparts = adminUploadItems.filter(function(item){ return item.type == 'clipart'});
 let customDesigns = adminUploadItems.filter(function(item){ return item.type == 'pre-designed'});
-let categories = await commonService.categoryService.getCategoriesAsync();
-let fonts = await commonService.contentService.getContentAsync('fonts',false);
-let customText = await commonService.contentService.getContentAsync('custom-text');
+let categories  = await commonService.categoryService.getCategoriesAsync();
+let fonts       = await commonService.contentService.getContentAsync('fonts',false);
+let customText  = await commonService.contentService.getContentAsync('custom-text');
 
 let ca = [];
 categories.forEach(category => {
@@ -644,20 +732,19 @@ router.delete('/api/admin/clipart/:id', isAdmin, async (req,res)=>{
     return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."});
   }  
   try{
-    await uploads.findOneAndDelete({type:'clipart', by_admin:true, code:id }); 
+    await uploads.findOneAndDelete({_id:id }); 
     return res.status(200).send({"status":400,"message":`Deleted successfully, Id:${id}`});
   }catch(e)
   { return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."}); }
  
 }) 
 router.post('/app/admin/uploads',  function(req, res) {
-  let {desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
+  let {id, desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
  
   file_name = file_name || "pd.png"; 
   //filename = `${filename}-${_id}${file_ext}`;       
-  var _id = mongoose.Types.ObjectId();
-  
-  var uploadModel = {
+  let _id = mongoose.Types.ObjectId();
+  let uploadModel = {
     title           :   title,
     name            :   name,
     desc            :   desc,
@@ -680,19 +767,20 @@ router.post('/app/admin/uploads',  function(req, res) {
     type            :   type,
     ref_code        :   ref_code,
     
+    
   };
 
   let _path = file_name?`../app/public/uploads/admin/${type}/${type}-${_id}.${file_name.split('.').pop()}`:'';  
   let _base64Alter = base64.replace(`data:${mime_type};base64,`, "");
 
   
-  fs.writeFile(_path, _base64Alter, 'base64', function(err) {
+  fs.writeFile(_path, _base64Alter, 'base64', async function(err) {
       if(err){ 
         console.log(err);
         return res.status(500).send({message:`Error uploading file.`, error: err}); 
        }
 
-       commonService.uploadService.upload(uploadModel,(err,msg)=>{
+       await commonService.uploadService.upload(uploadModel, id, (err,msg)=>{
         if(!err)
         {res.status(200).send({message:`Success`, error: null}); }
          res.status(400).send({message:`Unable to upload file.`, error: msg}); 

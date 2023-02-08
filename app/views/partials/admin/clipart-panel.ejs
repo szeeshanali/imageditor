@@ -1,21 +1,10 @@
-<!-- <div id="admin-image-upload">
-    <div class="pd-t-15 text-center drag-drop-input">
-        <h1 class="ion-ios-cloud-upload icon-imgupload"></h1>
-        <br>
-            <p class="tx-12 "><%= locals.uploadmessage %></p>
-        </div>
-</div>
-    <input id="admin-image-upload-hidden" data-page-id="<%= locals.page.id %>" type="file" accept="image/*" multiple="multiple" hidden="hidden">
-        
-    
-     -->
-
-   
+  
     <div class="card">
         <div class="pd-10 admin-design-ctrl">
-    
+            <button type="button" id="btnDeleteClipart" class="hidden btn btn-sm btn-primary tx-12 tx-bold tx-uppercase delete">Delete</button>
+
                 <div class="pd-b-10">
-                    <div class="tx-left mg-y-5">
+                    <div class="tx-left">
                         <select id="admin-categories" class="form-control  select2 select2-hidden-accessible" data-placeholder="Choose one" tabindex="-1" aria-hidden="true">
                             <option label="Categories"></option>
                             <%for(var i=0; i<categories.length;i++){%>
@@ -30,16 +19,12 @@
                     </div>
                    
     
-                    <div class="mg-y-5">
-                        <input class="form-control" value="https://www.kopykake.com/"  placeholder="KopyKake Webstore Link" id="admin-design-link" type="text">
-                    </div>
-                    <div class="mg-y-5">
-                        <input class="form-control" id="admin-kopykake-part"  placeholder="KopyKake Part #" id="admin-design-link" type="text">
-                    </div>
+
+
                     <div class="d-flex pd-y-10">
                         <label class="ckbox">
-                            <input type="checkbox" checked="" id="design-active"><span>Active</span>
-                          </label>
+                            <input type="checkbox"   id="design-active"><span>Active</span>
+                        </label>
                           <!-- <label class="ckbox mg-l-20">
                             <input type="checkbox" id="design-default" ><span>Default</span>
                           </label>
@@ -49,8 +34,10 @@
             </div>
                 <div id="save-image-ctrl" class="tx-center">
                     <div class="btn-group" role="group" >
-                        <button type="button" id="save-design" class="btn btn-primary  pd-x-25 active ">Upload</button>
+                        <input type="hidden" id="selectedClipartId">
+                        <button type="button" id="save-design" class="btn btn-primary  pd-x-25 active ">Save</button>
                         <button type="button" id="cancel-design" class="btn btn-secondary pd-x-25 ">Reset</button>
+
                       </div>
                 </div>
             </div>

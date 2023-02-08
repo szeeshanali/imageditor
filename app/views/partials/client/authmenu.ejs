@@ -1,6 +1,6 @@
 <%if( user != null)  {%>
 <div class="am-header-right">
-    
+    <a href="#" data-target="modal" data-toggle="#faqPopup" class="tx-white tx-bold   mg-r-5 nav-link nav-link-profile">FAQs</a>    
     <div class="dropdown dropdown-profile">
         <a href="#" class="nav-link nav-link-profile" data-toggle="dropdown" aria-expanded="false">
 
@@ -9,6 +9,7 @@
                 <i class="fa fa-angle-down mg-l-3"></i>
             </span>
         </a>
+
         <div class="dropdown-menu wd-200" x-placement="bottom-start" style="position: absolute; transform: translate3d(20px, 48px, 0px); top: 0px; left: 0px; will-change: transform;">
             <ul class="list-unstyled user-profile-nav">
                 <!-- <li>
@@ -36,6 +37,7 @@
         </div>
         <!-- dropdown-menu -->
     </div>
+
     <!-- dropdown -->
 </div>
 <%}%>

@@ -1,7 +1,25 @@
-<div class=" pd-20">
-  <div class="row row-sm mg-t-15 mg-sm-t-20">
-    <div class="col-md-6 card pd-20">
-      <div class="list-group widget-list-group" style="max-height: 350px; overflow-y:scroll">
+<div class="row">
+  <div class="col-lg-3 col-md-3 col-sm-3 pd-l-0">
+    <div class="card">
+      <%- include('../../partials/admin/dashboard-panel'); %>
+    </div>
+  </div>
+  <div class="col-lg-9 col-md-9 col-sm-9 pd-l-0">
+    <div class="card pd-20">
+      <h6 >Add Custom Text</h6>
+      <p >Custom text will be displayed as a list to the user in which user can choose their favorite text for the design.</p>
+      <div class="row row-xs">
+        <div class="wd-300">
+          <input type="text" placeholder="Enter Text" id="inputCustomText" class="form-control" maxlength="100" minlength="3" pattern=".{3,100}" title="Minimum 3 and maximum 100 characters." >
+        </div>
+      </div><!-- row -->
+      <div class="form-layout-footer pd-t-20">
+        <button type="button" id="btnCustomText" class="btn btn-primary tx-uppercase tx-bold">Add Text</button>
+        <button class="btn btn-secondary tx-uppercase tx-bold " id="btnCustomTextClear">Clear</button>
+      </div>
+    </div>
+    <div>
+      <div class="list-group widget-list-group mg-t-15 style="max-height: 350px; overflow-y:scroll">
         <%if(!content || content?.length == 0){%>
         <p class="pd-10">No Custom Text Found.</p>
         <%}%>
@@ -10,34 +28,16 @@
           <div class="media">
        
             <div class="media-body">
-              <span class="tx-inverse tx-18"><%=content[i].content%></span>
-              <span class="pull-right"><button class="btn btn-secondary btn-custom-text" type="button" id="<%=content[i]._id%>"><i class="icon ion-ios-trash-outline tx-18"></i></button></span>
+              <span class="tx-inverse tx-16 tx-bold"><%=content[i].content%></span>
+              <span class="pull-right"><button class="btn btn-secondary btn-custom-text pd-0 pd-x-10" type="button" id="<%=content[i]._id%>"><i class="icon ion-ios-trash-outline tx-18"></i></button></span>
             </div><!-- media-body -->
           </div><!-- media -->
         </div><!-- list-group-item -->
         <%}%>
-      </div><!-- list-group -->
-    </div><!-- col-md-6 -->
-  
-    <div class="col-md-6 mg-t-15 mg-sm-t-20 mg-md-t-0">
-      <div class="card pd-20 pd-sm-40 form-layout form-layout-5">
-        <h6 class="tx-gray-800 tx-uppercase tx-bold tx-14 mg-b-10" >Add Custom Text</h6>
-        <p class="mg-b-30 tx-gray-600">Custom text will be displayed as a list to the user in which user can choose their favorite text for the design.</p>
-        <div class="row row-xs">
-          <div class="col-sm-10 mg-t-10 mg-sm-t-0">
-            <input type="text" placeholder="Enter Text" id="inputCustomText" class="form-control" maxlength="100" minlength="3" pattern=".{3,100}" title="Minimum 3 and maximum 100 characters." >
-          </div>
-        </div><!-- row -->
-     
-        <div class="row row-xs mg-t-30">
-          <div class="col-sm-8 mg-l-auto">
-            <div class="form-layout-footer">
-              <button type="button" id="btnCustomText" class="btn btn-primary mg-r-5">Add Text</button>
-              <button class="btn btn-secondary" id="btnCustomTextClear">Clear</button>
-            </div><!-- form-layout-footer -->
-          </div><!-- col-8 -->
-        </div>
       </div>
-    </div><!-- col-md-6 -->
+    </div>
   </div>
 </div>
+
+
+

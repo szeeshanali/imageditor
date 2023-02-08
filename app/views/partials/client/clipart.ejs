@@ -6,47 +6,24 @@
 
   <div class="col-lg-12  " >
 
-    <!-- <div class="dropdown">
-      <button class="btn  dropdown-toggle" type="button" data-toggle="dropdown">Categories
-      <span class="caret"></span></button>
-      <ul class="dropdown-menu">
-        <%categories?.forEach(item=>{%>
-
-        <li><a href="#"><%=item.name%></a></li>
-        <%})%>
-      </ul>
-    </div> -->
     <div class="nav am-sideleft-menu pd-0">
     
       <%cliparts?.forEach(clipart=>{ %>
        
         <div class="nav-item">
-          <a href="#" class="nav-link with-sub text-primary">
-            <span><%=clipart.categoryName%> (<%= clipart.items.length %>)</span>
+          <a href="#" class="nav-link with-sub text-primary tx-12 tx-bold tx-uppercase">
+            <span><%=clipart.categoryName%> </span><span class="tx-bold mg-l-10">(<%= clipart.items.length %>)</span>
           </a>
        
             <div class="nav-sub" style="display: none;">
               <div class="row" id="clipartContainer">
 
               <%clipart.items.forEach(item=>{ %>
-                <!-- <img src="/uploads/admin/clipart/clipart-<%=item.code %><%=item.file_ext %>" alt="Avatar" class="image" style="width:100%">
-                <div class="middle">
-                  <div class="text">Add to Design</div>
-                </div> -->
-                <!-- <div class="nav-item col-lg-3 pd-2  clipart " >
-                    <div class="card" style="height:100px; background-color:#ebebeb; border-radius: 5px; padding:5px">
-                      <img  class="card-img-top img-fluid pd-b-10 " src="/uploads/admin/clipart/clipart-<%=item.code %><%=item.file_ext %>" alt="Image">
-                        <h5 class="tx-12 tx-center" style="height:28px;overflow:hidden"><%=item.title %></h5>
-                    </div>
-                    <div class="clipart-text">Add</div>
-                </div> -->
-
+              
                 <div class=" nav-item col-lg-3 col-md-3 col-sm-6 col-xs-12 pd-2   clipart" data-title="<%=item.title %>" data-url="/uploads/admin/clipart/clipart-<%=item.code %><%=item.file_ext %>" data-target="#clipartModal" data-toggle="modal">
                   <div  >
                       <img class="card-img-top img-fluid pd-b-10 " src="/uploads/admin/clipart/clipart-<%=item.code %><%=item.file_ext %>" alt="">
-                      <!-- <div class="overlay2">
-                         <h2 data-url="/uploads/admin/clipart/clipart-<%=item.code %><%=item.file_ext %>">Add</h2>
-                      </div> -->
+                 
                   </div>
               </div>
                 

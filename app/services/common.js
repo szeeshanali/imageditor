@@ -2,6 +2,7 @@ const categoryModel = require("../models/categories");
 const uploads = require("../models/uploads"); 
 const appuserModel = require("../models/appuser"); 
 const contents = require("../models/contents"); 
+const logs = require("../models/logs"); 
 
 const { default: mongoose, mongo } = require('mongoose');
 
@@ -9,13 +10,39 @@ const commonService = (function() {
     this.cached_categories = [];
     this.cached_categoryItems = [];
     this.cached_templates = [];
-    this.getCategoriesAsync = async ()=>
+    this.getCategoriesAsync = (all) =>
     { 
-        return await categoryModel.find({active:true});
+        if(all)
+        {  return categoryModel.find({deleted:false}); }
+        else 
+        {  return categoryModel.find({active:true,deleted:false}); }
     },
-
-    this.getTemplatesAsync = async (active)=>
+    this.getCategoriesByFilterAsync = (filter) =>
     { 
+        filter['deleted'] = false;
+        return categoryModel.find(filter);
+    },
+    this.deleteCategoriesByFilterAsync = async (filter) =>
+    { 
+        let itemExists = await uploads.find({type:"clipart", category:filter.id}); 
+        if(itemExists != null && itemExists.length > 0)
+        {throw 403};
+
+        return await categoryModel.findOneAndUpdate({_id:filter.id},{deleted:true},{
+            returnOriginal: false
+        });
+    },
+    this.addCategoryAsync = async (categoryName) =>
+    { 
+        var category = new categoryModel();
+        category.name = categoryName;
+        category.active = true; 
+        category.deleted = false; 
+
+        
+        return category.save();
+    },
+    this.getTemplatesAsync = async (active)=> { 
      
         return  await uploads.find({type: 'template', active:true, by_admin:true  },
     {
@@ -51,39 +78,22 @@ const commonService = (function() {
         return  designs;
     }
 
-    this.getUploads = async (type, active, by_admin)=>
+    this.getUploads = (type,all) =>
     { 
-        active = (active == null)?null:!active;
-        var designs = [];
-        if(type == 'all')
-        {
-            designs =   await uploads.find({ active:{$ne:active}, by_admin:by_admin, deleted:false},
+        let filter = {}; 
+        let projection = {code:1,title:1,type:1,name:1,ref_code:1,id:1,category:1,file_ext:1,active:1 };
 
-            {
-                code:1,
-                title:1,
-                type:1,
-                name:1,
-                ref_code:1,
-                id:1,
-                category:1,
-                file_ext:1
-            }).sort({order_no:1}); 
-        }else{
-
-            //let query = await uploads.find({type: type, active:active, by_admin:by_admin,deleted:false }; 
-            designs =   await uploads.find({type: type, active:{$ne:active}, by_admin:by_admin,deleted:false },
-            {
-                code:1,
-                base64:1,
-                title:1,
-                type:1,
-                id:1,
-                category:1
-            }).sort({order_no:1}); 
+        if(all)
+        { 
+            filter = {deleted:false};
+            if(type != "all")
+            {filter["type"] = type}
         }
-      
-        return  designs;
+        else 
+        { filter = {type: type, active:true, deleted:false }; }
+
+        return uploads.find(filter,projection).sort({order_no:1}); 
+             
     }
 
     this.getUserDesignsAsync = async (userId, designId)=>
@@ -238,18 +248,26 @@ const commonService = (function() {
         return report; 
 
     }
-    this.upload = (uploadModel, result)=>{
+    this.upload = async (uploadModel, selectedDesignId, result)=>{
 
         var ticks = new Date().getTime();
         var objectId = mongoose.Types.ObjectId();
-        var upload = new uploads(uploadModel);
-        upload.save()
-        .then((value)=>{
-            result(false,value);
-           // res.redirect(ROUTE_ADMIN_HOME);
-        }).catch(value=> {
-            result(true,value);
-        });
+        if(selectedDesignId && selectedDesignId.length>3){
+          const update = { title: uploadModel.title, category:uploadModel.category, active:uploadModel.active };
+            await uploads.findOneAndUpdate({_id:selectedDesignId}, update, {
+                returnOriginal: false
+            });
+
+        }else{
+            var upload = new uploads(uploadModel);
+            upload.save().then((value)=>{
+                result(false,value);
+               // res.redirect(ROUTE_ADMIN_HOME);
+            }).catch(value=> {
+                result(true,value);
+            });
+        }
+       
        }
        this.clearUploads = ()=> {
         this.cached_templates = null;
@@ -263,10 +281,23 @@ const commonService = (function() {
 
         if( type === 'fonts')
         {  
+            let fonts = new Array();
             if(isAdmin)
-            {return await contents.find({type:type, deleted:false});}
-            return await contents.find({type:type, active:true, deleted:false});
-      }
+            { fonts =  await contents.find({type:type, deleted:false}); }
+            else
+            { fonts = await contents.find({type:type, active:true, deleted:false}); }
+            
+            fonts = fonts.sort(function(a, b) {
+                    const nameA = a.content.toUpperCase(); 
+                    const nameB = b.content.toUpperCase(); 
+                    if (nameA < nameB) {
+                    return -1;
+                    }
+                });
+            
+                return fonts;
+            
+        }
 
 
         return await contents.findOne({type:type, active:true, deleted:false});    
@@ -305,13 +336,27 @@ const commonService = (function() {
         this.cached_categoryItems = [];
     }
 
-
+    this.addLogs = (user_id,level,type,message,content,path,is_admin)=>{
+        let _log = new logs({
+            user_id: user_id,
+            level:level,
+            message:message,
+            content:content,
+            type:type,
+            path:path,
+            is_admin:is_admin             
+        })
+        _log.save();
+    }
 
     return {
         categoryService: {
             getCategoriesAsync  :   this.getCategoriesAsync,
             getCategoryAsync    :   this.getCategoryAsync,
-            addCategoryItemAsync     :   this.addCategoryItemAsync
+            addCategoryItemAsync     :   this.addCategoryItemAsync,
+            addCategoryAsync        : this.addCategoryAsync,
+            getCategoriesByFilterAsync:this.getCategoriesByFilterAsync,
+            deleteCategoriesByFilterAsync:this.deleteCategoriesByFilterAsync
         },
         uploadService:{
             upload                  :   this.upload,
@@ -333,6 +378,9 @@ const commonService = (function() {
         contentService: {
             addOrUpdateContentAsync  :  this.addOrUpdateContentAsync ,
             getContentAsync          :  this.getContentAsync
+        },
+        logger:{
+            log: this.addLogs
         },
         clearCache: clearCache
     }

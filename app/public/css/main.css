@@ -3669,7 +3669,8 @@ tbody.collapse.show {
 
 .badge-primary {
   color: #fff;
-  background-color: #007bff;
+  background-color: #494699;
+ 
 }
 .badge-primary[href]:focus, .badge-primary[href]:hover {
   color: #fff;
@@ -45209,7 +45210,9 @@ a.hover-white-8:hover, a.hover-white-8:focus {
 .tx-bold {
   font-weight: 700;
 }
-
+.tx-underline {
+  text-decoration: underline;
+}
 .tx-semibold {
   font-weight: 600;
 }
