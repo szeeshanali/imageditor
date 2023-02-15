@@ -1781,14 +1781,18 @@ function renderPreview() {
               
 
             }
-            var watermark = "/uploads/admin/watermark/watermark.png";
-
-            // fabric.Image.fromURL(watermark, function (img) {
+            // var watermark = "/uploads/admin/watermark/watermark.png";
+           
+            //     fabric.Image.fromURL(watermark, function (img) {
+            //         img.scaleToWidth(150)
+            //         img.set({left:150,top:0})
                 
-            //     canvasPrev.add(img);
-                       
-            // });
-            // canvasPrev.renderAll();
+            //         canvasPrev.add(img);
+            //     });
+
+              
+            
+            canvasPrev.renderAll();
 
             $loader.addClass("hidden");
             //$("#ws-btn-save").addClass("hidden");
