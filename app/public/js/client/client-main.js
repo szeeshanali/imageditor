@@ -800,8 +800,7 @@ function loadSVGTemplate(id) {
             }
 
 
-            canvasPrev.setDimensions({width: templateWidth, height: templateHeight});
-            
+            canvasPrev.setDimensions({width: templateWidth, height: templateHeight});            
             canvasPrev.setBackgroundImage(loadedObjects, canvasPrev.renderAll.bind(canvasPrev));
            
             let __w = parseInt(templateWidth*__f); 
@@ -812,6 +811,7 @@ function loadSVGTemplate(id) {
             canvasPrev.renderAll();
 
             loadedObjects.center().setCoords();
+            canvasPrev.meta = meta;
             //loadgrid()
         }, function (item, object) {
             object.set({fill:"#fff"});
@@ -1781,14 +1781,18 @@ function renderPreview() {
               
 
             }
-            var watermark = "/uploads/admin/watermark/watermark.png";
-
-            // fabric.Image.fromURL(watermark, function (img) {
+            // var watermark = "/uploads/admin/watermark/watermark.png";
+           
+            //     fabric.Image.fromURL(watermark, function (img) {
+            //         img.scaleToWidth(150)
+            //         img.set({left:150,top:0})
                 
-            //     canvasPrev.add(img);
-                       
-            // });
-            // canvasPrev.renderAll();
+            //         canvasPrev.add(img);
+            //     });
+
+              
+            
+            canvasPrev.renderAll();
 
             $loader.addClass("hidden");
             //$("#ws-btn-save").addClass("hidden");
@@ -2030,7 +2034,7 @@ function generatePDFfromPreview(onServer, callback) {
         toast("Please create your design before download.");
         return;
     }
-
+    var c = canvasPrev.meta; 
 
     $loader.removeClass("hidden");
     menuHighlighter("#menu-download");
@@ -2059,7 +2063,7 @@ function generatePDFfromPreview(onServer, callback) {
 
             width = pdf.internal.pageSize.getWidth();
             height = pdf.internal.pageSize.getHeight();
-            const factor = 1.3; 
+            const factor = 1.5; 
             canvasPrev.clone(function (clonedCanvas) {
                 var bg = clonedCanvas.backgroundImage;
                 clonedCanvas.backgroundImage = false;
@@ -2068,7 +2072,7 @@ function generatePDFfromPreview(onServer, callback) {
                 else
                 { clonedCanvas.setDimensions({ width: 612 * factor, height: 792 * factor }); }
 
-                clonedCanvas.setZoom(1.3);
+                //clonedCanvas.setZoom(1.);
                 for (var i = 0; i < clonedCanvas._objects.length; i++) {
                     clonedCanvas._objects[i].globalCompositeOperation = null;
                     canvasPrev.renderAll.bind(clonedCanvas)
@@ -2077,7 +2081,7 @@ function generatePDFfromPreview(onServer, callback) {
                 clonedCanvas.add(bg);
                 clonedCanvas.renderAll();
                 var imgData = clonedCanvas.toDataURL('image/png');
-                 pdf.addImage(imgData, 'png', 0, 0);
+                pdf.addImage(imgData, 'png', 0, 0, 612 * factor, 792 * factor);
 
                 if(onServer)
                 {
@@ -2096,7 +2100,9 @@ function generatePDFfromPreview(onServer, callback) {
                     fn = fn || "KakePrints.pdf";
                     fn = (fn.indexOf('.pdf') === -1)?(fn+".pdf"):fn;
                     pdf.save(fn);
-                    $.post('/api/logs',{level:1,type:'download_pdf',content:fn},(data)=>{})
+                    var t = canvasPrev.meta; 
+                    $.post('/api/logs',{
+                        level:1,type:'download_pdf',content:fn, data:t},(data)=>{})
                 }
 
                 $loader.addClass("hidden");

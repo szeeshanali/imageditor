@@ -998,8 +998,17 @@ function saveDesign() {
 
         initContextMenu();
 
+        $("#categoryContainer .category").on("click",function(e){
+          
+            const id = e.currentTarget.id; 
+            let categoryNm =  $(`#${id}`).find('.category-nm').text();
+            $("#inputCategoryName").val(categoryNm);
+            $("#btnAddCategory").text("Update Category");
+            $("#hiddenCategoryId").val(id.replace("category-",""));
+        })
 
         $("#categoryContainer .btnDelCategory").on("click",function(e){
+            e.stopPropagation();
             let categoryId = e.currentTarget.id; 
             $loader.removeClass("hidden");
             $.ajax({
@@ -1029,13 +1038,20 @@ function saveDesign() {
         })
 
         $("#btnAddCategory").on("click",function(){
-           let categoryText = $("#inputCategoryName").val();
+           let categoryText =   $("#inputCategoryName").val();
+           if(!categoryText || categoryText.length <3)
+           {
+            alert("Category name must be greater than 2 characters");
+            return;
+           }
+           let categoryId   =   $("#hiddenCategoryId").val();
            $loader.removeClass("hidden");
            $.ajax({
             type: "POST",
             url: "/api/admin/category",
             data: {
-                name: categoryText
+                name: categoryText,
+                id: categoryId
             },
             success: function (res) {
                 
@@ -1053,6 +1069,8 @@ function saveDesign() {
 
         $("#btnClearCategory").on("click",function(){
             $("#inputCategoryName").val("");
+            $("#btnAddCategory").text("Add Category");
+            $("#hiddenCategoryId").val("");
         })
 
         $("#clipartAdminContainer .clipart").on("click",function(e){
@@ -1524,28 +1542,47 @@ function saveDesign() {
         });
         ///
 
-
-
-        $(".btn-custom-text").on("click",function(e){
-          var id = e.currentTarget.id;
-
-          $.ajax({
-            type: "DELETE",
-            url: `/api/admin/custom-text/${id}`,
-            success: function (res) {
-                toast("Deleted successfully!");
-                $(`#custom-text-${id}`).remove();
-            },
-            error: function (res) {
-                toast("Error while deleting.");
-            }
-        })
+        $("#customTextContainer .customTxt").on("click",function(e){
+            const id = e.currentTarget.id; 
+            let $elm =  $(`#${id}`).find('.custom-text');
+            let txt =$elm.text(); 
 
         
-         
+        
+           
+            let order  = $elm.attr('data-order');
+            $("#inputCustomText").val(txt);
+            $("#btnCustomText").text("Update Text");
+            $("#hiddenCustomTextId").val(id.replace("custom-text-",""));
+            $("#customTxtDisplayOrder").val(order);
+        })
+
+        $(".btn-custom-text").on("click",function(e){
+            e.stopPropagation();
+            var id = e.currentTarget.id;
+            let $elm =  $(`#${id}`).find('.custom-text');
+            let txt =$elm.text(); 
+            if(!confirm(`Do you want to delete?`))
+            {return;}
+
+            $.ajax({
+                type: "DELETE",
+                url: `/api/admin/custom-text/${id}`,
+                success: function (res) {
+                    toast("Deleted successfully!");
+                    $(`#custom-text-${id}`).remove();
+                },
+                error: function (res) {
+                    toast("Error while deleting.");
+                }
+            })
+
         });
         $("#btnCustomTextClear").on("click", function (e) {
           $('#inputCustomText').val("");
+          $("#hiddenCustomTextId").val("");
+          $("#btnCustomText").val("Add Text");
+          $("#customTxtDisplayOrder").val("");
         })
         $("#btnCustomText").on("click", function (e) {
           if(customTextInProgress){
@@ -1567,12 +1604,17 @@ function saveDesign() {
             toast("Custom text should not be greater than 100 characters.");
             return; 
           }
+          let customTextId = $("#hiddenCustomTextId").val();
+          let order = $("#customTxtDisplayOrder").val();
+
           $.ajax({
               type: "POST",
               url: "/api/admin/content",
               data: {
-                  content: text,
-                  type: type
+                  content   : text,
+                  type      : type,
+                  id        : customTextId,
+                  order     : order || 0
               },
               success: function (res) {
                 window.location.reload();
@@ -2394,13 +2436,12 @@ function saveDesign() {
         enabledDesignCtrl({});
         // var msg = `Sheet size: Width: ${(o.width/dpi).toFixed(2)}", Height: ${(o.height/dpi).toFixed(2)}", Logo size: Width: ${(o.logoWidth/dpi).toFixed(2)}", Height: ${(o.logoHeight/dpi).toFixed(2)}", Total Logos: ${o.logoCount}`;
         // $pageTitle.html(msg);
-        var pageHeightInInches = (o.height / 72).toFixed(1);
-        var pageWidthInInches = (o.width / 72).toFixed(1);
-        var pageSize = `${pageWidthInInches}x${pageHeightInInches}''`;
-
-        var logoHeightInInches = (o.height / 72).toFixed(1);
-        var logoWidthInInches = (o.logoWidth / 72).toFixed(1);
-        var logoSize = `${logoWidthInInches}''`;
+        var pageHeightInInches  = (o.height / 72).toFixed(1);
+        var pageWidthInInches   = (o.width  / 72).toFixed(1);
+        var pageSize            = `${pageWidthInInches}x${pageHeightInInches}''`;
+        var logoHeightInInches  = (o.height / 72).toFixed(1);
+        var logoWidthInInches   = (o.logoWidth / 72).toFixed(1);
+        var logoSize            = `${logoWidthInInches}''`;
 
         $("#template-info-panel .page-size").text(pageSize);
         $("#template-info-panel .logo-size").text(logoSize);
@@ -2467,7 +2508,6 @@ function saveDesign() {
             toast("Already submitted, please choose new design.");
             return;
         }
-        debugger;
         var m = selectedDesign.meta;
         var meta = {
             width: m.width,
@@ -3341,6 +3381,65 @@ function generatePDFfromPreview(onServer, callback) {
         error: function (res) {
             toast("Error while downloading.");
         }
+    })
+}
+
+function loadProject(id) {
+    $loader.removeClass("hidden");
+    state.isPreviewCanvas = false;
+    var group = [];
+    //$("#btnBack").trigger("click");
+    $.get(`/api/project/${id}`, function (res) {
+        $loader.addClass("hidden");
+        const json = JSON.parse(res.data.json);
+        if (! json) {
+            return;
+        }
+        canvas.clear();
+        /// loading design 
+        canvas.loadFromJSON(json, function () {
+           
+            $("#menu-upload > a").click();
+            
+        }, function (o, object) {
+        })
+
+        /// loading template 
+        fabric.loadSVGFromURL(res.template.base64, function (objects, options) { // $canvasPrev.fadeOut();
+            var loadedObjects = new fabric.Group(group);
+            var templateWidth = options.viewBoxWidth;
+            var templateHeight = options.viewBoxHeight;
+
+            let isLandspace = (templateWidth > templateHeight);
+            canvasPrev.setDimensions({width: templateWidth, height: templateHeight});
+
+            let __f = 0.9;
+            if (isLandspace) {
+              
+                templateWidth = options.viewBoxHeight;
+                templateHeight = options.viewBoxWidth;
+            }
+            let __w = parseInt(templateWidth*__f); 
+            let __h = parseInt(templateHeight*__f);
+            $("#admin-main-canvas-logo").css({"width":`${__w}px`,"height":`${__h}px`,"padding":"1px","left":"21px"});
+            
+            canvasPrev.setBackgroundImage(loadedObjects, canvasPrev.renderAll.bind(canvasPrev));
+            canvasPrev.renderAll();
+            loadedObjects.center().setCoords();
+
+           
+
+
+        }, function (item, object) {
+            object.set({fill:"#fff"});
+            object.set('id', item.getAttribute('id'));
+            group.push(object);
+        });
+
+    }).fail(function (err) {
+        $loader.addClass("hidden");
+        toast("Something went wrong! Please contact admin.");
+        console.log(err);
     })
 }
      

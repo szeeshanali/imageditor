@@ -1,0 +1,408 @@
+<style>
+  <%fonts?.forEach((item)=>{%>
+  @font-face{
+    font-family:"<%=item.content.replace('.ttf','')%>";
+    src:url("/fonts/<%=item.content%>");
+    font-weight:normal;
+    font-style:normal;
+    
+}                     
+<%})%>
+   
+   </style>
+<div class="row mg-r-0">
+    <!--Workspace Left Panel-->
+<div class="col-lg-3 pd-l-0 pd-r-0">
+  
+    <div class="leftpanel" id="menu-panel" >
+        <div class="tab-content">
+            
+            <div  id="templatepanel" class="tab-pane active"   >
+              <div class="list-group widget-list-group bg-app-primary">
+                <div class="list-group-item d-flex">
+                  <div class="media d-block d-sm-flex">
+                  
+                    <div class="media-body mg-t-10 mg-sm-t-0">
+                      <h6 class="mg-b-5 tx-12 tx-inverse tx-bold tx-white"><span class="ion-ios-lightbulb pd-r-5 text-warning"></span>Choose from the below templates and click next to create design.</h6>
+                    </div>
+                     
+                    
+                    <!-- media-body -->
+                  </div><!-- media -->
+                   <div class="btn-group mg-b-0 mg-l-auto lh-2">
+                      <button type="button" class="btn btn-primary wd-120 ht-50 tx-18" id="btn-step-design">
+                        NEXT <div class="tx-12 text-warning tx-bold underline">Create Design</div></button>
+                    </div>
+                </div>
+              </div>
+              <div>
+                
+                  <div class="row mg-0">
+                    <%for(var i=0; i<templates.length; i++){ %>
+                    <div class="col-lg-4 pd-0  bd template" id="<%=templates[i].code %>">
+                      <div class="card" style="height: 220px">
+                        <div class="card-body pd-10">
+                          <img class="card-img-top img-fluid pd-b-10 ht-140" src="/uploads/admin/template/template-<%=templates[i].code %><%=templates[i].file_ext %>" alt="Image">
+                          <h5 class="tx-14 tx-inverse pd-x-5" style="height:45px;overflow:hidden" title="<%=templates[i].title %>"><%=templates[i].title %></h5>
+                          <p class="card-subtitle tx-12  pd-x-5">Part # <%=templates[i].ref_code || "N/A" %></p>
+                        </div>
+                      </div><!-- card -->
+                    </div>
+                    <%}%> 
+                  </div>
+              </div>
+            </div>            
+            <div id="uploadpanel" class="tab-pane"  >
+         
+                <!-- <div class="pd-x-10 pd-y-10  bd-b">
+                  <b class="tx-primary">Create Design</b>
+                  <a href="#" class="pull-right next-step" id="btn-step-preview" title="Preview Design (Step 2)" >Next</a>
+
+                  <a href="#" class=" next-step gray hidden" id="btnBack"  >Back</a></span>
+                  <a href="#" class="next-step gray mg-l-5 hidden" id="btnFinalized"  >Finalized</a></span>
+
+                </div> -->
+
+                <div class="list-group widget-list-group bg-app-primary">
+                  <div class="list-group-item d-flex" id="create-design-heading">
+                    <div class="media d-block d-sm-flex">
+                      <!-- <div class="d-block d-sm-flex mg-sm-r-20">
+                        <i class="ion-images tx-24 tx-white"></i>
+                      </div> -->
+                      <div class="media-body mg-t-10 mg-sm-t-0 ">
+                        <h6 class="mg-b-5 tx-12 tx-bold pd-x-5 tx-white "><span class="ion-ios-lightbulb pd-r-5 text-warning"></span>Now, create your design by adding Photos, Clip Arts and Text and click next to preview or save button to save your design.</h6>
+                      </div><!-- media-body -->
+                    </div><!-- media -->
+                    <div class="btn-group mg-b-0 mg-l-auto">
+                      <button type="button" class="btn btn-secondary disabled" onclick="$btnTemplate.click()" ><i class="icon ion-ios-arrow-back tx-20"></i></button>
+                      <button type="button" class="btn btn-primary wd-120 ht-50 tx-18" id="btn-step-preview">
+                        NEXT  <div class="tx-12 text-warning tx-bold underline">Preview Design</div>
+                      </button>
+                    </div>
+                    <!-- <a href="#"  class="btn btn-primary pd-lg-x-20 mg-l-auto " id="btn-step-preview" >Preview</a> -->
+                  </div>
+                  <div class="list-group-item d-flex hidden" id="preview-design-heading" style="height:90px">
+                    <div class="media d-block d-sm-flex">
+                      <!-- <div class="d-block d-sm-flex mg-sm-r-20">
+                        <i class="ion-images tx-24 tx-white"></i>
+                      </div> -->
+                      <div class="media-body mg-t-10 mg-sm-t-0">
+                        <h6 class="mg-b-5 tx-12 tx-white"><span class="ion-ios-lightbulb pd-r-5 text-warning"></span>You are almost done! Click next to download or save button to save your design.</h6>
+                      </div><!-- media-body -->
+                    </div><!-- media -->
+                    <div class="btn-group mg-b-0 mg-l-auto">
+
+                    <button type="button" class="btn btn-secondary disabled"  id="btnBack" ><i class="icon ion-ios-arrow-back tx-20"></i></button>
+
+                    <button type="button" class="btn btn-primary wd-120 ht-50 tx-18" id="btn-step-download">
+                      NEXT  <div class="tx-12 text-warning tx-bold underline">Download PDF</div>
+                    </button>
+                    </div>
+                  </div>
+                </div>
+                
+                <%- include('../../partials/client/imgupload'); %>
+            </div>
+           
+            <div id="shared-library" class="tab-pane"  >
+    
+              <%- include('../../partials/client/sharedlibrary'); %>
+            </div>                          
+            <div id="textmenu" class="tab-pane" >
+                <div class="pd-x-10 tx-12 pd-y-10 bd-b"><b class="tx-primary tx-14">Add Text</b> </div>
+    
+            </div>
+            <div id="savedesign" class="tab-pane">
+              <div class="list-group widget-list-group bg-app-primary">
+                <div class="list-group-item d-flex">
+                  <div class="media d-block d-sm-flex">
+                    <div class="d-block d-sm-flex mg-sm-r-20">
+                      <i class="ion-android-done-all tx-24 tx-white"></i>
+                    </div><!-- d-flex -->
+                    <div class="media-body mg-t-10 mg-sm-t-0">
+                      <h6 class="mg-b-5 tx-14">Save Project</h6>
+                      <p class="mg-b-0 tx-12 tx-white-5">You can save up to <b>(<%=project_limit%>)</b> projects.</p>
+                    </div><!-- media-body -->
+                  </div><!-- media -->
+                </div>
+              </div>
+
+              <div class="card pd-20 ">
+               
+                <div class="form-layout">
+                  <div class="row ">
+                    <div class="col-lg-12">
+                      <div class="form-group">
+                        <label class="form-control-label">Project title: <span class="tx-danger">*</span></label>
+                        <input class="form-control" minlength="3"  maxlength="50" pattern=".{3,30}" title="Minimum 3 and maximum 30 characters." required type="text" id="input-project-title" name="firstname"  placeholder="Enter project title">
+                      </div>
+                    </div>
+                    <div class="col-lg-12">
+                      <div class="form-group">
+                        <label class="form-control-label">Description: </label>
+                        <textarea rows="2" class="form-control" pattern=".{3,100}" title="Minimum 3 and maximum 100 characters." minlength="3"  maxlength="50"  id="input-project-desc" required placeholder="Enter Description" spellcheck="false"></textarea>
+                      </div>
+                    </div>
+
+                  </div><!-- row -->
+      
+                  <div >
+                    <button class="btn  btn-primary mg-r-5" data-toggle="modal" data-target="#confirmbox" id="btnSaveModel">Save Project</button>
+                    <button class="btn btn-secondary" id="btnCancelSaveDesign">Cancel</button>
+                  </div><!-- form-layout-footer -->
+                </div><!-- form-layout -->
+              </div>
+              
+              
+
+
+            </div>
+            <div id="myprojects" class="tab-pane">
+              <div class="list-group widget-list-group bg-app-primary">
+                <div class="list-group-item d-flex">
+                  <div class="media d-block d-sm-flex">
+                    <div class="d-block d-sm-flex mg-sm-r-20">
+                      <i class="ion-flag tx-24 tx-white"></i>
+                    </div><!-- d-flex -->
+                    <div class="media-body mg-t-10 mg-sm-t-0">
+                      <h6 class="mg-b-5 tx-14">My Saved Projects</h6>
+                      <p class="mg-b-0 tx-12 tx-white-5">You can save up to <b>(<%=project_limit%>)</b> projects.</p>
+                    </div><!-- media-body -->
+                  </div><!-- media -->
+                </div>
+              </div>
+              <div class="card ">
+                <div class="pd-20" id="myProjectContainer"></div>
+             </div> 
+            </div>
+            <div id="library" class="tab-pane">
+              <div class="list-group widget-list-group bg-app-primary">
+                <div class="list-group-item d-flex">
+                  <div class="media d-block d-sm-flex">
+                    <div class="d-block d-sm-flex mg-sm-r-20">
+                      <i class="ion-flag tx-24 tx-white"></i>
+                    </div><!-- d-flex -->
+                    <div class="media-body mg-t-10 mg-sm-t-0">
+                      <h6 class="mg-b-5 tx-14">Pre Designed</h6>
+                      <p class="mg-b-0 tx-12 tx-white-5">Use ready made design in your template.</p>
+
+                    </div><!-- media-body -->
+                  </div><!-- media -->
+                </div>
+              </div>
+              <div class="card">
+                <div class="card ">
+                 <div class="mg-t-15 mg-sm-t-20" id="preDesignedContainer"></div>
+              </div>  
+              </div>
+            </div>
+            <!-- #settingMenu -->
+        </div>
+    </div>
+</div>
+<!-- Workspace canvas-->
+<div class="col-lg-6">
+  <div class="list-group widget-list-group bg-app-primary" style="height:90px">
+    <div class="list-group-item d-flex">
+      <ul class="step d-flex flex-nowrap">
+        <li class="step-item ">
+          <a href="#!" class="" style="cursor:default">Select Template</a>
+        </li>
+        <li class="step-item active">
+          <a href="#!" class="" style="cursor:default" >Create Design</a>
+        </li>
+        <li class="step-item ">
+          <a href="#!" class="" style="cursor:default">Preview</a>
+        </li>     
+        <li class="step-item">
+          <a href="#!" class="" style="cursor:default" >Download</a>
+        </li>
+      </ul> 
+    </div>
+  </div>
+  <div class="card pd-x-20 pd-y-15">
+    <div class="alert alert-primary pd-y-20 hidden" role="alert" id="previewMsg">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">×</span>
+      </button>
+      <div class="d-sm-flex align-items-center justify-content-start">
+        <i class="icon ion-ios-information alert-icon tx-52 mg-r-20"></i>
+        <div class="mg-t-20 mg-sm-t-0">
+          <p class="mg-b-0 tx-gray">You may edit individual Circle / Square by selecting the Layers on the Right. Alternatively you may also modify the overall sheet in order to get your desired output</p>
+        </div>
+      </div><!-- d-flex -->
+    </div>
+    <div class="email-content-header">
+      <div>
+          <div class="d-flex" id="ruler-ctrl">
+            <div class=" mg-r-10">
+              <label class="ckbox">
+                <input type="checkbox"  id="btnDisplayGrid" ><span>Grid</span>
+              </label>
+            </div>
+            <div class="mg-r-10">
+              <label class="ckbox">
+                <input type="checkbox"  id="btnDisplayRuler" ><span>Ruler</span>
+              </label>
+            </div>
+
+          <!-- <button type="button" id="btnDisplayGrid" class="btn btn-secondary bd-0 pd-x-20">Grid</button>
+          <button type="button" id="btnDisplayRuler" class="btn btn-secondary bd-0 pd-x-20">Ruler</button> -->
+
+        </div><!-- btn-group -->
+      </div>
+      <div class="mg-l-auto">
+        <div class="d-flex">
+          <button type="button" onclick="$('#btn-menu-peview').click()" class="hidden btn btn-sm btn-success tx-12 tx-uppercase tx-bold bd-0 pd-x-20 " id="ws-btn-preview">Preview <br> Your Design</button>
+
+          <button type="button" data-toggle="modal" data-target="#downloadPDFModel" class="btn btn-sm btn-success tx-12 tx-uppercase tx-bold  bd-0 pd-x-20 hidden" id="ws-btn-download" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?" data-toggle="popover" ><i class="ion-checkmark-circled mg-r-5"></i> Finalize & Download <br> your PDF</button>
+          <button type="button" onclick="$('#menu-save-design').click()" class=" hidden btn btn-primary btn-sm tx-12 tx-uppercase tx-bold bd-0 pd-x-20" id="ws-btn-save"><i class="fa fa-floppy-o mg-r-5"></i>Save <br>  Design</button>
+
+          <button type="button" onclick="$('#btnBack').click()" class="btn btn-danger tx-12 btn-sm tx-uppercase tx-bold  bd-0 pd-x-20 hidden" id="ws-btn-back"><i class="fa fa-pencil-square-o mg-r-5"></i> Continue Editing <br> your Design</button>
+
+          <a href="#" id="btnStartOverModel" data-toggle="modal" data-target="#confirmbox"  class="btn btn-sm btn-danger bd-0 pd-x-20 mg-l-1 tx-12 tx-uppercase tx-bold" ><i class="ion-refresh mg-r-5"></i>Restart Designing from <br>the Beginning</a>
+        </div>
+
+        <div class="btn-group mg-b-0">
+        </div><!-- btn-group -->
+
+      </div>
+    </div>
+
+    
+    
+    <div class="table-responsive">
+      
+      <div class="workarea" id="workarea" style="background-color:#6b68c9;padding:30px">
+      
+     
+        <div  id="canvas-holder">
+            <div class="content tx-center">
+                <canvas id="client-main-canvas"   ></canvas>
+                <canvas id="client-main-canvas-logo"   ></canvas>                    
+            </div>
+        </div>
+      
+        <div class="paste-clipboard"  style="display: none;"  id="pasteClipboard">
+         <span  onclick="parseClipboardData();"  > Copy from Clipboard</span>
+      </div>
+    </div>
+    </div>
+  </div>
+   
+    
+</div>
+<!--Workspace Right panel-->
+<div class="col-lg-3 pd-x-0" id="workspace-right-panel" >
+    <%- include('../../partials/client/popups/rfq.ejs',{user:user}); %>
+</div>
+</div>
+
+<%- include('../../partials/client/rightpanel'); %>
+
+
+ <!-- SMALL MODAL -->
+ <div id="confirmbox" class="modal fade">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content bd-0 tx-14">
+      <div class="modal-header pd-x-20">
+        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Are you sure?</h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body pd-20">
+        <p class="mg-b-5" id="confirmBoxBody"></p>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" id="btnModelContinue" data-dismiss="modal" class="btn btn-primary pd-x-20">Continue</button>
+        <button type="button" class="btn btn-secondary pd-x-20" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div><!-- modal-dialog -->
+</div><!-- modal -->
+
+<div id="downloadPDFModel" class="modal fade">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content bd-0 tx-14">
+      <div class="modal-header pd-x-20">
+        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Finalize And Download your Design </h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body pd-20">
+        <input type="text" id="downloadFileName" class="form-control" placeholder="Enter File Name">
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" onclick="$('#btn-download-pdf').click()" data-dismiss="modal" class="btn-sm tx-12 tx-uppercase btn btn-success pd-x-20">Download your design <br> in PDF</button>
+        <button type="button" data-toggle="modal" data-target="#rfq" class="btn btn-sm tx-12 tx-uppercase btn-primary pd-x-20" data-dismiss="modal">Send to KakePrints <br> for a Quote.</button>
+      </div>
+    </div>
+  </div><!-- modal-dialog -->
+</div><!-- modal -->
+
+<div id="cropModal" class="modal fade">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content bd-0 tx-14">
+      <div class="modal-header pd-x-20">
+        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Crop Image</h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body pd-20">
+        <canvas id="cropCanvas">
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button"  id="btnCrop" class="btn btn-sm tx-12 tx-uppercase btn-primary pd-x-20" >Crop Image</button>
+        <button type="button"  id="btnCropDone" class="btn btn-sm tx-12 tx-uppercase btn-primary pd-x-20" data-dismiss="modal" >Done</button>
+
+        <button type="button" class="btn btn-sm tx-12 tx-uppercase btn-secondary pd-x-20" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div><!-- modal-dialog -->
+</div><!-- modal -->
+<%- include('../../partials/client/popups/popup-clipart'); %>
+<%- include('../../partials/client/popups/faq'); %>
+
+
+<div id="rfq_confirm" class="modal fade" aria-hidden="true" >
+  <div class="modal-dialog modal-md modal-dialog-vertical-center " role="document">
+    <div class="modal-content bd-0">
+      <div class="modal-header pd-y-20 pd-x-25">
+        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Notice</h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body pd-25">
+        <h4 class="lh-4 mg-b-20 tx-inverse">Your print request has been sent to Kopykake.</h4>
+        <p class="mg-b-5">Please look for an email from Kopykake with a quote for your job. PLEASE NOTE: Print jobs are not processed for printing until order is confirmed and paid. </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary pd-x-20" data-dismiss="modal" >Ok</button>
+      </div>
+    </div>
+   </div>
+                          <!-- modal-dialog -->
+                      </div>
+<script> 
+    // $(".tab-content .tab-pane").each((i,e)=>
+    //    { $(e).removeClass("active"); })
+    //   //$("#templatepanel").addClass("active");
+      //$("#menu-templates").addClass("bg-warning")
+    window.onload = function()
+   { 
+    debugger;
+        var code = '<%=code || "default" %>' ;
+        loadProject(code);
+        $('[data-toggle="popover"]').popover()
+
+   }
+
+   $.get('/app/faq',(res)=>{
+    $("#faq-contanier").html(res);
+  })
+</script>
+   

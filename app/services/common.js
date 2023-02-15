@@ -117,13 +117,24 @@ const commonService = (function() {
             active:true });
 
         }else{
-            designs = await uploads.findOne({
-                active:true, 
-                type:'project', 
-                by_admin:false, 
-                code: designId,
-                uploaded_by: userId
-             });
+            if(userId == 'admin')
+            {
+                designs = await uploads.findOne({
+                    _id: designId,
+                    active:true, 
+                    type:'project',
+                 },{thumbBase64:0});
+    
+            }else{
+                designs = await uploads.findOne({
+                    active:true, 
+                    type:'project', 
+                    by_admin:false, 
+                    code: designId,
+                    uploaded_by: userId
+                 });
+            }
+           
 
               
              
@@ -277,7 +288,7 @@ const commonService = (function() {
     this.getContentAsync = async (type, isAdmin)=>{
 
         if(type === 'custom-text' )
-        {  return await contents.find({type:type, active:true, deleted:false}); }
+        {  return await contents.find({type:type, active:true, deleted:false}).sort({order:1}); }
 
         if( type === 'fonts')
         {  
@@ -305,13 +316,13 @@ const commonService = (function() {
 
    
 
-    this.addOrUpdateContentAsync = async (label,content,type,by_admin)=>{
+    this.addOrUpdateContentAsync = async (label,content,type,by_admin,order)=>{
         if((content == null || content.length < 3) && type != 'custom-text' )
         {throw "Empty content."; }
 
         if(type === 'custom-text' || type === 'fonts' )
         {
-            var content =  new contents({content:content,type:type,by_admin:by_admin,label:label});
+            var content =  new contents({content:content,type:type,by_admin:by_admin,label:label,order:order});
             await content.save();
             return;
         }
@@ -336,7 +347,7 @@ const commonService = (function() {
         this.cached_categoryItems = [];
     }
 
-    this.addLogs = (user_id,level,type,message,content,path,is_admin)=>{
+    this.addLogs = (user_id,level,type,message,content,path,is_admin, data)=>{
         let _log = new logs({
             user_id: user_id,
             level:level,
@@ -344,7 +355,8 @@ const commonService = (function() {
             content:content,
             type:type,
             path:path,
-            is_admin:is_admin             
+            is_admin:is_admin, 
+            data: JSON.stringify(data)            
         })
         _log.save();
     }

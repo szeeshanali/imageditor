@@ -9,6 +9,7 @@ const schema  = new mongoose.Schema({
     modified_dt    :    {   type    :   Date,   default : null },
     by_admin       :    {   type    :   Boolean },
     label           :   {   type    :   String },
+    order           :   {   type    :   Number}
     });
 
 const contents   = mongoose.model('contents',schema);
