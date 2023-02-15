@@ -117,13 +117,24 @@ const commonService = (function() {
             active:true });
 
         }else{
-            designs = await uploads.findOne({
-                active:true, 
-                type:'project', 
-                by_admin:false, 
-                code: designId,
-                uploaded_by: userId
-             });
+            if(userId == 'admin')
+            {
+                designs = await uploads.findOne({
+                    _id: designId,
+                    active:true, 
+                    type:'project',
+                 },{thumbBase64:0});
+    
+            }else{
+                designs = await uploads.findOne({
+                    active:true, 
+                    type:'project', 
+                    by_admin:false, 
+                    code: designId,
+                    uploaded_by: userId
+                 });
+            }
+           
 
               
              
@@ -336,7 +347,7 @@ const commonService = (function() {
         this.cached_categoryItems = [];
     }
 
-    this.addLogs = (user_id,level,type,message,content,path,is_admin)=>{
+    this.addLogs = (user_id,level,type,message,content,path,is_admin, data)=>{
         let _log = new logs({
             user_id: user_id,
             level:level,
@@ -344,7 +355,8 @@ const commonService = (function() {
             content:content,
             type:type,
             path:path,
-            is_admin:is_admin             
+            is_admin:is_admin, 
+            data: JSON.stringify(data)            
         })
         _log.save();
     }

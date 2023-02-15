@@ -1,0 +1,26 @@
+<div id="popupDownloadHistory" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-vertical-center " role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold" id="downloadHistoryTitle"></h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body pd-25" style="width:600px; height:400px; overflow-y:scroll">
+                <h6 class="lh-4 mg-b-20 tx-inverse">PDF Download History</h6>
+                <div>Start Date:
+                    <input type='date' id="dtFrom"/>
+                     End Date:
+                    <input type='date' id="dtTo"/><button type="button" id="btnFindDownloadHistory">Search</button>
+                    <button type="button" id="btnClearDownloadsHistory">Clear</button>
+                </div>
+                <div class="mg-b-5 pd-y-10" id="downloadHistoryContent"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary pd-x-20" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+    <!-- modal-dialog -->
+</div>

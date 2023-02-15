@@ -436,8 +436,9 @@ router.get(ROUTE_ADMIN_DASHBOARD, isAdmin, async (req,res)=>{
 
   let totalUsers = await appusers.count();
   let allusers = await appusers.find({deleted:false, active:true},{password:0,is_admin:0,deleted:0,date:0,lname:0});
-  let allDownloads = await logs.find({"type":"download_pdf"},{ user_id:1,created_dt:1 });
-  let allProjects = await uploads.find({"type":"project"},{ _id:1,created_dt:1,uploaded_by:1 })
+  let userIds =  allusers.map(function(i){return i._id});
+  let allDownloads = await logs.find({"type":"download_pdf"},{ user_id:1,created_dt:1, content:1, data:1  });
+  let allProjects = await uploads.find({"type":"project", "deleted":false},{ _id:1,created_dt:1,uploaded_by:1, title:1 })
   var report = {
     todayUsers:0,
     thisWeekUsers:0,
@@ -513,6 +514,8 @@ router.get('/app/admin/template-designer', isAdmin, (req,res)=>{
   res.render("pages/admin/templatedesigner",{user:req.user});
 })
 
+
+
 router.get('/app/admin/templates', isAdmin, async (req,res)=>{
   res.locals.page = {
     id: "__edit-template",
@@ -526,6 +529,57 @@ router.get('/app/admin/templates', isAdmin, async (req,res)=>{
   });
 
 })
+
+router.get('/app/admin/user-project/:id', isAdmin, async (req,res)=>{ 
+  res.locals.page = {
+    id: "__workspace",
+    title: "Workspace",
+    user: req.user
+  }
+
+const id = req.params.id;
+const type = req.params.type;
+let template = {};
+let meta = {};
+
+//let customDesigns = await uploads.find({type:'pre-designed', active:true, deleted:false, base64:{$ne:null},json:{$ne:null}},{code:1,base64:1}) || [];
+let adminUploadItems = await commonService.uploadService.getUploads('all',true,true);
+let templates = adminUploadItems.filter(function(item){ return item.type == 'template'});
+let cliparts = adminUploadItems.filter(function(item){ return item.type == 'clipart'});
+let customDesigns = adminUploadItems.filter(function(item){ return item.type == 'pre-designed'});
+let categories  = await commonService.categoryService.getCategoriesAsync();
+let fonts       = await commonService.contentService.getContentAsync('fonts',false);
+let customText  = await commonService.contentService.getContentAsync('custom-text');
+
+let ca = [];
+
+categories.forEach(category => {
+var items = cliparts?.filter(i=>i.category == category.id);
+if(items != null && items.length > 0)
+{
+    ca.push({
+       categoryName:category.name,
+       items: items
+    })
+}
+
+});
+res.render('pages/admin/UserProject',{
+    user:req.user,
+    template:template,
+    templateMeta:meta,
+    templates: templates,
+    customDesigns: customDesigns,
+    cliparts:ca,
+    categories:categories,
+    type:type,
+    code:id,
+    project_limit:req.user.project_limit,
+    fonts:fonts,
+    customText:customText
+
+});
+});
 
 router.get('/app/admin/categories', isAdmin, async (req,res)=>{
   const  {width, height, title} = req.body;
@@ -738,6 +792,20 @@ router.delete('/api/admin/clipart/:id', isAdmin, async (req,res)=>{
   { return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."}); }
  
 }) 
+
+
+router.get("/api/user-project/:id?",  async (req, res) => {
+  var id = req.params.id; 
+  try{
+      var data  = await commonService.uploadService.getUserDesignsAsync('admin',id);
+      var svgTemplate = await uploads.findOne({code:data.templateId},{base64:1})
+      res.status(200).send({data:data,template:svgTemplate});
+  }catch{
+      res.status(500).send();
+  }
+});
+
+
 router.post('/app/admin/uploads',  function(req, res) {
   let {id, desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
  

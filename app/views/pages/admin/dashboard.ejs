@@ -1,151 +1,286 @@
-
 <div class="row">
-  <div class="col-lg-3 pd-0">
-    <div class="card">
-      <%- include('../../partials/admin/dashboard-panel'); %>
-    </div>
-    
-  </div>
-  <div class="col-lg-9 ">
-    <div class="card bd-b pd-10 tx-uppercase tx-bold tx-inverse">Dashboard</div>
+    <div class="col-lg-3 pd-0">
+        <div class="card">
+            <%- include('../../partials/admin/dashboard-panel'); %>
+        </div>
 
-    <div class="card">
-      <div class="row row-sm">
-        <div class="col-lg-4">
-          <div class="card pd-20">
-            <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Users (<%=report.totalUsers%>)</h6>
-            <div class="d-flex mg-b-10">
-              <div class="bd-r pd-r-10">
-                <label class="tx-12">Today</label>
-                <p class="tx-lato tx-inverse tx-bold"><%=report.todayUsers%></p>
-              </div>
-              <div class="bd-r pd-x-10">
-                <label class="tx-12">This Week</label>
-                <p class="tx-lato tx-inverse tx-bold"><%=report.thisWeekUsers%></p>
-              </div>
-              <div class="pd-l-10">
-                <label class="tx-12">This Month</label>
-                <p class="tx-lato tx-inverse tx-bold"><%=report.thisMonthUsers%></p>
-              </div>
-            </div><!-- d-flex -->
-            
-            <p class="tx-12 mg-b-0">Total number of Registered Users (<%=report.totalUsers%>)</p>
-          </div><!-- card -->
-        </div><!-- col-4 -->
-        <div class="col-lg-4 mg-t-15 mg-sm-t-20 mg-lg-t-0">
-          <div class="card pd-20">
-            <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">PDF Downloads (<%=report.totalDownloads%>)</h6>
-            <div class="d-flex mg-b-10">
-              <div class="bd-r pd-r-10">
-                <label class="tx-12">Today</label>
-                <p class="tx-lato tx-inverse tx-bold"><%=report.todayDownloads%></p>
-              </div>
-              <div class="bd-r pd-x-10">
-                <label class="tx-12">This Week</label>
-                <p class="tx-lato tx-inverse tx-bold"><%=report.thisWeekDownloads%></p>
-              </div>
-              <div class="pd-l-10">
-                <label class="tx-12">This Month</label>
-                <p class="tx-lato tx-inverse tx-bold"><%=report.thisMonthDownloads%></p>
-              </div>
-            </div><!-- d-flex -->
-          
-            <p class="tx-12 mg-b-0">Total numbers of PDF Downloads (<%=report.totalDownloads%>)</p>
-          </div><!-- card -->
-        </div><!-- col-4 -->
-        <div class="col-lg-4 mg-t-15 mg-sm-t-20 mg-lg-t-0">
-          <div class="card pd-20">
-            <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">User Projects (<%=report.totalProjects%>)</h6>
-            <div class="d-flex mg-b-10">
-              <div class="bd-r pd-r-10">
-                <label class="tx-12">Today</label>
-                <p class="tx-lato tx-inverse tx-bold"><%=report.todayProjects%></p>
-              </div>
-              <div class="bd-r pd-x-10">
-                <label class="tx-12">This Week</label>
-                <p class="tx-lato tx-inverse tx-bold"><%=report.thisWeekProjects%></p>
-              </div>
-              <div class="pd-l-10">
-                <label class="tx-12">This Month</label>
-                <p class="tx-lato tx-inverse tx-bold"><%=report.thisMonthProjects%></p>
-              </div>
-            </div><!-- d-flex -->
-          
-            <p class="tx-12 mg-b-0">Total Number of Porjects saved by users (<%=report.totalProjects%>)</p>
-          </div><!-- card -->
-        </div><!-- col-4 -->
-      </div>
     </div>
-    <div class="card bd-t pd-20 mg-t-20">
-      <table id="usertable" class="display" style="width:100%"></table>
+    <div class="col-lg-9 ">
+        <div class="card bd-b pd-10 tx-uppercase tx-bold tx-inverse">Dashboard</div>
+
+        <div class="card">
+            <div class="row row-sm">
+                <div class="col-lg-4">
+                    <div class="card pd-20">
+                        <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Users (<%=report.totalUsers%>)</h6>
+                        <div class="d-flex mg-b-10">
+                            <div class="bd-r pd-r-10">
+                                <label class="tx-12">Today</label>
+                                <p class="tx-lato tx-inverse tx-bold"><%=report.todayUsers%></p>
+                            </div>
+                            <div class="bd-r pd-x-10">
+                                <label class="tx-12">This Week</label>
+                                <p class="tx-lato tx-inverse tx-bold"><%=report.thisWeekUsers%></p>
+                            </div>
+                            <div class="pd-l-10">
+                                <label class="tx-12">This Month</label>
+                                <p class="tx-lato tx-inverse tx-bold"><%=report.thisMonthUsers%></p>
+                            </div>
+                        </div>
+                        <!-- d-flex -->
+
+                        <p class="tx-12 mg-b-0">Total number of Registered Users (<%=report.totalUsers%>)</p>
+                    </div>
+                    <!-- card -->
+                </div>
+                <!-- col-4 -->
+                <div class="col-lg-4 mg-t-15 mg-sm-t-20 mg-lg-t-0">
+                    <div class="card pd-20">
+                        <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">PDF Downloads (<%=report.totalDownloads%>)</h6>
+                        <div class="d-flex mg-b-10">
+                            <div class="bd-r pd-r-10">
+                                <label class="tx-12">Today</label>
+                                <p class="tx-lato tx-inverse tx-bold"><%=report.todayDownloads%></p>
+                            </div>
+                            <div class="bd-r pd-x-10">
+                                <label class="tx-12">This Week</label>
+                                <p class="tx-lato tx-inverse tx-bold"><%=report.thisWeekDownloads%></p>
+                            </div>
+                            <div class="pd-l-10">
+                                <label class="tx-12">This Month</label>
+                                <p class="tx-lato tx-inverse tx-bold"><%=report.thisMonthDownloads%></p>
+                            </div>
+                        </div>
+                        <!-- d-flex -->
+
+                        <p class="tx-12 mg-b-0">Total numbers of PDF Downloads (<%=report.totalDownloads%>)</p>
+                    </div>
+                    <!-- card -->
+                </div>
+                <!-- col-4 -->
+                <div class="col-lg-4 mg-t-15 mg-sm-t-20 mg-lg-t-0">
+                    <div class="card pd-20">
+                        <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">User Projects (<%=report.totalProjects%>)</h6>
+                        <div class="d-flex mg-b-10">
+                            <div class="bd-r pd-r-10">
+                                <label class="tx-12">Today</label>
+                                <p class="tx-lato tx-inverse tx-bold"><%=report.todayProjects%></p>
+                            </div>
+                            <div class="bd-r pd-x-10">
+                                <label class="tx-12">This Week</label>
+                                <p class="tx-lato tx-inverse tx-bold"><%=report.thisWeekProjects%></p>
+                            </div>
+                            <div class="pd-l-10">
+                                <label class="tx-12">This Month</label>
+                                <p class="tx-lato tx-inverse tx-bold"><%=report.thisMonthProjects%></p>
+                            </div>
+                        </div>
+                        <!-- d-flex -->
+
+                        <p class="tx-12 mg-b-0">Total Number of Porjects saved by users (<%=report.totalProjects%>)</p>
+                    </div>
+                    <!-- card -->
+                </div>
+                <!-- col-4 -->
+            </div>
+        </div>
+        <div class="card bd-t pd-20 mg-t-20">
+            <table id="usertable" class="display" style="width:100%"></table>
+        </div>
     </div>
-  </div>
 
 </div>
+<%- include('../../partials/admin/popups/PopupPDFDownloadHistory'); %>
+<%- include('../../partials/admin/popups/PopupUserProjectHistory'); %>
+
+
 <script>
-  let users = <%-JSON.stringify(users)%>;
-  let userProjects = <%-JSON.stringify(userProjects)%>;
-  let downloads = <%-JSON.stringify(downloads)%>;
-  let temp = "";
-  let page_number = 1;
-  let page_size = 100;
+    let users = <%-JSON.stringify(users)%>;
+    let userProjects = <%-JSON.stringify(userProjects)%>;
+    let downloads = <%-JSON.stringify(downloads)%>;
+    let temp = "";
+    let page_number = 1;
+    let page_size = 100;
 
 
-  $(".tab-content .tab-pane").each((i, e) => {
-      $(e).removeClass("active");
-  })
-  $("#dashboard-panel").addClass("active");
-  users = users.map(i => {
-      return {
-          fname: i.fname,
-          email: i.email,
-          download_count:  downloads.filter(function(v){ return v.user_id == i._id })?.length ||0,
+    $(".tab-content .tab-pane").each((i, e) => {
+        $(e).removeClass("active");
+    })
+    $("#dashboard-panel").addClass("active");
+    users = users.map(i => {
+        return {
+            fname: i.fname,
+            email: i.email,
+            download_count: `<a href='#' onclick="showDownloadHistory('${i._id }','${i.fname}')" data-id='${i._id}' data-title='${ i.fname
+            }' data-target='#popupDownloadHistory' data-toggle='modal' class='tx-bold text-primary tx-underline'>${
+                downloads.filter(function (v) {
+                    return v.user_id == i._id
+                }) ?. length || 0
+            }</a>`,
 
-          project_limit: i.project_limit,
-          saved_projects: 
-          `<a href='' class='tx-bold text-primary tx-underline'>${ userProjects.filter(function(v){ return v.uploaded_by == i._id })?.length ||0}</a>`,
-          watermark: i.watermark ? 'Enabled' : 'Disabled',
-          created_dt: (new Date(i.created_dt).toLocaleString('en-US', {hour12: false})),
-          action: `<div class="d-flex" >
-   <i class="ion-edit pd-x-5 edit user-action" onclick="editCustomer(${
-              JSON.stringify(i).replace(/"/g, "'")
-          })"  data-target="#edituser" data-toggle="modal" title="Edit" id="edit${
-              i._id
-          }"></i>                    
- </div>`
-      }
-  }).map(i => Object.values(i));
-  $(document).ready(function () {
-      var t = $('#usertable').DataTable({
-          data: users,
-          columns: [
-              {
-                  title: 'Name'
-              },
-              {
-                  title: 'Email'
-              },
-              {
-                  title: 'PDF <br>Downloads'
-              },
+            project_limit: i.project_limit,
+            saved_projects: `<a href='#' data-id='${i._id}' data-title='${ i.fname
+            }' data-target='#popupProjectHistory' data-toggle='modal' class='tx-bold text-primary tx-underline' onclick="showProjectHistory('${i._id }','${i.fname}')" >${
+                userProjects.filter(function (v) {
+                    return v.uploaded_by == i._id
+                }) ?. length || 0
+            }</a>`,
+            watermark: i.watermark ? 'Enabled' : 'Disabled',
+            created_dt: (new Date(i.created_dt).toLocaleString('en-US', {hour12: false})),
+            action: `<div class="d-flex" ><i class="ion-edit pd-x-5 edit user-action" onclick="editCustomer(${
+                JSON.stringify(i).replace(/"/g, "'")
+            })"  data-target="#edituser" data-toggle="modal" title="Edit" id="edit${
+                i._id
+            }"></i></div>`
+        }
+    }).map(i => Object.values(i));
+    $(document).ready(function () {
+        var t = $('#usertable').DataTable({
+            data: users,
+            columns: [{ title: 'Name' },
+                { title: 'Email' },
+                { title: 'PDF <br>Downloads' },
+                { title: 'Project <br> Limit' }, 
+                { title: 'Saved <br> Projects' }, 
+                { title: 'Watermark' }, 
+                { title: 'Date <br> Registered'}, 
+                { title: 'Edit' },
+            ]
+        });
 
-              {
-                  title: 'Project <br> Limit'
-              }, 
-              {
-                  title: 'Saved <br> Projects'
-              },
-              {
-                  title: 'Watermark'
-              }, {
-                  title: 'Date <br> Registered'
-              }, {
-                  title: 'Edit'
-              },
+    });
+    let selectedHistory = {}
+    let history = downloads;
+    let endDt = null;
+    let startDt = null;
+    let filteredHistory = history;
 
-          ]
-      });
+    function showDownloadHistory(userId, title, filteredDownloads) {
+      selectedHistory = {
+            userId: userId,
+            title: title
+        }
+
+        let _title = `${title}`;
 
 
-  });
+        filteredHistory = filteredDownloads ? filteredDownloads : history.filter(function (f) {
+            return f.user_id == userId
+        });
+        let table = `<div class='table-responsive'>
+        <table  class='table mg-b-0'>
+            <thead>
+                <th>File Name</th>
+                <th>Download Date</th>
+                <th>Template</th>
+                </thead>
+                <tbody>{tr}</tbody>
+          </table></div>`;
+        let tr = `<tr>{td}</tr>`;
+        let temp = "";
+        filteredHistory ?. forEach(item => {
+            let d = {};
+            if (item.data) {
+                d = JSON.parse(item.data);
+            }
+
+            temp += tr.replace(
+                "{td}",
+                `
+      <td><strong>${ item.content }</strong></td>
+      <td>${ new Date(item.created_dt).toLocaleString() }</td>
+      <td>${ d.title || 'N/A' }</td>` ) });
+        table = table.replace("{tr}", temp);
+        if (filteredHistory.length == 0) {
+            table = "<p clsss='pd-y-20'>No PDF Downloads yet!</p>"
+        }
+        $("#downloadHistoryTitle").text(_title);
+        $("#downloadHistoryContent").html(table);
+    }
+
+
+    
+    $("#dtFrom").on('change', function (e) {
+        startDt = new Date(e.currentTarget.valueAsDate.setHours(0, 0, 0, 0));
+    })
+    $("#dtTo").on('change', function (e) {
+        endDt = e.currentTarget.valueAsDate;
+    })
+    $("#btnFindDownloadHistory").on("click", function (e) {
+        if (! startDt) {
+            alert("Please select Start Date.")
+            return;
+        }
+
+        if (! endDt) {
+            endDt = startDt;
+            endDt = new Date(new Date(startDt).setHours(23, 59, 59, 999));
+        } else {
+            endDt = new Date(endDt.setHours(23, 59, 59, 999));
+        }
+
+        result = filteredHistory.filter(d => {
+            let downloadPdfDt = new Date(d.created_dt).getTime();
+            return(startDt.getTime() < downloadPdfDt && downloadPdfDt < endDt.getTime());
+        })
+
+
+        showDownloadHistory(selectedHistory.userId, selectedHistory.title, result);
+        // startDt = null;
+        // endDt = null;
+        startDt = null;
+        endDt = null;
+        $("#dtTo").val("");
+        $("#dtFrom").val("");
+    })
+    $("#btnClearDownloadsHistory").on("click", function () {
+        startDt = null;
+        endDt = null;
+        $("#dtTo").val("");
+        $("#dtFrom").val("");
+        showDownloadHistory(selectedHistory.userId, selectedHistory.title, null);
+    })
+    function showProjectHistory(userId, title) {
+        let _title = `${title}`;
+
+        let filteredUserProjects = userProjects.filter(function (f) {
+            return f.uploaded_by == userId
+        });
+
+        let table = `<div class='table-responsive'>
+        <table  class='table mg-b-0'>
+            <thead>
+                <th>Project Name</th>
+                <th>Created Date</th>
+                <th>View</th>
+                </thead>
+                <tbody>{tr}</tbody>
+          </table></div>`;
+        let tr = `<tr>{td}</tr>`;
+        let temp = "";
+        filteredUserProjects ?. forEach(item => {
+            let d = {};
+            if (item.data) {
+                d = JSON.parse(item.data);
+            }
+
+            temp += tr.replace(
+                "{td}",
+                `
+      <td><strong>${ item.title }</strong></td>
+      <td>${ new Date(item.created_dt).toLocaleString() }</td><td><a href='/app/admin/user-project/${item._id}'   >View</a></td>` ) });
+        table = table.replace("{tr}", temp);
+        if (filteredUserProjects.length == 0) {
+            table = "<p clsss='pd-y-20'>No PDF Downloads yet!</p>"
+        }
+        $("#projectHistoryTitle").text(_title);
+        $("#projectHistoryContent").html(table);
+    }
+    $("#btnProjectHistory").on("click", function () {
+       
+    })
+
+    
+
+
 </script>

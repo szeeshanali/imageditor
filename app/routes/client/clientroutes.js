@@ -90,6 +90,7 @@ router.get(ROUTE_USER_HOME,  async (req, res) => {
 router.get("/api/project/:id?", isLoggedIn,  async (req, res) => {
     var id = req.params.id; 
     try{
+       
         var data  = await commonService.uploadService.getUserDesignsAsync(req.user._id,id);
         var svgTemplate = await uploads.findOne({code:data.templateId},{base64:1})
         res.status(200).send({data:data,template:svgTemplate});
