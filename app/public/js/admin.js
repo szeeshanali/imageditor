@@ -998,8 +998,17 @@ function saveDesign() {
 
         initContextMenu();
 
+        $("#categoryContainer .category").on("click",function(e){
+          
+            const id = e.currentTarget.id; 
+            let categoryNm =  $(`#${id}`).find('.category-nm').text();
+            $("#inputCategoryName").val(categoryNm);
+            $("#btnAddCategory").text("Update Category");
+            $("#hiddenCategoryId").val(id.replace("category-",""));
+        })
 
         $("#categoryContainer .btnDelCategory").on("click",function(e){
+            e.stopPropagation();
             let categoryId = e.currentTarget.id; 
             $loader.removeClass("hidden");
             $.ajax({
@@ -1029,13 +1038,20 @@ function saveDesign() {
         })
 
         $("#btnAddCategory").on("click",function(){
-           let categoryText = $("#inputCategoryName").val();
+           let categoryText =   $("#inputCategoryName").val();
+           if(!categoryText || categoryText.length <3)
+           {
+            alert("Category name must be greater than 2 characters");
+            return;
+           }
+           let categoryId   =   $("#hiddenCategoryId").val();
            $loader.removeClass("hidden");
            $.ajax({
             type: "POST",
             url: "/api/admin/category",
             data: {
-                name: categoryText
+                name: categoryText,
+                id: categoryId
             },
             success: function (res) {
                 
@@ -1053,6 +1069,8 @@ function saveDesign() {
 
         $("#btnClearCategory").on("click",function(){
             $("#inputCategoryName").val("");
+            $("#btnAddCategory").text("Add Category");
+            $("#hiddenCategoryId").val("");
         })
 
         $("#clipartAdminContainer .clipart").on("click",function(e){
@@ -1524,28 +1542,47 @@ function saveDesign() {
         });
         ///
 
-
-
-        $(".btn-custom-text").on("click",function(e){
-          var id = e.currentTarget.id;
-
-          $.ajax({
-            type: "DELETE",
-            url: `/api/admin/custom-text/${id}`,
-            success: function (res) {
-                toast("Deleted successfully!");
-                $(`#custom-text-${id}`).remove();
-            },
-            error: function (res) {
-                toast("Error while deleting.");
-            }
-        })
+        $("#customTextContainer .customTxt").on("click",function(e){
+            const id = e.currentTarget.id; 
+            let $elm =  $(`#${id}`).find('.custom-text');
+            let txt =$elm.text(); 
 
         
-         
+        
+           
+            let order  = $elm.attr('data-order');
+            $("#inputCustomText").val(txt);
+            $("#btnCustomText").text("Update Text");
+            $("#hiddenCustomTextId").val(id.replace("custom-text-",""));
+            $("#customTxtDisplayOrder").val(order);
+        })
+
+        $(".btn-custom-text").on("click",function(e){
+            e.stopPropagation();
+            var id = e.currentTarget.id;
+            let $elm =  $(`#${id}`).find('.custom-text');
+            let txt =$elm.text(); 
+            if(!confirm(`Do you want to delete?`))
+            {return;}
+
+            $.ajax({
+                type: "DELETE",
+                url: `/api/admin/custom-text/${id}`,
+                success: function (res) {
+                    toast("Deleted successfully!");
+                    $(`#custom-text-${id}`).remove();
+                },
+                error: function (res) {
+                    toast("Error while deleting.");
+                }
+            })
+
         });
         $("#btnCustomTextClear").on("click", function (e) {
           $('#inputCustomText').val("");
+          $("#hiddenCustomTextId").val("");
+          $("#btnCustomText").val("Add Text");
+          $("#customTxtDisplayOrder").val("");
         })
         $("#btnCustomText").on("click", function (e) {
           if(customTextInProgress){
@@ -1567,12 +1604,17 @@ function saveDesign() {
             toast("Custom text should not be greater than 100 characters.");
             return; 
           }
+          let customTextId = $("#hiddenCustomTextId").val();
+          let order = $("#customTxtDisplayOrder").val();
+
           $.ajax({
               type: "POST",
               url: "/api/admin/content",
               data: {
-                  content: text,
-                  type: type
+                  content   : text,
+                  type      : type,
+                  id        : customTextId,
+                  order     : order || 0
               },
               success: function (res) {
                 window.location.reload();

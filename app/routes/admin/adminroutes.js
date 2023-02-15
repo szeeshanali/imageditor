@@ -195,6 +195,7 @@ router.get("/app/admin/faq", isAdmin, async (req,res)=>{
 
 router.get("/api/admin/custom-text", async (req,res)=>{
   var content = await commonService.contentService.getContentAsync('custom-text') || {};
+  
   res.status(200).send(content);
 })
 
@@ -204,7 +205,7 @@ router.delete('/api/admin/custom-text/:id', isAdmin, async (req,res)=>{
     return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."});
   }  
   try{
-    await contents.findOneAndDelete({type:'custom-text', by_admin:true, code:id }); 
+    await contents.findOneAndDelete({type:'custom-text', by_admin:true, _id:id }); 
     return res.status(200).send({"status":400,"message":`Deleted successfully, Id:${id}`});
   }catch(e)
   { return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."}); }
@@ -335,13 +336,29 @@ router.post(ROUTE_ADMIN_SAVEDESIGN,  isAdmin,  (req,res)=>{
 });
 
 router.post('/api/admin/content', isAdmin, async (req,res)=>{
-  const  {content, type, fontFile, label} = req.body;
+  const  {content, type, fontFile, label, id, order} = req.body;
   try{
     if(type === 'faq' || type === 'privacy-policy' || type === "terms-conditions")
     { 
       await commonService.contentService.addOrUpdateContentAsync(label,content,type,true);       
       return res.status(200).send({status:"success",message:"Content updated successfully!"});      
     }
+
+    if(type === 'custom-text')
+    {
+      if(id && id.length === 24)
+      {
+
+      
+        let doc = await contents.findOneAndUpdate({_id:id,type:'custom-text'},{order:order,content:content});
+        await contents.findOneAndUpdate({order:order,type:'custom-text'},{order:doc.order});
+        return res.status(200).send({status:"success",message:"Content updated successfully!"});  
+        
+      }
+      await commonService.contentService.addOrUpdateContentAsync(label,content,type,true,order);       
+      return res.status(200).send({status:"success",message:"Content updated successfully!"});  
+    }
+
     //Create an instance of the form object
   let form = new formidable.IncomingForm();
   //Process the file upload in Node
@@ -368,7 +385,12 @@ router.post('/api/admin/content', isAdmin, async (req,res)=>{
     fs.readFile(file.contentFile.filepath, function (err, data) {
       fs.writeFile(newpath, data, async function () {
         //Send a NodeJS file upload confirmation message
-        await commonService.contentService.addOrUpdateContentAsync(fields.label,fields.content,fields.type,true);       
+        await commonService.contentService.addOrUpdateContentAsync(
+          fields.label,
+          fields.content,
+          fields.type,
+          true
+          );       
         res.status(200).send({status:"success",message:"Content updated successfully!"})
       });
     })
@@ -390,16 +412,23 @@ router.post('/app/admin/workspace',(req,res)=>{
 })
 
 router.post('/api/admin/category', isAdmin , async (req,res)=>{
-  const  {name} = req.body;
+  const  {name, id} = req.body;
   try{
+    
+
 
     let nameAlreadyExists = await commonService.categoryService.getCategoriesByFilterAsync({name:name});
-
     if(nameAlreadyExists && nameAlreadyExists.length > 0)
     { return res.status(409).send(`DUPLICATE: ${name}`) }
 
+    if(id && id.length === 24)
+    { 
+      await categories.updateOne({_id:id},{name:name});
+      return res.status(200).send(`UPDATED: ${name}`)  
+    }
+     
     await commonService.categoryService.addCategoryAsync(name);
-    res.status(200).send(`CREATED: ${name}`)
+    return res.status(200).send(`CREATED: ${name}`)  
 
   }catch(ex)
   {

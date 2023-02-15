@@ -12,10 +12,12 @@
         <div class="row row-xs">
           <div class="wd-300">
             <div>Category Name:</div>
+            <input type="hidden" id="hiddenCategoryId">
             <input type="text" placeholder="Enter Category Name" id="inputCategoryName" class="form-control" maxlength="100" minlength="3" pattern=".{3,100}" title="Minimum 3 and maximum 100 characters." >
           </div>
         </div><!-- row -->
         <div class="form-layout-footer pd-t-20" >
+        
           <button type="button" id="btnAddCategory" class="btn btn-primary tx-uppercase tx-bold">Add Category</button>
           <button class="btn btn-secondary tx-uppercase tx-bold " id="btnClearCategory">Clear</button>
         </div>
@@ -29,11 +31,11 @@
           <p class="pd-10">No Category Found</p>
           <%}%>
           <%for(var i=0;i<categories?.length;i++){%>
-          <div class="list-group-item pd-y-10 rounded-top-0 bd-0" id="custom-text-<%=categories[i]._id%>">
+          <div class="list-group-item pd-y-10 rounded-top-0 bd-0 category" id="category-<%=categories[i]._id%>">
             <div class="media">
          
-              <div class="media-body">
-                <span class="tx-inverse tx-14 tx-bold"><%=categories[i].name%></span>
+              <div class="media-body" >
+                <span class="tx-inverse tx-14 tx-bold category-nm"><%=categories[i].name%></span>
                 <span class="pull-right"><button class="btn btn-secondary btnDelCategory  pd-0 pd-x-10" type="button" id="<%=categories[i]._id%>"><i class="icon ion-ios-trash-outline tx-14"></i></button></span>
               </div><!-- media-body -->
             </div><!-- media -->

@@ -288,7 +288,7 @@ const commonService = (function() {
     this.getContentAsync = async (type, isAdmin)=>{
 
         if(type === 'custom-text' )
-        {  return await contents.find({type:type, active:true, deleted:false}); }
+        {  return await contents.find({type:type, active:true, deleted:false}).sort({order:1}); }
 
         if( type === 'fonts')
         {  
@@ -316,13 +316,13 @@ const commonService = (function() {
 
    
 
-    this.addOrUpdateContentAsync = async (label,content,type,by_admin)=>{
+    this.addOrUpdateContentAsync = async (label,content,type,by_admin,order)=>{
         if((content == null || content.length < 3) && type != 'custom-text' )
         {throw "Empty content."; }
 
         if(type === 'custom-text' || type === 'fonts' )
         {
-            var content =  new contents({content:content,type:type,by_admin:by_admin,label:label});
+            var content =  new contents({content:content,type:type,by_admin:by_admin,label:label,order:order});
             await content.save();
             return;
         }
