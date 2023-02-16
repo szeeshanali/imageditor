@@ -839,9 +839,21 @@ router.get("/api/user-project/:id?",  async (req, res) => {
 });
 
 
-router.post('/app/admin/uploads',  function(req, res) {
-  let {id, desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
+router.post('/app/admin/uploads', async function(req, res) {
+  let {id, userDesignId, desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
  
+  if(userDesignId)
+  {
+    try {
+      await uploads.findOneAndUpdate({_id:userDesignId},{json:json});
+      return res.status(200).send({message:`Updated Successfully`, error: null}); 
+    }catch(ex)
+    {
+      return res.status(500).send({message:`Unable to Save`, error: ex.message}); 
+
+    }
+   
+  }
   file_name = file_name || "pd.png"; 
   //filename = `${filename}-${_id}${file_ext}`;       
   let _id = mongoose.Types.ObjectId();

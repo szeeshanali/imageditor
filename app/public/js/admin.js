@@ -1791,21 +1791,44 @@ function saveDesign() {
                 return;
             }
 
-            // 1.
-            // $("#add-template-panel,#create-design-panel").addClass("hidden");
-            // $("#save-design-panel").removeClass("hidden");
-
-
-            $("#menu-panel .tab-pane").each((index,elem)=>{
-                $(elem).removeClass("active");
-                $("#shared-library").addClass("active");
-            })
-            // /saveDesign();
+          alert(1);
 
 
         });
 
+        $("#saveUserDesign").on("click",function(e){
+            let designId = $("#hiddenDesignId").val();
+            if(!designId)
+            {alert("Error loading Design. Design Id is missing");
+            return;} 
+            let json = canvas.toJSON();
+            $loader.removeClass("hidden");
+            $.ajax({
+                type: "POST",
+                url: "/app/admin/uploads",
+                // contentType: false,
+                // enctype: 'multipart/form-data',
+                // processData: false,
+                data: {
+                    userDesignId: designId,
+                    json: JSON.stringify(json)
+                },
+                success: function (res) {
+                    designFlags.submitted = true;
+                    toast("Uploaded Successfully!");
+                    setTimeout(function () {
+                        onDesignReload();
+                    }, 2000)
+                },  
+                error: function (res) {
+                    designFlags.submitted = false;
+                    toast("Server Error.");
+                    $loader.addClass("hidden");
+                }
+            })
+        })
 
+        
         rotateObject();
         cropObject();
         flipXYObject();
@@ -3416,36 +3439,36 @@ function loadProject(id) {
         })
 
         /// loading template 
-        // fabric.loadSVGFromURL(res.template.base64, function (objects, options) { // $canvasPrev.fadeOut();
-        //     var loadedObjects = new fabric.Group(group);
-        //     var templateWidth = options.viewBoxWidth;
-        //     var templateHeight = options.viewBoxHeight;
+        fabric.loadSVGFromURL(res.template.base64, function (objects, options) { // $canvasPrev.fadeOut();
+            var loadedObjects = new fabric.Group(group);
+            var templateWidth = options.viewBoxWidth;
+            var templateHeight = options.viewBoxHeight;
 
-        //     let isLandspace = (templateWidth > templateHeight);
-        //     canvasPrev.setDimensions({width: templateWidth, height: templateHeight});
+            let isLandspace = (templateWidth > templateHeight);
+            canvasPrev.setDimensions({width: templateWidth, height: templateHeight});
 
-        //     let __f = 0.9;
-        //     if (isLandspace) {
+            let __f = 0.9;
+            if (isLandspace) {
               
-        //         templateWidth = options.viewBoxHeight;
-        //         templateHeight = options.viewBoxWidth;
-        //     }
-        //     let __w = parseInt(templateWidth*__f); 
-        //     let __h = parseInt(templateHeight*__f);
-        //     $("#admin-main-canvas-logo").css({"width":`${__w}px`,"height":`${__h}px`,"padding":"1px","left":"21px"});
+                templateWidth = options.viewBoxHeight;
+                templateHeight = options.viewBoxWidth;
+            }
+            let __w = parseInt(templateWidth*__f); 
+            let __h = parseInt(templateHeight*__f);
+            $("#admin-main-canvas-logo").css({"width":`${__w}px`,"height":`${__h}px`,"padding":"1px","left":"21px"});
             
-        //     canvasPrev.setBackgroundImage(loadedObjects, canvasPrev.renderAll.bind(canvasPrev));
-        //     canvasPrev.renderAll();
-        //     loadedObjects.center().setCoords();
+            canvasPrev.setBackgroundImage(loadedObjects, canvasPrev.renderAll.bind(canvasPrev));
+            canvasPrev.renderAll();
+            loadedObjects.center().setCoords();
 
            
 
 
-        // }, function (item, object) {
-        //     object.set({fill:"#fff"});
-        //     object.set('id', item.getAttribute('id'));
-        //     group.push(object);
-        // });
+        }, function (item, object) {
+            object.set({fill:"#fff"});
+            object.set('id', item.getAttribute('id'));
+            group.push(object);
+        });
 
     }).fail(function (err) {
         $loader.addClass("hidden");

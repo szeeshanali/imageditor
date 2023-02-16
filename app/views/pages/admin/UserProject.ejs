@@ -254,9 +254,10 @@
       <div class="mg-l-auto">
         <div class="d-flex">
           <button type="button" onclick="$('#btn-menu-peview').click()" class="hidden btn btn-sm btn-success tx-12 tx-uppercase tx-bold bd-0 pd-x-20 " id="ws-btn-preview">Preview <br> Your Design</button>
+          <button type="button" data-toggle="modal" data-target="#commitDesign" class="btn btn-sm btn-success tx-12 tx-uppercase tx-bold  bd-0 pd-x-20 hidden" id="ws-btn-save" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?" data-toggle="popover" ><i class="ion-checkmark-circled mg-r-5"></i> Save <br> Changes</button>
 
-          <button type="button" data-toggle="modal" data-target="#downloadPDFModel" class="btn btn-sm btn-success tx-12 tx-uppercase tx-bold  bd-0 pd-x-20 hidden" id="ws-btn-download" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?" data-toggle="popover" ><i class="ion-checkmark-circled mg-r-5"></i> Finalize & Download <br> your PDF</button>
-          <button type="button" onclick="$('#menu-save-design').click()" class=" hidden btn btn-primary btn-sm tx-12 tx-uppercase tx-bold bd-0 pd-x-20" id="ws-btn-save"><i class="fa fa-floppy-o mg-r-5"></i>Save <br>  Design</button>
+          <!-- <button type="button" data-toggle="modal" data-target="#downloadPDFModel" class="btn btn-sm btn-success tx-12 tx-uppercase tx-bold  bd-0 pd-x-20 hidden" id="ws-btn-download" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?" data-toggle="popover" ><i class="ion-checkmark-circled mg-r-5"></i> Finalize & Download <br> your PDF</button> -->
+          <button type="button"  class=" btn btn-primary btn-sm tx-12 tx-uppercase tx-bold bd-0 pd-x-20" id="saveUserDesign" ><i class="fa fa-floppy-o mg-r-5"></i>Save <br>  Design</button>
 
           <button type="button" onclick="$('#btnBack').click()" class="btn btn-danger tx-12 btn-sm tx-uppercase tx-bold  bd-0 pd-x-20 hidden" id="ws-btn-back"><i class="fa fa-pencil-square-o mg-r-5"></i> Continue Editing <br> your Design</button>
 
@@ -385,6 +386,7 @@
       </div>
     </div>
    </div>
+   <input type="hidden" id="hiddenDesignId">
                           <!-- modal-dialog -->
                       </div>
 <script> 
@@ -396,7 +398,7 @@
    { 
         var code = '<%=code || "default" %>' ;
         loadProject(code);
-
+        $("#hiddenDesignId").val(code);
         $('[data-toggle="popover"]').popover()
 
    }
