@@ -278,8 +278,8 @@
      
         <div  id="canvas-holder">
             <div class="content tx-center">
-                <canvas id="client-main-canvas"   ></canvas>
-                <canvas id="client-main-canvas-logo"   ></canvas>                    
+                <canvas id="admin-main-canvas"  ></canvas>
+                <canvas id="admin-main-canvas-logo"   ></canvas>                    
             </div>
         </div>
       
@@ -394,9 +394,9 @@
       //$("#menu-templates").addClass("bg-warning")
     window.onload = function()
    { 
-    debugger;
         var code = '<%=code || "default" %>' ;
         loadProject(code);
+
         $('[data-toggle="popover"]').popover()
 
    }

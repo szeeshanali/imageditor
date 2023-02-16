@@ -3389,7 +3389,7 @@ function loadProject(id) {
     state.isPreviewCanvas = false;
     var group = [];
     //$("#btnBack").trigger("click");
-    $.get(`/api/project/${id}`, function (res) {
+    $.get(`/api/user-project/${id}`, function (res) {
         $loader.addClass("hidden");
         const json = JSON.parse(res.data.json);
         if (! json) {
@@ -3397,44 +3397,55 @@ function loadProject(id) {
         }
         canvas.clear();
         /// loading design 
+        canvas.setDimensions({width:502,height:500})
         canvas.loadFromJSON(json, function () {
-           
-            $("#menu-upload > a").click();
+            $("#btn-step-design").click();
+            let meta = JSON.parse(res.template.meta);
+            let logoSize = `${(meta.objectWidth / dpi).toFixed(1)}" x ${((meta.objectHeight || meta.objectWidth) / dpi).toFixed(1)}`;
+            let pageSize = `${meta.width/dpi}" x ${meta.height/dpi}"`;
+            $("#template-info-panel .template-name").text(meta.title);
+            $("#template-info-panel .page-size").text(pageSize);
+            $("#template-info-panel .logo-size").text(logoSize + "''");
+           // $("#template-info-panel .total-logos").text(objects.length);
+            $("#template-info-panel .page-title").text(meta.title);
+//$("#template-info-panel .ref_code").text(data.ref_code);
+            $("#template-info-panel #imgSelectedTemplate").attr("src", res.template.base64)
+
             
         }, function (o, object) {
         })
 
         /// loading template 
-        fabric.loadSVGFromURL(res.template.base64, function (objects, options) { // $canvasPrev.fadeOut();
-            var loadedObjects = new fabric.Group(group);
-            var templateWidth = options.viewBoxWidth;
-            var templateHeight = options.viewBoxHeight;
+        // fabric.loadSVGFromURL(res.template.base64, function (objects, options) { // $canvasPrev.fadeOut();
+        //     var loadedObjects = new fabric.Group(group);
+        //     var templateWidth = options.viewBoxWidth;
+        //     var templateHeight = options.viewBoxHeight;
 
-            let isLandspace = (templateWidth > templateHeight);
-            canvasPrev.setDimensions({width: templateWidth, height: templateHeight});
+        //     let isLandspace = (templateWidth > templateHeight);
+        //     canvasPrev.setDimensions({width: templateWidth, height: templateHeight});
 
-            let __f = 0.9;
-            if (isLandspace) {
+        //     let __f = 0.9;
+        //     if (isLandspace) {
               
-                templateWidth = options.viewBoxHeight;
-                templateHeight = options.viewBoxWidth;
-            }
-            let __w = parseInt(templateWidth*__f); 
-            let __h = parseInt(templateHeight*__f);
-            $("#admin-main-canvas-logo").css({"width":`${__w}px`,"height":`${__h}px`,"padding":"1px","left":"21px"});
+        //         templateWidth = options.viewBoxHeight;
+        //         templateHeight = options.viewBoxWidth;
+        //     }
+        //     let __w = parseInt(templateWidth*__f); 
+        //     let __h = parseInt(templateHeight*__f);
+        //     $("#admin-main-canvas-logo").css({"width":`${__w}px`,"height":`${__h}px`,"padding":"1px","left":"21px"});
             
-            canvasPrev.setBackgroundImage(loadedObjects, canvasPrev.renderAll.bind(canvasPrev));
-            canvasPrev.renderAll();
-            loadedObjects.center().setCoords();
+        //     canvasPrev.setBackgroundImage(loadedObjects, canvasPrev.renderAll.bind(canvasPrev));
+        //     canvasPrev.renderAll();
+        //     loadedObjects.center().setCoords();
 
            
 
 
-        }, function (item, object) {
-            object.set({fill:"#fff"});
-            object.set('id', item.getAttribute('id'));
-            group.push(object);
-        });
+        // }, function (item, object) {
+        //     object.set({fill:"#fff"});
+        //     object.set('id', item.getAttribute('id'));
+        //     group.push(object);
+        // });
 
     }).fail(function (err) {
         $loader.addClass("hidden");
