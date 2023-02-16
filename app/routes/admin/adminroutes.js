@@ -572,7 +572,11 @@ let template = {};
 let meta = {};
 
 //let customDesigns = await uploads.find({type:'pre-designed', active:true, deleted:false, base64:{$ne:null},json:{$ne:null}},{code:1,base64:1}) || [];
-let adminUploadItems = await commonService.uploadService.getUploads('all',true,true);
+let adminUploadItems = await uploads.find({deleted:false,active:true},{
+  json:0,
+  base64:0,
+  thumbBase64:0
+});
 let templates = adminUploadItems.filter(function(item){ return item.type == 'template'});
 let cliparts = adminUploadItems.filter(function(item){ return item.type == 'clipart'});
 let customDesigns = adminUploadItems.filter(function(item){ return item.type == 'pre-designed'});
@@ -827,7 +831,7 @@ router.get("/api/user-project/:id?",  async (req, res) => {
   var id = req.params.id; 
   try{
       var data  = await commonService.uploadService.getUserDesignsAsync('admin',id);
-      var svgTemplate = await uploads.findOne({code:data.templateId},{base64:1})
+      var svgTemplate = await uploads.findOne({code:data.templateId},{base64:1,meta:1})
       res.status(200).send({data:data,template:svgTemplate});
   }catch{
       res.status(500).send();
