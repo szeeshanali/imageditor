@@ -2072,7 +2072,7 @@ function generatePDFfromPreview(onServer, callback) {
                 else
                 { clonedCanvas.setDimensions({ width: 612 * factor, height: 792 * factor }); }
 
-                //clonedCanvas.setZoom(1.);
+                clonedCanvas.setZoom(1.334);
                 for (var i = 0; i < clonedCanvas._objects.length; i++) {
                     clonedCanvas._objects[i].globalCompositeOperation = null;
                     canvasPrev.renderAll.bind(clonedCanvas)
@@ -2081,8 +2081,8 @@ function generatePDFfromPreview(onServer, callback) {
                 clonedCanvas.add(bg);
                 clonedCanvas.renderAll();
                 var imgData = clonedCanvas.toDataURL('image/png');
-                pdf.addImage(imgData, 'png', 0, 0, 612 * factor, 792 * factor);
-
+                ///pdf.addImage(imgData, 'png', 0, 0, 612 * factor, 792 * factor);
+                pdf.addImage(imgData, 'png', 0, 0);
                 if(onServer)
                 {
                     callback(btoa(pdf.output(),"base64"));
