@@ -698,16 +698,32 @@ function loadSVGTemplate(id) {
 
             // / getting actual width and height of a logo
             // / setting canvas dimensions with logo width/height
-            let logo = objects[objects.length-1];  
+             let logo = objects[objects.length-1];  
             if(logo.height && logo.height < logo.width)
             {
                 let ratio = (logo.width/logo.height);
                 logoHeight = logoDisplaySize/ratio;
-                
+                logo.scaleToHeight(logoHeight);
+            }else
+            {
+                logo.scaleToWidth(logoDisplaySize);
             }
 
-            logo.scaleToWidth(logoDisplaySize-2);
-            logo.scaleToHeight(logoHeight-2);
+            // if(logo.height === logo.width)
+            // {
+            //     logo.scaleToWidth(logoDisplaySize-2);
+            // }else
+            // {
+            //     logo.set({width:logoDisplaySize,height:logoHeight});
+            // }
+
+            // if(logo.width<logoDisplaySize)
+            // {
+            //     logo.scaleToWidth(logoDisplaySize-2);
+            // }
+            
+          
+            logo.setCoords();
             canvas.setDimensions({width: logoDisplaySize, height: logoHeight});
             canvas.setBackgroundImage(logo, canvas.renderAll.bind(canvas));
             canvas.renderAll();
@@ -1488,6 +1504,7 @@ $("#btnStartOverModel").on("click",function(e){
     $canvasPrev.parent().hide();
 
     $("#templatepanel .template").on("click", (e) => {
+        alert(1);
         enabledTextMode = false;
         var id = e.currentTarget.id;
         canvas.clear();
@@ -2053,11 +2070,15 @@ function generatePDFfromPreview(onServer, callback) {
             var width = canvasPrev.backgroundImage.width;
             var height = canvasPrev.backgroundImage.height;
             let pageFormat = 'letter';
-         
+            if(height/72 > 16){
+                pageFormat='tabloid'
+            }
+
+
             var pdf = new jsPDF({
                 orientation: (width > height) ? 'l' : 'p',
                 unit: 'pt',
-                format: 'letter',
+                format: pageFormat,
                 putOnlyUsedFonts: true
             });
 
