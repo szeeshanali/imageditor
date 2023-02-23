@@ -566,6 +566,7 @@ function loadProject(id) {
         /// loading template 
         fabric.loadSVGFromURL(res.template.base64, function (objects, options) { // $canvasPrev.fadeOut();
             var loadedObjects = new fabric.Group(group);
+         
             var templateWidth = options.viewBoxWidth;
             var templateHeight = options.viewBoxHeight;
 
@@ -698,17 +699,24 @@ function loadSVGTemplate(id) {
 
             // / getting actual width and height of a logo
             // / setting canvas dimensions with logo width/height
-             let logo = objects[objects.length-1];  
-            if(logo.height && logo.height < logo.width)
-            {
-                let ratio = (logo.width/logo.height);
-                logoHeight = logoDisplaySize/ratio;
-                logo.scaleToHeight(logoHeight);
-            }else
-            {
-                logo.scaleToWidth(logoDisplaySize);
-            }
-
+        //      let logo = objects[objects.length-1];  
+        //      logo.set({left:8})
+        //     if(logo.height && logo.height < logo.width)
+        //     {
+        //         let ratio = (logo.width/logo.height);
+        //         logoHeight = logoDisplaySize/ratio;
+        //         logo.scaleToHeight(logoHeight);
+        //     }else
+        //     {
+        //         logo.scaleToWidth(logoDisplaySize);
+               
+        //     }
+        //    if(objects.length === 1)
+        //    {
+        //     logoDisplaySize = logo.width>500?500:logo.width;
+            
+        //    }
+           
             // if(logo.height === logo.width)
             // {
             //     logo.scaleToWidth(logoDisplaySize-2);
@@ -721,8 +729,11 @@ function loadSVGTemplate(id) {
             // {
             //     logo.scaleToWidth(logoDisplaySize-2);
             // }
-            
-          
+
+            let logo = objects[objects.length-1];  
+            logo.scaleToWidth(logoDisplaySize);
+            logoHeight = logo.getScaledHeight();
+            //.set({left:8})
             logo.setCoords();
             canvas.setDimensions({width: logoDisplaySize, height: logoHeight});
             canvas.setBackgroundImage(logo, canvas.renderAll.bind(canvas));
@@ -778,7 +789,7 @@ function loadSVGTemplate(id) {
                 {
                   
                   let pos = $(labels[i]).position();
-                  $(".canvas-container").first().append(`<div class='grid-lines' style='height:${logoHeight}px;left:${pos.left-22}px; top:0px; '></div>`)
+                  $(".canvas-container").first().append(`<div class='grid-lines' style='height:${logoHeight}px;left:${pos.left-29}px; top:0px; '></div>`)
                 }
           
                 for(let i=0;i<(vlabels.length);i++)
@@ -786,8 +797,8 @@ function loadSVGTemplate(id) {
                   
                     let pos = $(vlabels[i]).position();
                 
-                  $(".canvas-container").first().append(`<div class='grid-lines h-gridlines' style='width:500px;top:${pos.top-22}px; left:0px; border-bottom: solid 1px #666;'></div>`);
-                  $(".canvas-container").first().css({width:"502px",height:`${logoHeight}px`})
+                  $(".canvas-container").first().append(`<div class='grid-lines h-gridlines' style='width:500px;top:${pos.top-26}px; left:0px; border-bottom: solid 1px #666;'></div>`);
+                  $(".canvas-container").first().css({width:"500px",height:`${logoHeight}px`})
                 }
                 if(!isRulerEnabled){
                     $("#btnDisplayRuler").click();
@@ -795,10 +806,10 @@ function loadSVGTemplate(id) {
                 if(!isGridLinesEnabled){
                     $("#btnDisplayGrid").click();
                 }
-            
+            $("#canvas-holder").css({"background-color":"#9293cb","width": "540px","margin": "auto","padding":"20px"});
         }, function (item, object) {
             object.set({fill:"#fff"});
-            object.set({left: 6, top: 4});
+            object.set({left: 0, top: 0});
            
         });
         // / load template - preview display
@@ -814,15 +825,20 @@ function loadSVGTemplate(id) {
                 templateWidth = options.viewBoxHeight;
                 templateHeight = options.viewBoxWidth;
             }
-
-
-            canvasPrev.setDimensions({width: templateWidth, height: templateHeight});            
             canvasPrev.setBackgroundImage(loadedObjects, canvasPrev.renderAll.bind(canvasPrev));
+
+            if(objects.length == 1 && objects[0].height>objects[0].width )
+            { canvasPrev.setDimensions({width: logoDisplaySize, height: logoHeight}); }
+            else
+            {canvasPrev.setDimensions({width: templateWidth, height: templateHeight}); }
+            
+
+                  
            
             let __w = parseInt(templateWidth*__f); 
             let __h = parseInt(templateHeight*__f);
 
-            $("#client-main-canvas-logo").css({"width":`${__w}px`,"height":`${__h}px`,"padding":"1px","left":"-21px"})
+            //$("#client-main-canvas-logo").css({"width":`${__w}px`,"height":`${__h}px`,"padding":"1px","left":"-21px"})
            
             canvasPrev.renderAll();
 
@@ -1717,6 +1733,7 @@ function backFromPreview() {
     $("#btnStartOverModel").removeClass("hidden");    
     $(".step-item:nth-child(3)").removeClass("active");
     $(".step-item:nth-child(2)").addClass("active");
+    $("#canvas-holder").css({"background-color":"#9293cb","width": "540px","margin": "auto","padding":"20px"});
 
     // 2.
     // $("#btnSave").unbind().click(function(){
@@ -1769,12 +1786,33 @@ function renderPreview() {
         let logos = canvasPrev.backgroundImage._objects;
         let w = logos[0].width; 
         let h = logos[0].height;
-      
+        $("#canvas-holder").removeAttr("style");
+        $("#canvas-holder").css({"border":"solid 1px #9293cb",});
        
 
         fabric.Image.fromURL(dataURL, (img) => {
             state.isPreviewCanvas = true;
             canvasPrev.remove(... canvasPrev.getObjects());
+            if(logos.length ==1 && logos[0].width < logos[0].height)
+            {
+                let object  = fabric.util.object.clone(img);
+                object.globalCompositeOperation = "source-atop";
+                canvasPrev.add(object).renderAll();
+                $("#create-design-heading").addClass("hidden");
+                $("#preview-design-heading").removeClass("hidden");
+                $("#ruler-ctrl").attr("style", "display:none !important");
+                canvasPrev.renderAll();
+                $loader.addClass("hidden");
+                //$("#ws-btn-save").addClass("hidden");
+                $("#ws-btn-preview").addClass("hidden");
+                $("#ws-btn-back").removeClass("hidden");
+                $("#ws-btn-download").removeClass("hidden");
+                $("#btnStartOverModel").addClass("hidden");
+                $("#previewMsg").removeClass("hidden");
+                return;
+            }
+
+
             for (let i = 0; i < logos.length; i++) {
                     
                 let logo    = logos[i];
@@ -1795,7 +1833,7 @@ function renderPreview() {
                 $("#create-design-heading").addClass("hidden");
                 $("#preview-design-heading").removeClass("hidden");
                 $("#ruler-ctrl").attr("style", "display:none !important");;
-              
+                $("#client-main-canvas-logo").css({"width":"90%","height":"90%"});
 
             }
             // var watermark = "/uploads/admin/watermark/watermark.png";
@@ -2088,12 +2126,18 @@ function generatePDFfromPreview(onServer, callback) {
             canvasPrev.clone(function (clonedCanvas) {
                 var bg = clonedCanvas.backgroundImage;
                 clonedCanvas.backgroundImage = false;
-                if(width>height)
-                { clonedCanvas.setDimensions({ width: 792 * factor, height: 612 * factor }); }
-                else
-                { clonedCanvas.setDimensions({ width: 612 * factor, height: 792 * factor }); }
 
-                clonedCanvas.setZoom(1.334);
+                if(canvasPrev.backgroundImage._objects.length >1)
+                {
+                    if(width>height)
+                    { clonedCanvas.setDimensions({ width: 792 * factor, height: 612 * factor }); }
+                    else
+                    { clonedCanvas.setDimensions({ width: 612 * factor, height: 792 * factor }); }
+                    clonedCanvas.setZoom(1.334);
+                }
+               
+                
+                //clonedCanvas.setZoom(1.334);
                 for (var i = 0; i < clonedCanvas._objects.length; i++) {
                     clonedCanvas._objects[i].globalCompositeOperation = null;
                     canvasPrev.renderAll.bind(clonedCanvas)
@@ -2103,7 +2147,16 @@ function generatePDFfromPreview(onServer, callback) {
                 clonedCanvas.renderAll();
                 var imgData = clonedCanvas.toDataURL('image/png');
                 ///pdf.addImage(imgData, 'png', 0, 0, 612 * factor, 792 * factor);
-                pdf.addImage(imgData, 'png', 0, 0);
+               
+                if(canvasPrev.backgroundImage._objects.length ==1)
+                {
+                    pdf.addImage(imgData, 'png', 0, 0, width, height);
+                }else{
+                   
+                    pdf.addImage(imgData, 'png', 0, 0  );
+                }
+                
+                
                 if(onServer)
                 {
                     callback(btoa(pdf.output(),"base64"));

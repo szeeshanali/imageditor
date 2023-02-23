@@ -605,7 +605,7 @@ color:#0900fd;
   }
 
   .bg-menu-highlight{
-    background-color: #6b68c9;
+    background-color: #9293cb;
   }
   .menu-num{
     font-size: 14px;
@@ -849,7 +849,8 @@ border-right: solid 0px #ccc;  }
 
 
   #client-main-canvas-logo,#admin-main-canvas, #admin-main-canvas-logo{
-    background-color: #6b68c9; 
+    background-color: #9293cb; 
+    padding:20px;
 } 
 
 .canvas-container{
