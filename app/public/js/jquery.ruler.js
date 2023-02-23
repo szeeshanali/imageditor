@@ -188,8 +188,9 @@
 			let vTickLabelPos = settings.hRuleSize;
 			newTickLabel = "";
 			let vLabelValue =0;
+		
 			let vArea = $vRule.height();
-			let pxLogoHeight =  vArea/logoHeight;
+			let pxLogoHeight = vArea/logoHeight;
 			let inchesHeightCounter = Math.floor(logoHeight);
 			var vMaker = vTickLabelPos;
 			for(var i=0;i<=inchesHeightCounter;i++)
