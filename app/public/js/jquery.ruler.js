@@ -135,7 +135,7 @@
 			
 			var $hRule = $this.children('.hRule');
 			var $vRule = $this.children('.vRule');
-		
+			$hRule.width($("#workarea").width()-120)
 			// Horizontal ruler ticks
 			var tickLabelPos = settings.vRuleSize;
 			var newTickLabel = "";
@@ -144,15 +144,15 @@
 			var logoSize = $(".logo-size").text()?.split('x');
 			let logoWidth = parseFloat(logoSize[0]);
 			let logoHeight = parseFloat(logoSize[1]);
-			let area = 500;
+			let area = $("#workarea").width()-150;
 			let pxLogoWidth =  area/logoWidth;
-			let inchesCounter = Math.floor(logoWidth);
+			let inchesCounter = Math.ceil(logoWidth);
 			let cmValues = (area-pxLogoWidth*inchesCounter);
 			var major = tickLabelPos;
 			for(var i=0;i<=inchesCounter;i++)
 			{
 
-					hLabelValue += 1; 
+					
 					console.log("logoSize",logoSize);
 					var val = (logoWidth*hLabelValue);
 					newTickLabel = "<div class='tickLabel'>" + hLabelValue + "''</div>";
@@ -164,6 +164,7 @@
 						 major = major + (pxLogoWidth/8)
 					}
 				tickLabelPos = (tickLabelPos + pxLogoWidth);	
+				hLabelValue += 1; 
 			}
 			
 			// while ( tickLabelPos <= $hRule.width() ) {
@@ -195,7 +196,7 @@
 			var vMaker = vTickLabelPos;
 			for(var i=0;i<=inchesHeightCounter;i++)
 			{
-				vLabelValue += 1; 			
+					
 				newTickLabel = "<div class='tickLabel'>" + vLabelValue + "''</div>";
 				$(newTickLabel).css( "top", vTickLabelPos+"px" ).appendTo($vRule);
 				for(var j=0;j<8;j++)
@@ -206,6 +207,7 @@
 					 vMaker = vMaker + (pxLogoHeight/8)
 				}
 				vTickLabelPos = (vTickLabelPos + pxLogoHeight);	
+				vLabelValue += 1; 		
 			}
 			// while (tickLabelPos <= $vRule.height()) {
 			// 	if ((( tickLabelPos - settings.hRuleSize ) %50 ) == 0) {

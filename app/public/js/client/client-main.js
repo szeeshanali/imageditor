@@ -566,7 +566,7 @@ function loadProject(id) {
         /// loading template 
         fabric.loadSVGFromURL(res.template.base64, function (objects, options) { // $canvasPrev.fadeOut();
             var loadedObjects = new fabric.Group(group);
-         
+      
             var templateWidth = options.viewBoxWidth;
             var templateHeight = options.viewBoxHeight;
 
@@ -671,7 +671,7 @@ function loadSVGTemplate(id) {
     selectedTemplateId = id;
     var group = [];
     state.isPreviewCanvas = false;
-   
+ 
     $.get(`/api/svg-templates/${id}`, function (data) {
         if (typeof(data) === 'string') {
             window.location.reload();
@@ -692,11 +692,11 @@ function loadSVGTemplate(id) {
         canvas.templateId = data.code;
         hideWorkspaceControls();
         // loading Big display
-        let logoDisplaySize = defaults.logoDisplaySize;
+        let logoDisplaySize = $("#workarea").width()-150;// defaults.logoDisplaySize;
         let logoHeight = defaults.logoDisplaySize;
 
         fabric.loadSVGFromURL(svgBase64, function (objects, options) {
-
+           
             // / getting actual width and height of a logo
             // / setting canvas dimensions with logo width/height
         //      let logo = objects[objects.length-1];  
@@ -785,7 +785,7 @@ function loadSVGTemplate(id) {
             $("#btnDisplayGrid").prop("checked",true);
            
             $(".grid-lines").remove();
-                for(var i=0;i<(labels.length);i++)
+                for(var i=0;i<(labels.length-1);i++)
                 {
                   
                   let pos = $(labels[i]).position();
@@ -797,8 +797,8 @@ function loadSVGTemplate(id) {
                   
                     let pos = $(vlabels[i]).position();
                 
-                  $(".canvas-container").first().append(`<div class='grid-lines h-gridlines' style='width:500px;top:${pos.top-26}px; left:0px; border-bottom: solid 1px #666;'></div>`);
-                  $(".canvas-container").first().css({width:"500px",height:`${logoHeight}px`})
+                  $(".canvas-container").first().append(`<div class='grid-lines h-gridlines' style='width:${logoDisplaySize}px;top:${pos.top-26}px; left:0px; border-bottom: solid 1px #666;'></div>`);
+                  $(".canvas-container").first().css({width:logoDisplaySize,height:`${logoHeight}px`})
                 }
                 if(!isRulerEnabled){
                     $("#btnDisplayRuler").click();
@@ -806,7 +806,7 @@ function loadSVGTemplate(id) {
                 if(!isGridLinesEnabled){
                     $("#btnDisplayGrid").click();
                 }
-            $("#canvas-holder").css({"background-color":"#9293cb","width": "540px","margin": "auto","padding":"20px"});
+            $("#canvas-holder").css({"background-color":"#9293cb","padding":"10px"});
         }, function (item, object) {
             object.set({fill:"#fff"});
             object.set({left: 0, top: 0});
@@ -923,8 +923,8 @@ function addSelectionRect(currentImage) {
         originY: "top",
         stroke: "black",
         opacity: 1,
-        width: currentImage.width,
-        height: currentImage.height,
+        width: currentImage.getScaledWidth()-50,
+        height: currentImage.getScaledHeight()-50,
         hasRotatingPoint: false,
         transparentCorners: false,
         cornerColor: "white",
@@ -936,10 +936,11 @@ function addSelectionRect(currentImage) {
         borderDashArray: [5, 5],
         borderScaleFactor: 1.3,
     });
-
-    selectionRect.scaleToWidth(200);
+    //selectionRect.scaleToWidth(200);
     cropCanvas.centerObject(selectionRect);
     cropCanvas.add(selectionRect);
+    cropCanvas.setActiveObject(selectionRect);
+
 }
 
 function menuHighlighter(itemToHighlight) {
@@ -1035,12 +1036,15 @@ function initUIEvents() {
 
     $("#btnCrop").on("click",(e)=>{
         var img = cropCanvas.item(0);
+        cropCanvas.isCropped = true;
         crop(img);
+         
     }); 
 
 
     $("#btnCropDone").on("click",(e)=>{
-
+        if(!cropCanvas.isCropped)
+        {return;}
         let rect = new fabric.Rect({
             left: selectionRect.left,
             top: selectionRect.top,
@@ -1085,6 +1089,7 @@ function initUIEvents() {
     $("#btnCropModal").on("click",(e)=>{
         cropRect=null; 
         cropCanvas.clear();
+        cropCanvas.isCropped = false; 
         let img = canvas.getActiveObject(); 
         if(img)
         {
@@ -1733,7 +1738,7 @@ function backFromPreview() {
     $("#btnStartOverModel").removeClass("hidden");    
     $(".step-item:nth-child(3)").removeClass("active");
     $(".step-item:nth-child(2)").addClass("active");
-    $("#canvas-holder").css({"background-color":"#9293cb","width": "540px","margin": "auto","padding":"20px"});
+    $("#canvas-holder").css({"background-color":"#9293cb","padding":"10px"});
 
     // 2.
     // $("#btnSave").unbind().click(function(){
@@ -1776,16 +1781,17 @@ function renderPreview() {
         let _h = canvas.height;
       
         var dataURL = clonedCanvas.toDataURL({
-            format: "png",
-            left: 0,
-            top: 0,
+            // format: "png",
+            // left: 0,
+            // top: 0,
             width: _w,
             height: _h
         });
+       // var dataURL = clonedCanvas.toDataURL();
 
         let logos = canvasPrev.backgroundImage._objects;
-        let w = logos[0].width; 
-        let h = logos[0].height;
+        // let w = logos[0].width; 
+        // let h = logos[0].height;
         $("#canvas-holder").removeAttr("style");
         $("#canvas-holder").css({"border":"solid 1px #9293cb",});
        
@@ -1814,28 +1820,33 @@ function renderPreview() {
 
 
             for (let i = 0; i < logos.length; i++) {
-                    
                 let logo    = logos[i];
                 let object  = fabric.util.object.clone(img);
+             
                 let left    = logo.left + logo.group.left + (logo.group.width / 2);
                 let top     = logo.top + logo.group.top + (logo.group.height / 2);
-               
-
-                object.scaleToWidth(logo.width+3);
                 object.set("top", top);
                 object.set("left", left);
+
+                object.scaleToHeight(logo.height+3);
+                //object.setWidth(logo.width);
+                //object.setWidth(logo.height);
+                
+               object.setCoords();
               
                 
               
                 object.globalCompositeOperation = "source-atop";
-                canvasPrev.add(object).renderAll();
+                canvasPrev.add(object)
                
-                $("#create-design-heading").addClass("hidden");
-                $("#preview-design-heading").removeClass("hidden");
-                $("#ruler-ctrl").attr("style", "display:none !important");;
-                $("#client-main-canvas-logo").css({"width":"90%","height":"90%"});
+               
 
             }
+            canvasPrev.renderAll();
+            $("#create-design-heading").addClass("hidden");
+            $("#preview-design-heading").removeClass("hidden");
+            $("#ruler-ctrl").attr("style", "display:none !important");;
+            $("#client-main-canvas-logo").css({"width":"90%","height":"90%"});
             // var watermark = "/uploads/admin/watermark/watermark.png";
            
             //     fabric.Image.fromURL(watermark, function (img) {
@@ -1944,10 +1955,17 @@ function initCanvasEvents() {
 
     canvas.selectedLayerId = null;
     canvas.on("object:added", (o) => {
-        o.target.id = `obj${
-            canvas._objects.length
-        }`;
-        o.target.index = canvas._objects.length - 1;
+        debugger;
+        if(o.target.type != "curved-text")
+           {
+            o.target.id = `obj${
+                canvas._objects.length
+            }`;
+            o.target.index = canvas._objects.length - 1;
+           }
+          
+        
+       
         onObjectAdded(o);
     })
 
@@ -2176,7 +2194,8 @@ function generatePDFfromPreview(onServer, callback) {
                     pdf.save(fn);
                     var t = canvasPrev.meta; 
                     $.post('/api/logs',{
-                        level:1,type:'download_pdf',content:fn, data:t},(data)=>{})
+                        level:1,type:'download_pdf',content:fn, data:t},(data)=>{}); 
+                    $("#downloadFileName").val(""); 
                 }
 
                 $loader.addClass("hidden");
@@ -2428,8 +2447,9 @@ function initCanvasTextEvents() {
             fontStyle: obj.fontStyle,
             cacheProperties: fabric.Object.prototype.cacheProperties.concat('diameter', 'kerning', 'flipped', 'fill', 'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'strokeStyle', 'strokeWidth','stroke'),
             stroke: $("#inputStrokeText").is(":checked")?$("#strokecolor").val():null,
-            strokeWidth: $("#inputStrokeText").is(":checked")?parseInt($("#text-stroke-width").val()):0
-
+            strokeWidth: $("#inputStrokeText").is(":checked")?parseInt($("#text-stroke-width").val()):0,
+            id: obj.id,
+            index:obj.index
             //strokeStyle: obj.strokeStyle,
             //stroke:obj.stroke,
             //strokeWidth: 2

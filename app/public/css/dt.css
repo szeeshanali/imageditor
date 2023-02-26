@@ -583,6 +583,7 @@ color:#0900fd;
     overflow-y: auto;     
     position: absolute;
     width: 100%;
+    height:calc(100vh - 40px);
   }
 
   ::-webkit-scrollbar {
@@ -845,7 +846,7 @@ font-weight: bold;
     display: inline;
     list-style-type: none;
     padding-right: 0px;
-border-right: solid 0px #ccc;  }
+    border-right: solid 0px #ccc;  }
 
 
   #client-main-canvas-logo,#admin-main-canvas, #admin-main-canvas-logo{
