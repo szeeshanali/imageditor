@@ -533,14 +533,17 @@ function thisMonthFilter(value)
 /**---------------------------- */
 
 router.get('/app/admin/template-designer', isAdmin, (req,res)=>{ 
+  let t = uploads.count({type:'template',deleted:false,active:true}); 
+
   res.locals.page = {
     user  : req.user,
     id    : "__template-designer",
     title : "Template Designer", 
-    upload_text: "Upload SVG Templates." 
+    upload_text: "Upload SVG Templates.",
+    next_order: t+1 
   }
 
-  res.render("pages/admin/templatedesigner",{user:req.user});
+  res.render("pages/admin/templatedesigner",{user:req.user,next_order:(t+1)});
 })
 
 
@@ -884,6 +887,8 @@ router.post('/app/admin/uploads', async function(req, res) {
   };
 
   let _path = file_name?`../app/public/uploads/admin/${type}/${type}-${_id}.${file_name.split('.').pop()}`:'';  
+  if(type === 'template')
+  {mime_type = "image/png"}
   let _base64Alter = base64.replace(`data:${mime_type};base64,`, "");
 
  

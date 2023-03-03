@@ -1,7 +1,7 @@
 
 const dpi = 72;
 const defaults = {
-    fontSize:36,
+    fontSize:22,
     fontFill: '#000',
     fontFamily:'Arial',
     strokeWidth: 10,
@@ -859,13 +859,14 @@ function loadSVGTemplate(id) {
             let firstLogo = objects[0];
             canvas.setBackgroundImage(firstLogo, canvas.renderAll.bind(canvas));            
             canvas.renderAll(); 
-            let zoomLevel = 500/firstLogo.width;
+           
+            let zoomLevel =  500/firstLogo.width;
             canvas.setZoom(zoomLevel);         
             canvas.zoomLevel = zoomLevel;
             let canvasZoomedWidth = firstLogo.width*canvas.getZoom(); 
             let canvasZoomedHeight = firstLogo.height*canvas.getZoom();
-            canvas.setWidth(canvasZoomedWidth); 
-            canvas.setHeight(canvasZoomedHeight);
+            canvas.setDimensions({width:canvasZoomedWidth,height:canvasZoomedHeight})
+            
             
             canvas.context = {
                 orignalWidth: firstLogo.width,
@@ -956,9 +957,8 @@ function loadSVGTemplate(id) {
                     object.set({
                         fill:"#fff",
                         left:0,
-                        top:0,                     
-                        width:object.width,
-                        height:object.height,
+                        top:0,
+                        strokeWidth:0
                     });
                                   
                 })
@@ -980,7 +980,8 @@ function loadSVGTemplate(id) {
 
               },function (item, object) {
                             object.set({
-                               backgroundImage:"transparent"
+                               backgroundImage:"transparent",
+                               strokeWidth:0
                             })
                     })
             
@@ -1734,6 +1735,15 @@ $("#btnStartOverModel").on("click",function(e){
 }
 
 function getCanvasCenter(objectWidth,objectHeight){
+
+    if(objectWidth>canvas.context.orignalWidth)
+    {
+        return {
+            left:0,
+            top: 0
+        }
+    }
+
     return {
         left:    (canvas.context.orignalWidth/2)-(objectWidth/2),
         top:    (canvas.context.orignalHeight/2)-(objectHeight/2)
@@ -2470,6 +2480,7 @@ const processFiles = (files) => {
             reader.onload = (e) => {
                 fabric.Image.fromURL(e.target.result, (img) => {
                     img.scaleToHeight(250);
+                    
                     let canvasCenter = getCanvasCenter(img.width,img.height)
                     img.set({left: canvasCenter.left, top: canvasCenter.top})
                     img.globalCompositeOperation = 'source-atop';
@@ -2868,20 +2879,20 @@ function calculateAspectRatioFit(srcWidth, srcHeight, maxWidth, maxHeight) {
 }
 
 
-// function ungroup(event) {
-//     var activeObject = canvas.getActiveObject();
-//     if (activeObject.type == "group") {
-//         var items = activeObject._objects;
-//         activeObject._restoreObjectsState();
-//         canvas.remove(activeObject);
-//         for (var i = 0; i < items.length; i++) {
-//             items[i].globalCompositeOperation = "source-atop"
-//             canvas.add(items[i]);
-//             canvas.item(canvas.size() - 1).hasControls = true;
-//         }
-//         canvas.renderAll();
-//     }
-// }
+function ungroup(event) {
+    var activeObject = canvas.getActiveObject();
+    if (activeObject.type == "group") {
+        var items = activeObject._objects;
+        activeObject._restoreObjectsState();
+        canvas.remove(activeObject);
+        for (var i = 0; i < items.length; i++) {
+            items[i].globalCompositeOperation = "source-atop"
+            canvas.add(items[i]);
+            canvas.item(canvas.size() - 1).hasControls = true;
+        }
+        canvas.renderAll();
+    }
+}
 
 
 

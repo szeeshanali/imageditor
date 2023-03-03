@@ -41,7 +41,8 @@
                 </div> -->
                 <div class="mg-y-5" >
                     <small>Display order:</small>
-                    <input class="form-control" oninput="this.value = 
+                    <%=next_order%>
+                    <input class="form-control" value="<%=next_order%>" oninput="this.value = 
                     !!this.value  && (Math.abs(this.value) >= 0 && Math.abs(this.value) <= 1000) ? Math.abs(this.value) : null"  id="admin-display-order" min="1" max="1000" type="number">
 
                 </div>
