@@ -1666,12 +1666,13 @@ function saveDesign() {
           $("#btnFontClear").on("click", function (e) {
             $('#inputFontName').val("");
           })
-          $("#btnAddContent").on("click", function (e) {
+          $("#btnAddFont").on("click", function (e) {
             if(customTextInProgress){
               toast("Please wait... ");
               return;
             }
 
+           
             
             var customTextInProgress = true;
             var type = 'fonts';
@@ -1705,7 +1706,8 @@ function saveDesign() {
             formData.append('contentFile',files[0]);
             formData.append('content',filename);
             formData.append('label',text)
-            formData.append('type',type)
+            formData.append('type',type);
+            $loader.removeClass("hidden");
             $.ajax({
                 type: "POST",
                 url: "/api/admin/content",
@@ -1719,10 +1721,12 @@ function saveDesign() {
                   window.location.reload();
                     designFlags.submitted = true;
                     toast("Content has been saved successfully.");
+                    $loader.addClass("hidden");
                 },
                 error: function (res) {
                     designFlags.submitted = false;
                     toast("Error while saving Content.");
+                    $loader.addClass("hidden");
                 }
             })
           })
@@ -2938,7 +2942,10 @@ function saveDesign() {
         }
 
     }
+
+
     function toast(message) {
+
         var $toast = $("#snackbar").addClass("show");
         $toast.text(message);
         setTimeout(function () {
@@ -2946,14 +2953,7 @@ function saveDesign() {
 
         }, 3000);
     }
-    function toast(message, delayInMS) {
-        var $toast = $("#snackbar").addClass("show");
-        $toast.text(message);
-        setTimeout(function () {
-            $toast.removeClass("show")
-
-        }, delayInMS);
-    }
+    
     function crop(currentImage) {
         let rect = new fabric.Rect({
             left: selectionRect.left,

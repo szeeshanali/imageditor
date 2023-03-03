@@ -886,21 +886,23 @@ router.post('/app/admin/uploads', async function(req, res) {
   let _path = file_name?`../app/public/uploads/admin/${type}/${type}-${_id}.${file_name.split('.').pop()}`:'';  
   let _base64Alter = base64.replace(`data:${mime_type};base64,`, "");
 
-  
-  fs.writeFile(_path, _base64Alter, 'base64', async function(err) {
+ 
+ const process = async ()=>{
+    fs.writeFile(_path, _base64Alter, 'base64', function(err) {
       if(err){ 
         console.log(err);
         return res.status(500).send({message:`Error uploading file.`, error: err}); 
-       }
-
-       await commonService.uploadService.upload(uploadModel, id, (err,msg)=>{
+      }
+       commonService.uploadService.upload(uploadModel, id, (err,msg)=>{
         if(!err)
         {res.status(200).send({message:`Success`, error: null}); }
-         res.status(400).send({message:`Unable to upload file.`, error: msg}); 
-       });
-       
+        res.status(400).send({message:`Unable to upload file.`, error: msg}); 
+      });      
   });
-  res.status(200).send({message:`Success`, error: null});
+ }
+ 
+ await process();
+res.status(200).send({message:`Success`, error: null});
  // commonService.uploadService.clear();
  // res.redirect('/app/admin/template-designer');
 })
