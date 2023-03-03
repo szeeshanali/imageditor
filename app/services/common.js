@@ -293,11 +293,16 @@ const commonService = (function() {
         if( type === 'fonts')
         {  
             let fonts = new Array();
+           
             if(isAdmin)
             { fonts =  await contents.find({type:type, deleted:false}); }
             else
             { fonts = await contents.find({type:type, active:true, deleted:false}); }
-            
+            fonts.push({
+                label : "Arial (sans-serif)",
+                content: "Arial",
+
+            })
             fonts = fonts.sort(function(a, b) {
                     const nameA = a.content.toUpperCase(); 
                     const nameB = b.content.toUpperCase(); 

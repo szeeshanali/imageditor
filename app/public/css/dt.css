@@ -849,11 +849,13 @@ font-weight: bold;
     border-right: solid 0px #ccc;  }
 
 
-  #client-main-canvas-logo,#admin-main-canvas, #admin-main-canvas-logo{
+  #admin-main-canvas, #admin-main-canvas-logo{
     background-color: #9293cb; 
     padding:20px;
 } 
-
+#client-main-canvas-logo{
+  background-color: #fff;
+}
 .canvas-container{
   margin:auto;
    /* border:solid 1px #666;  */

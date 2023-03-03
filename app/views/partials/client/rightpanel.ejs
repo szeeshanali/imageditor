@@ -34,6 +34,7 @@
                             <p>
                             <span class="template-name tx-bold"></span><br>
                             <span >Sheet size:</span> <span class="page-size tx-bold"></span><br>
+                            <span >Format:</span> <span class="page-format tx-bold"></span><br>
                              Total Logos: <span class="total-logos tx-bold"></span><br>
                              Logo Size: <span class="logo-size tx-bold"></span> <br>
                              Part #: <span class="ref_code tx-bold"></span><br>
@@ -175,7 +176,7 @@
                             <button class="btn btn-block dropdown-toggle" type="button" id="fontlist" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Arial (sans-serif)
                             </button>
-                            <div class="dropdown-menu"  aria-labelledby="fontlist">
+                            <div class="dropdown-menu"  aria-labelledby="fontlist" style="width:100%;height:500px;overflow-y: scroll;font-size:22px;">
                                 <%fonts?.forEach((item)=>{%>
                                     <a class="dropdown-item" href="#" style="font-family: <%=item.content.replace('.ttf','')%>" data-value="<%=item.content.replace('.ttf','')%>" ><%=item.label%></a>
                                 <%})%>
