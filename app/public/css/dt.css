@@ -974,7 +974,7 @@ font-weight: bold;
 .form-control, .dataTables_filter input {
   border-radius: 0;
   background-color: #f8f9fa;
-  margin-top:20px;
+  /* margin-top:20px; */
 }
 .form-control:focus, .dataTables_filter input:focus, .form-control:active, .dataTables_filter input:active {
   background-color: #fff;
