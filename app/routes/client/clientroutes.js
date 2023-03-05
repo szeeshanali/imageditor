@@ -128,12 +128,11 @@ router.get('/api/svg-templates/:id/:t?', isLoggedIn,  async (req,res)=>{
     const itemid = req.params["id"]; 
     var result = null; 
     if(itemid == "default"){
-        result = await uploads.findOne({
-            type:'template', by_admin:true, active:true, default:true });  
+        result = await uploads.findOne({type:'template', by_admin:true, active:true, default:true });  
             if(result == null)
             {
                 result = await uploads.findOne({
-                    type:'template', by_admin:true, active:true }).sort({order:-1}); 
+                    type:'template', by_admin:true, active:true }).sort({order_no:1}); 
             }  
     }else{
         const type = req.params["t"];
@@ -290,10 +289,11 @@ router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
     let meta = {};
     
    ///let customDesigns = await uploads.find({type:'pre-designed', active:true, deleted:false, base64:{$ne:null},json:{$ne:null}},{code:1,base64:1}) || [];
-   let adminUploadItems = await commonService.uploadService.getUploads('all',true,true);
-   let templates = adminUploadItems.filter(function(item){ return item.type == 'template'});
-   let cliparts = adminUploadItems.filter(function(item){ return item.type == 'clipart'});
-   let customDesigns = adminUploadItems.filter(function(item){ return item.type == 'pre-designed'});
+   //let adminUploadItems = await commonService.uploadService.getUploads('all',true,true);
+  let _uploads = await uploads.find({$or:[{type:"template"},{type:"clipart"},{type:"pre-designed"}],active:true,deleted:false}).sort({order_no:1});
+   let templates = _uploads.filter(function(i){return i.type === 'template'});
+   let cliparts = _uploads.filter(function(i){return i.type === 'clipart'});
+   let customDesigns = _uploads.filter(function(i){return i.type === 'pre-designed'});
    
    let customText = await commonService.contentService.getContentAsync('custom-text');
    let fonts = await commonService.contentService.getContentAsync('fonts',false);

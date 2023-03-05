@@ -21,12 +21,9 @@
               <div class="list-group widget-list-group bg-app-primary">
                 <div class="list-group-item d-flex">
                   <div class="media d-block d-sm-flex">
-                  
                     <div class="media-body mg-t-10 mg-sm-t-0">
                       <h6 class="mg-b-5 tx-12 tx-inverse tx-bold tx-white"><span class="ion-ios-lightbulb pd-r-5 text-warning"></span>Choose from the below templates and click next to create design.</h6>
                     </div>
-                     
-                    
                     <!-- media-body -->
                   </div><!-- media -->
                    <div class="btn-group mg-b-0 mg-l-auto lh-2">
@@ -36,37 +33,17 @@
                 </div>
               </div>
               <div>
-                
                   <div class="row mg-0">
                     <%for(var i=0; i<templates.length; i++){ %>
-                    <div class="col-md-3 col-lg-4 pd-0  bd template" id="<%=templates[i].code %>">
-                      <div class="card pd-5" >
-                        <img class="card-img-top img-fluid pd-b-10"style="height:150px; top:0px" src="/uploads/admin/template/template-<%=templates[i].code %><%=templates[i].file_ext %>" alt="Image">
-                        <h5 class="tx-14 tx-primary tx-bold pd-x-5" style="height:45px;overflow:hidden" title="<%=templates[i].title %>"><%=templates[i].title %></h5>
-                        
-                    </div><!-- card -->
-                    </div>
-                    <%}%> 
+                      <%- include('../../partials/template',{template:templates[i]}); %>
+                    <%}%>
                   </div>
               </div>
             </div>            
             <div id="uploadpanel" class="tab-pane"  >
-         
-                <!-- <div class="pd-x-10 pd-y-10  bd-b">
-                  <b class="tx-primary">Create Design</b>
-                  <a href="#" class="pull-right next-step" id="btn-step-preview" title="Preview Design (Step 2)" >Next</a>
-
-                  <a href="#" class=" next-step gray hidden" id="btnBack"  >Back</a></span>
-                  <a href="#" class="next-step gray mg-l-5 hidden" id="btnFinalized"  >Finalized</a></span>
-
-                </div> -->
-
                 <div class="list-group widget-list-group bg-app-primary">
                   <div class="list-group-item d-flex" id="create-design-heading">
                     <div class="media d-block d-sm-flex">
-                      <!-- <div class="d-block d-sm-flex mg-sm-r-20">
-                        <i class="ion-images tx-24 tx-white"></i>
-                      </div> -->
                       <div class="media-body mg-t-10 mg-sm-t-0 ">
                         <h6 class="mg-b-5 tx-12 tx-bold pd-x-5 tx-white "><span class="ion-ios-lightbulb pd-r-5 text-warning"></span>Now, create your design by adding Photos, Clip Arts and Text and click next to preview or save button to save your design.</h6>
                       </div><!-- media-body -->
@@ -272,8 +249,6 @@
     <div class="table-responsive">
       
       <div class="workarea" id="workarea" >
-      
-     
         <div  id="canvas-holder">
             <div class="content tx-center" >
                 <canvas id="client-main-canvas"   ></canvas>
@@ -296,7 +271,7 @@
 </div>
 </div>
 
-<%- include('../../partials/client/rightpanel'); %>
+<%- include('../../partials/canvas-controls'); %>
 
 
  <!-- SMALL MODAL -->
@@ -337,8 +312,8 @@
         <button type="button" data-toggle="modal" data-target="#rfq" class="btn btn-sm tx-12 tx-uppercase btn-primary pd-x-20" data-dismiss="modal">Send to KakePrints <br> for a Quote.</button>
       </div>
     </div>
-  </div><!-- modal-dialog -->
-</div><!-- modal -->
+  </div>
+</div>
 
 <div id="cropModal" class="modal fade">
   <div class="modal-dialog modal-md" role="document">
@@ -397,7 +372,6 @@
         if(type === 'project'){
             loadProject(code);
         }else{
-          
             loadSVGTemplate(code);
 
         }
