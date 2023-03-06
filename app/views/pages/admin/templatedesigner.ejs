@@ -4,68 +4,59 @@
 <div class="row mg-r-0">
   <div class="col-lg-3 pd-0">
 <div class="card">
-  <%- include('../../partials/admin/imgupload'); %>
-  </div>
-  <div class="list-group widget-list-group">
-    <div class="list-group-item pd-20">
-    
-      <h6 class="card-body-title">Template Details</h6>
+  
+  <div class="list-group widget-list-group bg-app-primary">
+    <div class="list-group-item d-flex">
+      <div class="media d-block d-sm-flex">
+        <div class="d-block d-sm-flex mg-sm-r-20">
+          <i class="ion-ios-cloud-upload-outline tx-24 tx-white"></i>
+        </div>
+        <div class="media-body mg-t-10 mg-sm-t-0">
+          <h6 class="mg-b-5 tx-14">Upload Frosting<br> Sheet</h6>
+          <p class="mg-b-0 tx-12 tx-white-5">SVG Only</p>
+        </div>
+      </div>
+      <a href="#" id="btnBrowseTemplate" class="btn btn-primary pd-lg-x-20 mg-l-auto">Browse</a>
+      <input id="hiddenBrowseTemplate" data-page-id="<%=locals.page.id%>" type="file" accept="image/*" multiple="multiple" hidden="hidden">
+      <input id="design-type" value="template" hidden="hidden">
 
-      <p>Please enter template details and save your changes.</p>
-    </div><!-- list-group-item -->
     </div>
+  </div>
+  </div>
+
 
   
   <div class="card">
   <div class="pd-20 admin-design-ctrl">
         <div class="pd-b-10">
              <div class="mg-y-5">
-                <input class="form-control" maxlength="50" minlength="3"   pattern=".{3,50}" title="Minimum 3 and maximum 50 characters." placeholder="Title" id="admin-design-title" type="text">
+              <label>Sheet Name:</label>
+                <input class="form-control" maxlength="50" minlength="3"   pattern=".{3,50}" title="Minimum 3 and maximum 50 characters." placeholder="Enter sheet name" id="inputSheetName" type="text">
             </div> 
-           <div class="mg-y-5">
-                <input class="form-control" readonly placeholder="File name" id="admin-file-name" type="text">
-            </div>
-            <!-- <div class="tx-left mg-y-5">
-                <select id="admin-page-size" class="form-control  select2 select2-hidden-accessible" data-placeholder="Choose one" tabindex="-1" aria-hidden="true">
-                    <option label="Page Size"></option>
-                    <option value="8.5”x11”">8.5”x11”</option>
-                    <option value="11”x17”">11”x17”</option>
-                    <option value="A4">A4</option>
-                    <option value="A3">A3</option>
-                  </select>
-                </div> -->
-            <div class="d-flex tx-left">
-                <!-- <div class="mg-y-5 mg-r-10">
-                    <small>Logos per page:</small>
-                    <input class="form-control"  id="admin-logo-count" min="1"  type="number">
-                </div> -->
-                <div class="mg-y-5" >
-                    <small>Display order:</small>
-                    <%=next_order%>
-                    <input class="form-control" value="<%=next_order%>" oninput="this.value = 
-                    !!this.value  && (Math.abs(this.value) >= 0 && Math.abs(this.value) <= 1000) ? Math.abs(this.value) : null"  id="admin-display-order" min="1" max="1000" type="number">
-
-                </div>
+         
+          
+          
+            <div class="mg-y-5">
+              <label>KopyKake Webstore Link:</label>
+                <input class="form-control" maxlength="100" minlength="3"  pattern=".{3,100}" title="Minimum 3 and maximum 100 characters."  id="inputSheetLink" type="text">
             </div>
             <div class="mg-y-5">
-                <input class="form-control" maxlength="100" minlength="3"  pattern=".{3,100}" title="Minimum 3 and maximum 100 characters."  placeholder="KopyKake Webstore Link" id="admin-design-link" type="text">
-            </div>
-            <div class="mg-y-5">
-                <input class="form-control" id="admin-kopykake-part" maxlength="20" minlength="3"   pattern=".{3,20}" title="Minimum 3 and maximum 20 characters."  placeholder="KopyKake Part #" id="admin-design-link" type="text">
+              <label>KopyKake Part No:</label>
+                <input class="form-control" id="inputPartNo" maxlength="20" minlength="3"   pattern=".{3,20}" title="Minimum 3 and maximum 20 characters."   id="inputPartNo" type="text">
             </div>
             <div class="d-flex pd-y-10">
                 <label class="ckbox">
-                    <input type="checkbox" checked="" id="design-active"><span>Active</span>
+                    <input type="checkbox" checked="" id="cbSheetActive"><span>Active</span>
                   </label>
                   <label class="ckbox mg-l-20">
-                    <input type="checkbox" id="design-default" ><span>Default</span>
+                    <input type="checkbox" id="cbSheetDefault" ><span>Default</span>
                   </label>
               
             </div>
     </div>
         <div id="save-image-ctrl" >
           <div class="btn-group" role="group">
-            <button type="button" id="save-design" class="btn  btn-primary " id="btnSave">Upload</button>
+            <button type="button"  class="btn  btn-primary " id="btnUploadTemplate">Upload</button>
             <button type="button" id="cancel-design" class="btn btn-secondary" id="btnCancelSaveDesign">Cancel</button>
           </div>
 
@@ -75,21 +66,56 @@
 
 </div>
   </div>
-  <div class="col-lg-9 pd-x-15 ">
+  <div class="col-lg-6 pd-x-15 ">
     <div class="card pd-x-15 pd-y-10 tx-primary tx-bold ">
-        PREVIEW
+      Frosting Sheet 
     </div>
-    <div class="card">
-      <div class="admin-template-designer-bg" style="min-height: 800px">
-        <div class="ht-100v tx-center" id="template-container">
-          <canvas id="admin-main-canvas" style="max-width: 612px; max-height:792px" ></canvas>
-      </div>
+    <div class="row" id="template-designer-text">
+      <div class="col-md">
+
+      </div><!-- col -->
+      <div class="col-md mg-t-20 mg-md-t-0">
+        <div class="bd-0">
+         
+          <div class="card-img-overlay pd-30 align-items-start flex-column">
+            <i class="ion-ios-cloud-upload-outline tx-100"></i>
+            <h6 class="mg-b-15">Browse & Upload Frosting Sheet.</h6>
+            <p class=" mg-b-auto">Please Browse and fill the Frosting Sheet Details and Click Upload button to Upload.</p>
+           
+          </div><!-- card-img-overlay -->
+        </div><!-- card -->
+      </div><!-- col -->
+      <div class="col-md mg-t-20 mg-md-t-0">
+
+      </div><!-- col -->
     </div>
 
-     
+    <div class="ht-100v tx-center pd-20" >
+      <canvas id="canvasTemplate" class="hidden"  ></canvas>
   </div>
   </div>
-  
+  <div class="col-lg-3 "> 
+    <div class="card pd-x-15 pd-y-10 tx-primary tx-bold ">
+      Frosting Sheet Details
+    </div>
+
+    <div >
+      <ul class="list-group widget-list-group">
+        <li class="list-group-item rounded-top-0">
+          <p class="mg-b-0"><strong class="tx-inverse tx-medium">File Name :</strong> <span id="fileName" class="text-muted">N/A</span></p>
+        </li>
+        <li class="list-group-item">
+          <p class="mg-b-0"><strong class="tx-inverse tx-medium">Sheet Size : </strong> <span id="sheetSize" class="text-muted">N/A</span></p>
+        </li>
+        <li class="list-group-item">
+          <p class="mg-b-0"><strong class="tx-inverse tx-medium">Page Format : </strong> <span id="pageFormat">N/A</span></p>
+        </li>
+        <li class="list-group-item">
+          <p class="mg-b-0"><strong class="tx-inverse tx-medium">Logos In Sheet :</strong> <span id="logosInSheet">N/A</span></p>
+        </li>
+       
+      </ul>
+    </div>
 </div>
 
 <script>

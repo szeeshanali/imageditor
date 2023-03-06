@@ -532,18 +532,18 @@ function thisMonthFilter(value)
 /** Template */
 /**---------------------------- */
 
-router.get('/app/admin/template-designer', isAdmin, (req,res)=>{ 
-  let t = uploads.count({type:'template',deleted:false,active:true}); 
+router.get('/app/admin/template-designer',  isAdmin, async (req,res)=>{ 
+  //let templateCou = await uploads.count({type:'template',deleted:false}); 
 
   res.locals.page = {
     user  : req.user,
     id    : "__template-designer",
     title : "Template Designer", 
     upload_text: "Upload SVG Templates.",
-    next_order: t+1 
+    next_order: 1000,
   }
 
-  res.render("pages/admin/templatedesigner",{user:req.user,next_order:(t+1)});
+  res.render("pages/admin/templatedesigner",{user:req.user,next_order:1000});
 })
 
 
@@ -842,6 +842,56 @@ router.get("/api/user-project/:id?",  async (req, res) => {
 });
 
 
+router.post('/app/admin/template', async function(req, res) {
+  let {id, userDesignId, desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
+ 
+  let _id = mongoose.Types.ObjectId();
+  let uploadModel = {
+    title           :   title,
+    name            :   name,
+    desc            :   desc,
+    file_name       :   file_name,
+    file_ext        :   file_ext,
+    order_no        :   order_no,
+    code            :   _id,
+    active          :   active,
+    base64          :   base64,
+    link            :   link,
+    path            :   null,
+    meta            :   meta,
+    default         :   req.body.default,
+    by_admin        :   true,
+    type            :   type,
+    ref_code        :   ref_code,
+    
+    
+  };
+
+  let _path = file_name?`../app/public/uploads/admin/template/template-${_id}.${file_name.split('.').pop()}`:'';  
+  let _base64Alter = base64.replace(`data:${mime_type};base64,`, "");
+
+  const process = async ()=>{
+    fs.writeFile(_path, _base64Alter, 'base64', function(err) {
+      if(err){ 
+        console.log(err);
+        return res.status(500).send({message:`Error uploading file.`, error: err}); 
+      }
+       commonService.uploadService.upload(uploadModel, id, (err,msg)=>{
+        if(!err)
+        {res.status(200).send({message:`Success`, error: null}); }
+        res.status(400).send({message:`Unable to upload file.`, error: msg}); 
+      });      
+  });
+ }
+ 
+ await process();
+res.status(200).send({message:`Success`, error: null});
+ // commonService.uploadService.clear();
+ // res.redirect('/app/admin/template-designer');
+})
+
+
+
 router.post('/app/admin/uploads', async function(req, res) {
   let {id, userDesignId, desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
  
@@ -921,7 +971,7 @@ router.get('/api/admin/svg-templates/:id', isAdmin, async (req,res)=>{
   }else{
 
       result = await uploads.findOne({
-          type:'template', by_admin:true,  code:itemid, deleted:false });  
+          type:'template', code:itemid, deleted:false });  
   }
   res.send(result);
   

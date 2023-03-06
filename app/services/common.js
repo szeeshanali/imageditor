@@ -122,8 +122,9 @@ const commonService = (function() {
                 designs = await uploads.findOne({
                     _id: designId,
                     active:true, 
+                    deleted:false,
                     type:'project',
-                 },{thumbBase64:0});
+                 });
     
             }else{
                 designs = await uploads.findOne({
@@ -270,10 +271,14 @@ const commonService = (function() {
             });
 
         }else{
+
+        
+            let templateCounts = await uploads.count({type:"template",deleted:false}); 
+            uploadModel.order_no = templateCounts+1;
             var upload = new uploads(uploadModel);
             upload.save().then((value)=>{
+
                 result(false,value);
-               // res.redirect(ROUTE_ADMIN_HOME);
             }).catch(value=> {
                 result(true,value);
             });

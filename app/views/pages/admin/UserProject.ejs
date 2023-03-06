@@ -272,23 +272,7 @@
 
     
     
-    <div class="table-responsive">
-      
-      <div class="workarea" id="workarea" style="background-color:#9293cb;padding:30px">
-      
-     
-        <div  id="canvas-holder">
-            <div class="content tx-center">
-                <canvas id="admin-main-canvas"  ></canvas>
-                <canvas id="admin-main-canvas-logo"   ></canvas>                    
-            </div>
-        </div>
-      
-        <div class="paste-clipboard"  style="display: none;"  id="pasteClipboard">
-         <span  onclick="parseClipboardData();"  > Copy from Clipboard</span>
-      </div>
-    </div>
-    </div>
+    <%- include('../../partials/admin/workarea'); %>
   </div>
    
     
@@ -299,7 +283,7 @@
 </div>
 </div>
 
-<%- include('../../partials/client/rightpanel'); %>
+<%- include('../../partials/canvas-controls'); %>
 
 
  <!-- SMALL MODAL -->
@@ -397,7 +381,7 @@
     window.onload = function()
    { 
         var code = '<%=code || "default" %>' ;
-        loadProject(code);
+        loadUserProject(code);
         $("#hiddenDesignId").val(code);
         $('[data-toggle="popover"]').popover()
 
