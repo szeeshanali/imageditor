@@ -7,7 +7,7 @@ $("#clipartmenu .clipart").on("click", (e) => {
     $("#btnAddClipart").unbind().on("click",function(){
         const _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
         fabric.Image.fromURL(url, function (img) {            
-           var ratio = canvas.context.orignalWidth/2;   
+           var ratio = canvas.context.originalWidth/2;   
            img.scaleToWidth(ratio);
            let canvasCenter = getCanvasCenter(img.getScaledWidth(),img.getScaledHeight())
            img.set({ left:canvasCenter.left , top: canvasCenter.top });                 
@@ -36,6 +36,7 @@ $btnAddText.on("click", function () {
         fontSize: defaults.fontSize
     };
     var item = new fabric.IText(text, textInfo);
+    
     let canvasCenter = getCanvasCenter(item.width,item.height);
     item.left = canvasCenter.left; 
     item.top = canvasCenter.top; 

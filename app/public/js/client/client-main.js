@@ -825,7 +825,7 @@ function drawTextAlongArc(context, str, centerX, centerY, radius, angle) {
   var selectionRect;
 function initUIEvents() {
    
-
+    initImageSelectionUIControls();
     /// disable previous date in rfq calandar.
     $(function(){
         var dtToday = new Date();    
@@ -2055,7 +2055,33 @@ function onChangeFontColor(picker, type) {
 initUIEvents();
 initCanvasEvents();
 
+function initImageSelectionUIControls()
+{
+    $("#btnImagePlus").on("click",function(e){
+        selectedCanvasImageResizeOnButtonClick(10);
+    })
+    $("#btnImageMinus").on("click",function(e){
+        selectedCanvasImageResizeOnButtonClick(-10);
+    })
 
+    $("#sliderImageSize").on("input",function(e){
+        //this.value = canvas.getActiveObject().getScaledWidth() + this.value;
+        selectedCanvasImageResizeOnButtonClick(this.value);
+    })
+
+
+    function selectedCanvasImageResizeOnButtonClick(value){
+        const selectedImage = canvas.getActiveObject(); 
+        const imageScaledWidth = selectedImage.getScaledWidth();
+        if(!selectedImage) return; 
+        selectedImage.scaleToWidth((imageScaledWidth+value)*canvas.context.zoomLevel);
+        //let getCenter = getCanvasCenter(imageScaledWidth,selectedImage.getScaledHeight());
+        //selectedImage.set({left:getCenter.left,top:getCenter.top})
+        canvas.setActiveObject(selectedImage);
+        canvas.renderAll();
+        selectedImage.setCoords();
+    }
+}
 // const savedCanvas = saveInBrowser.load('kp-editor');
 // if (savedCanvas) {
 //     canvas.loadFromJSON(savedCanvas, canvas.renderAll.bind(canvas));

@@ -20,12 +20,12 @@ function getCanvasCenter(objectWidth,objectHeight){
     if(!canvas || !canvas.context)
     {return {left:0,top:0}}
 
-    if(objectWidth>canvas.context.orignalWidth)
+    if(objectWidth>canvas.width)
     { return { left:0, top: 0 } }
 
     return {
-        left:    (canvas.context.orignalWidth/2)-(objectWidth/2),
-        top:    (canvas.context.orignalHeight/2)-(objectHeight/2)
+        left:    (canvas.width/2)-(objectWidth/2),
+        top:    (canvas.height/2)-(objectHeight/2)
     }
 
 }
@@ -82,9 +82,11 @@ const processFiles = (files) => {
         } else {
             reader.onload = (e) => {
                 fabric.Image.fromURL(e.target.result, (img) => {
-                    
-                    img.scaleToHeight(250);                    
-                    let canvasCenter = getCanvasCenter(img.width,img.height)
+                    //let logoSize = canvas.context.originalWidth;
+                    //img.scaleToWidth(logoSize/1.5);  
+                    let ratio = canvas.width/2; 
+                    img.scaleToWidth(ratio);                
+                    let canvasCenter = getCanvasCenter(img.getScaledWidth(),img.getScaledHeight())
                     img.set({left: canvasCenter.left, top: canvasCenter.top})
                     img.globalCompositeOperation = 'source-atop';
                     if (state.isPreviewCanvas) {

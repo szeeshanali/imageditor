@@ -2613,6 +2613,7 @@ function saveDesign() {
         if (show) {
             $imgCtrl.each(function () {
                 $(this).removeClass("hidden");
+                
             })
         } else {
             $imgCtrl.each(function () {
@@ -2652,6 +2653,8 @@ function saveDesign() {
 
     InitUIEvents();
     initCanvasEvents();
+
+   
     function mainControls(show) {
         if (show) {
             $mainCtrl.each(function () {

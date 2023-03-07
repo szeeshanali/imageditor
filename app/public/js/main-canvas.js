@@ -29,7 +29,7 @@ $("#btnDisplayGrid").on("click", function (e) {
     $("#btnAddClipart").unbind().on("click",function(){
         const _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
         fabric.Image.fromURL(url, function (img) {
-           var ratio = canvas.context.orignalWidth/2;   
+           var ratio = canvas.width/2;   
            img.scaleToWidth(ratio);
            let canvasCenter = getCanvasCenter(img.getScaledWidth(),img.getScaledHeight())
            img.set({ left:canvasCenter.left , top: canvasCenter.top });                 
@@ -72,25 +72,36 @@ $("#btnDisplayGrid").on("click", function (e) {
     
     
                 let firstLogo = objects[0];
-                canvas.setBackgroundImage(firstLogo, canvas.renderAll.bind(canvas));            
+                            
+                 
+                //let zoomLevel =  500/firstLogo.width;
+                //canvas.setZoom(zoomLevel);         
+                //canvas.zoomLevel = zoomLevel;
+                //let canvasZoomedWidth = firstLogo.width*canvas.getZoom(); 
+                //let canvasZoomedHeight = firstLogo.height*canvas.getZoom();
+                //canvas.setDimensions({width:canvasZoomedWidth,height:canvasZoomedHeight})
+
+                let logoSize = 500/firstLogo.width;
+                firstLogo.scaleToWidth(firstLogo.width*logoSize);
+                canvas.setBackgroundImage(firstLogo, canvas.renderAll.bind(canvas));
+                canvas.setDimensions({width:firstLogo.getScaledWidth(),height:firstLogo.getScaledHeight()})
                 canvas.renderAll(); 
-               
-                let zoomLevel =  500/firstLogo.width;
-                canvas.setZoom(zoomLevel);         
-                canvas.zoomLevel = zoomLevel;
-                let canvasZoomedWidth = firstLogo.width*canvas.getZoom(); 
-                let canvasZoomedHeight = firstLogo.height*canvas.getZoom();
-                canvas.setDimensions({width:canvasZoomedWidth,height:canvasZoomedHeight})
-                
-                
+              
+                // canvas.context = {
+                //     originalWidth: firstLogo.width,
+                //     originalHeight: firstLogo.height,
+                //     displayWidth: canvasZoomedWidth,
+                //     displayHeight:canvasZoomedHeight,
+                //     zoomLevel: 1
+                // }
                 canvas.context = {
-                    orignalWidth: firstLogo.width,
-                    orignalHeight: firstLogo.height,
-                    displayWidth: canvasZoomedWidth,
-                    displayHeight:canvasZoomedHeight,
-                    zoomLevel: zoomLevel
+                    originalWidth   :   firstLogo.width,
+                    originalHeight  :   firstLogo.height,
+                    displayWidth    :   canvas.width,
+                    displayHeight   :   canvas.height,
+                    zoomLevel: 1
                 }
-    
+
                 $("#canvas-holder").css({"background-color":"#9293cb","padding":"10px"});
                 let logoHeight = canvas.getHeight();
                 let logoDisplaySize = canvas.getWidth();
@@ -299,6 +310,7 @@ $("#btnDisplayGrid").on("click", function (e) {
     
      canvas.setZoom(canvas.context.zoomLevel);
      canvas.setDimensions({width:canvas.context.displayWidth, height:canvas.context.displayHeight})
+     canvas.renderAll();
      // 5.
       //canvasPrev.clear();
      // 6.
@@ -330,22 +342,28 @@ $("#btnDisplayGrid").on("click", function (e) {
      canvas.clone(function (clonedCanvas) {
          var bg = clonedCanvas.backgroundImage;
          clonedCanvas.backgroundImage = false;
-         clonedCanvas.setDimensions({width:canvas.context.orignalWidth,height:canvas.context.orignalHeight})
+
+        //  clonedCanvas.setDimensions({
+        //     width:canvas.context.originalWidth,
+        //     height:canvas.context.originalHeight
+        // }); 
+
          for (var i = 0; i < clonedCanvas._objects.length; i++) {
              clonedCanvas._objects[i].globalCompositeOperation = null;
              clonedCanvas.renderAll.bind(clonedCanvas)
          }
-         clonedCanvas.renderAll();
-         let _w = canvas.width; 
-         let _h = canvas.height;
-         var dataURL = clonedCanvas.toDataURL({format:"jpg",quality:1});
-         let logos = canvasPrev.backgroundImage._objects;
+
+         
+         var dataURL = clonedCanvas.toDataURL();
+         
+        let logos = canvasPrev.backgroundImage._objects;
          $("#canvas-holder").removeAttr("style");
          $("#canvas-holder").css({"background-color":"#d8dce3", "padding":"20px",});
          fabric.Image.fromURL(dataURL, (img) => {
              state.isPreviewCanvas = true;
              canvasPrev.remove(... canvasPrev.getObjects());
-           
+             img.scaleToWidth(canvas.context.originalWidth);
+           ///img.scaleToWidth(canvas.context.originalWidth);
              if(logos && logos.length>0)
              {
                  for (let i = 0; i < logos.length; i++) {
@@ -473,9 +491,21 @@ $("#btnDisplayGrid").on("click", function (e) {
                 }else{
                     if (res.data.watermark) {
                         var watermark = "/uploads/admin/watermark/watermark.png";
-                        for(var i=0;i<5;i++)
+                        let t = 0;
+                        let l = 0
+                        for(var i=0;i<25;i++)
                         {
-                            pdf.addImage(watermark, 'PNG', width/2-75, 150*i, 150, 150);
+                            if(i%5 === 0)
+                            {
+                                l = 0;
+                                t += 120;
+                            }else{
+                                l += 120;
+                            }
+                           
+                            pdf.addImage(watermark, 'PNG', l, t, 100, 100);
+                            
+                            
                         }
                        
                     }
