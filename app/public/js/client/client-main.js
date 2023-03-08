@@ -7,6 +7,7 @@ const defaults = {
     strokeWidth: 10,
     logoDisplaySize:500
 }
+
 const letterPageSize = {
     width: (8.5 * dpi),
     height: (11 * dpi)
@@ -1347,6 +1348,7 @@ function setSelectedTextStyle(prop, value) {
     var txt = canvas.getActiveObject();
 //  if(txt.type == 'curved-text')
 //  {return;}
+txt 
     txt.set(prop, value);
     canvas.renderAll();
 
@@ -1491,14 +1493,9 @@ function initCanvasEvents() {
     canvas.on("object:added", (o) => {
         if(o.target.type != "curved-text")
            {
-            o.target.id = `obj${
-                canvas._objects.length
-            }`;
+            o.target.id = `obj${canvas._objects.length}`;
             o.target.index = canvas._objects.length - 1;
            }
-          
-        
-       
         onObjectAdded(o);
     })
 

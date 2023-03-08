@@ -339,7 +339,7 @@ $("#btnDisplayGrid").on("click", function (e) {
          }
 
          
-         var dataURL = clonedCanvas.toDataURL();
+         var dataURL = clonedCanvas.toDataURL({format:"jpg", quality:1, multiplier: 1 });
          
          $("#canvas-holder").removeAttr("style");
          $("#canvas-holder").css({"background-color":"#d8dce3", "padding":"20px",});
@@ -354,7 +354,6 @@ $("#btnDisplayGrid").on("click", function (e) {
 
              if(logos && logos.length>0)
              {
-                debugger;
                 let logoWidth = logos[0].width; 
                 img.scaleToWidth(logoWidth);
                 img.setCoords();
@@ -362,7 +361,15 @@ $("#btnDisplayGrid").on("click", function (e) {
                 let missingPoints = logoWidth - designWidthAfterScale; 
                 img.scaleToWidth(logoWidth+10);
                 img.setCoords();
-                let f = img.getScaledWidth();
+
+
+                // var scaleWidth = logos[0].width / img.width;
+                // var scaleHeight = logos[0].height / img.height;
+                // var scale = Math.min(scaleWidth, scaleHeight);
+                // var _img = new fabric.Image(img, {
+                //     scaleX: scale,
+                //     scaleY: scale,
+                // });
               
                  for (let i = 0; i < logos.length; i++) {
                      let logo    = logos[i];
@@ -480,7 +487,7 @@ $("#btnDisplayGrid").on("click", function (e) {
                 bg.globalCompositeOperation = "destination-in";
                 clonedCanvas.add(bg);
                 clonedCanvas.renderAll();
-                var imgData = clonedCanvas.toDataURL({format:"jpg",quality:1,multiplier:2});
+                var imgData = clonedCanvas.toDataURL({format:"jpg",quality:1,multiplier:3});
                 pdf.addImage(imgData, 'jpg', 0, 0,width,height);
                
 
