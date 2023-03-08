@@ -1931,12 +1931,6 @@ function saveDesign() {
         })
 
         $customTemplateThumb.on("click", (e) => {
-            // var templateId = e.currentTarget.id;
-            // if(templateId){
-            // loadSVGTemplateForCustomDesign(templateId);
-            // }else{
-            // toast(`Can't load Template.`)
-            // }
             var id = e.currentTarget.id;
             canvas.clear();
             loadSVGTemplate(id);

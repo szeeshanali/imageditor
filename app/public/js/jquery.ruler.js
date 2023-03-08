@@ -73,7 +73,7 @@
 			
 			var $hRule = $this.children('.hRule');
 			var $vRule = $this.children('.vRule');
-			var hRulerWidth = canvas.getWidth() + 29; 
+			var hRulerWidth = canvas.getWidth() + 26; 
 			$hRule.width(hRulerWidth)
 			// Horizontal ruler ticks
 			var tickLabelPos = settings.vRuleSize;
@@ -85,7 +85,7 @@
 			let logoHeight = parseFloat(logoSize[1]);
 			let area = hRulerWidth;
 			
-			let pxLogoWidth =  (area-29)/logoWidth;
+			let pxLogoWidth =  (area-26)/logoWidth;
 			let inchesCounter = Math.ceil(logoWidth);
 			
 			var major = tickLabelPos;

@@ -1,7 +1,7 @@
 
 const dpi = 72;
 const defaults = {
-    fontSize:22,
+    fontSize:36,
     fontFill: '#000',
     fontFamily:'Arial',
     strokeWidth: 10,
@@ -1223,7 +1223,6 @@ $("#btnStartOverModel").on("click",function(e){
     })
     $("#text-letter-spacing, #text-letter-spacing-range").on("change", function () {
         setSelectedTextStyle("charSpacing", this.value);
-
     });
     $("#text-bg-color").on("change", function () {
         setSelectedTextStyle("backgroundColor", this.value);
@@ -1344,7 +1343,7 @@ $("#btnStartOverModel").on("click",function(e){
 
 
 function setSelectedTextStyle(prop, value) {
-    
+    debugger;
     var txt = canvas.getActiveObject();
 //  if(txt.type == 'curved-text')
 //  {return;}
@@ -1751,6 +1750,7 @@ function initCanvasTextEvents() {
         }else
         {
             obj.set('strokeWidth',0)
+            obj.set('stroke',null);
         }
         canvas.renderAll();
     });
