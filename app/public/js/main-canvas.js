@@ -20,27 +20,7 @@ $("#btnDisplayGrid").on("click", function (e) {
      $(".grid-lines").hide(); }
  })
 
- $("#clipartmenu .clipart").on("click", (e) => {
-    const url = $(e.currentTarget).attr("data-url");
-    const title = $(e.currentTarget).attr("data-title");
-    $("#clipartTitle").text(title);
-    $("#clipartImage").attr("src",url);
 
-    $("#btnAddClipart").unbind().on("click",function(){
-        const _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
-        fabric.Image.fromURL(url, function (img) {
-           var ratio = canvas.width/2;   
-           img.scaleToWidth(ratio);
-           let canvasCenter = getCanvasCenter(img.getScaledWidth(),img.getScaledHeight())
-           img.set({ left:canvasCenter.left , top: canvasCenter.top });                 
-           img.globalCompositeOperation = 'source-atop';
-            _canvas.add(img);
-            _canvas.renderAll();
-            mainControls(true);
-            // $("#menu-text > a").click();
-        });
-    })
-});
 
  function loadSVGTemplate(id) {
         selectedTemplateId = id;
@@ -81,10 +61,25 @@ $("#btnDisplayGrid").on("click", function (e) {
                 //let canvasZoomedHeight = firstLogo.height*canvas.getZoom();
                 //canvas.setDimensions({width:canvasZoomedWidth,height:canvasZoomedHeight})
 
-                let logoSize = 500/firstLogo.width;
-                firstLogo.scaleToWidth(firstLogo.width*logoSize);
+
+                let aspectRatio = firstLogo.width/firstLogo.height;
+                let displayWidth = 500; 
+                let logoDisplayWidth = displayWidth; 
+                let logoDisplayHeight = displayWidth/aspectRatio; 
+              
                 canvas.setBackgroundImage(firstLogo, canvas.renderAll.bind(canvas));
-                canvas.setDimensions({width:firstLogo.getScaledWidth(),height:firstLogo.getScaledHeight()})
+                firstLogo.scaleToWidth(logoDisplayWidth);
+                // let missingPoints = logoDisplayWidth-firstLogo.getScaledWidth();
+                // firstLogo.scaleToWidth(logoDisplayWidth+missingPoints);
+
+                //firstLogo.scaleToHeight(logoDisplayHeight);
+                firstLogo.setCoords();
+
+                canvas.backgroundImage.set({
+                    left:0,
+                    top:0,
+                })
+                canvas.setDimensions({width:logoDisplayWidth,height:logoDisplayHeight})
                 canvas.renderAll(); 
               
                 // canvas.context = {
@@ -148,10 +143,7 @@ $("#btnDisplayGrid").on("click", function (e) {
               },function (item, object) {
     
                         object.set({
-                            fill:"#fff",
-                            left:0,
-                            top:0,
-                            strokeWidth:0
+                            fill:"#fff"
                         });
                                       
             })
@@ -167,10 +159,7 @@ $("#btnDisplayGrid").on("click", function (e) {
                     canvasPrev.setDimensions({width:viewBoxWidth,height:viewBoxHeight})
                     canvasPrev.renderAll.bind(canvas);    
                   },function (item, object) {
-                                object.set({
-                                   backgroundImage:"transparent",
-                                   strokeWidth:0
-                                })
+                                object.set({ backgroundImage:"transparent"});
                         })
                 });
     }
@@ -308,9 +297,9 @@ $("#btnDisplayGrid").on("click", function (e) {
      $("#admin-main-canvas").parent().fadeIn();
      $("#admin-main-canvas-logo").parent().fadeOut();
     
-     canvas.setZoom(canvas.context.zoomLevel);
-     canvas.setDimensions({width:canvas.context.displayWidth, height:canvas.context.displayHeight})
-     canvas.renderAll();
+     //.setZoom(canvas.context.zoomLevel);
+     //canvas.setDimensions({width:canvas.context.displayWidth, height:canvas.context.displayHeight})
+     //canvas.renderAll();
      // 5.
       //canvasPrev.clear();
      // 6.
@@ -341,12 +330,8 @@ $("#btnDisplayGrid").on("click", function (e) {
     */ 
      canvas.clone(function (clonedCanvas) {
          var bg = clonedCanvas.backgroundImage;
+         let logos = canvasPrev.backgroundImage._objects;
          clonedCanvas.backgroundImage = false;
-
-        //  clonedCanvas.setDimensions({
-        //     width:canvas.context.originalWidth,
-        //     height:canvas.context.originalHeight
-        // }); 
 
          for (var i = 0; i < clonedCanvas._objects.length; i++) {
              clonedCanvas._objects[i].globalCompositeOperation = null;
@@ -356,24 +341,37 @@ $("#btnDisplayGrid").on("click", function (e) {
          
          var dataURL = clonedCanvas.toDataURL();
          
-        let logos = canvasPrev.backgroundImage._objects;
          $("#canvas-holder").removeAttr("style");
          $("#canvas-holder").css({"background-color":"#d8dce3", "padding":"20px",});
          fabric.Image.fromURL(dataURL, (img) => {
              state.isPreviewCanvas = true;
              canvasPrev.remove(... canvasPrev.getObjects());
-             img.scaleToWidth(canvas.context.originalWidth);
-           ///img.scaleToWidth(canvas.context.originalWidth);
+
+            
+             //img.scaleToWidth(canvas.context.originalWidth);
+            //let missingPoints = canvas.context.originalWidth - img.getScaledWidth();
+           
+
              if(logos && logos.length>0)
              {
+                debugger;
+                let logoWidth = logos[0].width; 
+                img.scaleToWidth(logoWidth);
+                img.setCoords();
+                let designWidthAfterScale = img.getScaledWidth(); 
+                let missingPoints = logoWidth - designWidthAfterScale; 
+                img.scaleToWidth(logoWidth+10);
+                img.setCoords();
+                let f = img.getScaledWidth();
+              
                  for (let i = 0; i < logos.length; i++) {
                      let logo    = logos[i];
                      let object  = fabric.util.object.clone(img);                 
                      let left    = logo.left + logo.group.left + (logo.group.width / 2);
-                     let top     = logo.top + logo.group.top + (logo.group.height / 2);
+                     let top     = logo.top + logo.group.top + (logo.group.height / 2);                    
                      object.set("top", top);
                      object.set("left", left);
-                     object.setCoords();
+                     
                      object.globalCompositeOperation = "source-atop";
                      canvasPrev.add(object)
                  }
@@ -383,8 +381,11 @@ $("#btnDisplayGrid").on("click", function (e) {
                  let object  = fabric.util.object.clone(img);                   
                
                  object.set("top", logo.top);
-                 object.set("left", logo.left);
-                object.setCoords();
+                 object.set("left", logo.left);  
+                 object.scaleToWidth(logo.width);
+                 let missingPoints = logo.width - object.getScaledWidth();
+                 object.scaleToWidth(logo.width+missingPoints);
+                 object.setCoords();
                  object.globalCompositeOperation = "source-atop";
                  canvasPrev.add(object);
                  
