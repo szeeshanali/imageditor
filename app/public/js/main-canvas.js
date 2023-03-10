@@ -339,7 +339,7 @@ $("#btnDisplayGrid").on("click", function (e) {
          }
 
          
-         var dataURL = clonedCanvas.toDataURL({format:"jpg", quality:1, multiplier: 2.5 });
+         var dataURL = clonedCanvas.toDataURL({format:"jpg", quality:1, multiplier: 3 });
          
          $("#canvas-holder").removeAttr("style");
          $("#canvas-holder").css({"background-color":"#d8dce3", "padding":"20px","overflow-x":"auto"});
