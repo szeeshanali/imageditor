@@ -339,10 +339,10 @@ $("#btnDisplayGrid").on("click", function (e) {
          }
 
          
-         var dataURL = clonedCanvas.toDataURL({format:"jpg", quality:1, multiplier: 1 });
+         var dataURL = clonedCanvas.toDataURL({format:"jpg", quality:1, multiplier: 2.5 });
          
          $("#canvas-holder").removeAttr("style");
-         $("#canvas-holder").css({"background-color":"#d8dce3", "padding":"20px",});
+         $("#canvas-holder").css({"background-color":"#d8dce3", "padding":"20px","overflow-x":"auto"});
          fabric.Image.fromURL(dataURL, (img) => {
              state.isPreviewCanvas = true;
              canvasPrev.remove(... canvasPrev.getObjects());
@@ -487,7 +487,7 @@ $("#btnDisplayGrid").on("click", function (e) {
                 bg.globalCompositeOperation = "destination-in";
                 clonedCanvas.add(bg);
                 clonedCanvas.renderAll();
-                var imgData = clonedCanvas.toDataURL({format:"jpg",quality:1,multiplier:3});
+                var imgData = clonedCanvas.toDataURL({format:"jpg",quality:0.1,multiplier:2.5});
                 pdf.addImage(imgData, 'jpg', 0, 0,width,height);
                
 

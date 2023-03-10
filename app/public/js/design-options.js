@@ -20,6 +20,13 @@ $("#clipartmenu .clipart").on("click", (e) => {
 });
 
 
+function resetTextControls(){
+    
+    $("#inputStrokeText").prop("checked",false);
+    $("#text-stroke-width").val(defaults.strokeWidth); 
+    
+
+}
 
 $btnAddText.on("click", function () {
     $("#inputCurvedText").prop("checked",false);
@@ -27,19 +34,8 @@ $btnAddText.on("click", function () {
     if (! text || text.length == 0) { // /toast("Please enter text");
         return;
     }
-    
-    var textInfo = {
-        left:0,
-        top: 0,
-        fontFamily: defaults.fontFamily || 'Arial',
-        fill: $("#fontColorBox").val() || defaults.fontFill,
-        fontSize: defaults.fontSize
-    };
-    var item = new fabric.IText(text, textInfo);
-
-    let canvasCenter = getCanvasCenter(item.width,item.height);
-    item.left = canvasCenter.left; 
-    item.top = canvasCenter.top; 
+    //resetTextControls();
+    let item = addText({text:text});
     if (state.isPreviewCanvas) {
         canvasPrev.add(item);
         canvasPrev.renderAll();
