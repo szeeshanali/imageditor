@@ -1,4 +1,12 @@
 
+const defaults = {
+    fontSize:36,
+    fontFill: '#000',
+    fontFamily:'Arial',
+    strokeWidth: 10,
+    logoDisplaySize:500
+}
+
 function getPageFormatByDimensions(widthPx, heightPx)
 {
     let wi = widthPx/dpi; 
@@ -28,6 +36,48 @@ function getCanvasCenter(objectWidth,objectHeight){
         top:    (canvas.height/2)-(objectHeight/2)
     }
 
+}
+
+
+
+function curveText(obj)
+{
+    var flipped = $("#inputFlipText").prop("checked");
+    obj.flipped = flipped;
+    var ct = new fabric.CurvedText(obj.text, {
+        type: 'curved-text',
+        diameter: parseInt($("#curveTextCtrl").val()) || 500,
+        left: obj.left,
+        top: obj.top,
+        fontFamily: obj.fontFamily,
+        fontSize: obj.fontSize,
+        kerning: 0,
+        flipped: flipped,
+        fill: obj.fill,
+        fontSize: obj.fontSize, // in px
+        fontWeight: obj.fontWeight,
+        fontStyle: obj.fontStyle,
+        cacheProperties: fabric.Object.prototype.cacheProperties.concat('diameter', 'kerning', 'flipped', 'fill', 'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'strokeStyle', 'strokeWidth','stroke'),
+        stroke: $("#inputStrokeText").is(":checked")?$("#strokecolor").val():null,
+        strokeWidth: $("#inputStrokeText").is(":checked")?parseInt($("#text-stroke-width").val()):0,
+        id: obj.id,
+        index:obj.index
+    })
+    return ct; 
+}
+
+function textCurrentValues(text){
+    return new fabric.IText(text.text, text);
+}
+
+function addText(text)
+{
+    
+    var item = textCurrentValues(text);
+    let canvasCenter = getCanvasCenter(item.width,item.height);
+    item.left = canvasCenter.left  ;
+    item.top = canvasCenter.top ;
+    return item; 
 }
 
 const processFiles = (files) => {

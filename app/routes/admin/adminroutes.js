@@ -772,8 +772,12 @@ router.put('/api/admin/template/:id?', isAdmin, async (req,res)=>{
     }    
     await uploads.updateMany({type:'template', by_admin:true }, {$set: {default: false} });
   
+    let requestOrder = req.body.order_no;
     /// find document by new Order no. 
-    let findDocumentByOrderNo = await uploads.findOne({type:'template', by_admin:true, order_no:req.body.order_no });
+    let findDocumentByOrderNo = await uploads.findOne({type:'template', by_admin:true, order_no:requestOrder });
+  
+
+
     let updateDocument  = await uploads.findOneAndUpdate({type:'template', by_admin:true, code:id }, req.body,{returnDocument:'before'}); 
     if(findDocumentByOrderNo){
       findDocumentByOrderNo.order_no = updateDocument.order_no;

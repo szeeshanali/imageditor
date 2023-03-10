@@ -2226,7 +2226,6 @@ function saveDesign() {
         $inputDesignLink.val(data.link);
         $inputLogoPerPage.val(meta.objects || 0);
         $("#kopykakePartNo").val(data.ref_code);
-        debugger;
 
         $("#editTemplateActive").prop("checked", data.active);
         $("#editTemplateDefault").prop("checked", data.default);

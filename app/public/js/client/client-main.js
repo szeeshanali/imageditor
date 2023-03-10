@@ -1,12 +1,13 @@
 
 const dpi = 72;
-const defaults = {
-    fontSize:36,
-    fontFill: '#000',
-    fontFamily:'Arial',
-    strokeWidth: 10,
-    logoDisplaySize:500
-}
+// const defaults = {
+//     fontSize:36,
+//     fontFill: '#000',
+//     fontFamily:'Arial',
+//     strokeWidth: 10,
+//     logoDisplaySize:500
+// }
+
 const letterPageSize = {
     width: (8.5 * dpi),
     height: (11 * dpi)
@@ -1101,11 +1102,38 @@ $("#btnStartOverModel").on("click",function(e){
         $(this).on("click", ".duplicate", function (evt) {
          
             evt.stopPropagation();
-            var object = fabric.util.object.clone(_canvas.getActiveObject());
-            object.set("top", object.top + 5);
-            object.set("left", object.left + 5);
-            _canvas.add(object);
-            _canvas.renderAll();
+            let activeObj = _canvas.getActiveObject();
+            var t = activeObj.get('type');
+           // var object = fabric.util.object.clone(activeObj);
+
+             activeObj.clone(function(object){
+                if (t == "i-text" || t == "curved-text") {
+                    object.left = object.left + 10; 
+                    object.top = object.top + 10; 
+                    if(t == "curved-text"){
+                      object =   curveText(object);
+                    }else{
+                        object = addText(object);
+                    }
+    
+                    object.set("top", object.top + 5);
+                    object.set("left", object.left + 5);
+                    object.set("id", _canvas._objects.length)
+                    object.set("index", _canvas._objects.length-1)
+                   
+                }else
+                {
+                    
+                    object.set("top", object.top + 5);
+                    object.set("left", object.left + 5);
+                    object.set("id", _canvas._objects.length)
+                    object.set("index", _canvas._objects.length-1)
+                }
+               
+                _canvas.add(object);
+                _canvas.renderAll();
+            })
+            
         });
         $(this).on("click", ".delete", function (evt) {
             evt.stopPropagation();
@@ -1343,7 +1371,6 @@ $("#btnStartOverModel").on("click",function(e){
 
 
 function setSelectedTextStyle(prop, value) {
-    debugger;
     var txt = canvas.getActiveObject();
 //  if(txt.type == 'curved-text')
 //  {return;}
@@ -1455,14 +1482,19 @@ function updateTextControls(e){
    $("#btnTextSize").val(item.fontSize);
    if(item.charSpacing)
    { $("#text-letter-spacing").val(item.charSpacing);}
+
+   $("#inputStrokeText").prop("checked",!!item.stroke); 
+
+   $("#text-letter-spacing").val(item.charSpacing||10)
+   
+
    if(item.strokeWidth)
    { 
     if($("#inputStrokeText").is(":checked"))
     {
         $("#text-stroke-width").val(item.strokeWidth); 
     }
-    
- }
+}
 
    if(item.lineHeight)
    { $("#text-line-height").val(item.lineHeight); }
@@ -1491,14 +1523,9 @@ function initCanvasEvents() {
     canvas.on("object:added", (o) => {
         if(o.target.type != "curved-text")
            {
-            o.target.id = `obj${
-                canvas._objects.length
-            }`;
+            o.target.id = `obj${canvas._objects.length}`;
             o.target.index = canvas._objects.length - 1;
            }
-          
-        
-       
         onObjectAdded(o);
     })
 
@@ -1763,30 +1790,31 @@ function initCanvasTextEvents() {
             return;
         }
         if (e.target.checked) {
-          var flipped = $("#inputFlipText").prop("checked");
-          obj.flipped = flipped;
-          var item = new fabric.CurvedText(obj.text, {
-            type: 'curved-text',
-            diameter: parseInt($("#curveTextCtrl").val()) || 500,
-            left: 100,
-            top: 40,
-            fontFamily: obj.fontFamily,
-            fontSize: obj.fontSize,
-            kerning: 0,
-            flipped: flipped,
-            fill: obj.fill,
-            fontSize: obj.fontSize, // in px
-            fontWeight: obj.fontWeight,
-            fontStyle: obj.fontStyle,
-            cacheProperties: fabric.Object.prototype.cacheProperties.concat('diameter', 'kerning', 'flipped', 'fill', 'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'strokeStyle', 'strokeWidth','stroke'),
-            stroke: $("#inputStrokeText").is(":checked")?$("#strokecolor").val():null,
-            strokeWidth: $("#inputStrokeText").is(":checked")?parseInt($("#text-stroke-width").val()):0,
-            id: obj.id,
-            index:obj.index
-            //strokeStyle: obj.strokeStyle,
-            //stroke:obj.stroke,
-            //strokeWidth: 2
-        });
+        //   var flipped = $("#inputFlipText").prop("checked");
+        //   obj.flipped = flipped;
+        //   var item = new fabric.CurvedText(obj.text, {
+        //     type: 'curved-text',
+        //     diameter: parseInt($("#curveTextCtrl").val()) || 500,
+        //     left: 100,
+        //     top: 40,
+        //     fontFamily: obj.fontFamily,
+        //     fontSize: obj.fontSize,
+        //     kerning: 0,
+        //     flipped: flipped,
+        //     fill: obj.fill,
+        //     fontSize: obj.fontSize, // in px
+        //     fontWeight: obj.fontWeight,
+        //     fontStyle: obj.fontStyle,
+        //     cacheProperties: fabric.Object.prototype.cacheProperties.concat('diameter', 'kerning', 'flipped', 'fill', 'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'strokeStyle', 'strokeWidth','stroke'),
+        //     stroke: $("#inputStrokeText").is(":checked")?$("#strokecolor").val():null,
+        //     strokeWidth: $("#inputStrokeText").is(":checked")?parseInt($("#text-stroke-width").val()):0,
+        //     id: obj.id,
+        //     index:obj.index
+        //     //strokeStyle: obj.strokeStyle,
+        //     //stroke:obj.stroke,
+        //     //strokeWidth: 2
+        // });
+        var item = curveText(obj);
         item.globalCompositeOperation = "source-atop";
         canvas.add(item);
         canvas.renderAll();
@@ -1795,17 +1823,18 @@ function initCanvasTextEvents() {
        
         } else {
             //$("#inputFlipText").prop('checked',false);
-            $("#curveTextCtrl").val(500);
+            $("#curveTextCtrl").val(1250);
             var obj = canvas.getActiveObject();
-            
+            canvas.remove(obj);
+            var c = getCanvasCenter(obj.width,obj.height);
             var textInfo = {
 
-                left        :   (canvas.width/2)-obj.width/2,
-                top         :   canvas.height/2,
+                left        :   c.left,
+                top         :   c.top,
                 fontFamily  :   obj.fontFamily,
                 fill        :   obj.fill,
                 fontSize    :   obj.fontSize,
-                flipped     :   flipped,
+                flipped     :   $("#inputFlipText").prop("checked") || false,
                 stroke      :   obj.stroke,
                 strokeWidth :   obj.strokeWidth,
                 paintFirst  :   "stroke",
@@ -1816,7 +1845,9 @@ function initCanvasTextEvents() {
             
         
             var item = new fabric.IText(obj.text, textInfo);
-            canvas.remove(obj);
+            
+            
+            //var item = addText(obj)
             item.globalCompositeOperation = 'source-atop';
             canvas.add(item);            
             canvas.setActiveObject(item);
@@ -1833,8 +1864,9 @@ function initCanvasTextEvents() {
     })
 
     $("#curveTextCtrl").on("input", function (e) {   
-        let val = e.currentTarget.value;
-        updateCurveText({diameter:val});
+        let val =  e.currentTarget.value;
+       console.log(val);
+        updateCurveText({"diameter":val});
     })
     $("#curveTextKerning").on("input", function (e) {
         let val = e.currentTarget.value;
