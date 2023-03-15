@@ -345,7 +345,7 @@
         </button>
       </div>
       <div class="modal-body pd-20">
-        <input type="text" id="downloadFileName" class="form-control" placeholder="Enter File Name">
+        <input type="text" id="customDesignName" class="form-control" placeholder="Enter File Name">
       </div>
       <div class="modal-footer justify-content-center">
         <button type="button" onclick="generatePDFfromPreview()" data-dismiss="modal" class="btn-sm tx-12 tx-uppercase btn btn-success pd-x-20">Download your design <br> in PDF</button>
@@ -377,19 +377,20 @@
   </div><!-- modal-dialog -->
 </div><!-- modal -->
 <%- include('../../partials/client/popups/popup-clipart'); %>
-<script> 
-    // $(".tab-content .tab-pane").each((i,e)=>
-    //    { $(e).removeClass("active"); })
-    //   //$("#templatepanel").addClass("active");
-      //$("#menu-templates").addClass("bg-warning")
-    window.onload = function()
-   { 
-       
-    var code = '<%=code || "default" %>' ;
-    loadSVGTemplate(code);
-        $('[data-toggle="popover"]').popover()
-   }
+<script>
 
+$(document).ready(function(){
+  var code = '<%=code || "default" %>' ;  
+  if(code === "default")
+  {
+    loadSVGTemplate(code);
+  }else
+  {
+    loadProject(code,true);
+  
+  }
+    //$('[data-toggle="popover"]').popover()
+})
 </script>
    
    

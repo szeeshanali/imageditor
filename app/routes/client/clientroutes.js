@@ -99,10 +99,10 @@ router.get("/api/project/:id?", isLoggedIn,  async (req, res) => {
     }
 });
 
-router.get("/api/pre-designed/:id?", isLoggedIn,  async (req, res) => {
+router.get("/api/custom-design/:id?", isLoggedIn,  async (req, res) => {
     
     var id = req.params.id; 
-    console.log(`API: /api/pre-designed/${id||''}`);
+    console.log(`API: /api/custom-design/${id||''}`);
     try{
         var data  = await commonService.uploadService.getPreDesignedAsync(id); 
         var svgTemplate= {};     
@@ -116,7 +116,41 @@ router.get("/api/pre-designed/:id?", isLoggedIn,  async (req, res) => {
         res.status(500).send();
     }
 });
-
+router.get("/api/custom-designs", isLoggedIn,  async (req, res) => {
+    
+    var id = req.params.id; 
+    console.log(`API: /api/custom-designs'}`);
+    try{
+        var data  = await uploads.find({"type":"pre-designed","deleted":false, "active":{$ne:false}},{
+            _id:1,
+            path:1,
+            title:1,
+            created_dt:1,
+            meta:1
+        }); 
+        
+        if(data)
+        {
+            data = data.map(i=>{
+              i.path=  i.path.replace("../app/public","");
+              return i
+            })
+        }
+        res.status(200).send({
+                "status"    : 200,
+                "message"   : "success",
+                "exception" : null,
+                "data"      : data
+            });   
+      
+    }catch(ex){
+        res.status(500).send({
+            "status"    : 500,
+            "message"   : "Error while getting custom designs",
+            "exception" : ex.message,
+        });
+    }
+});
 router.delete("/api/client/project/:id?", isLoggedIn,  async (req, res) => {
     var id = req.params["id"]; 
     var data  =  await commonService.uploadService.deleteUploadAsync(id, 'project' , req.user._id);
@@ -151,6 +185,9 @@ router.get('/api/svg-templates/:id/:t?', isLoggedIn,  async (req,res)=>{
 })
 
 
+
+
+
 router.get('/app/cliparts/', isLoggedIn,  async (req,res)=>{
     var templates = await commonService.uploadService.getTemplatesAsync();
 
@@ -183,50 +220,137 @@ router.get("/app/main",  async (req, res) => {
 
 
 //****Save Design */
+router.delete("/api/my-designs/:id", isLoggedIn,  async (req, res) => {
+    try{
+        var id = req.params["id"]; 
+        var data  =  await uploads.remove({_id:id});
+        return ok(res, data);
+    }catch(ex)
+    {
+        return error(res,ex);
+    }
+
+});
+
+function error(res,ex)
+{
+    console.log(ex.message);
+    return  res.status(500).send({
+        status:500,
+        message:"error",
+        error:true,
+        exception:ex.message,
+        data:null
+    });
+
+}
+function ok(res,data)
+{
+  return  res.status(200).send({
+        status:200,
+        message:"ok",
+        error:false,
+        exception:null,
+        data:data
+    });
+}
+
+router.get("/api/my-designs", isLoggedIn, async function(req,res){
+
+    try{
+        let d = await uploads.find({
+            uploaded_by:req.user._id,
+            type:"project",
+            active:true,
+            deleted:false,
+        },{_id:1,title:1,created_dt:1,path:1,meta:1,desc:1});
+
+        d = d.map(i=>{
+            i.path = i.path?.replace("../app/public","");
+            return  i; 
+        })
+        res.status(200).send({
+            status:200,
+            message:"ok",
+            error:false,
+            exception:null,
+            data:d
+        }); 
+    }catch(ex){
+        res.status(500).send({
+            status:500,
+            message:"error",
+            error:true,
+            exception:ex.message,
+            data:null
+        }); 
+    }
+})
+
+
 router.post('/app/client/save-design', isLoggedIn, async function(req, res) {
 try{
 
     const totalProjects =  await uploads.find({ 
-        uploaded_by:req.user._id,  
-        deleted:false, active:true,
-        type:'project'
+        uploaded_by     :   req.user._id,  
+        deleted         :   false,
+        active          :   true,
+        type            :   'project'
+
     },{title:1}); 
+
     const count = totalProjects.length;
     console.log(`total project count: ${count}`); 
     console.log(totalProjects);
-    if(count>=req.user.project_limit){
-        return res.status(401).send({message:`You can not save more than ${req.user.project_limit} projects.`, error: `You can not save more than ${req.user.project_limit} projects.`});
-    }  
-    const {json,thumbBase64,title, desc, templateId} = req.body; 
-    if(totalProjects.find(i=>i.title === title))
-    {
-        return res.status(400).send({message:`A project with the same name  (${title}) is already exists. `, error: `Project with the same name  (${title}) is already exists. `});
 
+    if(count>=req.user.project_limit){
+        //return res.status(401).send({message:`You can not save more than ${req.user.project_limit} projects.`, error: `You can not save more than ${req.user.project_limit} projects.`});
+        return res.status(401).send({
+            status:401,
+            message:`You can not save more than ${req.user.project_limit} projects.`,
+            exception:null,
+            error:true,
+            valid:false
+        });
+    }        
+    let {id, itemId, userDesignId, desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
+     
+    if(totalProjects.find(i=>i.title?.toLowerCase()?.trim() === title?.toLowerCase().trim()))
+    {
+        ///return res.status(400).send({message:`A project with the same name  (${title}) is already exists. `, error: `Project with the same name  (${title}) is already exists. `});
+        return res.status(400).send({
+            status:401,
+            message:`Project with the same name is already exists, please choose different name.`,
+            exception:null,
+            error:true,
+            valid:false
+        });
     }
-    
- 
-  
-    var _id = mongoose.Types.ObjectId();
-    var uploadModel = {
-      title           :   title || `project${_id}`,
-      name            :   desc || "",
-      order_no        :   1,
+        
+    let _id = mongoose.Types.ObjectId();
+    let uploadModel = {
+      title           :   title,
+      name            :   title,
+      desc            :   desc,
       code            :   _id,
       active          :   true,
       json            :   json,
-      thumbBase64     :   thumbBase64,
-      default         :   false,
+      base64          :   base64,
+      path            :   null,
+      meta            :   meta,
       by_admin        :   false,
-      type            :   "project",
-      uploaded_by     :    req.user._id  ,
-      templateId      :    templateId 
+      type            :   'project',
+      uploaded_by     :   req.user._id      
     };
-    commonService.uploadService.upload(uploadModel,(err,msg)=>{
-        if(!err)
-            {res.status(200).send({message:`Success`, error: msg}); }
-            else{res.status(400).send({message:`Unable to upload file.`, error: msg});  }
-            
-        })
+  
+    let _path = `../app/public/uploads/client/pre-designed/pre-designed-${_id}.jpg`;    
+    let _base64Alter = base64.replace(`data:${"image/png"};base64,`, "");
+    await fs.writeFileSync(_path,_base64Alter,{ encoding: 'base64' }); 
+    uploadModel.path = _path;
+    var upload = new uploads(uploadModel);
+    await upload.save();
+    res.status(200).send({message:`Success`, error: null});
+
     }catch(ex) {
         res.status(500).send({message:`Something went wrong!`, error: ex.message});
     }
@@ -288,9 +412,7 @@ router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
     let template = {};
     let meta = {};
     
-   ///let customDesigns = await uploads.find({type:'pre-designed', active:true, deleted:false, base64:{$ne:null},json:{$ne:null}},{code:1,base64:1}) || [];
-   //let adminUploadItems = await commonService.uploadService.getUploads('all',true,true);
-  let _uploads = await uploads.find({$or:[{type:"template"},{type:"clipart"},{type:"pre-designed"}],active:true,deleted:false}).sort({order_no:1});
+   let _uploads = await uploads.find({$or:[{type:"template"},{type:"clipart"},{type:"pre-designed"}],active:true,deleted:false},{json:0,base64:0,thumbBase64:0}).sort({order_no:1});
    let templates = _uploads.filter(function(i){return i.type === 'template'});
    let cliparts = _uploads.filter(function(i){return i.type === 'clipart'});
    let customDesigns = _uploads.filter(function(i){return i.type === 'pre-designed'});

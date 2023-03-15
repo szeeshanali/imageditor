@@ -1,11 +1,11 @@
 
-    const defaults = {
-        fontSize:36,
-        fontFill: '#000',
-        fontFamily:'Arial',
-        strokeWidth: 10,
-        logoDisplaySize:500
-    }
+    // const defaults = {
+    //     fontSize:36,
+    //     fontFill: '#000',
+    //     fontFamily:'Arial',
+    //     strokeWidth: 10,
+    //     logoDisplaySize:500
+    // }
     var canvas = new fabric.Canvas("admin-main-canvas", {preserveObjectStacking: true})
     var canvasPrev = new fabric.Canvas("admin-main-canvas-logo", {preserveObjectStacking: true});
     var cropCanvas  = new fabric.Canvas("cropCanvas",  {preserveObjectStacking: true});
@@ -826,6 +826,26 @@ function saveDesign() {
         canvas.renderAll();
     }
 
+    function initUICustomProjects(){
+
+        $(".custom-project").on("click",function(){
+            const $elem = $(this);
+            const meta = $elem.attr("data-meta");
+            const metaJSON = JSON.parse(meta);
+            let html = $("#customDesignDetailsTemplate").html();
+            html = 
+            html.replace("{design-name}",metaJSON.title)
+            .replace("{sheet-size}", getInches(metaJSON.sheetWidth,metaJSON.sheetHeight) + " inches")
+            .replace("{total-logos}",metaJSON.totalLogos)
+            .replace("{logo-size}",getInches(metaJSON.logoWidth,metaJSON.logoHeight)+ " inches")
+            .replace("{design-id}",$elem.attr('id'));
+            
+            $("#customDesignDetails").html(html);
+        })
+
+
+
+    }
 
 
     function initUIUploadTemplate(){
@@ -987,6 +1007,7 @@ function saveDesign() {
         
         initContextMenu();
         initUIUploadTemplate();
+        initUICustomProjects();
 
         $("#categoryContainer .category").on("click",function(e){
           
@@ -1740,13 +1761,12 @@ function saveDesign() {
        * 2. show save design form. 
        * 3. save design. 
        */
+
             if (canvas.backgroundImage == null || canvas._objects.length == 0) {
                 toast("Please create your design before save.");
                 return;
             }
-
-
-
+             saveCustomDesign(true);
         });
 
         $("#saveUserDesign").on("click",function(e){
@@ -1759,9 +1779,6 @@ function saveDesign() {
             $.ajax({
                 type: "POST",
                 url: "/app/admin/uploads",
-                // contentType: false,
-                // enctype: 'multipart/form-data',
-                // processData: false,
                 data: {
                     userDesignId: designId,
                     json: JSON.stringify(json)
@@ -1770,7 +1787,7 @@ function saveDesign() {
                     designFlags.submitted = true;
                     toast("Uploaded Successfully!");
                     setTimeout(function () {
-                        onDesignReload();
+                        window.location.href = "/admin/shared-library";
                     }, 2000)
                 },  
                 error: function (res) {
@@ -2403,6 +2420,8 @@ function saveDesign() {
         })
       }
 
+     
+
 
 
     function onObjectAdded(o) {
@@ -2482,41 +2501,41 @@ function saveDesign() {
     function addFiltersOnSelection() {}
 
     /** Layer functions */
-    function addLayer(o) {
-        $("#collapse-layers").addClass("show");
+    // function addLayer(o) {
+    //     $("#collapse-layers").addClass("show");
     
-        var temp = layerHtml;
-        $layers.html();
-        var layers = "";
-        // var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
-        var _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
-        for (var i = _canvas._objects.length - 1; i >= 0; i--) {
-            var obj = _canvas._objects[i];
+    //     var temp = layerHtml;
+    //     $layers.html();
+    //     var layers = "";
+    //     // var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
+    //     var _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
+    //     for (var i = _canvas._objects.length - 1; i >= 0; i--) {
+    //         var obj = _canvas._objects[i];
             
-            var src = obj._element ?. currentSrc;
-            if (obj.text) {
-                src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAABHNJREFUeJzt3LurHGUcx+FvcqKiJohGBBGjRPHyB4imE0u72Akix1bsBAsriyiKokQ7CQoKaiGKCpGAjSI2golXhIR4v3USbzExicViiCHndy55d95zdp4H3iYLM7+d3c+emd0hCQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABJsq73AFOyMckVmd3ntxp9n+T33kNQ25hkV5IjSU5Yg64jSZ5NcuGirxJdrEuyJ/3fKGNfu+Mv96p0W/q/OazJurV+qdaO9b0HaOiW3gNw0rbeA7QyS4Fc0HsATjqv9wCtzFIg0JxAoCAQKGzoPcAqcSDJd0mON9zmukx+rLy+4TbP5MskP2by7VEr65NcmeTahtuksx1Z/teRLyW5YcpzbUtycAWzLbb2J7lpyrPfmOSVFcz20JTnYgWWE8ixJHcPONvWTG7DaBXHoSRbBpz/nkyO2egCGes1yANJXhhwfweTvNhwe88n+bbh9payvwcH3N+qMcZAvkqys8N+9zbc1r6G21qqJzNslKvCGAPZmeSfDvs90nBbRxtuazn7fKbDfrsaWyCHkjzXe4g1bFeSP3oPMaSxBbIryW+9h1jDfs3IPmDGFMjxjPAUYQqeTtvfXFa1MQXyepKvew8xAw4keav3EEMZUyBP9R5ghozmWI4lkA+TfNB7iBnybvp81Ty4WQrkcPHY4xnRefMATiR5onj8z6EGmbZZCuSjBf79nSSvDjnISLyc5L0FHlvotaCjczK5s/XUe4L2Jtncc6hTzKfdvVh3DTv6gi5L8mn+P9tnSeZ6DsXCrkvyfia3kzya1fVf0Mxn9gJJkk2ZnMJ+k8lfFLfIsyLzmc1AZtosXYNAcwKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIZDhzDbfldRuIAz2crQ23dXXDbUF3c0n2JznRaH0eH27MkPvTLo7/1n2DPgOYkvkkx9I+kKNJ7hzuaUA7m5LckWR32odx+nozyfYkGwd5ZrBCV2Vy2rMnyd+Zfhinr8NJ3k5yb5ItU36usKi5JNuSPJLkkwwfxGLr4yQ7ktwcF/QM6KIkjyX5Jf0jWOr6OcnDmZz6wdRck+Rg+r/hV7r2Z3IqCM2dm+SL9H+Tn+3al2RD42MD2Z7+b+5W6/bGx2ZmuXhbukt6D9DQ5t4DMHsuzeRit/en/9muH5Jc3PjYQJLJRfobmfyK3fuNvtx1NMlrcaPjsqzrPcAadX6Sy7N2TlGPJ/kpyV+9BwEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM7kX8fwvIWqet/rAAAAAElFTkSuQmCC';
-            }
-            layers += temp.replace(/{id}/ig, obj.id).replace("{src}", src).replace("{_id}", obj.id).replace(/{index}/ig, i + 1);
-        }
-        if (layers != "") {
-            $layers.html(layers);
-            //$("#ws-btn-save").removeClass('hidden');
-            if(!state.isPreviewCanvas)
-            { $("#ws-btn-preview").removeClass('hidden');  }
+    //         var src = obj._element ?. currentSrc;
+    //         if (obj.text) {
+    //             src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAABHNJREFUeJzt3LurHGUcx+FvcqKiJohGBBGjRPHyB4imE0u72Akix1bsBAsriyiKokQ7CQoKaiGKCpGAjSI2golXhIR4v3USbzExicViiCHndy55d95zdp4H3iYLM7+d3c+emd0hCQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABJsq73AFOyMckVmd3ntxp9n+T33kNQ25hkV5IjSU5Yg64jSZ5NcuGirxJdrEuyJ/3fKGNfu+Mv96p0W/q/OazJurV+qdaO9b0HaOiW3gNw0rbeA7QyS4Fc0HsATjqv9wCtzFIg0JxAoCAQKGzoPcAqcSDJd0mON9zmukx+rLy+4TbP5MskP2by7VEr65NcmeTahtuksx1Z/teRLyW5YcpzbUtycAWzLbb2J7lpyrPfmOSVFcz20JTnYgWWE8ixJHcPONvWTG7DaBXHoSRbBpz/nkyO2egCGes1yANJXhhwfweTvNhwe88n+bbh9payvwcH3N+qMcZAvkqys8N+9zbc1r6G21qqJzNslKvCGAPZmeSfDvs90nBbRxtuazn7fKbDfrsaWyCHkjzXe4g1bFeSP3oPMaSxBbIryW+9h1jDfs3IPmDGFMjxjPAUYQqeTtvfXFa1MQXyepKvew8xAw4keav3EEMZUyBP9R5ghozmWI4lkA+TfNB7iBnybvp81Ty4WQrkcPHY4xnRefMATiR5onj8z6EGmbZZCuSjBf79nSSvDjnISLyc5L0FHlvotaCjczK5s/XUe4L2Jtncc6hTzKfdvVh3DTv6gi5L8mn+P9tnSeZ6DsXCrkvyfia3kzya1fVf0Mxn9gJJkk2ZnMJ+k8lfFLfIsyLzmc1AZtosXYNAcwKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIZDhzDbfldRuIAz2crQ23dXXDbUF3c0n2JznRaH0eH27MkPvTLo7/1n2DPgOYkvkkx9I+kKNJ7hzuaUA7m5LckWR32odx+nozyfYkGwd5ZrBCV2Vy2rMnyd+Zfhinr8NJ3k5yb5ItU36usKi5JNuSPJLkkwwfxGLr4yQ7ktwcF/QM6KIkjyX5Jf0jWOr6OcnDmZz6wdRck+Rg+r/hV7r2Z3IqCM2dm+SL9H+Tn+3al2RD42MD2Z7+b+5W6/bGx2ZmuXhbukt6D9DQ5t4DMHsuzeRit/en/9muH5Jc3PjYQJLJRfobmfyK3fuNvtx1NMlrcaPjsqzrPcAadX6Sy7N2TlGPJ/kpyV+9BwEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM7kX8fwvIWqet/rAAAAAElFTkSuQmCC';
+    //         }
+    //         layers += temp.replace(/{id}/ig, obj.id).replace("{src}", src).replace("{_id}", obj.id).replace(/{index}/ig, i + 1);
+    //     }
+    //     if (layers != "") {
+    //         $layers.html(layers);
+    //         //$("#ws-btn-save").removeClass('hidden');
+    //         if(!state.isPreviewCanvas)
+    //         { $("#ws-btn-preview").removeClass('hidden');  }
     
-        } else {
-            $layers.html("Empty! please upload an image.");
-            //$("#ws-btn-save").addClass('hidden');
+    //     } else {
+    //         $layers.html("Empty! please upload an image.");
+    //         //$("#ws-btn-save").addClass('hidden');
     
-            if(!state.isPreviewCanvas)
-            { 
-                $("#ws-btn-preview").addClass('hidden'); 
-            }
+    //         if(!state.isPreviewCanvas)
+    //         { 
+    //             $("#ws-btn-preview").addClass('hidden'); 
+    //         }
     
-        }
+    //     }
     
-    }
+    // }
     function layerSelectEventHandler($elem, selected) {
         selectedObjectBySelectLayer($elem, selected);
     }
@@ -3077,6 +3096,15 @@ function loadUserProject(id) {
         console.log(err);
     })
 }
+
+function onPageLoad(context){
+updateCounts(context.counts);
+}
+
+function updateCounts(counts){
+    $("#countCustomProjects").text(counts.customProjects);
+}
+
      
 function initContextMenu()
 {

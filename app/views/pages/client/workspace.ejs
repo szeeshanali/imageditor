@@ -249,21 +249,8 @@
     <div class="table-responsive">
       
       <div class="workarea" id="workarea" >
-        <!-- <div class="pd-10 bd" >
-          <ul class="nav nav-gray-600 flex-column flex-sm-row" role="tablist">
-            <li class="nav-item">
-              <div><i class="ion-android-remove-circle tx-30" id="btnImageMinus"></i></div>
-            </li>
-            <li class="nav-item">
-              <div class="slidecontainer">
-                <input type="range" min="1" max="500" value="250" step="10" class="slider" id="sliderImageSize">
-              </div>
-            </li>
-            <li class="nav-item"><div><i class="ion-android-add-circle tx-30 " id="btnImagePlus"></i></div></li>
-           
-          </ul>
-        </div> -->
-        <div  id="canvas-holder">
+   
+        <div  id="canvas-holder" >
             <div class="content tx-center" >
                 <canvas id="client-main-canvas"   ></canvas>
                 <canvas id="client-main-canvas-logo"   ></canvas>                    
@@ -383,12 +370,13 @@
    { 
         var code = '<%=code || "default" %>' ;
         var type = '<%=type%>';
-        if(type === 'project'){
-            loadProject(code);
-        }else{
-            loadSVGTemplate(code);
+        // if(type === 'project'){
+        //     loadProject(code);
+        // }else{
+        //     loadSVGTemplate(code);
 
-        }
+        // }
+        loadSVGTemplate(code);
         $('[data-toggle="popover"]').popover()
 
    }

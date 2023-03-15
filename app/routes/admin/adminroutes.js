@@ -467,7 +467,11 @@ router.get(ROUTE_ADMIN_DASHBOARD, isAdmin, async (req,res)=>{
   let allusers = await appusers.find({deleted:false, active:true},{password:0,is_admin:0,deleted:0,date:0,lname:0});
   let userIds =  allusers.map(function(i){return i._id});
   let allDownloads = await logs.find({"type":"download_pdf"},{ user_id:1,created_dt:1, content:1, data:1  });
-  let allProjects = await uploads.find({"type":"project", "deleted":false},{ _id:1,created_dt:1,uploaded_by:1, title:1 })
+  let _uploads = await uploads.find({ "type":{$in:["project","pre-designed"]}, deleted:false},{ _id:1,created_dt:1,uploaded_by:1, title:1,type:1 })
+  let allCustomProjects = _uploads.filter(function(i){return i.type === "pre-designed"});
+  let allUserProjects = _uploads.filter(function(i){return i.type === "project"}); 
+  
+
   var report = {
     todayUsers:0,
     thisWeekUsers:0,
@@ -496,10 +500,10 @@ report.thisMonthDownloads =allDownloads.filter(thisMonthFilter).length || 0;
 report.totalDownloads      = allDownloads.length;
 
 /// project filter 
-report.totalProjects = allProjects.length;
-report.todayProjects =   allProjects.filter(todayFilter).length || 0;;
-report.thisWeekProjects = allProjects.filter(thisWeekFilter).length || 0;
-report.thisMonthProjects =allProjects.filter(thisMonthFilter).length || 0;
+report.totalProjects = allUserProjects.length;
+report.todayProjects =   allUserProjects.filter(todayFilter).length || 0;;
+report.thisWeekProjects = allUserProjects.filter(thisWeekFilter).length || 0;
+report.thisMonthProjects =allUserProjects.filter(thisMonthFilter).length || 0;
 
 
 //let projects = await uploads.find({"type":"project","deleted":false, "active":true},{projection:{"json":0,"base64":0}}); 
@@ -519,14 +523,14 @@ function thisMonthFilter(value)
    id     : "__dashboard",
    user   : req.user,
    users  : allusers,
-   userProjects: allProjects,
-   downloads:allDownloads,
-   report: report
+   userProjects   : allUserProjects,
+   customProjects : allCustomProjects,
+   downloads      : allDownloads,
+   report         : report
 
   } ;
   res.render(PATH_ADMIN_DASHBOARD,res.locals.page);
 })
-
 
 /** End */
 /** Template */
@@ -542,7 +546,6 @@ router.get('/app/admin/template-designer',  isAdmin, async (req,res)=>{
     upload_text: "Upload SVG Templates.",
     next_order: 1000,
   }
-
   res.render("pages/admin/templatedesigner",{user:req.user,next_order:1000});
 })
 
@@ -713,7 +716,7 @@ router.post('/app/admin/save-design', isAdmin, async function(req, res) {
       }
    })
     
-router.get('/app/admin/pre-designed', isAdmin, async (req,res)=>{
+router.get('/app/admin/custom-design/:id?', isAdmin, async (req,res)=>{
     
   res.locals.page = {
     id: "__workspace",
@@ -721,16 +724,17 @@ router.get('/app/admin/pre-designed', isAdmin, async (req,res)=>{
     user: req.user
   }
 
+  
 const id = req.params.id;
 const type = req.params.type;
 let template = {};
 let meta = {};
 
-//let customDesigns = await uploads.find({type:'pre-designed', active:true, deleted:false, base64:{$ne:null},json:{$ne:null}},{code:1,base64:1}) || [];
-let adminUploadItems = await commonService.uploadService.getUploads('all',true,true);
-let templates = adminUploadItems.filter(function(item){ return item.type == 'template'});
-let cliparts = adminUploadItems.filter(function(item){ return item.type == 'clipart'});
-let customDesigns = adminUploadItems.filter(function(item){ return item.type == 'pre-designed'});
+const _uploads = await uploads.find({$or:[{type:"template"},{type:"clipart"},{type:"pre-designed"}],active:true,deleted:false}).sort({order_no:1});
+const templates = _uploads.filter(function(i){return i.type === 'template'});
+const cliparts = _uploads.filter(function(i){return i.type === 'clipart'});
+const customDesigns = _uploads.filter(function(i){return i.type === 'pre-designed'});
+
 let categories  = await commonService.categoryService.getCategoriesAsync();
 let fonts       = await commonService.contentService.getContentAsync('fonts',false);
 let customText  = await commonService.contentService.getContentAsync('custom-text');
@@ -747,7 +751,8 @@ if(items != null && items.length > 0)
 }
 
 });
-res.render('pages/admin/pre-designed',{
+
+res.render('pages/admin/custom-design',{
     user:req.user,
     template:template,
     templateMeta:meta,
@@ -792,6 +797,20 @@ router.put('/api/admin/template/:id?', isAdmin, async (req,res)=>{
 
 })
 
+/**
+ * Shared Library
+ */
+
+router.get("/app/admin/shared-library", isAdmin, async (req,res)=>{
+     var kpDesigns = await uploads.find({type:"pre-designed",deleted:false},{_id:1,path:1,title:1,meta:1});
+   res.locals.page = {
+    title  : "Shared Library",
+    id     : "__sharedlibrary",
+    user   : req.user,
+    kpDesigns : kpDesigns
+   } ;
+   res.render("pages/admin/shared-library",res.locals.page);
+})
 
 
 // per
@@ -842,6 +861,35 @@ router.get("/api/user-project/:id?",  async (req, res) => {
       res.status(200).send({data:data,template:svgTemplate});
   }catch{
       res.status(500).send();
+  }
+});
+
+router.get("/api/project/:id?", isLoggedIn,  async (req, res) => {
+  var id = req.params.id; 
+  try{
+    if(!id)
+    { return res.status(404).send("Design not Found.") }
+
+    var data  = await uploads.findOne({_id:id},{_id:1,json:1,meta:1});
+      res.status(200).send({data:data});
+  }catch(ex) {
+      console.error(`Error: api:/api/p/${id}, exception:${ex}`);
+      res.status(500).send("Sever Error");
+  }
+});
+
+
+router.get("/api/admin/project/:id?", isAdmin,  async (req, res) => {
+  var id = req.params.id; 
+  try{
+    if(!id)
+    { return res.status(404).send("Design not Found.") }
+
+    var data  = await uploads.findOne({_id:id},{_id:1,json:1,meta:1});
+      res.status(200).send({data:data});
+  }catch(ex) {
+      console.error(`Error: api:/api/p/${id}, exception:${ex}`);
+      res.status(500).send("Sever Error");
   }
 });
 
@@ -897,20 +945,12 @@ res.status(200).send({message:`Success`, error: null});
 
 
 router.post('/app/admin/uploads', async function(req, res) {
-  let {id, userDesignId, desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
- 
-  if(userDesignId)
-  {
-    try {
-      await uploads.findOneAndUpdate({_id:userDesignId},{json:json});
-      return res.status(200).send({message:`Updated Successfully`, error: null}); 
-    }catch(ex)
-    {
-      return res.status(500).send({message:`Unable to Save`, error: ex.message}); 
-
-    }
+  let {id, itemId, userDesignId, desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
+  
    
-  }
+  
+  
+  mime_type = mime_type || "image/png"
   file_name = file_name || "pd.png"; 
   //filename = `${filename}-${_id}${file_ext}`;       
   let _id = mongoose.Types.ObjectId();
@@ -943,28 +983,62 @@ router.post('/app/admin/uploads', async function(req, res) {
   let _path = file_name?`../app/public/uploads/admin/${type}/${type}-${_id}.${file_name.split('.').pop()}`:'';  
   if(type === 'template')
   {mime_type = "image/png"}
-  let _base64Alter = base64.replace(`data:${mime_type};base64,`, "");
 
- 
- const process = async ()=>{
-    fs.writeFile(_path, _base64Alter, 'base64', function(err) {
-      if(err){ 
-        console.log(err);
-        return res.status(500).send({message:`Error uploading file.`, error: err}); 
-      }
-       commonService.uploadService.upload(uploadModel, id, (err,msg)=>{
+  let _base64Alter = base64.replace(`data:${mime_type};base64,`, "");
+ try{
+
+ }catch(ex){
+
+ }
+  await fs.writeFileSync(_path,_base64Alter,{ encoding: 'base64' }); 
+  uploadModel.path = _path;
+    if(itemId)
+    {
+      await uploads.findOneAndUpdate({_id:itemId},{
+        title:title,
+        base64:base64,
+        json:json,
+        path:_path
+      });
+      
+    }else{
+    
+      commonService.uploadService.upload(uploadModel, id, (err,msg)=>{
         if(!err)
         {res.status(200).send({message:`Success`, error: null}); }
         res.status(400).send({message:`Unable to upload file.`, error: msg}); 
-      });      
-  });
- }
- 
- await process();
-res.status(200).send({message:`Success`, error: null});
+      }); 
+
+    }
+  // fs.writeFile(_path, _base64Alter,'base64', async function(err) {
+  //   if(err){ 
+  //     console.log(err);
+  //     return res.status(500).send({message:`Error uploading file.`, error: err}); 
+  //   }
+  //   uploadModel.path = _path;
+  //   if(itemId)
+  //   {
+  //     await uploads.findOneAndUpdate({_id:itemId},{
+  //       title:title,
+  //       base64:base64,
+  //       json:json,
+  //       path:_path
+  //     });
+      
+  //   }else{
+    
+  //     commonService.uploadService.upload(uploadModel, id, (err,msg)=>{
+  //       if(!err)
+  //       {res.status(200).send({message:`Success`, error: null}); }
+  //       res.status(400).send({message:`Unable to upload file.`, error: msg}); 
+  //     }); 
+
+  //   }
+        res.status(200).send({message:`Success`, error: null});
+});
+
  // commonService.uploadService.clear();
  // res.redirect('/app/admin/template-designer');
-})
 
 router.get('/api/admin/svg-templates/:id', isAdmin, async (req,res)=>{
   const itemid = req.params["id"]; 

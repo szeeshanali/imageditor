@@ -726,6 +726,17 @@ font-weight: bold;
     width: 20%;
 }
 
+.kp-badge{
+  position: absolute;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    vertical-align: middle;
+    padding: 5px 0px;
+    margin: 0px -5px;
+}
+
 /* .background{
     background-image: url(../img/bg.jpg);
     background-size: cover;
@@ -858,6 +869,8 @@ font-weight: bold;
 #client-main-canvas-logo{
   background-color: #fff;
 }
+
+
 .canvas-container{
   margin:auto;
    /* border:solid 1px #666;  */

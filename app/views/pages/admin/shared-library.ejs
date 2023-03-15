@@ -1,0 +1,74 @@
+<div class="row mg-r-0">
+<div class="col-lg-4 pd-0">
+  
+  <div class="card">
+    <div class="list-group widget-list-group bg-app-primary">
+      <div class="list-group-item d-flex">
+        <div class="media d-block d-sm-flex">
+          <div class="d-block d-sm-flex mg-sm-r-20">
+            <i class="ion-folder tx-24 tx-white"></i>
+          </div><!-- d-flex -->
+          <div class="media-body mg-t-10 mg-sm-t-0">
+            <h6 class="mg-b-5 tx-14">KakePrints Library</h6>
+            <p class="mg-b-0 tx-12 tx-white-5">KakPrints Designs for Sharing</p>
+          </div><!-- media-body -->
+        </div><!-- media -->
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"  >
+        <h6 class="mg-b-0 tx-14">
+          <b>Design Details</b>
+        </h6>
+    </div>
+    <!-- card-header -->
+
+    <div class="mg-l-10" id="customDesignDetails">
+          <span >Design name:</span> <span>{design-name}</span><br><br>
+          <span >Sheet size:</span> <span>{sheet-size}</span><br>
+          <span>Total Logos:</span><span> {total-logos}</span><br>
+          <span> Logo Size:</span><span> {logo-size}</span> <br>
+          <div class="btn-group" role="group">
+            <button type="button"  class="btn btn-primary  wd-130 active ">Edit Design</button>
+          </div>
+  </div>
+
+    </div>
+</div>
+<div class="col-lg-8 pd-x-10">
+  <div class="card pd-10 tx-primary tx-bold bd-b">KakePrints Designs (<%=kpDesigns.length %>)</div>
+  <div class="card pd-10">
+    <div  id="templatepanel" class="tab-pane active"   >
+      <div   >
+           <div class="d-flex svg-templates tx-center ">
+            <%kpDesigns?.forEach((item)=>{%>
+
+              <div id="<%=item._id %>" data-meta="<%=unescape(item.meta)%>" class="custom-project template-small " > 
+                <img src="<%=item.path?.replace('../app/public','') %>" style="width:93px"> 
+                <div class="tx-12 tx-bold pd-y-5 lh-1"><%=item.title %></div>
+            </div>
+
+            <%})%>
+
+          </div>
+      </div>
+      </div> 
+
+  </div>
+</div>
+
+</div>
+<script type="text/template" id="customDesignDetailsTemplate">
+  <div class="mg-l-10" >
+    <span >Design name:</span> <span>{design-name}</span><br>
+    <span >Sheet size:</span> <span>{sheet-size}</span><br>
+    <span>Total Logos:</span><span> {total-logos}</span><br>
+    <span> Logo Size:</span><span> {logo-size}</span> <br>
+    <div class="btn-group" role="group">
+      <a href="/app/admin/custom-design/{design-id}" class="btn btn-primary">Edit Design</a>
+      <a href="#" class="btn btn-primary">Delete Design</a>
+    </div>
+</div>
+</script>

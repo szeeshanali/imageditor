@@ -13,16 +13,49 @@ function getPageFormatByDimensions(widthPx, heightPx)
     let hi = heightPx/dpi;
     if(wi === 8.5 && hi===11)
         return "letter";
-    
     if(wi === 11 && hi===17)
-        return "ledger";
-        
+        return "tabloid";
+    if(wi === 17 && hi===11)
+        return "ledger";         
     if(wi === 8.5 && hi===14)
         return "legal";
     
         console.error(`page format is not handled for this dimensions. ${wi}x${hi}`);
     return "letter";
 }
+
+function getInches(widthInPx, heightInPx)
+{
+    const w =widthInPx/dpi;
+    const h = heightInPx/dpi;
+    return `${w.toFixed(1)}x${h.toFixed(1)}`;
+}
+
+
+const cache = (function(){
+
+    function get(key){
+        return localStorage.getItem(key);
+    }
+    function set(key,value){
+        localStorage.setItem(key,value);
+    }
+    function remove(key){
+        localStorage.removeItem(key);
+    }
+    function exists(key)
+    {
+
+        return !(localStorage.getItem(key) === null);
+    }
+
+    return {
+        get:get,
+        set:set,
+        remove:remove,
+        exists:exists
+    }
+})($);
 
 function getCanvasCenter(objectWidth,objectHeight){
     if(!canvas || !canvas.context)
