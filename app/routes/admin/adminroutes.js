@@ -864,19 +864,19 @@ router.get("/api/user-project/:id?",  async (req, res) => {
   }
 });
 
-router.get("/api/project/:id?", isLoggedIn,  async (req, res) => {
-  var id = req.params.id; 
-  try{
-    if(!id)
-    { return res.status(404).send("Design not Found.") }
+// router.get("/api/project/:id?", isLoggedIn,  async (req, res) => {
+//   var id = req.params.id; 
+//   try{
+//     if(!id)
+//     { return res.status(404).send("Design not Found.") }
 
-    var data  = await uploads.findOne({_id:id},{_id:1,json:1,meta:1});
-      res.status(200).send({data:data});
-  }catch(ex) {
-      console.error(`Error: api:/api/p/${id}, exception:${ex}`);
-      res.status(500).send("Sever Error");
-  }
-});
+//     var data  = await uploads.findOne({_id:id},{_id:1,json:1,meta:1});
+//       res.status(200).send({data:data});
+//   }catch(ex) {
+//       console.error(`Error: api:/api/p/${id}, exception:${ex}`);
+//       res.status(500).send("Sever Error");
+//   }
+// });
 
 
 router.get("/api/admin/project/:id?", isAdmin,  async (req, res) => {
@@ -942,13 +942,9 @@ res.status(200).send({message:`Success`, error: null});
  // res.redirect('/app/admin/template-designer');
 })
 
-
-
-router.post('/app/admin/uploads', async function(req, res) {
+async function uploadAsync(req,res)
+{
   let {id, itemId, userDesignId, desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
-  
-   
-  
   
   mime_type = mime_type || "image/png"
   file_name = file_name || "pd.png"; 
@@ -985,11 +981,7 @@ router.post('/app/admin/uploads', async function(req, res) {
   {mime_type = "image/png"}
 
   let _base64Alter = base64.replace(`data:${mime_type};base64,`, "");
- try{
 
- }catch(ex){
-
- }
   await fs.writeFileSync(_path,_base64Alter,{ encoding: 'base64' }); 
   uploadModel.path = _path;
     if(itemId)
@@ -1010,33 +1002,16 @@ router.post('/app/admin/uploads', async function(req, res) {
       }); 
 
     }
-  // fs.writeFile(_path, _base64Alter,'base64', async function(err) {
-  //   if(err){ 
-  //     console.log(err);
-  //     return res.status(500).send({message:`Error uploading file.`, error: err}); 
-  //   }
-  //   uploadModel.path = _path;
-  //   if(itemId)
-  //   {
-  //     await uploads.findOneAndUpdate({_id:itemId},{
-  //       title:title,
-  //       base64:base64,
-  //       json:json,
-  //       path:_path
-  //     });
-      
-  //   }else{
-    
-  //     commonService.uploadService.upload(uploadModel, id, (err,msg)=>{
-  //       if(!err)
-  //       {res.status(200).send({message:`Success`, error: null}); }
-  //       res.status(400).send({message:`Unable to upload file.`, error: msg}); 
-  //     }); 
-
-  //   }
         res.status(200).send({message:`Success`, error: null});
-});
+}
 
+
+router.post('/app/admin/uploads', isAdmin, async function(req, res) {
+  await uploadAsync(req,res);
+});
+router.post('/app/uploads', isLoggedIn, async function(req, res) {
+  await uploadAsync(req,res);
+});
  // commonService.uploadService.clear();
  // res.redirect('/app/admin/template-designer');
 

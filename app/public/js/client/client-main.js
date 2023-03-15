@@ -32,33 +32,50 @@ var layerHtml = `<div class="media d-block d-flex layer-item object-options" dat
     </div>
    </div>`;
 
-var projectHtml = `<div class='my-projects'><div class="list-group-item d-flex">
-<div class="media d-block d-sm-flex">
-  <div class="d-block d-sm-flex ">
-    <img src="{base64}" class=" wd-100" alt="Image">
-  </div><!-- d-flex -->
-  <div class="media-body pd-15">
-    <h6 class="mg-b-5 tx-14"><a href="#" class="tx-inverse hover-primary tx-bold" onclick="loadProject('{code}',false)" id='{code}' >{title}</a></h6>
-    <p class='tx-12'>{desc}</p>
-    <p class="mg-b-0 tx-12">{created_dt}</p>
-  </div><!-- media-body -->
-</div><!-- media -->
-<a href="#" class="pd-lg-x-20 mg-l-auto ion-trash-a tx-30 text-secondary delete"  onclick="deleteProject('{code}',this)" ></a>
-</div></div>`;
+// var projectHtml = `<div class='my-projects'><div class="list-group-item d-flex">
+// <div class="media d-block d-sm-flex">
+//   <div class="d-block d-sm-flex ">
+//     <img src="{base64}" class=" wd-100" alt="Image">
+//   </div><!-- d-flex -->
+//   <div class="media-body pd-15">
+//     <h6 class="mg-b-5 tx-14"><a href="#" class="tx-inverse hover-primary tx-bold" onclick="loadProject('{code}',false)" id='{code}' >{title}</a></h6>
+//     <p class='tx-12'>{desc}</p>
+//     <p class="mg-b-0 tx-12">{created_dt}</p>
+//   </div><!-- media-body -->
+// </div><!-- media -->
+// <a href="#" class="pd-lg-x-20 mg-l-auto ion-trash-a tx-30 text-secondary delete"  onclick="deleteProject('{code}',this)" ></a>
+// </div></div>`;
+
+const projectHtml = `
+<div class="col-md">
+              <div class="card bg-gray-200">
+                <div class="card-body">
+                  <h5 class="card-body-title">{{title}}</h5>
+                  <p class="card-subtitle tx-normal mg-b-15">{{desc}}</p>
+                  <p class="card-text">
+                  <img src="{{src}}" class=" wd-100" alt="Image">
+                  </p>
+                  <a href="#"  onclick="loadProject('{{code}}',false)" class="card-link">Edit</a>
+                  <a href="#" onclick="deleteProject('{{code}}',this)" class="card-link">Delete</a>
+                </div>
+              </div><!-- card -->
+            </div>
+`
 
 const designHtml = `<div class='pre-designed'><div class="list-group-item d-flex pd-0">
 <div class="media d-block d-sm-flex">
   <div class="d-block d-sm-flex">
-    <img src="{base64}" class="wd-100" alt="Image">
+    <img src="{{base64}}" class="wd-100" alt="Image">
   </div>
   <div class="media-body pd-15">
-    <h6 class="mg-b-5 tx-14"><a href="#" class="tx-inverse hover-primary tx-bold" onclick="loadProject('{code}')" id='{code}' >{title}</a></h6>
-    <p class="mg-b-0 tx-12">{created_dt}</p>
-    <p class="mg-b-0 tx-12">Sheet Size: {sheetSize}</p>
-    <p class="mg-b-0 tx-12">Logo Size: {logoSize}</p>
-    <p class="mg-b-0 tx-12">Total Logos: {totalLogos}</p>
-    <p class="mg-b-0 tx-12">Format: {pageFormat}</p>
-  
+    <h6 class="mg-b-5 tx-14"><a href="#" class="tx-inverse hover-primary tx-bold"  id='{{code}}' >{{title}}</a></h6>
+    <p class="mg-b-0 tx-12">{{created_dt}}</p>
+    <p class="mg-b-0 tx-12">Sheet Size: {{sheetSize}}</p>
+    <p class="mg-b-0 tx-12">Logo Size: {{logoSize}}</p>
+    <p class="mg-b-0 tx-12">Total Logos: {{totalLogos}}</p>
+    <p class="mg-b-0 tx-12">Format: {{pageFormat}}</p>
+    <a href="#" class="btn btn-sm btn-primary"  onclick="loadProject('{{code}}')" class="card-link">Edit</a>
+
 
   </div><!-- media-body -->
 </div><!-- media -->
@@ -460,16 +477,16 @@ function getUserProjects() {
 
         var projects = res.data || [];
         var temp = "";
-        $("#myProjectContainer").html("<p>No Project found.</p>");
+        $("#my-proj-container").html("<p>No Project found.</p>");
         for (var i = 0; i < projects.length; i++) {
             var p = projects[i];
             var desc = p.title.lenght>50?p.title.substring(0, p.title.length):p.title;
-            temp += projectHtml.replace(/{code}/ig, p._id)
-            .replace(/{base64}/ig, p.path)
-            .replace(/{title}/ig, p.title)
+            temp += projectHtml.replace(/{{code}}/ig, p._id)
+            .replace(/{{src}}/ig, p.path)
+            .replace(/{{title}}/ig, p.title)
             .replace(/{created_dt}/ig, new Date(p.created_dt).toDateString())
-            .replace(/{desc}/ig, p.desc);
-            $("#myProjectContainer").html(temp);
+            .replace(/{{desc}}/ig, p.desc);
+            $("#my-proj-container").html(temp);
         }
         $loader.addClass("hidden");
     })
@@ -484,22 +501,22 @@ function getSharedProjects() {
         var projects = res.data || [];
 
         var temp = "";
-        $("#preDesignedContainer").html("<p>No Project found.</p>");
+        $("#kp-designs-container").html("<p>No Project found.</p>");
 
         projects?.forEach(item=>{
             let meta = JSON.parse(item.meta);
             temp += designHtml
-            .replace(/{code}/ig, item._id)
-            .replace(/{base64}/ig, item.path)
-            .replace(/{title}/ig, item.title)
-            .replace(/{created_dt}/ig, new Date(item.created_dt).toDateString())
-            .replace(/{sheetSize}/ig, `${getInches(meta.sheetWidth,meta.sheetHeight)}"`)
-            .replace(/{logoSize}/ig, `${getInches(meta.logoWidth,meta.logoHeight)}"`)
-            .replace(/{pageFormat}/ig, meta.pageFormat)
-            .replace(/{totalLogos}/ig, meta.totalLogos);
+            .replace(/{{code}}/ig, item._id)
+            .replace(/{{base64}}/ig, item.path)
+            .replace(/{{title}}/ig, item.title)
+            .replace(/{{created_dt}}/ig, new Date(item.created_dt).toDateString())
+            .replace(/{{sheetSize}}/ig, `${getInches(meta.sheetWidth,meta.sheetHeight)}"`)
+            .replace(/{{logoSize}}/ig, `${getInches(meta.logoWidth,meta.logoHeight)}"`)
+            .replace(/{{pageFormat}}/ig, meta.pageFormat)
+            .replace(/{{totalLogos}}/ig, meta.totalLogos);
         })
        
-        $("#preDesignedContainer").html(temp);
+        $("#kp-designs-container").html(temp);
 
     }).fail(function (ex) {
         console.log(ex);
@@ -1018,38 +1035,38 @@ function initUIEvents() {
 
 
 $("#btnLibraryModal").on("click",function(e){
-    $("#btnModelContinue").text("Continue");
-    $("#confirmBoxBody").text("Do you want to discard your changes?");
-    $("#btnModelContinue").unbind().on("click", function (e) {
-        e.preventDefault();       
-        canvas.clear();
-        canvasPrev.clear();
-        $layers.html();
-        getSharedProjects();
-        $("#libraryLink").click();
-        menuHighlighter("#btnLibrary");
-    })
-
+    // $("#btnModelContinue").text("Continue");
+    // $("#confirmBoxBody").text("Do you want to discard your changes?");
+    // $("#btnModelContinue").unbind().on("click", function (e) {
+    //     e.preventDefault();       
+    //     canvas.clear();
+    //     canvasPrev.clear();
+    //     $layers.html();
+    //     getSharedProjects();
+    //     $("#libraryLink").click();
+    //     menuHighlighter("#btnLibrary");
+    // })
+    getSharedProjects();
 })
 
-$("#btnMyProjectsModal").on("click",function(e){
-   
-    $("#btnModelContinue").text("Continue");
-    $("#confirmBoxBody").text("Do you want to discard your changes?");
-    $("#btnModelContinue").unbind().on("click", function (e) {
-        e.preventDefault();
-        canvas.clear();
-        canvasPrev.clear();
-        $layers.html();
-        getUserProjects();
-        $("#myProjectLink").click();
-        menuHighlighter("#btnMyProjects");
-        
-    });
-   
+//Menu: My Save Design Button. 
 
+ $("#btnMyProjectsModal").on("click",function(e){
+    getUserProjects();
+//     // $("#btnModelContinue").text("Continue");
+//     // $("#confirmBoxBody").text("Do you want to discard your changes?");
+//     // $("#btnModelContinue").unbind().on("click", function (e) {
+//     //     e.preventDefault();
+//     //     canvas.clear();
+//     //     canvasPrev.clear();
+//     //     $layers.html();
 
-})
+//     //     getUserProjects();
+//     //     $("#myProjectLink").click();
+//     //     menuHighlighter("#btnMyProjects");        
+//     // });
+
+ })
 
  $("#btnSaveModel").on("click",function(e){
         e.preventDefault();

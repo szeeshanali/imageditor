@@ -341,6 +341,42 @@
 <%- include('../../partials/client/popups/faq'); %>
 
 
+<div id="my-proj-modal" class="modal fade" aria-hidden="true" >
+  <div class="modal-dialog modal-lg modal-dialog-vertical-center " role="document">
+    <div class="modal-content bd-0">
+      <div class="modal-header pd-y-20 pd-x-25">
+        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">MY SAVED PROJECTS</h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body pd-25">
+        <div class="row row-sm" id="my-proj-container">
+
+        </div>      
+      </div>
+    </div>
+   </div>
+</div>
+
+   <div id="shared-lib-modal" class="modal fade" aria-hidden="true" >
+    <div class="modal-dialog modal-lg modal-dialog-vertical-center " role="document">
+      <div class="modal-content bd-0">
+        <div class="modal-header pd-y-20 pd-x-25">
+          <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">KakePrints Designs Library</h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body pd-25">
+          <div class="row row-sm" id="kp-designs-container">
+  
+          </div>      
+        </div>
+      </div>
+     </div>
+                        <!-- modal-dialog -->
+                    </div>
 <div id="rfq_confirm" class="modal fade" aria-hidden="true" >
   <div class="modal-dialog modal-md modal-dialog-vertical-center " role="document">
     <div class="modal-content bd-0">
@@ -359,13 +395,8 @@
       </div>
     </div>
    </div>
-                          <!-- modal-dialog -->
-                      </div>
+
 <script> 
-    // $(".tab-content .tab-pane").each((i,e)=>
-    //    { $(e).removeClass("active"); })
-    //   //$("#templatepanel").addClass("active");
-      //$("#menu-templates").addClass("bg-warning")
     window.onload = function()
    { 
         var code = '<%=code || "default" %>' ;

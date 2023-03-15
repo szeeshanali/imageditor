@@ -22,11 +22,12 @@ $("#btnDisplayGrid").on("click", function (e) {
 
 
 
- function loadSVGTemplate(id) {
+ function loadSVGTemplate(id,onComplete) {
         selectedTemplateId = id;
         var group = [];
         state.isPreviewCanvas = false;
         $.get(`/api/svg-templates/${id}`, function (data) {
+            
             fabric.loadSVGFromURL(data.base64, function(objects, options) {         
                 if (typeof(data) === 'string') {
                     window.location.reload();
@@ -120,7 +121,28 @@ $("#btnDisplayGrid").on("click", function (e) {
                     if(!isGridLinesEnabled){
                         $("#btnDisplayGrid").click();
                     }
-    
+
+                    $.get(`/api/svg-templates/${id}`, function (data) {
+                        fabric.loadSVGFromURL(data.base64, function(objects, options) {         
+                            var obj = fabric.util.groupSVGElements(objects, options);
+                           let firstLogo = objects[0];
+                            let viewBoxHeight= options.viewBoxHeight;
+                            let viewBoxWidth = options.viewBoxWidth;
+                            canvasPrev.setBackgroundImage(obj, canvasPrev.renderAll.bind(canvasPrev));           
+                            canvasPrev.setDimensions({width:viewBoxWidth,height:viewBoxHeight})
+                            canvasPrev.renderAll.bind(canvas);    
+                          },function (item, object) {
+                                object.set({ 
+                                    backgroundImage:"transparent",
+                                    strokeWidth:0,
+                                    strokeMiterLimit:0
+                                });
+                                
+                                })
+
+
+                        });
+
     
     
               },function (item, object) {
@@ -135,26 +157,14 @@ $("#btnDisplayGrid").on("click", function (e) {
 
                                       
             })
+
+            if(onComplete){
+                onComplete(data)
+            };
+
             });
            
-            $.get(`/api/svg-templates/${id}`, function (data) {
-                fabric.loadSVGFromURL(data.base64, function(objects, options) {         
-                    var obj = fabric.util.groupSVGElements(objects, options);
-                   let firstLogo = objects[0];
-                    let viewBoxHeight= options.viewBoxHeight;
-                    let viewBoxWidth = options.viewBoxWidth;
-                    canvasPrev.setBackgroundImage(obj, canvasPrev.renderAll.bind(canvasPrev));           
-                    canvasPrev.setDimensions({width:viewBoxWidth,height:viewBoxHeight})
-                    canvasPrev.renderAll.bind(canvas);    
-                  },function (item, object) {
-                        object.set({ 
-                            backgroundImage:"transparent",
-                            strokeWidth:0,
-                            strokeMiterLimit:0
-                        });
-                        
-                        })
-                });
+            
     }
 
     function loadTemplateDetails(data,templateLogos)
@@ -555,5 +565,62 @@ function addLayer(o) {
         }
 
     }
+
+}
+
+
+function loadProject(projectId)
+{
+   $loader.removeClass("hidden");
+   $.ajax({
+       type: "GET",
+       url: `/api/project/${projectId}`,
+       success: function (res) {
+           if (!res.data) {
+               window.location.reload();
+               return;
+           }
+           if(!res.data.meta)
+           {
+               let msg ="Error Loading Design"; 
+               toast(msg);
+               $loader.addClass('hidden');
+               console.error("Missing Meta Information");                
+               throw msg;
+           } 
+
+           const meta = JSON.parse(res.data.meta);
+           if(!meta.templateId)
+           {
+           let msg ="Error Loading Design"; 
+           toast(msg);
+           $loader.addClass('hidden');
+           console.error("Missing TemplateId Meta Information");                
+           throw msg;
+           }
+           
+
+           loadSVGTemplate(meta.templateId,(data)=>{
+
+            $loader.addClass("hidden");               
+            canvas.designId = projectId;
+               canvas.loadFromJSON(res.data.json,canvas.renderAll.bind(canvas));                               
+               canvas.requestRenderAll();
+               $('#my-proj-modal').modal('hide');
+               $('#shared-lib-modal').modal('hide');
+               
+               
+
+           });
+
+
+       },
+       error: function (xhr, ajaxOptions, thrownError) {
+           debugger;
+           toast(thrownError);
+
+       }
+   })
+   
 
 }
