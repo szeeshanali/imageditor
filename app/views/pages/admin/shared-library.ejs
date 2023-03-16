@@ -26,14 +26,8 @@
     <!-- card-header -->
 
     <div class="mg-l-10" id="customDesignDetails">
-          <span >Design name:</span> <span>{design-name}</span><br><br>
-          <span >Sheet size:</span> <span>{sheet-size}</span><br>
-          <span>Total Logos:</span><span> {total-logos}</span><br>
-          <span> Logo Size:</span><span> {logo-size}</span> <br>
-          <div class="btn-group" role="group">
-            <button type="button"  class="btn btn-primary  wd-130 active ">Edit Design</button>
-          </div>
-  </div>
+      <p>Please Select Design</p>         
+    </div>
 
     </div>
 </div>
@@ -61,12 +55,12 @@
 
 </div>
 <script type="text/template" id="customDesignDetailsTemplate">
-  <div class="mg-l-10" >
-    <span >Design name:</span> <span>{design-name}</span><br>
-    <span >Sheet size:</span> <span>{sheet-size}</span><br>
-    <span>Total Logos:</span><span> {total-logos}</span><br>
-    <span> Logo Size:</span><span> {logo-size}</span> <br>
-    <div class="btn-group" role="group">
+  <div class="mg-l-10 pd-10" >
+    <span class="tx-bold wd-120" >Design name:</span> <span>{design-name}</span><br>
+    <span class="tx-bold" >Sheet size:</span> <span>{sheet-size}</span><br>
+    <span class="tx-bold" >Total Logos:</span><span> {total-logos}</span><br>
+    <span class="tx-bold" > Logo Size:</span><span> {logo-size}</span> <br>
+    <div class="btn-group tx-bold pd-t-20" role="group">
       <a href="/app/admin/custom-design/{design-id}" class="btn btn-primary">Edit Design</a>
       <a href="#" class="btn btn-primary">Delete Design</a>
     </div>

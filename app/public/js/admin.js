@@ -3036,66 +3036,66 @@ function saveDesign() {
 
  
 
-function loadUserProject(id) {
-    $loader.removeClass("hidden");
-    state.isPreviewCanvas = false;
-    var group = [];
-    //$("#btnBack").trigger("click");
-    $.get(`/api/user-project/${id}`, function (res) {
-        $loader.addClass("hidden");
-        const json = JSON.parse(res.data.json);
-        if (! json) {
-            return;
-        }
-        canvas.clear();
-        /// loading design 
-        canvas.setDimensions({width:502,height:500})
-        canvas.loadFromJSON(json, function () {
-            $("#btn-step-design").click();
-        }, function (o, object) {
-        })
+// function loadUserProject(id) {
+//     $loader.removeClass("hidden");
+//     state.isPreviewCanvas = false;
+//     var group = [];
+//     //$("#btnBack").trigger("click");
+//     $.get(`/api/user-project/${id}`, function (res) {
+//         $loader.addClass("hidden");
+//         const json = JSON.parse(res.data.json);
+//         if (! json) {
+//             return;
+//         }
+//         canvas.clear();
+//         /// loading design 
+//         canvas.setDimensions({width:502,height:500})
+//         canvas.loadFromJSON(json, function () {
+//             $("#btn-step-design").click();
+//         }, function (o, object) {
+//         })
 
-        /// loading template 
-        fabric.loadSVGFromURL(res.template.base64, function (objects, options) { // $canvasPrev.fadeOut();
-            var loadedObjects = new fabric.Group(group);
-            var templateWidth = options.viewBoxWidth;
-            var templateHeight = options.viewBoxHeight;
+//         /// loading template 
+//         fabric.loadSVGFromURL(res.template.base64, function (objects, options) { // $canvasPrev.fadeOut();
+//             var loadedObjects = new fabric.Group(group);
+//             var templateWidth = options.viewBoxWidth;
+//             var templateHeight = options.viewBoxHeight;
             
 
 
-            let isLandspace = (templateWidth > templateHeight);
-            canvasPrev.setDimensions({width: templateWidth, height: templateHeight});
+//             let isLandspace = (templateWidth > templateHeight);
+//             canvasPrev.setDimensions({width: templateWidth, height: templateHeight});
 
-            let __f = 0.9;
-            if (isLandspace) {
+//             let __f = 0.9;
+//             if (isLandspace) {
               
-                templateWidth = options.viewBoxHeight;
-                templateHeight = options.viewBoxWidth;
-            }
-            let __w = parseInt(templateWidth*__f); 
-            let __h = parseInt(templateHeight*__f);
-            $("#admin-main-canvas-logo").css({"width":`${__w}px`,"height":`${__h}px`,"padding":"1px","left":"21px"});
+//                 templateWidth = options.viewBoxHeight;
+//                 templateHeight = options.viewBoxWidth;
+//             }
+//             let __w = parseInt(templateWidth*__f); 
+//             let __h = parseInt(templateHeight*__f);
+//             $("#admin-main-canvas-logo").css({"width":`${__w}px`,"height":`${__h}px`,"padding":"1px","left":"21px"});
             
-            canvasPrev.setBackgroundImage(loadedObjects, canvasPrev.renderAll.bind(canvasPrev));
-            canvasPrev.renderAll();
-            loadedObjects.center().setCoords();
-            res.data.meta = res.template.meta;
-            loadTemplateDetails(res.data, loadedObjects._objects)
+//             canvasPrev.setBackgroundImage(loadedObjects, canvasPrev.renderAll.bind(canvasPrev));
+//             canvasPrev.renderAll();
+//             loadedObjects.center().setCoords();
+//             res.data.meta = res.template.meta;
+//             loadTemplateDetails(res.data, loadedObjects._objects)
            
 
 
-        }, function (item, object) {
-            object.set({fill:"#fff"});
-            object.set('id', item.getAttribute('id'));
-            group.push(object);
-        });
+//         }, function (item, object) {
+//             object.set({fill:"#fff"});
+//             object.set('id', item.getAttribute('id'));
+//             group.push(object);
+//         });
 
-    }).fail(function (err) {
-        $loader.addClass("hidden");
-        toast("Something went wrong! Please contact admin.");
-        console.log(err);
-    })
-}
+//     }).fail(function (err) {
+//         $loader.addClass("hidden");
+//         toast("Something went wrong! Please contact admin.");
+//         console.log(err);
+//     })
+// }
 
 function onPageLoad(context){
 updateCounts(context.counts);

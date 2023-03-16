@@ -68,12 +68,12 @@ const designHtml = `<div class='pre-designed'><div class="list-group-item d-flex
     <img src="{{base64}}" class="wd-100" alt="Image">
   </div>
   <div class="media-body pd-15">
-    <h6 class="mg-b-5 tx-14"><a href="#" class="tx-inverse hover-primary tx-bold"  id='{{code}}' >{{title}}</a></h6>
-    <p class="mg-b-0 tx-12">{{created_dt}}</p>
-    <p class="mg-b-0 tx-12">Sheet Size: {{sheetSize}}</p>
-    <p class="mg-b-0 tx-12">Logo Size: {{logoSize}}</p>
-    <p class="mg-b-0 tx-12">Total Logos: {{totalLogos}}</p>
-    <p class="mg-b-0 tx-12">Format: {{pageFormat}}</p>
+    <h6 class="mg-b-5 tx-14 "><a href="#" class="tx-inverse hover-primary tx-bold"  id='{{code}}' >{{title}}</a></h6>
+    <p class="mg-b-0 tx-12 tx-bold">{{created_dt}}</p>
+    <p class="mg-b-0 tx-12 tx-bold">Sheet Size: {{sheetSize}}</p>
+    <p class="mg-b-0 tx-12 tx-bold">Logo Size: {{logoSize}}</p>
+    <p class="mg-b-0 tx-12 tx-bold">Total Logos: {{totalLogos}}</p>
+    <p class="mg-b-0 tx-12 tx-bold tx-uppercase">Format: {{pageFormat}}</p>
     <a href="#" class="btn btn-sm btn-primary"  onclick="loadProject('{{code}}')" class="card-link">Edit</a>
 
 
@@ -180,7 +180,7 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
     type: 'curved-text',
     diameter: parseInt($("#curveTextCtrl").val()) || 250,
     kerning: 0,
-    flipped:    $("#inputFlipText").prop("checked") || false,
+    //flipped:    $("#inputFlipText").prop("checked") || false,
     fill:       $("#fontColorBox").val() || '#000000',
     fontFamily: $("#fontlist").attr("data-value") || 'Arial',
     fontSize: parseInt($("#btnTextSize").val()), // in px

@@ -1006,3 +1006,11 @@ font-weight: bold;
   border-radius: 3px;
   margin: 0px 5px;
 }
+.sticky-header-left-panel {
+  position: fixed;
+  width:23.7%  ;
+  z-index: 1;
+}
+.sticky-body-left-panel{
+  padding-top:90px;
+}

@@ -616,9 +616,7 @@ function loadProject(projectId)
 
        },
        error: function (xhr, ajaxOptions, thrownError) {
-           debugger;
            toast(thrownError);
-
        }
    })
    

@@ -18,7 +18,8 @@
         <div class="tab-content">
             
             <div  id="templatepanel" class="tab-pane active"   >
-              <div class="list-group widget-list-group bg-app-primary">
+             
+              <div class="list-group widget-list-group bg-app-primary sticky-header-left-panel">
                 <div class="list-group-item d-flex">
                   <div class="media d-block d-sm-flex">
                     <div class="media-body mg-t-10 mg-sm-t-0">
@@ -32,8 +33,9 @@
                     </div>
                 </div>
               </div>
+
               <div>
-                  <div class="row mg-0">
+                  <div class="row mg-0 sticky-body-left-panel">
                     <%for(var i=0; i<templates.length; i++){ %>
                       <%- include('../../partials/template',{template:templates[i]}); %>
                     <%}%>
@@ -41,7 +43,7 @@
               </div>
             </div>            
             <div id="uploadpanel" class="tab-pane"  >
-                <div class="list-group widget-list-group bg-app-primary">
+                <div class="list-group widget-list-group bg-app-primary ">
                   <div class="list-group-item d-flex" id="create-design-heading">
                     <div class="media d-block d-sm-flex">
                       <div class="media-body mg-t-10 mg-sm-t-0 ">
