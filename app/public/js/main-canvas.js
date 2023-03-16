@@ -22,11 +22,12 @@ $("#btnDisplayGrid").on("click", function (e) {
 
 
 
- function loadSVGTemplate(id) {
+ function loadSVGTemplate(id,onComplete) {
         selectedTemplateId = id;
         var group = [];
         state.isPreviewCanvas = false;
         $.get(`/api/svg-templates/${id}`, function (data) {
+            
             fabric.loadSVGFromURL(data.base64, function(objects, options) {         
                 if (typeof(data) === 'string') {
                     window.location.reload();
@@ -52,27 +53,12 @@ $("#btnDisplayGrid").on("click", function (e) {
     
     
                 let firstLogo = objects[0];
-                            
-                 
-                //let zoomLevel =  500/firstLogo.width;
-                //canvas.setZoom(zoomLevel);         
-                //canvas.zoomLevel = zoomLevel;
-                //let canvasZoomedWidth = firstLogo.width*canvas.getZoom(); 
-                //let canvasZoomedHeight = firstLogo.height*canvas.getZoom();
-                //canvas.setDimensions({width:canvasZoomedWidth,height:canvasZoomedHeight})
-
-
                 let aspectRatio = firstLogo.width/firstLogo.height;
                 let displayWidth = 500; 
                 let logoDisplayWidth = displayWidth; 
                 let logoDisplayHeight = displayWidth/aspectRatio; 
-              
                 canvas.setBackgroundImage(firstLogo, canvas.renderAll.bind(canvas));
                 firstLogo.scaleToWidth(logoDisplayWidth);
-                // let missingPoints = logoDisplayWidth-firstLogo.getScaledWidth();
-                // firstLogo.scaleToWidth(logoDisplayWidth+missingPoints);
-
-                //firstLogo.scaleToHeight(logoDisplayHeight);
                 firstLogo.setCoords();
 
                 canvas.backgroundImage.set({
@@ -81,20 +67,18 @@ $("#btnDisplayGrid").on("click", function (e) {
                 })
                 canvas.setDimensions({width:logoDisplayWidth,height:logoDisplayHeight})
                 canvas.renderAll(); 
-              
-                // canvas.context = {
-                //     originalWidth: firstLogo.width,
-                //     originalHeight: firstLogo.height,
-                //     displayWidth: canvasZoomedWidth,
-                //     displayHeight:canvasZoomedHeight,
-                //     zoomLevel: 1
-                // }
                 canvas.context = {
                     originalWidth   :   firstLogo.width,
                     originalHeight  :   firstLogo.height,
                     displayWidth    :   canvas.width,
                     displayHeight   :   canvas.height,
-                    zoomLevel: 1
+                    zoomLevel       :   1,
+                    logoWidth       :   firstLogo.width,
+                    logoHeight      :   firstLogo.height,
+                    sheetWidth      :   options.viewBoxWidth,
+                    sheetHeight     :   options.viewBoxHeight,
+                    totalLogos      :   objects.length,
+                    templateId      :   selectedTemplateId 
                 }
 
                 $("#canvas-holder").css({"background-color":"#9293cb","padding":"10px"});
@@ -137,7 +121,28 @@ $("#btnDisplayGrid").on("click", function (e) {
                     if(!isGridLinesEnabled){
                         $("#btnDisplayGrid").click();
                     }
-    
+
+                    $.get(`/api/svg-templates/${id}`, function (data) {
+                        fabric.loadSVGFromURL(data.base64, function(objects, options) {         
+                            var obj = fabric.util.groupSVGElements(objects, options);
+                           let firstLogo = objects[0];
+                            let viewBoxHeight= options.viewBoxHeight;
+                            let viewBoxWidth = options.viewBoxWidth;
+                            canvasPrev.setBackgroundImage(obj, canvasPrev.renderAll.bind(canvasPrev));           
+                            canvasPrev.setDimensions({width:viewBoxWidth,height:viewBoxHeight})
+                            canvasPrev.renderAll.bind(canvas);    
+                          },function (item, object) {
+                                object.set({ 
+                                    backgroundImage:"transparent",
+                                    strokeWidth:0,
+                                    strokeMiterLimit:0
+                                });
+                                
+                                })
+
+
+                        });
+
     
     
               },function (item, object) {
@@ -145,23 +150,21 @@ $("#btnDisplayGrid").on("click", function (e) {
                         object.set({
                             fill:"#fff"
                         });
+                        object.set({ 
+                            strokeWidth:0,
+                            strokeMiterLimit:0
+                        });
+
                                       
             })
+
+            if(onComplete){
+                onComplete(data)
+            };
+
             });
            
-            $.get(`/api/svg-templates/${id}`, function (data) {
-                fabric.loadSVGFromURL(data.base64, function(objects, options) {         
-                    var obj = fabric.util.groupSVGElements(objects, options);
-                   let firstLogo = objects[0];
-                    let viewBoxHeight= options.viewBoxHeight;
-                    let viewBoxWidth = options.viewBoxWidth;
-                    canvasPrev.setBackgroundImage(obj, canvasPrev.renderAll.bind(canvasPrev));           
-                    canvasPrev.setDimensions({width:viewBoxWidth,height:viewBoxHeight})
-                    canvasPrev.renderAll.bind(canvas);    
-                  },function (item, object) {
-                                object.set({ backgroundImage:"transparent"});
-                        })
-                });
+            
     }
 
     function loadTemplateDetails(data,templateLogos)
@@ -355,22 +358,9 @@ $("#btnDisplayGrid").on("click", function (e) {
              if(logos && logos.length>0)
              {
                 let logoWidth = logos[0].width; 
-                img.scaleToWidth(logoWidth);
-                img.setCoords();
-                let designWidthAfterScale = img.getScaledWidth(); 
-                let missingPoints = logoWidth - designWidthAfterScale; 
                 img.scaleToWidth(logoWidth+10);
                 img.setCoords();
 
-
-                // var scaleWidth = logos[0].width / img.width;
-                // var scaleHeight = logos[0].height / img.height;
-                // var scale = Math.min(scaleWidth, scaleHeight);
-                // var _img = new fabric.Image(img, {
-                //     scaleX: scale,
-                //     scaleY: scale,
-                // });
-              
                  for (let i = 0; i < logos.length; i++) {
                      let logo    = logos[i];
                      let object  = fabric.util.object.clone(img);                 
@@ -389,9 +379,7 @@ $("#btnDisplayGrid").on("click", function (e) {
                
                  object.set("top", logo.top);
                  object.set("left", logo.left);  
-                 object.scaleToWidth(logo.width);
-                 let missingPoints = logo.width - object.getScaledWidth();
-                 object.scaleToWidth(logo.width+missingPoints);
+                 object.scaleToWidth(logo.width+10);
                  object.setCoords();
                  object.globalCompositeOperation = "source-atop";
                  canvasPrev.add(object);
@@ -487,7 +475,7 @@ $("#btnDisplayGrid").on("click", function (e) {
                 bg.globalCompositeOperation = "destination-in";
                 clonedCanvas.add(bg);
                 clonedCanvas.renderAll();
-                var imgData = clonedCanvas.toDataURL({format:"jpg",quality:0.1,multiplier:2.5});
+                var imgData = clonedCanvas.toDataURL({format:"jpg",quality:1,multiplier:2.5});
                 pdf.addImage(imgData, 'jpg', 0, 0,width,height);
                
 
@@ -541,4 +529,96 @@ $("#btnDisplayGrid").on("click", function (e) {
         }
     })
 }
- 
+function addLayer(o) {
+    $("#collapse-layers").addClass("show");
+
+    var temp = layerHtml;
+    $layers.html();
+    var layers = "";
+    // var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
+    var _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
+   
+   
+    for (var i = _canvas._objects.length - 1; i >= 0; i--) {
+        var obj = _canvas._objects[i];
+        
+        var src = obj._element ?. currentSrc;
+        if (obj.text) {
+            src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAABHNJREFUeJzt3LurHGUcx+FvcqKiJohGBBGjRPHyB4imE0u72Akix1bsBAsriyiKokQ7CQoKaiGKCpGAjSI2golXhIR4v3USbzExicViiCHndy55d95zdp4H3iYLM7+d3c+emd0hCQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABJsq73AFOyMckVmd3ntxp9n+T33kNQ25hkV5IjSU5Yg64jSZ5NcuGirxJdrEuyJ/3fKGNfu+Mv96p0W/q/OazJurV+qdaO9b0HaOiW3gNw0rbeA7QyS4Fc0HsATjqv9wCtzFIg0JxAoCAQKGzoPcAqcSDJd0mON9zmukx+rLy+4TbP5MskP2by7VEr65NcmeTahtuksx1Z/teRLyW5YcpzbUtycAWzLbb2J7lpyrPfmOSVFcz20JTnYgWWE8ixJHcPONvWTG7DaBXHoSRbBpz/nkyO2egCGes1yANJXhhwfweTvNhwe88n+bbh9payvwcH3N+qMcZAvkqys8N+9zbc1r6G21qqJzNslKvCGAPZmeSfDvs90nBbRxtuazn7fKbDfrsaWyCHkjzXe4g1bFeSP3oPMaSxBbIryW+9h1jDfs3IPmDGFMjxjPAUYQqeTtvfXFa1MQXyepKvew8xAw4keav3EEMZUyBP9R5ghozmWI4lkA+TfNB7iBnybvp81Ty4WQrkcPHY4xnRefMATiR5onj8z6EGmbZZCuSjBf79nSSvDjnISLyc5L0FHlvotaCjczK5s/XUe4L2Jtncc6hTzKfdvVh3DTv6gi5L8mn+P9tnSeZ6DsXCrkvyfia3kzya1fVf0Mxn9gJJkk2ZnMJ+k8lfFLfIsyLzmc1AZtosXYNAcwKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIZDhzDbfldRuIAz2crQ23dXXDbUF3c0n2JznRaH0eH27MkPvTLo7/1n2DPgOYkvkkx9I+kKNJ7hzuaUA7m5LckWR32odx+nozyfYkGwd5ZrBCV2Vy2rMnyd+Zfhinr8NJ3k5yb5ItU36usKi5JNuSPJLkkwwfxGLr4yQ7ktwcF/QM6KIkjyX5Jf0jWOr6OcnDmZz6wdRck+Rg+r/hV7r2Z3IqCM2dm+SL9H+Tn+3al2RD42MD2Z7+b+5W6/bGx2ZmuXhbukt6D9DQ5t4DMHsuzeRit/en/9muH5Jc3PjYQJLJRfobmfyK3fuNvtx1NMlrcaPjsqzrPcAadX6Sy7N2TlGPJ/kpyV+9BwEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM7kX8fwvIWqet/rAAAAAElFTkSuQmCC';
+        }
+        src = state.isPreviewCanvas?"/images/layerimg.png":src;
+        layers += temp.replace(/{id}/ig, obj.id).replace("{src}", src).replace("{_id}", obj.id).replace(/{index}/ig, i + 1);
+    }
+    if (layers != "") {
+        $layers.html(layers);
+        $("#ws-btn-save").removeClass('hidden');
+        if(!state.isPreviewCanvas)
+        { $("#ws-btn-preview").removeClass('hidden');  }
+
+    } else {
+        $layers.html("Empty! please upload an image.");
+        $("#ws-btn-save").addClass('hidden');
+
+        if(!state.isPreviewCanvas)
+        { 
+            $("#ws-btn-preview").addClass('hidden'); 
+        }
+
+    }
+
+}
+
+
+function loadProject(projectId)
+{
+   $loader.removeClass("hidden");
+   $.ajax({
+       type: "GET",
+       url: `/api/project/${projectId}`,
+       success: function (res) {
+           if (!res.data) {
+               window.location.reload();
+               return;
+           }
+           if(!res.data.meta)
+           {
+               let msg ="Error Loading Design"; 
+               toast(msg);
+               $loader.addClass('hidden');
+               console.error("Missing Meta Information");                
+               throw msg;
+           } 
+
+           const meta = JSON.parse(res.data.meta);
+           if(!meta.templateId)
+           {
+           let msg ="Error Loading Design"; 
+           toast(msg);
+           $loader.addClass('hidden');
+           console.error("Missing TemplateId Meta Information");                
+           throw msg;
+           }
+           
+
+           loadSVGTemplate(meta.templateId,(data)=>{
+
+            $loader.addClass("hidden");               
+            canvas.designId = projectId;
+               canvas.loadFromJSON(res.data.json,canvas.renderAll.bind(canvas));                               
+               canvas.requestRenderAll();
+               $('#my-proj-modal').modal('hide');
+               $('#shared-lib-modal').modal('hide');
+               
+               
+
+           });
+
+
+       },
+       error: function (xhr, ajaxOptions, thrownError) {
+           toast(thrownError);
+       }
+   })
+   
+
+}

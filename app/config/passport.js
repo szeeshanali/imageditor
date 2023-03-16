@@ -28,7 +28,7 @@ module.exports = function(passport) {
                  if(req.params?.mode === "admin")
                  {
 
-                  var user = await User.findOne({email : email, is_admin:true, deleted:false});
+                  var user = await User.findOne({email : email, password:password, is_admin:true, deleted:false});
                     if(!user) {
                       return done(null, false, { message : 'Incorrect username or password'});
                    }else{

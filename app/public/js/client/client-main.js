@@ -32,28 +32,51 @@ var layerHtml = `<div class="media d-block d-flex layer-item object-options" dat
     </div>
    </div>`;
 
-var projectHtml = `<div class='my-projects'><div class="list-group-item d-flex">
-<div class="media d-block d-sm-flex">
-  <div class="d-block d-sm-flex mg-sm-r-20">
-    <img src="{base64}" class="rounded-circle wd-40" alt="Image">
-  </div><!-- d-flex -->
-  <div class="media-body mg-t-10 mg-sm-t-0">
-    <h6 class="mg-b-5 tx-14"><a href="#" class="tx-inverse hover-primary tx-bold" onclick="loadProject('{code}')" id='{code}' >{title}</a></h6>
-    <p class='tx-12'>{desc}</p>
-    <p class="mg-b-0 tx-12">{created_dt}</p>
-  </div><!-- media-body -->
-</div><!-- media -->
-<a href="#" class="pd-lg-x-20 mg-l-auto ion-trash-a tx-30 text-secondary delete"  onclick="deleteProject('{code}',this)" ></a>
-</div></div>`;
+// var projectHtml = `<div class='my-projects'><div class="list-group-item d-flex">
+// <div class="media d-block d-sm-flex">
+//   <div class="d-block d-sm-flex ">
+//     <img src="{base64}" class=" wd-100" alt="Image">
+//   </div><!-- d-flex -->
+//   <div class="media-body pd-15">
+//     <h6 class="mg-b-5 tx-14"><a href="#" class="tx-inverse hover-primary tx-bold" onclick="loadProject('{code}',false)" id='{code}' >{title}</a></h6>
+//     <p class='tx-12'>{desc}</p>
+//     <p class="mg-b-0 tx-12">{created_dt}</p>
+//   </div><!-- media-body -->
+// </div><!-- media -->
+// <a href="#" class="pd-lg-x-20 mg-l-auto ion-trash-a tx-30 text-secondary delete"  onclick="deleteProject('{code}',this)" ></a>
+// </div></div>`;
 
-const designHtml = `<div class='pre-designed'><div class="list-group-item d-flex">
+const projectHtml = `
+<div class="col-md">
+              <div class="card bg-gray-200">
+                <div class="card-body">
+                  <h5 class="card-body-title">{{title}}</h5>
+                  <p class="card-subtitle tx-normal mg-b-15">{{desc}}</p>
+                  <p class="card-text">
+                  <img src="{{src}}" class=" wd-100" alt="Image">
+                  </p>
+                  <a href="#"  onclick="loadProject('{{code}}',false)" class="card-link">Edit</a>
+                  <a href="#" onclick="deleteProject('{{code}}',this)" class="card-link">Delete</a>
+                </div>
+              </div><!-- card -->
+            </div>
+`
+
+const designHtml = `<div class='pre-designed'><div class="list-group-item d-flex pd-0">
 <div class="media d-block d-sm-flex">
-  <div class="d-block d-sm-flex mg-sm-r-20">
-    <img src="{base64}" class="rounded-circle wd-40" alt="Image">
-  </div><!-- d-flex -->
-  <div class="media-body mg-t-10 mg-sm-t-0">
-    <h6 class="mg-b-5 tx-14"><a href="#" class="tx-inverse hover-primary tx-bold" onclick="loadDesign('{code}')" id='{code}' >{title}</a></h6>
-    <p class="mg-b-0 tx-12">{created_dt}</p>
+  <div class="d-block d-sm-flex">
+    <img src="{{base64}}" class="wd-100" alt="Image">
+  </div>
+  <div class="media-body pd-15">
+    <h6 class="mg-b-5 tx-14 "><a href="#" class="tx-inverse hover-primary tx-bold"  id='{{code}}' >{{title}}</a></h6>
+    <p class="mg-b-0 tx-12 tx-bold">{{created_dt}}</p>
+    <p class="mg-b-0 tx-12 tx-bold">Sheet Size: {{sheetSize}}</p>
+    <p class="mg-b-0 tx-12 tx-bold">Logo Size: {{logoSize}}</p>
+    <p class="mg-b-0 tx-12 tx-bold">Total Logos: {{totalLogos}}</p>
+    <p class="mg-b-0 tx-12 tx-bold tx-uppercase">Format: {{pageFormat}}</p>
+    <a href="#" class="btn btn-sm btn-primary"  onclick="loadProject('{{code}}')" class="card-link">Edit</a>
+
+
   </div><!-- media-body -->
 </div><!-- media -->
 </div></div>`;
@@ -118,6 +141,7 @@ fabric.Object.prototype.cornerSize = 10;
 fabric.Object.prototype.padding = 3;
 
 
+
 async function parseClipboardData() {
     
     const items = await navigator.clipboard.read().then((items)=>{
@@ -156,7 +180,7 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
     type: 'curved-text',
     diameter: parseInt($("#curveTextCtrl").val()) || 250,
     kerning: 0,
-    flipped:    $("#inputFlipText").prop("checked") || false,
+    //flipped:    $("#inputFlipText").prop("checked") || false,
     fill:       $("#fontColorBox").val() || '#000000',
     fontFamily: $("#fontlist").attr("data-value") || 'Arial',
     fontSize: parseInt($("#btnTextSize").val()), // in px
@@ -440,23 +464,31 @@ var filters = [
 
 function getUserProjects() {
     $loader.removeClass("hidden");
-    $.get(`/api/project/`, function (res) {
-        $loader.addClass("hidden");
-        var projects = res.data || [];
-
-        var temp = "";
-        $("#myProjectContainer").html("<p>No projects found.</p>");
-        for (var i = 0; i < projects.length; i++) {
-            var p = projects[i];
-            var desc = p.name.lenght>50?p.name.substring(0, p.name.lenght):p.name;
-            temp += projectHtml.replace(/{code}/ig, p.code)
-            .replace(/{base64}/ig, p.thumbBase64)
-            .replace(/{title}/ig, p.title)
-            .replace(/{created_dt}/ig, new Date(p.created_dt).toDateString())
-            .replace(/{desc}/ig, p.name);
-            $("#myProjectContainer").html(temp);
+    backFromPreview();
+    $.get(`/api/my-designs/`, function (res) {
+        
+        if(res.error)
+        {
+            $loader.addClass("hidden");
+            toast("Error Loading Projects");
+            console.error(res.exception); 
+            return; 
         }
 
+        var projects = res.data || [];
+        var temp = "";
+        $("#my-proj-container").html("<p>No Project found.</p>");
+        for (var i = 0; i < projects.length; i++) {
+            var p = projects[i];
+            var desc = p.title.lenght>50?p.title.substring(0, p.title.length):p.title;
+            temp += projectHtml.replace(/{{code}}/ig, p._id)
+            .replace(/{{src}}/ig, p.path)
+            .replace(/{{title}}/ig, p.title)
+            .replace(/{created_dt}/ig, new Date(p.created_dt).toDateString())
+            .replace(/{{desc}}/ig, p.desc);
+            $("#my-proj-container").html(temp);
+        }
+        $loader.addClass("hidden");
     })
 
 }
@@ -464,22 +496,27 @@ function getUserProjects() {
 
 function getSharedProjects() {
     $loader.removeClass("hidden");
-    $.get(`/api/pre-designed/`, function (res) {
+    $.get(`/api/custom-designs`, function (res) {
         $loader.addClass("hidden");
         var projects = res.data || [];
 
         var temp = "";
-        $("#preDesignedContainer").html("<p>No projects found.</p>");
+        $("#kp-designs-container").html("<p>No Project found.</p>");
 
         projects?.forEach(item=>{
+            let meta = JSON.parse(item.meta);
             temp += designHtml
-            .replace(/{code}/ig, item.code)
-            .replace(/{base64}/ig, item.thumbBase64)
-            .replace(/{title}/ig, item.title)
-            .replace(/{created_dt}/ig, new Date(item.created_dt).toDateString());
+            .replace(/{{code}}/ig, item._id)
+            .replace(/{{base64}}/ig, item.path)
+            .replace(/{{title}}/ig, item.title)
+            .replace(/{{created_dt}}/ig, new Date(item.created_dt).toDateString())
+            .replace(/{{sheetSize}}/ig, `${getInches(meta.sheetWidth,meta.sheetHeight)}"`)
+            .replace(/{{logoSize}}/ig, `${getInches(meta.logoWidth,meta.logoHeight)}"`)
+            .replace(/{{pageFormat}}/ig, meta.pageFormat)
+            .replace(/{{totalLogos}}/ig, meta.totalLogos);
         })
        
-        $("#preDesignedContainer").html(temp);
+        $("#kp-designs-container").html(temp);
 
     }).fail(function (ex) {
         console.log(ex);
@@ -531,85 +568,91 @@ function deleteProject(id, self) {
 
     $.ajax({
         type: "DELETE",
-        url: `/api/client/project/${id}`,
+        url: `/api/my-designs/${id}`,
         success: function (res) {
             $loader.addClass("hidden");
+            if(res.error)
+            {
+                toast("Error deleting project.");
+                console.error(res.message);
+            }else{
 
-            toast("Project has been successfully deleted.");
-            $(self).parent().parent().fadeOut();
+                toast("Project has been successfully deleted.");
+                $(self).parent().parent().fadeOut();
+
+            }
         },
         error: function (res) {
             $loader.addClass("hidden");
-
             toast("Error while deleting project.");
         }
     })
 }
-function loadProject(id) {
-    $loader.removeClass("hidden");
-    state.isPreviewCanvas = false;
-    var group = [];
-    $("#btnBack").trigger("click");
-    $.get(`/api/project/${id}`, function (res) {
-        $loader.addClass("hidden");
-        const json = JSON.parse(res.data.json);
-        if (! json) {
-            return;
-        }
-        canvas.clear();
-        /// loading design 
-        canvas.loadFromJSON(json, function () {
-            $("#menu-upload > a").click();
+// function loadProject(id) {
+//     $loader.removeClass("hidden");
+//     state.isPreviewCanvas = false;
+//     var group = [];
+//     $("#btnBack").trigger("click");
+//     $.get(`/api/project/${id}`, function (res) {
+//         $loader.addClass("hidden");
+//         const json = JSON.parse(res.data.json);
+//         if (! json) {
+//             return;
+//         }
+//         canvas.clear();
+//         /// loading design 
+//         canvas.loadFromJSON(json, function () {
+//             $("#menu-upload > a").click();
             
-        }, function (o, object) {
-        })
+//         }, function (o, object) {
+//         })
 
-        /// loading template 
-        fabric.loadSVGFromURL(res.template.base64, function (objects, options) { // $canvasPrev.fadeOut();
-            var loadedObjects = new fabric.Group(group);
+//         /// loading template 
+//         fabric.loadSVGFromURL(res.template.base64, function (objects, options) { // $canvasPrev.fadeOut();
+//             var loadedObjects = new fabric.Group(group);
       
-            var templateWidth = options.viewBoxWidth;
-            var templateHeight = options.viewBoxHeight;
+//             var templateWidth = options.viewBoxWidth;
+//             var templateHeight = options.viewBoxHeight;
 
-            let isLandspace = (templateWidth > templateHeight);
-            canvasPrev.setDimensions({width: templateWidth, height: templateHeight});
+//             let isLandspace = (templateWidth > templateHeight);
+//             canvasPrev.setDimensions({width: templateWidth, height: templateHeight});
 
-            let __f = 0.9;
-            if (isLandspace) {
+//             let __f = 0.9;
+//             if (isLandspace) {
               
-                templateWidth = options.viewBoxHeight;
-                templateHeight = options.viewBoxWidth;
-            }
-            let __w = parseInt(templateWidth*__f); 
-            let __h = parseInt(templateHeight*__f);
-            $("#client-main-canvas-logo").css({"width":`${__w}px`,"height":`${__h}px`,"padding":"1px","left":"21px"});
+//                 templateWidth = options.viewBoxHeight;
+//                 templateHeight = options.viewBoxWidth;
+//             }
+//             let __w = parseInt(templateWidth*__f); 
+//             let __h = parseInt(templateHeight*__f);
+//             $("#client-main-canvas-logo").css({"width":`${__w}px`,"height":`${__h}px`,"padding":"1px","left":"21px"});
             
-            canvasPrev.setBackgroundImage(loadedObjects, canvasPrev.renderAll.bind(canvasPrev));
-            canvasPrev.renderAll();
-            loadedObjects.center().setCoords();
+//             canvasPrev.setBackgroundImage(loadedObjects, canvasPrev.renderAll.bind(canvasPrev));
+//             canvasPrev.renderAll();
+//             loadedObjects.center().setCoords();
 
            
 
 
-        }, function (item, object) {
-            object.set({fill:"#fff"});
-            object.set('id', item.getAttribute('id'));
-            group.push(object);
-        });
+//         }, function (item, object) {
+//             object.set({fill:"#fff"});
+//             object.set('id', item.getAttribute('id'));
+//             group.push(object);
+//         });
 
-    }).fail(function (err) {
-        $loader.addClass("hidden");
-        toast("Something went wrong! Please contact admin.");
-        console.log(err);
-    })
-}
+//     }).fail(function (err) {
+//         $loader.addClass("hidden");
+//         toast("Something went wrong! Please contact admin.");
+//         console.log(err);
+//     })
+// }
 
 function loadDesign(id) {
     state.isPreviewCanvas = false;
     var group = [];
     $("#btnBack").click();
     $loader.removeClass("hidden");
-    $.get(`/api/pre-designed/${id}`, function (res) {
+    $.get(`/api/custom-design/${id}`, function (res) {
         $loader.addClass("hidden");
         const json = JSON.parse(res.data.json);
         if (! json) {
@@ -663,6 +706,8 @@ function loadDesign(id) {
         console.log(err);
     })
 }
+
+
 
 /***
  * Workspace canvas.
@@ -990,38 +1035,38 @@ function initUIEvents() {
 
 
 $("#btnLibraryModal").on("click",function(e){
-    $("#btnModelContinue").text("Continue");
-    $("#confirmBoxBody").text("Do you want to discard your changes?");
-    $("#btnModelContinue").unbind().on("click", function (e) {
-        e.preventDefault();       
-        canvas.clear();
-        canvasPrev.clear();
-        $layers.html();
-        getSharedProjects();
-        $("#libraryLink").click();
-        menuHighlighter("#btnLibrary");
-    })
-
+    // $("#btnModelContinue").text("Continue");
+    // $("#confirmBoxBody").text("Do you want to discard your changes?");
+    // $("#btnModelContinue").unbind().on("click", function (e) {
+    //     e.preventDefault();       
+    //     canvas.clear();
+    //     canvasPrev.clear();
+    //     $layers.html();
+    //     getSharedProjects();
+    //     $("#libraryLink").click();
+    //     menuHighlighter("#btnLibrary");
+    // })
+    getSharedProjects();
 })
 
-$("#btnMyProjectsModal").on("click",function(e){
-   
-    $("#btnModelContinue").text("Continue");
-    $("#confirmBoxBody").text("Do you want to discard your changes?");
-    $("#btnModelContinue").unbind().on("click", function (e) {
-        e.preventDefault();
-        canvas.clear();
-        canvasPrev.clear();
-        $layers.html();
-        getUserProjects();
-        $("#myProjectLink").click();
-        menuHighlighter("#btnMyProjects");
-        
-    });
-   
+//Menu: My Save Design Button. 
 
+ $("#btnMyProjectsModal").on("click",function(e){
+    getUserProjects();
+//     // $("#btnModelContinue").text("Continue");
+//     // $("#confirmBoxBody").text("Do you want to discard your changes?");
+//     // $("#btnModelContinue").unbind().on("click", function (e) {
+//     //     e.preventDefault();
+//     //     canvas.clear();
+//     //     canvasPrev.clear();
+//     //     $layers.html();
 
-})
+//     //     getUserProjects();
+//     //     $("#myProjectLink").click();
+//     //     menuHighlighter("#btnMyProjects");        
+//     // });
+
+ })
 
  $("#btnSaveModel").on("click",function(e){
         e.preventDefault();
@@ -1029,6 +1074,7 @@ $("#btnMyProjectsModal").on("click",function(e){
         $("#confirmBoxBody").text("Do you want to save your changes?");
         $("#btnModelContinue").unbind().on("click",function(e){
             e.preventDefault();
+            //saveDesign();
             saveDesign();
         })
        
@@ -1395,7 +1441,6 @@ function saveDesign() {
         return;
     }
 
-
     var title = $("#input-project-title").val();
     var desc = $("#input-project-desc").val();
 
@@ -1413,23 +1458,20 @@ function saveDesign() {
         return;
     }
 
-    if (! canvas.templateId) {
-        console.error("templateId is not present in canvas.");
-        toast("Can't save project. please contact admin.");
-        return;
-    }
 
-
-    var thumbBase64 = canvas.toDataURL({format: 'jpg', quality: 0.8});
     $.ajax({
         type: "POST",
         url: "/app/client/save-design",
         data: {
-            title: title || "N/A",
-            desc: desc || "N/A",
-            thumbBase64: thumbBase64,
+            desc: desc,
+            meta: JSON.stringify(canvas.context),
+            title: title,
+            name: title,
+            active: true,
+            base64: JSON.stringify(canvas.toDataURL()),
             json: JSON.stringify(canvas.toDatalessJSON()),
-            templateId: canvas.templateId
+            type: "project",
+            by_admin: false,            
         },
         success: function (res) {
             if (typeof(res) === "string") {
@@ -1564,44 +1606,7 @@ function onObjectAdded(o) {
 
 
 // Layers:
-function addLayer(o) {
-    $("#collapse-layers").addClass("show");
 
-    var temp = layerHtml;
-    $layers.html();
-    var layers = "";
-    // var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
-    var _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
-   
-   
-    for (var i = _canvas._objects.length - 1; i >= 0; i--) {
-        var obj = _canvas._objects[i];
-        
-        var src = obj._element ?. currentSrc;
-        if (obj.text) {
-            src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAABHNJREFUeJzt3LurHGUcx+FvcqKiJohGBBGjRPHyB4imE0u72Akix1bsBAsriyiKokQ7CQoKaiGKCpGAjSI2golXhIR4v3USbzExicViiCHndy55d95zdp4H3iYLM7+d3c+emd0hCQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABJsq73AFOyMckVmd3ntxp9n+T33kNQ25hkV5IjSU5Yg64jSZ5NcuGirxJdrEuyJ/3fKGNfu+Mv96p0W/q/OazJurV+qdaO9b0HaOiW3gNw0rbeA7QyS4Fc0HsATjqv9wCtzFIg0JxAoCAQKGzoPcAqcSDJd0mON9zmukx+rLy+4TbP5MskP2by7VEr65NcmeTahtuksx1Z/teRLyW5YcpzbUtycAWzLbb2J7lpyrPfmOSVFcz20JTnYgWWE8ixJHcPONvWTG7DaBXHoSRbBpz/nkyO2egCGes1yANJXhhwfweTvNhwe88n+bbh9payvwcH3N+qMcZAvkqys8N+9zbc1r6G21qqJzNslKvCGAPZmeSfDvs90nBbRxtuazn7fKbDfrsaWyCHkjzXe4g1bFeSP3oPMaSxBbIryW+9h1jDfs3IPmDGFMjxjPAUYQqeTtvfXFa1MQXyepKvew8xAw4keav3EEMZUyBP9R5ghozmWI4lkA+TfNB7iBnybvp81Ty4WQrkcPHY4xnRefMATiR5onj8z6EGmbZZCuSjBf79nSSvDjnISLyc5L0FHlvotaCjczK5s/XUe4L2Jtncc6hTzKfdvVh3DTv6gi5L8mn+P9tnSeZ6DsXCrkvyfia3kzya1fVf0Mxn9gJJkk2ZnMJ+k8lfFLfIsyLzmc1AZtosXYNAcwKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIZDhzDbfldRuIAz2crQ23dXXDbUF3c0n2JznRaH0eH27MkPvTLo7/1n2DPgOYkvkkx9I+kKNJ7hzuaUA7m5LckWR32odx+nozyfYkGwd5ZrBCV2Vy2rMnyd+Zfhinr8NJ3k5yb5ItU36usKi5JNuSPJLkkwwfxGLr4yQ7ktwcF/QM6KIkjyX5Jf0jWOr6OcnDmZz6wdRck+Rg+r/hV7r2Z3IqCM2dm+SL9H+Tn+3al2RD42MD2Z7+b+5W6/bGx2ZmuXhbukt6D9DQ5t4DMHsuzeRit/en/9muH5Jc3PjYQJLJRfobmfyK3fuNvtx1NMlrcaPjsqzrPcAadX6Sy7N2TlGPJ/kpyV+9BwEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM7kX8fwvIWqet/rAAAAAElFTkSuQmCC';
-        }
-        src = state.isPreviewCanvas?"/images/layerimg.png":src;
-        layers += temp.replace(/{id}/ig, obj.id).replace("{src}", src).replace("{_id}", obj.id).replace(/{index}/ig, i + 1);
-    }
-    if (layers != "") {
-        $layers.html(layers);
-        $("#ws-btn-save").removeClass('hidden');
-        if(!state.isPreviewCanvas)
-        { $("#ws-btn-preview").removeClass('hidden');  }
-
-    } else {
-        $layers.html("Empty! please upload an image.");
-        $("#ws-btn-save").addClass('hidden');
-
-        if(!state.isPreviewCanvas)
-        { 
-            $("#ws-btn-preview").addClass('hidden'); 
-        }
-
-    }
-
-}
 function layerSelectEventHandler($elem, selected) {
     selectedObjectBySelectLayer($elem, selected);
 }
@@ -1829,11 +1834,11 @@ function initCanvasTextEvents() {
             $("#curveTextCtrl").val(1250);
             var obj = canvas.getActiveObject();
             canvas.remove(obj);
-            var c = getCanvasCenter(obj.width,obj.height);
+           // var c = getCanvasCenter(obj.width,obj.height);
             var textInfo = {
 
-                left        :   c.left,
-                top         :   c.top,
+                left        :   obj.left,
+                top         :   obj.top,
                 fontFamily  :   obj.fontFamily,
                 fill        :   obj.fill,
                 fontSize    :   obj.fontSize,

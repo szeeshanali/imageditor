@@ -257,7 +257,7 @@
           <button type="button" data-toggle="modal" data-target="#commitDesign" class="btn btn-sm btn-success tx-12 tx-uppercase tx-bold  bd-0 pd-x-20 hidden" id="ws-btn-save" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?" data-toggle="popover" ><i class="ion-checkmark-circled mg-r-5"></i> Save <br> Changes</button>
 
           <!-- <button type="button" data-toggle="modal" data-target="#downloadPDFModel" class="btn btn-sm btn-success tx-12 tx-uppercase tx-bold  bd-0 pd-x-20 hidden" id="ws-btn-download" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?" data-toggle="popover" ><i class="ion-checkmark-circled mg-r-5"></i> Finalize & Download <br> your PDF</button> -->
-          <button type="button"  class=" btn btn-primary btn-sm tx-12 tx-uppercase tx-bold bd-0 pd-x-20" id="saveUserDesign" ><i class="fa fa-floppy-o mg-r-5"></i>Save <br>  Design</button>
+          <!-- <button type="button"  class=" btn btn-primary btn-sm tx-12 tx-uppercase tx-bold bd-0 pd-x-20" id="saveUserDesign" ><i class="fa fa-floppy-o mg-r-5"></i>Save <br>  Design</button> -->
 
           <button type="button" onclick="$('#btnBack').click()" class="btn btn-danger tx-12 btn-sm tx-uppercase tx-bold  bd-0 pd-x-20 hidden" id="ws-btn-back"><i class="fa fa-pencil-square-o mg-r-5"></i> Continue Editing <br> your Design</button>
 
@@ -381,7 +381,7 @@
     window.onload = function()
    { 
         var code = '<%=code || "default" %>' ;
-        loadUserProject(code);
+        loadProject(code);
         $("#hiddenDesignId").val(code);
         $('[data-toggle="popover"]').popover()
 

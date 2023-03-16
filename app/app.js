@@ -18,7 +18,7 @@ const clientroutes         = require("../app/routes/client/clientroutes");
 const authroutes           = require("../app/routes/authroutes");
 const mainroutes           = require("../app/routes/mainroutes");
 const passport             = require('passport');
-const commonService        = require('../app/services/common');
+const path = require("path");
 const {
     PORT,
     SESSION_SECRET,
@@ -64,9 +64,9 @@ mongoose.connect(MONGO_CONN,
 app.use(expressLayouts);
  
 app.set('view engine', 'ejs');
-app.use(express.static('public'))
-app.use(express.static('uploads'))
+// app.use(express.static('public'))
 
+app.use(express.static("public"));
 app.use(express.json({limit: '25mb'}));
 app.use(express.urlencoded({limit: '25mb', extended: true }));
 app.use(session(

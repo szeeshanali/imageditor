@@ -281,7 +281,12 @@
        
     })
 
-    
+$(document).ready(function(){
+    let context = {
+        counts: { customProjects:'<%=customProjects?.length%>' }
+    }
+    cache.set('context',JSON.stringify(context));    
+})        
 
 
 </script>

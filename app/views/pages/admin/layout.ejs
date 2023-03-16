@@ -38,7 +38,16 @@
     </div>
 </div>
 
+<script>
+$(document).ready(function(){
 
+    if(cache.exists('context')){
+        const context  = JSON.parse(cache.get('context'));
+        onPageLoad(context);
+    }
+    
+}); 
+</script>
     </body>
 
 </html>

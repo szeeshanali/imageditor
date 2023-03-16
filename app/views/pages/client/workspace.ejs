@@ -18,7 +18,8 @@
         <div class="tab-content">
             
             <div  id="templatepanel" class="tab-pane active"   >
-              <div class="list-group widget-list-group bg-app-primary">
+             
+              <div class="list-group widget-list-group bg-app-primary sticky-header-left-panel">
                 <div class="list-group-item d-flex">
                   <div class="media d-block d-sm-flex">
                     <div class="media-body mg-t-10 mg-sm-t-0">
@@ -32,8 +33,9 @@
                     </div>
                 </div>
               </div>
+
               <div>
-                  <div class="row mg-0">
+                  <div class="row mg-0 sticky-body-left-panel">
                     <%for(var i=0; i<templates.length; i++){ %>
                       <%- include('../../partials/template',{template:templates[i]}); %>
                     <%}%>
@@ -41,7 +43,7 @@
               </div>
             </div>            
             <div id="uploadpanel" class="tab-pane"  >
-                <div class="list-group widget-list-group bg-app-primary">
+                <div class="list-group widget-list-group bg-app-primary ">
                   <div class="list-group-item d-flex" id="create-design-heading">
                     <div class="media d-block d-sm-flex">
                       <div class="media-body mg-t-10 mg-sm-t-0 ">
@@ -249,21 +251,8 @@
     <div class="table-responsive">
       
       <div class="workarea" id="workarea" >
-        <!-- <div class="pd-10 bd" >
-          <ul class="nav nav-gray-600 flex-column flex-sm-row" role="tablist">
-            <li class="nav-item">
-              <div><i class="ion-android-remove-circle tx-30" id="btnImageMinus"></i></div>
-            </li>
-            <li class="nav-item">
-              <div class="slidecontainer">
-                <input type="range" min="1" max="500" value="250" step="10" class="slider" id="sliderImageSize">
-              </div>
-            </li>
-            <li class="nav-item"><div><i class="ion-android-add-circle tx-30 " id="btnImagePlus"></i></div></li>
-           
-          </ul>
-        </div> -->
-        <div  id="canvas-holder">
+   
+        <div  id="canvas-holder" >
             <div class="content tx-center" >
                 <canvas id="client-main-canvas"   ></canvas>
                 <canvas id="client-main-canvas-logo"   ></canvas>                    
@@ -354,6 +343,42 @@
 <%- include('../../partials/client/popups/faq'); %>
 
 
+<div id="my-proj-modal" class="modal fade" aria-hidden="true" >
+  <div class="modal-dialog modal-lg modal-dialog-vertical-center " role="document">
+    <div class="modal-content bd-0">
+      <div class="modal-header pd-y-20 pd-x-25">
+        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">MY SAVED PROJECTS</h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body pd-25">
+        <div class="row row-sm" id="my-proj-container">
+
+        </div>      
+      </div>
+    </div>
+   </div>
+</div>
+
+   <div id="shared-lib-modal" class="modal fade" aria-hidden="true" >
+    <div class="modal-dialog modal-lg modal-dialog-vertical-center " role="document">
+      <div class="modal-content bd-0">
+        <div class="modal-header pd-y-20 pd-x-25">
+          <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">KakePrints Designs Library</h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body pd-25">
+          <div class="row row-sm" id="kp-designs-container">
+  
+          </div>      
+        </div>
+      </div>
+     </div>
+                        <!-- modal-dialog -->
+                    </div>
 <div id="rfq_confirm" class="modal fade" aria-hidden="true" >
   <div class="modal-dialog modal-md modal-dialog-vertical-center " role="document">
     <div class="modal-content bd-0">
@@ -372,23 +397,19 @@
       </div>
     </div>
    </div>
-                          <!-- modal-dialog -->
-                      </div>
+
 <script> 
-    // $(".tab-content .tab-pane").each((i,e)=>
-    //    { $(e).removeClass("active"); })
-    //   //$("#templatepanel").addClass("active");
-      //$("#menu-templates").addClass("bg-warning")
     window.onload = function()
    { 
         var code = '<%=code || "default" %>' ;
         var type = '<%=type%>';
-        if(type === 'project'){
-            loadProject(code);
-        }else{
-            loadSVGTemplate(code);
+        // if(type === 'project'){
+        //     loadProject(code);
+        // }else{
+        //     loadSVGTemplate(code);
 
-        }
+        // }
+        loadSVGTemplate(code);
         $('[data-toggle="popover"]').popover()
 
    }
