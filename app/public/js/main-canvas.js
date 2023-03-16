@@ -622,3 +622,53 @@ function loadProject(projectId)
    
 
 }
+
+
+
+function saveCustomDesign(byAdmin) {
+    canvas.state = "init";
+    if(canvas.state === "inprogress")
+    {  toast("Please Wait while Saving Design.");
+    return; }
+    var meta = canvas.context; 
+    meta.title =  $("#customDesignName").val() || "Untitled";
+    
+    if(meta.title.length > 50)
+    {
+        toast("Please should not greater than 50 characters.");
+        return;
+    }
+
+    let dataUrl         = canvas.toDataURL();       
+    const isAdmin = byAdmin?"admin":"";
+    canvas.state = "inprogress";
+    $loader.removeClass("hidden");
+    $.ajax({
+        type: "POST",
+        url: "/app/"+isAdmin+"/uploads",
+        data: {
+            desc: "",
+            meta: JSON.stringify(meta),
+            title: meta.title,
+            name: meta.title,
+            active: true,
+            base64: dataUrl,
+            json: JSON.stringify(canvas.toJSON()),
+            type: "pre-designed",
+            by_admin: byAdmin,
+            itemId:canvas.designId
+        },
+        success: function (res) {
+            canvas.state = "completed";
+            toast("Uploaded Successfully!");
+            setTimeout(function () {
+                onDesignReload();
+            }, 2000)
+        },  
+        error: function (res) {
+            canvas.state = "error";
+            toast("Server Error.");
+            $loader.addClass("hidden");
+        }
+    })
+  }
