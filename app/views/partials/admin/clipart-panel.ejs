@@ -1,7 +1,6 @@
   
     <div class="card">
-        <div class="pd-10 admin-design-ctrl">
-            <button type="button" id="btnDeleteClipart" class="hidden btn btn-sm btn-primary tx-12 tx-bold tx-uppercase delete">Delete</button>
+        <div class="pd-x-15 admin-design-ctrl">
 
                 <div class="pd-b-10">
                     <div class="tx-left">
@@ -15,7 +14,7 @@
     
                   
                     <div class="mg-y-5">
-                        <input class="form-control" placeholder="Title" id="admin-design-title" type="text">
+                        <input class="form-control" placeholder="Enter ClipArt Name" id="inputClipArtName" type="text">
                     </div>
                    
     
@@ -23,23 +22,22 @@
 
                     <div class="d-flex pd-y-10">
                         <label class="ckbox">
-                            <input type="checkbox"   id="design-active"><span>Active</span>
+                            <input type="checkbox"   id="cbClipArtActive"><span>Active</span>
                         </label>
                           <!-- <label class="ckbox mg-l-20">
                             <input type="checkbox" id="design-default" ><span>Default</span>
                           </label>
                        -->
                     </div>
-    
-            </div>
-                <div id="save-image-ctrl" class="tx-center">
-                    <div class="btn-group" role="group" >
+                    <div id="save-image-ctrl  class="tx-center">
                         <input type="hidden" id="selectedClipartId">
-                        <button type="button" id="save-design" class="btn btn-primary  pd-x-25 active ">Save</button>
-                        <button type="button" id="cancel-design" class="btn btn-secondary pd-x-25 ">Reset</button>
-
-                      </div>
+                        <button type="button" id="btnUploadClipart" class="tx-bold btn-xs tx-uppercase btn btn-success  pd-x-25 active pd-y-10">Upload</button>
+                        <button type="button" id="btnUpdateClipart" class="hidden btn-xs tx-bold tx-uppercase btn btn-success  pd-x-25 active pd-y-10">Save Changes</button>
+                        <button type="button" id="btnDeleteClipart" class="hidden btn-xs tx-bold tx-uppercase btn btn-danger  pd-x-25 active pd-y-10">Delete</button>
+                        <button type="button" id="btnCancelClipart" class="tx-bold btn-xs tx-uppercase btn btn-primary pd-x-25 pd-y-10">Cancel</button>
                 </div>
+            </div>
+               
             </div>
     </div>
   

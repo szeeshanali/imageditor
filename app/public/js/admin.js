@@ -1002,12 +1002,239 @@ function saveDesign() {
         })
 
     }
+
+
+    function initUIClipArts()
+    {
+        let selectedClipArt = null;
+        let selectedClipArtId =null; 
+
+        $("#btnBrowseClipart").on("click", (e)=>{
+            e.preventDefault();
+            $("#btnUploadClipart").removeClass("hidden");
+            $("#btnUpdateClipart").addClass("hidden");
+            $("#btnDeleteClipart").addClass("hidden");
+            $("#hiddenUploadClipArtFile").click();
+        })
+
+        $("#btnCancelClipart").on("click",function(){
+            $("#btnUploadClipart").removeClass("hidden");
+            $("#btnUpdateClipart").addClass("hidden");
+            $("#btnDeleteClipart").addClass("hidden");
+            disposeClipArt();
+        })
+
+        $("#hiddenUploadClipArtFile").on("change",(e)=>{
+          
+            const files = e.target.files; 
+            const file = files[0];
+            const fileType = file.type; 
+            const allowedTypes = [ 'image/jpeg','image/png','image/gif']
+            if (! allowedTypes.includes(file.type)) 
+            { 
+                toast(`'${file.type}' unsupported image type. `)
+                return; 
+            }
+             
+            let reader = new FileReader()
+             reader.onload = (e) => {
+
+                 fabric.Image.fromURL(e.target.result, (img) => {
+                             
+                     img.scaleToHeight(250);   
+                                     
+                     let canvasCenter = getCanvasCenter(img.width,img.height)
+                     img.set({left: canvasCenter.left, top: canvasCenter.top})
+                     canvas.add(img);
+                    canvas.renderAll();
+                     selectedClipArt={
+                        file:file,
+                        base64:e.target.result,
+                        image:img
+                    }
+                 })
+             } 
+             reader.readAsDataURL(file);
+         })
+
+         $("#btnUploadClipart").on("click",(e)=>{
+            const clipArtName       = $("#inputClipArtName").val();
+            let selectedDesignId    = $("#selectedClipartId").val();
+            const category          = $("#admin-categories").val();
+
+            if(!isValidClipArt(clipArtName,category))
+            {return;}
+            $loader.removeClass("hidden");
+
+            
+           
+
+            const meta = {
+                name        :   clipArtName,
+                originalName :   selectedClipArt.file.name,
+                size        :   selectedClipArt.file.size,
+                width       :   selectedClipArt.image.width,
+                height      :   selectedClipArt.image.height,
+                fileType    :   selectedClipArt.file.type,
+                file_ext    : `.${selectedClipArt.file.name.split('.').pop()}`,
+            };
+          
+            const dataUrl         = selectedClipArt.base64;       
+            const designType      =  "clipart";
+            const active          = $("#cbClipArtActive").prop("checked");
+            
+
+            $loader.removeClass("hidden");
+            $.ajax({
+                type: "POST",
+                url: "/app/admin/uploads",
+                data: {
+                    meta: JSON.stringify(meta),
+                    title: meta.name,
+                    name: meta.name,
+                    file_name: meta.fileName,
+                    mime_type : meta.fileType,
+                    active: active,
+                    base64: dataUrl,
+                    type: designType,
+                    by_admin: true,
+                    category: category,
+                    id:$("#selectedClipartId").val()
+                },
+                success: function (res) {
+                    disposeClipArt();
+                    window.location.reload();
+                    toast("Uploaded Successfully!");
+                },  
+                error: function (res) {
+                    toast("Server Error.");
+                    disposeClipArt();
+                }
+            })
+
+
+         });
+
+
+         $("#clipartAdminContainer .clipart").on("click",function(e){
+            
+            disposeClipArt();
+            $("#btnUploadClipart").addClass("hidden");
+            $("#btnUpdateClipart").removeClass("hidden");          
+            $("#btnDeleteClipart").removeClass("hidden");
+
+            let $item = $(e.currentTarget); 
+            let url = $item.attr("data-url");
+            let title = $item.attr("data-title");
+            let category = $item.attr("data-category");
+            let active =  ($item.attr("data-active") === "true");
+            let meta = $item.attr("data-meta");
+            selectedClipArtId = $item.attr("id");
+            let fn =  url.substring(url.lastIndexOf('/')+1);                        
+
+            fabric.Image.fromURL(url, function (img) {
+                img.scaleToWidth(250);
+                canvas.add(img).renderAll();                
+                $("#selectedClipartId").val(selectedClipArtId);
+                $("#admin-categories").val(category);
+                $("#inputClipArtName").val(title);
+                $("#btnDeleteClipart").removeClass("hidden");
+                $("#cbClipArtActive").prop("checked", active);
+            });
+        });
+
+        
+
+        $("#btnDeleteClipart").on("click",function(e){
+            let target = e.currentTarget; 
+            let id = $("#selectedClipartId").val(); 
+            deleteClipart(id);
+        })
+
+        $("#btnUpdateClipart").on("click",function(e){
+
+            const clipArtName       = $("#inputClipArtName").val();
+            const selectedClipartId = $("#selectedClipartId").val();
+            const category          = $("#admin-categories").val();
+            const active            = $("#cbClipArtActive").prop("checked");
+            
+            if(!isValidClipArt(clipArtName,category))
+            {return;}
+            
+            $loader.removeClass("hidden");
+            $.ajax({
+                type: "PUT",
+                url: `/api/clipart/${selectedClipartId}`,
+                data: {
+                    title: clipArtName,
+                    name: clipArtName,
+                    active: active,
+                    category: category,
+                    id:selectedClipartId
+                },
+                success: function (res) {
+                    disposeClipArt()
+                    window.location.reload();
+                    toast("Uploaded Successfully!");
+                },  
+                error: function (res) {
+                    toast("Server Error.");
+                    disposeClipArt();
+                }
+            })
+
+        })
+
+        function isValidClipArt(name,category)
+        {
+            if(!$("#selectedClipartId").val())
+            {
+                if (!selectedClipArt || !selectedClipArt.base64 ) {
+                    toast("Please Browse and select an image.");
+                    return false;
+                }
+            }
+            
+            
+            if (!name || name.length == 0) {
+                toast("Please Enter ClipArt Name");
+                return false;
+            }
+            if(name.length > 50)
+            {
+                toast("Please should not greater than 50 characters.");
+                return false;
+            }
+
+            if(!category ){
+                toast(`Please select a category.`);
+                return;
+            }
+            return true; 
+        }
+
+         function disposeClipArt()
+         {
+            $loader.addClass("hidden");
+            canvas.clear();
+            $("#admin-categories").val("");
+            $("#inputClipArtName").val("");
+            $("#cbClipArtActive").prop("checked",false);
+            $("#hiddenUploadClipArtFile").val("");
+            selectedClipArt = null;
+            selectedClipArtId = null; 
+            
+         }
+
+
+    }
   
     function InitUIEvents() {
         
         initContextMenu();
         initUIUploadTemplate();
         initUICustomProjects();
+        initUIClipArts();
 
         $("#categoryContainer .category").on("click",function(e){
           
@@ -1085,51 +1312,12 @@ function saveDesign() {
             $("#btnAddCategory").text("Add Category");
             $("#hiddenCategoryId").val("");
         })
-
-        $("#clipartAdminContainer .clipart").on("click",function(e){
-            let $item = $(e.currentTarget); 
-            let url = $item.attr("data-url");
-            let title = $item.attr("data-title");
-            let category = $item.attr("data-category");
-            let active =  ($item.attr("data-active") === "true");
-            let id = $item.attr("id");
-            let fn =  url.substring(url.lastIndexOf('/')+1);
-            selectedDesign.file = {
-                name:fn,
-                
-            }
-            canvas.clear();
-            fabric.Image.fromURL(url, function (img) {
-                img.scaleToWidth(250);
-                img.set({left:150, top:50})
-                canvas.add(img).renderAll();
-               
-                selectedDesign.base64 = canvas.item(0).toDataURL();
-                selectedDesign.meta ={
-                    width   :img.width,
-                    height  :img.height
-
-                }
-                //selectedDesign.base64 = 
-                $("#selectedClipartId").val(id);
-                $("#admin-categories").val(category);
-                $("#admin-design-title").val(title);
-                $("#design-active").prop("checked", active);
-                $("#btnDeleteClipart").removeClass("hidden");
-            });
-        });
-
         $("#bannerThumbs .delete").on("click",function(e){
             let target = e.currentTarget; 
             let id = target.id; 
             deleteBanner(id);
         })
-
-        $("#btnDeleteClipart").on("click",function(e){
-            let target = e.currentTarget; 
-            let id = $("#selectedClipartId").val(); 
-            deleteClipart(id);
-        })
+        
         $("#btnLibraryModal").on("click",function(e){
             $("#btnModelContinue").text("Continue");
             $("#confirmBoxBody").text("Do you want to discard your changes?");
@@ -1356,6 +1544,7 @@ function saveDesign() {
             enabledTextMode = false;
             var id = e.currentTarget.id;
             canvas.clear();
+            debugger;
             loadSVGTemplate(id);
         });
         $("#btn-step-design").on("click", function (e) {
@@ -1935,23 +2124,23 @@ function saveDesign() {
         })
 
 
-        $templateThumb.unbind().on("click", (e) => {
+        // $templateThumb.unbind().on("click", (e) => {
 
-            var templateId = e.currentTarget.id;
-            if (templateId) {
+        //     var templateId = e.currentTarget.id;
+        //     if (templateId) {
 
-                loadTemplateInfoByTemplateId(templateId);
-                // loadSVGTemplate(templateId);
-            } else {
-                toast(`Can't load Template.`)
-            }
-        })
+        //         loadTemplateInfoByTemplateId(templateId);
+        //         // loadSVGTemplate(templateId);
+        //     } else {
+        //         toast(`Can't load Template.`)
+        //     }
+        // })
 
-        $customTemplateThumb.on("click", (e) => {
-            var id = e.currentTarget.id;
-            canvas.clear();
-            loadSVGTemplate(id);
-        })
+        // $customTemplateThumb.on("click", (e) => {
+        //     var id = e.currentTarget.id;
+        //     canvas.clear();
+        //     loadSVGTemplate(id);
+        // })
 
         // $clipartThumb.on("click", (e) => {
         //     var id = e.currentTarget.src;
@@ -2068,71 +2257,33 @@ function saveDesign() {
         })
 
         $btnImageUploadHidden.on('change', function (e) {
-            if (e.target.files.length === 0) 
-                return;
-            
+            let files = e.target.files;
             if (files.length === 0) 
                 return;
-    const allowedTypes = [ 'image/svg+xml']
-    for (let file of files) {
+            
+
+    const allowedTypes = [ 'image/jpeg','image/png','image/gif']
+   const file = files[0];
+
         if (! allowedTypes.includes(file.type)) 
         { 
-            toast(`'${file.type}' unsupported sheet type. Only SVG Frosting Sheet `)
+            toast(`'${file.type}' unsupported image type. `)
             return; }
 
         let reader = new FileReader()
-        // handle svg
-        if (file.type === 'application/pdf') {
-
-            reader.onload = function () {
-                var typedarray = new Uint8Array(this.result);
-                PDFJS.getDocument(typedarray).then(function (pdf) { // you can now use *pdf* here
-                    console.log("the pdf has ", pdf.numPages, "page(s).");
-                    // getting first page only.
-                    pdf.getPage(1).then(function (page) {
-                        // you can now use *page* here
-                        var viewport = page.getViewport(1.0);
-                        var canvasEl = document.createElement("canvas")
-                        canvasEl.height = viewport.height;
-                        canvasEl.width = viewport.width;
-                        page.render({canvasContext: canvasEl.getContext('2d'), viewport: viewport}).then(function () {
-                            var bg = canvasEl.toDataURL("image/png");
-                            fabric.Image.fromURL(bg, function (img) {
-                                img.scaleToWidth(canvas.width);
-                                img.scaleToHeight(canvas.height);
-                                img.globalCompositeOperation = 'source-atop';
-                                canvas.add(img);
-                            });
-                            canvas.renderAll();
-                        });
-                    });
-
-                });
-            };
-            reader.readAsArrayBuffer(file);
-
-        } else {
+        
             reader.onload = (e) => {
                 fabric.Image.fromURL(e.target.result, (img) => {
-                    
+                    selectedDesign = img;
                     img.scaleToHeight(250);                    
                     let canvasCenter = getCanvasCenter(img.width,img.height)
                     img.set({left: canvasCenter.left, top: canvasCenter.top})
-                    img.globalCompositeOperation = 'source-atop';
-                    if (state.isPreviewCanvas) {
-                        canvasPrev.add(img);
-                    } else {
-                        canvas.add(img);
-                        canvas.setActiveObject(img);
-                    } mainControls(true);
+                    canvas.add(img);
+                    
                 })
             } 
             reader.readAsDataURL(file);
-        }
-        continue
-        // }
 
-    }
         })
 
         $("#btnEditContent").on("click",function(){
@@ -2180,52 +2331,6 @@ function saveDesign() {
         $adminDesignCtrl.find(".disabled").removeClass("disabled");
     }
 
-
-    
-    
-
-    
-
-
-    function loadSVGTemplateForCustomDesign(id) {
-        var group = [];
-
-        $.get(`/api/admin/svg-templates/${id}`, function (data) {
-            const svgBase64 = data.base64;
-            if (! svgBase64) {
-                alert("Error loading Template");
-                return;
-            }
-
-            // canvas.setDimensions({width: letterPageSize.width, height: letterPageSize.height});
-            // canvasPrev.setDimensions({width: letterPageSize.width, height: letterPageSize.height});
-            canvas.clear();
-            fabric.loadSVGFromURL(svgBase64, function (objects, options) {
-                var loadedObjects = new fabric.Group(group);
-                var width = 400;
-                var height = 400;
-                // canvas.orignalBackgroundImage = loadedObjects;
-                var logo = objects[0];
-                // var diff = templateWidth - logo.width;
-                // var logoWidth = logo.width + diff;
-                logo.scaleToWidth(width);
-                canvas.setDimensions({
-                    width: width + 100,
-                    height: height + 100
-                });
-                canvas.setBackgroundImage(logo, canvas.renderAll.bind(canvas));
-                canvas.renderAll();
-                loadedObjects.center().setCoords();
-
-            }, function (item, object) {
-                object.set('id', item.getAttribute('id'));
-                group.push(object);
-            });
-
-            loadTemplateInfo(data);
-        })
-
-    }
     function loadTemplateInfo(data) {
 
         var meta = data.meta;

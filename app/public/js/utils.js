@@ -113,6 +113,9 @@ function addText(text)
     return item; 
 }
 
+function getPath(path){
+    return path.replace("../app/public/",'');
+}
 const processFiles = (files) => {
     if (files.length === 0) 
         return;
