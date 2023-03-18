@@ -636,13 +636,13 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
         })
     }
     function deleteBanner(id,onSuccess,onError) {
-        if (!confirm("do you want to delete this template?")) {
+        if (!confirm("do you want to delete this Banner?")) {
             return;
         }
        
         $.ajax({
             type: "DELETE",
-            url: `/api/admin/banner/${id}`,
+            url: `/api/admin/manage/banner/${id}`,
             success: function (res) {
 
                 toast("Deleted successfully!");
@@ -1003,6 +1003,151 @@ function saveDesign() {
 
     }
 
+    function initUIBanner(){
+        let selectedBanner = null;
+        let selectedBannerId =null; 
+
+        $("#btnBrowseBanner").on("click", (e)=>{
+            e.preventDefault();
+            $("#btnUploadBanner").removeClass("hidden");
+            $("#btnDeleteBanner").addClass("hidden");
+            $("#hiddenUploadBannerFile").click();
+        })
+
+        $("#btnCancelBanner").on("click",function(){
+            $("#btnUploadBanner").removeClass("hidden");
+            $("#btnDeleteBanner").addClass("hidden");
+            disposeBanner();
+        })
+
+        $("#hiddenUploadBannerFile").on("change",(e)=>{
+          
+            const files = e.target.files; 
+            const file = files[0];
+            const fileType = file.type; 
+            const allowedTypes = [ 'image/jpeg','image/png','image/gif']
+            if (! allowedTypes.includes(file.type)) 
+            { 
+                toast(`'${file.type}' unsupported image type. `)
+                return; 
+            }
+             
+            let reader = new FileReader()
+             reader.onload = (e) => {
+
+                 fabric.Image.fromURL(e.target.result, (img) => {
+                             
+                     img.scaleToHeight(250);   
+                                     
+                     let canvasCenter = getCanvasCenter(img.width,img.height)
+                     img.set({left: canvasCenter.left, top: canvasCenter.top})
+                     canvas.add(img);
+                    canvas.renderAll();
+                     selectedBanner={
+                        file:file,
+                        base64:e.target.result,
+                        image:img
+                    }
+                 })
+             } 
+             reader.readAsDataURL(file);
+         })
+
+         $("#btnUploadBanner").on("click",(e)=>{
+            const bannerName       = $("#inputBannerName").val();
+            if(!isValidBanner(bannerName))
+            {return;}
+
+            $loader.removeClass("hidden");
+
+            
+           
+
+            const meta = {
+                name        :   bannerName,
+                originalName :   selectedBanner.file.name,
+                size        :   selectedBanner.file.size,
+                width       :   selectedBanner.image.width,
+                height      :   selectedBanner.image.height,
+                fileType    :   selectedBanner.file.type,
+                file_ext    : `.${selectedBanner.file.name.split('.').pop()}`,
+            };
+          
+            const dataUrl         = selectedBanner.base64;       
+            const designType      =  "banner";
+            const active          = $("#cbBannerActive").prop("checked");
+            
+
+            $loader.removeClass("hidden");
+            $.ajax({
+                type: "POST",
+                url: "/app/admin/uploads",
+                data: {
+                    meta: JSON.stringify(meta),
+                    title: meta.name,
+                    name: meta.name,
+                    file_name: meta.fileName,
+                    mime_type : meta.fileType,
+                    active: active,
+                    base64: dataUrl,
+                    type: designType,
+                    by_admin: true
+                },
+                success: function (res) {
+                    disposeBanner();
+                    window.location.reload();
+                    toast("Uploaded Successfully!");
+                },  
+                error: function (res) {
+                    toast("Server Error.");
+                    disposeBanner();
+                }
+            })
+
+
+         });
+
+        
+
+         $("#bannerThumbs .delete").on("click",function(e){
+            let target = e.currentTarget; 
+            let id = target.id; 
+            deleteBanner(id);
+        })
+
+      
+
+        function isValidBanner(name)
+        {
+            if (!selectedBanner || !selectedBanner.base64 ) {
+                toast("Please Browse and select an image.");
+                return false;
+            }            
+            
+            if (!name || name.length == 0) {
+                toast("Please Enter Name");
+                return false;
+            }
+            if(name.length > 50)
+            {
+                toast("Name should not greater than 50 characters.");
+                return false;
+            }
+
+           
+            return true; 
+        }
+
+         function disposeBanner()
+         {
+            $loader.addClass("hidden");
+            canvas.clear();
+            $("#inputBannerName").val("");
+            $("#cbBannerActive").prop("checked",false);
+            $("#hiddenUploadClipArtFile").val("");
+            selectedBanner = null;
+         }
+    }
 
     function initUIClipArts()
     {
@@ -1115,7 +1260,6 @@ function saveDesign() {
 
          });
 
-
          $("#clipartAdminContainer .clipart").on("click",function(e){
             
             disposeClipArt();
@@ -1142,8 +1286,6 @@ function saveDesign() {
                 $("#cbClipArtActive").prop("checked", active);
             });
         });
-
-        
 
         $("#btnDeleteClipart").on("click",function(e){
             let target = e.currentTarget; 
@@ -1202,7 +1344,7 @@ function saveDesign() {
             }
             if(name.length > 50)
             {
-                toast("Please should not greater than 50 characters.");
+                toast("Name should not greater than 50 characters.");
                 return false;
             }
 
@@ -1235,6 +1377,7 @@ function saveDesign() {
         initUIUploadTemplate();
         initUICustomProjects();
         initUIClipArts();
+        initUIBanner();
 
         $("#categoryContainer .category").on("click",function(e){
           
@@ -1312,11 +1455,7 @@ function saveDesign() {
             $("#btnAddCategory").text("Add Category");
             $("#hiddenCategoryId").val("");
         })
-        $("#bannerThumbs .delete").on("click",function(e){
-            let target = e.currentTarget; 
-            let id = target.id; 
-            deleteBanner(id);
-        })
+        
         
         $("#btnLibraryModal").on("click",function(e){
             $("#btnModelContinue").text("Continue");

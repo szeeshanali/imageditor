@@ -81,7 +81,7 @@ $("#btnDisplayGrid").on("click", function (e) {
                     templateId      :   selectedTemplateId 
                 }
 
-                $("#canvas-holder").css({"background-color":"#9293cb","padding":"10px"});
+                $("#canvas-holder").css({"background-color":"#9293cb","padding":"27px"});
                 let logoHeight = canvas.getHeight();
                 let logoDisplaySize = canvas.getWidth();
     
@@ -287,7 +287,7 @@ $("#btnDisplayGrid").on("click", function (e) {
      $("#btnStartOverModel").removeClass("hidden");    
      $(".step-item:nth-child(3)").removeClass("active");
      $(".step-item:nth-child(2)").addClass("active");
-     $("#canvas-holder").css({"background-color":"#9293cb","padding":"10px"});
+     $("#canvas-holder").css({"background-color":"#9293cb","padding":"27px"});
  
      // 2.
      // $("#btnSave").unbind().click(function(){

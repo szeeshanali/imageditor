@@ -677,7 +677,7 @@ router.get('/app/admin/manage/cliparts', isAdmin, async (req,res)=>{
 
 
 
-router.get('/app/admin/banners', isAdmin, async (req,res)=>{
+router.get('/app/admin/manage/banners', isAdmin, async (req,res)=>{
   const banners = await commonService.uploadService.getUploads('banner',null,true)
   res.locals.page = {
     id: "__banners",
@@ -831,7 +831,7 @@ router.delete('/api/admin/template/:id', isAdmin, async (req,res)=>{
   { return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."}); }
  
 }) 
-router.delete('/api/admin/banner/:id', isAdmin, async (req,res)=>{
+router.delete('/api/admin/manage/banner/:id', isAdmin, async (req,res)=>{
   var id = req.params["id"]; 
   if(!id){
     return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."});

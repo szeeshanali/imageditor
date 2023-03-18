@@ -1,28 +1,15 @@
 <div class="row mg-r-0">
     <div class="col-lg-3 pd-0">
         <div class="list-group widget-list-group bg-app-primary">
-            <div class="list-group-item d-flex">
-              <div class="media d-block d-sm-flex">
-                <div class="d-block d-sm-flex mg-sm-r-20">
-                  <i class="ion-ios-paw-outline tx-24 tx-white"></i>
-                </div><!-- d-flex -->
-                <div class="media-body mg-t-10 mg-sm-t-0">
-                  <h6 class="mg-b-5 tx-14">Upload Image</h6>
-                  <div class="mg-b-0 tx-12 tx-white-5">JPG, GIF, SVG, PNG</div>
-                </div><!-- media-body -->
-              </div><!-- media -->
-              <a href="#" id="admin-image-upload" class="btn btn-primary pd-lg-x-20 mg-l-auto">Browse</a>
-              <input id="admin-image-upload-hidden" data-page-id="<%=locals.page.id%>" type="file" accept="image/*" multiple="multiple" hidden="hidden">
+            <div class="list-group-item d-flex">            
+              <a href="#" id="btnBrowseBanner" class="btn tx-bold btn-block tx-uppercase btn-primary pd-lg-x-20 mg-l-auto">Browse Image</a>
+              <input id="hiddenUploadBannerFile" data-page-id="<%=locals.page.id%>" type="file" accept="image/*" multiple="multiple" hidden="hidden">
             <input id="design-type" value="banner" hidden="hidden">
     
             </div>
+            
           </div>
-          <div class="list-group-item ">
-           <!-- d-flex -->
-           <h6 class="card-body-title">Banner Details</h6>
-           <p >Please enter following details and save your changes.</p>
         
-          </div>
           <div class="card">
             <%- include('../../partials/admin/banner-panel'); %>
           </div>
@@ -37,39 +24,40 @@
             <input id="design-type" value="clipart" hidden="hidden">
         </div> -->
     </div>
-    <div class="col-lg-9 pd-x-15">
-        <div class="card pd-10 tx-primary tx-bold bd-b">PREVIEW</div>
+    <div class="col-lg-6 pd-x-15">
+        <div class="card pd-10 tx-primary tx-bold bd-b mg-b-15">Manage Banners</div>
 
-        <div class="card ht-300 grid-bg" style="height:600px">
-            <div class="workarea" >
-                <div  id="canvas-holder">
-                    <div class="content tx-center">
-                        <canvas id="admin-main-canvas" width="500" height="500" style="margin:20px;background-color:transparent;border:dashed 1px #000" ></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card ht-300">
-          <div class="row" id="bannerThumbs">
-          <%banners?.forEach((item)=>{%>
-            <div class="col-lg-3">
-              <div class="card bd-0"  >
-                <div style="height:200px;overflow:hidden;padding:10px;text-align: center;">
-                <img class="card-img-top img-fluid"   src="<%=item.base64%>" alt="Image">
+        <div class="card " >
+          <div class="workarea" >
+              <div  id="canvas-holder">
+                  <div class="content tx-center">
+                      <canvas id="admin-main-canvas" width="500" height="400" style="margin-top:20px; background-color:transparent; border:solid 1px #ccc;  box-shadow: 3px 5px #ccc;" ></canvas>
+                  </div>
               </div>
-                <div class="card-body bd bd-t-0">
-                  <h6 class="mg-b-3"><a href="" class="tx-dark"><%=item.title%></a></h6>
-                  <span class="tx-12"><%=item.create_dt%></span>
-                  <button type="button" id="<%=item.code%>" class="btn btn-sm btn-primary tx-12 tx-bold tx-uppercase delete">Delete</button>
-                </div>
-              </div>
-            </div>
-        
-          <%})%>
-        </div>
-        </div>
+          </div>
+      </div>
+       
         </div>
      
+        <div class="col-lg-3">
+          <div class="row" id="bannerThumbs">
+            <%banners?.forEach((item)=>{%>
+              <div class="col-lg-6 pd-1">
+                <div class="card bd-0"  >
+                  <div >
+                  <img class="card-img-top img-fluid"   src="<%=item.base64%>" alt="Image">
+                </div>
+                  <div class="card-body bd bd-t-0">
+                    <h6 class="mg-b-3"><a href="" class="tx-dark"><%=item.title%></a></h6>
+                    <span class="tx-12"><%=item.create_dt%></span>
+                    <button type="button" id="<%=item.code%>" class="btn btn-sm btn-primary tx-12 tx-bold tx-uppercase delete">Delete</button>
+                  </div>
+                </div>
+              </div>
+          
+            <%})%>
+          </div>
+        </div>
     </div>
   
     </div>
