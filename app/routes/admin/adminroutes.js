@@ -5,7 +5,7 @@ const formidable                    = require('formidable');
 const categories            = require("../../models/categories.js");
 const uploads               = require("../../models/uploads.js");
 const contents               = require("../../models/contents.js");
-
+const categoryModel = require("../../models/categories");
 const commonService         = require("../../services/common");
 const appusers              = require("../../models/appuser");
 const logs              = require("../../models/logs");
@@ -634,14 +634,18 @@ router.get('/app/admin/categories', isAdmin, async (req,res)=>{
 
 
 
-router.get('/app/admin/cliparts', isAdmin, async (req,res)=>{
+router.get('/app/admin/manage/cliparts', isAdmin, async (req,res)=>{
 
   let categoriesWithItems = []; 
-  let cliparts = await commonService.uploadService.getUploads('clipart',true)    
-  let categories = await commonService.categoryService.getCategoriesAsync(true);
+  let cliparts = await uploads.find({type:"clipart",deleted:false},{json:0,base64:0,thumbBase64:0})    
+  let categories = await categoryModel.find({deleted:false}).sort({name:1});
   
   categories.forEach(category => {
    var items = cliparts?.filter(i=>i.category == category.id);
+   items = items.map(i=>{
+    i.path = i.path?.replace("../app/public","");
+    return i;
+   })
    if(items != null && items.length > 0)
    {
     categoriesWithItems.push({
@@ -730,7 +734,8 @@ const type = req.params.type;
 let template = {};
 let meta = {};
 
-const _uploads = await uploads.find({$or:[{type:"template"},{type:"clipart"},{type:"pre-designed"}],active:true,deleted:false}).sort({order_no:1});
+const _uploads = await uploads.find({$or:[{type:"template"},{type:"clipart"},
+{type:"pre-designed"}],active:true,deleted:false},{json:0,base64:0,thumbBase64:0}).sort({order_no:1});
 const templates = _uploads.filter(function(i){return i.type === 'template'});
 const cliparts = _uploads.filter(function(i){return i.type === 'clipart'});
 const customDesigns = _uploads.filter(function(i){return i.type === 'pre-designed'});
@@ -1064,5 +1069,40 @@ router.put('/api/admin/user/:id?', isAdmin, async (req,res)=>{
   await appusers.findOneAndUpdate({_id:id}, {active:active,project_limit:project_limit,is_admin:is_admin,watermark:watermark});   
   return res.status(200).send({"status":400,"message":`Updated successfully, Id:${id}`});
 })
+/** Cliparts */
+router.put("/api/clipart/:id",isAdmin, async (req,res)=>{
+  const id = req.params["id"];
+  const {name,active,category} = req.body;
+
+  try{
+    const d = await uploads.updateOne({"_id":id},{"name":name,"title":name,"active":active,"category":category}); 
+    return ok(res,d);
+  }catch(ex){
+    return error(res,ex);
+  }
+})
+
+function error(res,ex)
+{
+    console.log(ex.message);
+    return  res.status(500).send({
+        status:500,
+        message:"error",
+        error:true,
+        exception:ex.message,
+        data:null
+    });
+
+}
+function ok(res,data)
+{
+  return  res.status(200).send({
+        status:200,
+        message:"ok",
+        error:false,
+        exception:null,
+        data:data
+    });
+}
 
 module.exports = router;

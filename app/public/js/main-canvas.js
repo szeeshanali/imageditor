@@ -133,9 +133,9 @@ $("#btnDisplayGrid").on("click", function (e) {
                             canvasPrev.renderAll.bind(canvas);    
                           },function (item, object) {
                                 object.set({ 
-                                    backgroundImage:"transparent",
-                                    strokeWidth:0,
-                                    strokeMiterLimit:0
+                                    fill:"#fff",
+                                strokeWidth:0,
+                                   strokeMiterLimit:0
                                 });
                                 
                                 })
@@ -315,14 +315,13 @@ $("#btnDisplayGrid").on("click", function (e) {
  }
  function renderPreview() {
      $loader.removeClass("hidden");
-     //$("#ws-btn-save").addClass("hidden");
      $("#ws-btn-preview").addClass("hidden");
      $("#ws-btn-back").removeClass("hidden");
      $("#ws-btn-download").removeClass("hidden");
      $("#btnStartOverModel").addClass("hidden");
      $("#previewMsg").removeClass("hidden");
-     $("#client-main-canvas-logo").attr("style","width:90%")
-     $("#admin-main-canvas-logo").attr("style","width:90%")
+    // $("#client-main-canvas-logo").attr("style","width:80%")
+    // $("#admin-main-canvas-logo").attr("style","width:80%")
      /***
     * creating copy of main canvas.
     * extracting objects from main canvas. 
@@ -333,6 +332,10 @@ $("#btnDisplayGrid").on("click", function (e) {
     */ 
      canvas.clone(function (clonedCanvas) {
          var bg = clonedCanvas.backgroundImage;
+         clonedCanvas.backgroundImage.set({
+                left:0,
+                top:0,
+            })
          let logos = canvasPrev.backgroundImage._objects;
          clonedCanvas.backgroundImage = false;
 
@@ -349,16 +352,13 @@ $("#btnDisplayGrid").on("click", function (e) {
          fabric.Image.fromURL(dataURL, (img) => {
              state.isPreviewCanvas = true;
              canvasPrev.remove(... canvasPrev.getObjects());
-
-            
              //img.scaleToWidth(canvas.context.originalWidth);
             //let missingPoints = canvas.context.originalWidth - img.getScaledWidth();
-           
-
              if(logos && logos.length>0)
              {
                 let logoWidth = logos[0].width; 
-                img.scaleToWidth(logoWidth+10);
+               // img.scaleToWidth(logoWidth+10);
+                img.scaleToWidth(logos[0].getScaledWidth()+6);
                 img.setCoords();
 
                  for (let i = 0; i < logos.length; i++) {
@@ -367,9 +367,9 @@ $("#btnDisplayGrid").on("click", function (e) {
                      let left    = logo.left + logo.group.left + (logo.group.width / 2);
                      let top     = logo.top + logo.group.top + (logo.group.height / 2);                    
                      object.set("top", top);
-                     object.set("left", left);
-                     
+                     object.set("left", left);                    
                      object.globalCompositeOperation = "source-atop";
+                     object.setCoords();
                      canvasPrev.add(object)
                  }
              }else{
@@ -379,14 +379,14 @@ $("#btnDisplayGrid").on("click", function (e) {
                
                  object.set("top", logo.top);
                  object.set("left", logo.left);  
-                 object.scaleToWidth(logo.width+10);
-                 object.setCoords();
+                 object.scaleToWidth(logo.getScaledWidth()+6);
                  object.globalCompositeOperation = "source-atop";
+                 object.setCoords();
                  canvasPrev.add(object);
                  
              }
  
-             canvasPrev.renderAll();
+             canvasPrev.requestRenderAll();
              $("#create-design-heading").addClass("hidden");
              $("#preview-design-heading").removeClass("hidden");
              $("#ruler-ctrl").attr("style", "display:none !important");;
@@ -475,7 +475,7 @@ $("#btnDisplayGrid").on("click", function (e) {
                 bg.globalCompositeOperation = "destination-in";
                 clonedCanvas.add(bg);
                 clonedCanvas.renderAll();
-                var imgData = clonedCanvas.toDataURL({format:"jpg",quality:1,multiplier:2.5});
+                var imgData = canvasPrev.toDataURL({format:"jpg",quality:1,multiplier:3});
                 pdf.addImage(imgData, 'jpg', 0, 0,width,height);
                
 

@@ -62,9 +62,10 @@ const projectHtml = `
             </div>
 `
 
-const designHtml = `<div class='pre-designed'><div class="list-group-item d-flex pd-0">
-<div class="media d-block d-sm-flex">
-  <div class="d-block d-sm-flex">
+const designHtml = `<div class='pre-designed'>
+<div class="list-group-item  pd-0">
+<div class="media d-block ">
+  <div class="d-block ">
     <img src="{{base64}}" class="wd-100" alt="Image">
   </div>
   <div class="media-body pd-15">
@@ -75,11 +76,10 @@ const designHtml = `<div class='pre-designed'><div class="list-group-item d-flex
     <p class="mg-b-0 tx-12 tx-bold">Total Logos: {{totalLogos}}</p>
     <p class="mg-b-0 tx-12 tx-bold tx-uppercase">Format: {{pageFormat}}</p>
     <a href="#" class="btn btn-sm btn-primary"  onclick="loadProject('{{code}}')" class="card-link">Edit</a>
-
-
-  </div><!-- media-body -->
-</div><!-- media -->
-</div></div>`;
+  </div>
+</div>
+</div>
+</div>`;
 
 
 // vars
@@ -688,7 +688,7 @@ function loadDesign(id) {
             let __w = parseInt(templateWidth*__f); 
             let __h = parseInt(templateHeight*__f);
 
-            $("#client-main-canvas-logo").css({"width":`${__w}px`,"height":`${__h}px`,"padding":"1px","left":"-21px"})
+            // $("#client-main-canvas-logo").css({"width":`${__w}px`,"height":`${__h}px`,"padding":"1px","left":"-21px"})
 
             canvasPrev.setBackgroundImage(loadedObjects, canvasPrev.renderAll.bind(canvasPrev));
             canvasPrev.renderAll();
