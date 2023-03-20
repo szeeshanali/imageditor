@@ -26,9 +26,16 @@ function getPageFormatByDimensions(widthPx, heightPx)
 
 function getInches(widthInPx, heightInPx)
 {
-    const w =widthInPx/dpi;
-    const h = heightInPx/dpi;
+    const w = getInch(widthInPx/dpi);
+    const h = getInch(heightInPx/dpi);
     return `${w.toFixed(1)}x${h.toFixed(1)}`;
+}
+
+ 
+
+function getInch(size)
+{
+    return size/dpi;
 }
 
 
@@ -189,4 +196,31 @@ const processFiles = (files) => {
         // }
 
     }
+}
+function moveSelected(direction) {
+    const STEP = 2;
+    var activeObject = canvas.getActiveObject();
+
+    if (activeObject) {
+        switch (direction) {
+        case Direction.LEFT:
+            activeObject.set({"left": activeObject.left - STEP});
+            break;
+        case Direction.UP:
+            activeObject.set({"top": activeObject.top - STEP});
+            break;
+        case Direction.RIGHT:
+            activeObject.set({"left": activeObject.left + STEP});
+            break;
+        case Direction.DOWN:
+            activeObject.set({"top": activeObject.top + STEP});
+            break;
+        }
+        activeObject.setCoords();
+        canvas.renderAll();
+        console.log('selected objects was moved');
+    } else {
+        console.log('no object selected');
+    }
+
 }

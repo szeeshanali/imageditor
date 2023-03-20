@@ -96,6 +96,11 @@
 					console.log("logoSize",logoSize);
 					var val = (logoWidth*hLabelValue);
 					newTickLabel = "<div class='tickLabel'>" + hLabelValue + "''</div>";
+					// if(logoWidth<2)
+					// {
+					// 	newTickLabel = "<div class='majorLabel'>" + hLabelValue + "''</div>";
+					// }
+					
 					$(newTickLabel).css( "left", tickLabelPos+"px" ).appendTo($hRule);
 					for(var j=0;j<8;j++)
 					{

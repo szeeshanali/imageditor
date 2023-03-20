@@ -65,8 +65,9 @@ $("#btnDisplayGrid").on("click", function (e) {
                     left:0,
                     top:0,
                 })
-                canvas.setDimensions({width:logoDisplayWidth,height:logoDisplayHeight})
+                canvas.setDimensions({width:logoDisplayWidth,height:logoDisplayHeight});
                 canvas.renderAll(); 
+
                 canvas.context = {
                     originalWidth   :   firstLogo.width,
                     originalHeight  :   firstLogo.height,
@@ -81,6 +82,12 @@ $("#btnDisplayGrid").on("click", function (e) {
                     templateId      :   selectedTemplateId 
                 }
 
+                const widthIn = getInch(firstLogo.width); 
+                const heightIn = getInch(firstLogo.height);
+
+
+
+
                 $("#canvas-holder").css({"background-color":"#9293cb","padding":"27px"});
                 let logoHeight = canvas.getHeight();
                 let logoDisplaySize = canvas.getWidth();
@@ -94,6 +101,12 @@ $("#btnDisplayGrid").on("click", function (e) {
             /// show grid lines 
                 let labels   = $(".hRule .tickLabel");
                 let vlabels   = $(".vRule .tickLabel");
+                // if(widthIn <3 && heightIn <3)
+                // {
+                //     labels   = $(".hRule .tickMajor");
+                //     vlabels  = $(".vRule .tickMajor");
+                // }
+                
                 let isGridLinesEnabled =  $("#btnDisplayGrid").is(":checked");
                 let isRulerEnabled =  $("#btnDisplayRuler").is(":checked");
                 $("#btnDisplayRuler").prop("checked",true);
@@ -110,10 +123,10 @@ $("#btnDisplayGrid").on("click", function (e) {
                     for(let i=0;i<(vlabels.length);i++)
                     {
                       
-                        let pos = $(vlabels[i]).position();
-                    
+                      let pos = $(vlabels[i]).position();
                       $(".canvas-container").first().append(`<div class='grid-lines h-gridlines' style='width:${logoDisplaySize}px;top:${pos.top-26}px; left:0px; border-bottom: solid 1px #666;'></div>`);
                       $(".canvas-container").first().css({width:logoDisplaySize,height:`${logoHeight}px`})
+                    
                     }
                     if(!isRulerEnabled){
                         $("#btnDisplayRuler").click();
