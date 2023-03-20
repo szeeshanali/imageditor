@@ -20,9 +20,9 @@
 
               <%clipart.items.forEach(item=>{ %>
               
-                <div class=" nav-item col-lg-3 col-md-3 col-sm-6 col-xs-12 pd-2   clipart" data-title="<%=item.title %>" data-url="/uploads/admin/clipart/clipart-<%=item.code %><%=item.file_ext %>" data-target="#clipartModal" data-toggle="modal">
+                <div class=" nav-item col-lg-3 col-md-3 col-sm-6 col-xs-12 pd-2   clipart" data-title="<%=item.title %>" data-url="<%=item.path%>" data-target="#clipartModal" data-toggle="modal">
                   <div  >
-                      <img class="card-img-top img-fluid pd-b-10 " src="/uploads/admin/clipart/clipart-<%=item.code %><%=item.file_ext %>" alt="">
+                      <img class="card-img-top img-fluid pd-b-10 " src="<%=item.path%>" alt="">
                  
                   </div>
               </div>

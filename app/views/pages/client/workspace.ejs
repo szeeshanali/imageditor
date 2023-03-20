@@ -251,10 +251,14 @@
     <div class="table-responsive">
       
       <div class="workarea" id="workarea" >
-   
+        <div style="text-align: right;">
+          <i class="ion-reply tx-32 " style="cursor:pointer" title="Undo" id="undo"></i>
+          <i class="ion-forward tx-32" style="cursor:pointer" title="Redo" id="redo"></i>
+        </div>
+
         <div  id="canvas-holder" >
             <div class="content tx-center" >
-                <canvas id="client-main-canvas"   ></canvas>
+                <canvas id="client-main-canvas" onkeydown="alert(1)" tabindex="0"  ></canvas>
                 <canvas id="client-main-canvas-logo"   ></canvas>                    
             </div>
         </div>

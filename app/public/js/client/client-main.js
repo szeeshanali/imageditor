@@ -141,6 +141,31 @@ fabric.Object.prototype.cornerSize = 10;
 fabric.Object.prototype.padding = 3;
 
 
+var Direction = {
+    LEFT: 0,
+    UP: 1,
+    RIGHT: 2,
+    DOWN: 3
+};
+fabric.util.addListener(document.body, 'keydown', function (options) {
+    if (options.repeat) {
+        return;
+    }
+    options.stopPropagation();
+    options.preventDefault();
+
+    var key = options.which || options.keyCode; // key detection
+    if (key === 37) { // handle Left key
+        moveSelected(Direction.LEFT);
+    } else if (key === 38) { // handle Up key
+        moveSelected(Direction.UP);
+    } else if (key === 39) { // handle Right key
+        moveSelected(Direction.RIGHT);
+    } else if (key === 40) { // handle Down key
+        moveSelected(Direction.DOWN);
+    }
+});
+
 
 async function parseClipboardData() {
     
@@ -867,10 +892,18 @@ function drawTextAlongArc(context, str, centerX, centerY, radius, angle) {
     }
     context.restore();
   }
+function initUIUndoRedo(){
+    $("#undo").on("click",function(){
+        canvasUndo.undo();
+    });
+    $("#redo").on("click",function(){
+        canvasUndo.redo();
+    });
+}
 
-  var selectionRect;
+var selectionRect;
 function initUIEvents() {
-   
+    initUIUndoRedo();
     initImageSelectionUIControls();
     /// disable previous date in rfq calandar.
     $(function(){

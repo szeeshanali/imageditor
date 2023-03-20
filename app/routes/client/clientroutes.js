@@ -429,10 +429,16 @@ router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
     var items = cliparts?.filter(i=>i.category == category.id);
     if(items != null && items.length > 0)
     {
+        items = items.map(i=>{
+            i.path = i.path?.replace("../app/public","");
+            return i; 
+        });
+
         ca.push({
            categoryName:category.name,
            items: items
-        })
+        }); 
+        
     }
    
    });
