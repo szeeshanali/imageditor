@@ -65,7 +65,7 @@ var $inputDesignLink = $("#admin-design-link");
 var $inputOrderNo = $("#admin-display-order");
 var $selectPageSize = $("#admin-page-size");
 var $inputLogoPerPage = $("#admin-logo-count");
-var $templateThumb = $("#templatepanel .template");
+var $templateThumb = $("#templatepanel_update .template");
 var $customTemplateThumb = $("#customTemplateThumb .template");
 var $clipartThumb = $("#clipartmenu .clipart img");
 var $btnUpdateDesign = $("#btnUpdateDesign");
@@ -1683,7 +1683,6 @@ function saveDesign() {
             enabledTextMode = false;
             var id = e.currentTarget.id;
             canvas.clear();
-            debugger;
             loadSVGTemplate(id);
         });
         $("#btn-step-design").on("click", function (e) {
@@ -2263,17 +2262,17 @@ function saveDesign() {
         })
 
 
-        // $templateThumb.unbind().on("click", (e) => {
+        $templateThumb.unbind().on("click", (e) => {
 
-        //     var templateId = e.currentTarget.id;
-        //     if (templateId) {
+            var templateId = e.currentTarget.id;
+            if (templateId) {
 
-        //         loadTemplateInfoByTemplateId(templateId);
-        //         // loadSVGTemplate(templateId);
-        //     } else {
-        //         toast(`Can't load Template.`)
-        //     }
-        // })
+                loadTemplateInfoByTemplateId(templateId);
+                // loadSVGTemplate(templateId);
+            } else {
+                toast(`Can't load Template.`)
+            }
+        })
 
         // $customTemplateThumb.on("click", (e) => {
         //     var id = e.currentTarget.id;
