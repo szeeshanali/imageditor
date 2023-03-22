@@ -89,6 +89,7 @@
 			let inchesCounter = Math.ceil(logoWidth);
 			
 			var major = tickLabelPos;
+			const marker = (logoHeight<=4 && logoWidth<=4)?4:8;
 			for(var i=0;i<=inchesCounter;i++)
 			{
 
@@ -102,11 +103,11 @@
 					// }
 					
 					$(newTickLabel).css( "left", tickLabelPos+"px" ).appendTo($hRule);
-					for(var j=0;j<8;j++)
+					for(var j=0;j<marker;j++)
 					{
 						newTickLabel = "<div class='tickMajor'></div>";
 				 		$(newTickLabel).css( "left", major +"px" ).appendTo($hRule);
-						 major = major + (pxLogoWidth/8)
+						 major = major + (pxLogoWidth/marker)
 					}
 				tickLabelPos = (tickLabelPos + pxLogoWidth);	
 				hLabelValue += 1; 
@@ -118,19 +119,19 @@
 		
 			let vArea = $vRule.height();
 			let pxLogoHeight = vArea/logoHeight;
-			let inchesHeightCounter = Math.floor(logoHeight);
+			let inchesHeightCounter = Math.ceil(logoHeight);
 			var vMaker = vTickLabelPos;
 			for(var i=0;i<=inchesHeightCounter;i++)
 			{
 					
 				newTickLabel = "<div class='tickLabel'>" + vLabelValue + "''</div>";
 				$(newTickLabel).css( "top", vTickLabelPos+"px" ).appendTo($vRule);
-				for(var j=0;j<8;j++)
+				for(var j=0;j<marker;j++)
 				{
 					newTickLabel = "<div class='tickMajor'></div>";
 					 $(newTickLabel).css( "top", vMaker +"px" ).appendTo($vRule);
 					//tickLabelPos = (tickLabelPos + pxLogoHeight);	
-					 vMaker = vMaker + (pxLogoHeight/8)
+					 vMaker = vMaker + (pxLogoHeight/marker)
 				}
 				vTickLabelPos = (vTickLabelPos + pxLogoHeight);	
 				vLabelValue += 1; 		

@@ -101,32 +101,62 @@ $("#btnDisplayGrid").on("click", function (e) {
             /// show grid lines 
                 let labels   = $(".hRule .tickLabel");
                 let vlabels   = $(".vRule .tickLabel");
-                // if(widthIn <3 && heightIn <3)
-                // {
-                //     labels   = $(".hRule .tickMajor");
-                //     vlabels  = $(".vRule .tickMajor");
-                // }
-                
+                let labels2   = $(".hRule .tickMajor");
+                let vlabels2   = $(".vRule .tickMajor");                
                 let isGridLinesEnabled =  $("#btnDisplayGrid").is(":checked");
                 let isRulerEnabled =  $("#btnDisplayRuler").is(":checked");
                 $("#btnDisplayRuler").prop("checked",true);
                 $("#btnDisplayGrid").prop("checked",true);
                
                 $(".grid-lines").remove();
-                    for(var i=0;i<(labels.length-1);i++)
+                    for(var i=1;i<labels.length;i++)
                     {
                       
                       let pos = $(labels[i]).position();
+                      if((pos.left-29) <= canvas.width){
                       $(".canvas-container").first().append(`<div class='grid-lines' style='height:${logoHeight}px;left:${pos.left-29}px; top:0px; '></div>`)
+                        if(widthIn<4 && heightIn<4)
+                        {
+                            for(var j=1;j<labels2.length;j++)
+                            {
+                                let _pos = $(labels2[j]).position();
+                                if((_pos.left)<=canvas.width)
+                                {
+                                    $(".canvas-container").first().append(`<div class='grid-lines' style='height:${logoHeight}px;left:${_pos.left-29}px; top:0px; '></div>`)
+                                }
+        
+                            }
+                        }
+                    }
+                     
+
                     }
               
                     for(let i=0;i<(vlabels.length);i++)
                     {
                       
                       let pos = $(vlabels[i]).position();
+                      if((pos.top-26) <= canvas.height){
                       $(".canvas-container").first().append(`<div class='grid-lines h-gridlines' style='width:${logoDisplaySize}px;top:${pos.top-26}px; left:0px; border-bottom: solid 1px #666;'></div>`);
                       $(".canvas-container").first().css({width:logoDisplaySize,height:`${logoHeight}px`})
-                    
+
+                      if(widthIn<4 && heightIn<4)
+                        {
+                            
+                            for(var j=1;j<vlabels2.length;j++)
+                            {
+                                let _pos = $(vlabels2[j]).position();
+                                if(_pos.top<=canvas.height)
+                                {
+                                    $(".canvas-container").first().append(`<div class='grid-lines h-gridlines' style='width:${logoDisplaySize}px;top:${_pos.top-26}px; left:0px; border-bottom: solid 1px #666;'></div>`);
+
+                                }
+                             
+        
+                            }
+                        }
+                      
+                      }
                     }
                     if(!isRulerEnabled){
                         $("#btnDisplayRuler").click();
