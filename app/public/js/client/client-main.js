@@ -152,14 +152,25 @@ var Direction = {
     RIGHT: 2,
     DOWN: 3
 };
-fabric.util.addListener(document.getElementById('client-main-canvas'), 'keydown', function (options) {
+
+
+fabric.util.addListener(document.body, 'keydown', function (options) {
+    
+
     if (options.repeat) {
         return;
     }
+
+    var key = options.which || options.keyCode; // key detection
+
+    if(!(key === 37 || key === 38 || key === 39 || key === 40 ) )
+    return; 
+
+    if(!canvas.getActiveObject()) return;
+
     options.stopPropagation();
     options.preventDefault();
 
-    var key = options.which || options.keyCode; // key detection
     if (key === 37) { // handle Left key
         moveSelected(Direction.LEFT);
     } else if (key === 38) { // handle Up key
@@ -170,6 +181,7 @@ fabric.util.addListener(document.getElementById('client-main-canvas'), 'keydown'
         moveSelected(Direction.DOWN);
     }
 });
+
 
 
 async function parseClipboardData() {
@@ -189,8 +201,8 @@ async function parseClipboardData() {
               item.getType(type).then((imageBlob) => {
                 let url = window.URL.createObjectURL(imageBlob);
                 fabric.Image.fromURL(url, function (img) {
+                    
                     img.globalCompositeOperation = 'source-atop';
-
                     canvas.add(img);
                     canvas.renderAll();
                 })
@@ -2050,8 +2062,11 @@ function pasteImage(event) { // get the raw clipboardData
             // format the imageData into a URL
             var imageURL = window.webkitURL.createObjectURL(imageData);
             fabric.Image.fromURL(imageURL, (img) => { // img.scaleToWidth(300);
-                img.scaleToHeight(300);
-
+                let ratio = canvas.width/1.5; 
+                    img.scaleToWidth(ratio);                
+                    let canvasCenter = getCanvasCenter(img.getScaledWidth(),img.getScaledHeight())
+                    img.set({left: canvasCenter.left, top: canvasCenter.top})
+                    img.setCoords();
                 img.globalCompositeOperation = "source-atop";
                 canvas.add(img).renderAll();
             })

@@ -35,7 +35,7 @@ $("#btnDisplayGrid").on("click", function (e) {
                 }
                 const svgBase64 = data.base64;
                 if (! svgBase64) {
-                toast("Error loading Template.");
+                toast("Error loading Template.");       
                 return;
                 }
             
