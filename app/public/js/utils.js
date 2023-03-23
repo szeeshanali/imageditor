@@ -177,7 +177,7 @@ const processFiles = (files) => {
                 fabric.Image.fromURL(e.target.result, (img) => {
                     //let logoSize = canvas.context.originalWidth;
                     //img.scaleToWidth(logoSize/1.5);  
-                    let ratio = canvas.width/2; 
+                    let ratio = canvas.width/1.5; 
                     img.scaleToWidth(ratio);                
                     let canvasCenter = getCanvasCenter(img.getScaledWidth(),img.getScaledHeight())
                     img.set({left: canvasCenter.left, top: canvasCenter.top})
