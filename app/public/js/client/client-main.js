@@ -173,6 +173,12 @@ fabric.util.addListener(document.getElementById('client-main-canvas'), 'keydown'
 
 
 async function parseClipboardData() {
+    if(!window.isSecureContext)
+    {
+        console.error();
+        toast("You are not running into secure origin - Please use CTRL+V to paste.");
+        return;
+    }
     
     const items = await navigator.clipboard.read().then((items)=>{
         for (let item of items) {
