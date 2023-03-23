@@ -1,4 +1,9 @@
 
+
+var canvas      = new fabric.Canvas("client-main-canvas",       {preserveObjectStacking: true})
+var canvasPrev  = new fabric.Canvas("client-main-canvas-logo",  {preserveObjectStacking: true});
+var cropCanvas  = new fabric.Canvas("cropCanvas",               {preserveObjectStacking: true});
+
 const dpi = 72;
 // const defaults = {
 //     fontSize:36,
@@ -147,7 +152,7 @@ var Direction = {
     RIGHT: 2,
     DOWN: 3
 };
-fabric.util.addListener(document.body, 'keydown', function (options) {
+fabric.util.addListener(document.getElementById('client-main-canvas'), 'keydown', function (options) {
     if (options.repeat) {
         return;
     }
@@ -447,9 +452,6 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
 };
 
 
-var canvas      = new fabric.Canvas("client-main-canvas",       {preserveObjectStacking: true})
-var canvasPrev  = new fabric.Canvas("client-main-canvas-logo",  {preserveObjectStacking: true});
-var cropCanvas  = new fabric.Canvas("cropCanvas",  {preserveObjectStacking: true});
 
 fabric.util.addListener(canvas.upperCanvasEl, 'dblclick', function (e) {
     var target = canvas.findTarget(e);
