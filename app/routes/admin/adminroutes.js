@@ -779,20 +779,64 @@ router.put('/api/admin/template/:id?', isAdmin, async (req,res)=>{
     var id = req.params["id"]; 
     if(!id){
       return res.status(400).send({"status":400,"message":"Can't Update. Id is missing."});
-    }    
+    }
+    
+    /// removing default check from all templates
+    /// request payload should have one default selected. 
+
     await uploads.updateMany({type:'template', by_admin:true }, {$set: {default: false} });
-  
+
     let requestOrder = req.body.order_no;
     /// find document by new Order no. 
-    let findDocumentByOrderNo = await uploads.findOne({type:'template', by_admin:true, order_no:requestOrder });
-  
+    let findDocumentByOrderNo = await uploads.findOne({type:'template', by_admin:true, order_no:requestOrder },{_id:1,order_no:1});
+    let findTargetDocumentOrderNo = await uploads.findOne({type:'template', by_admin:true, code:id },{_id:1,order_no:1} );
+    let inputOrder =findDocumentByOrderNo.order_no;
+    let targetOrder =  findTargetDocumentOrderNo.order_no;
+   
+
+    
+    if(inputOrder<targetOrder)
+    {
+      let range = [];
+      for(let i=inputOrder;i<targetOrder;i++)
+      {
+        range.push(i)
+      }
+      let findRangeIds = await uploads.find({order_no:{$in:range}},{_id:1,order_no:1});
+      findTargetDocumentOrderNo.order_no = inputOrder;
+      findTargetDocumentOrderNo.save();
+
+      findRangeIds.forEach(item=>{
+        item.order_no = item.order_no+1; 
+        item.save();
+      })
+
+      console.log("update order upword");
+
+    }else{
+      let range = [];
+      for(let i=inputOrder;i>targetOrder;i--)
+      {
+        range.push(i)
+      }
+      let findRangeIds = await uploads.find({order_no:{$in:range}},{_id:1,order_no:1});
+      findTargetDocumentOrderNo.order_no = inputOrder;
+      findTargetDocumentOrderNo.save();
+
+      findRangeIds.forEach(item=>{
+        item.order_no = item.order_no-1; 
+        item.save();
+      })
+      console.log("update order downword");
+    } 
 
 
-    let updateDocument  = await uploads.findOneAndUpdate({type:'template', by_admin:true, code:id }, req.body,{returnDocument:'before'}); 
-    if(findDocumentByOrderNo){
-      findDocumentByOrderNo.order_no = updateDocument.order_no;
-      findDocumentByOrderNo.save();
-    }
+
+    // let updateDocument  = await uploads.findOneAndUpdate({type:'template', by_admin:true, code:id }, req.body,{returnDocument:'before'}); 
+    // if(findDocumentByOrderNo){
+    //   findDocumentByOrderNo.order_no = updateDocument.order_no;
+    //   findDocumentByOrderNo.save();
+    // }
     return res.status(200).send({"status":400,"message":`Updated successfully, Id:${id}`});
   }catch(ex)
   {
