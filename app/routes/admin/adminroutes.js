@@ -171,8 +171,9 @@ router.get("/app/admin/settings", isAdmin, async (req,res)=>{
 
 
 router.get("/app/admin/terms", isAdmin, async (req,res)=>{
-  var content = await commonService.contentService.getContentAsync('terms-conditions') || {};
-
+  var content =  await contents.findOne({type:'terms', active:true, deleted:false});
+  var exp = /^<([a-z]+)([^<]+)*(?:>(.*)<\/\1>|\s+\/>)$/;
+  
   res.locals.page = {
     title  : "Terms & Conditions",
     id     : "__terms",
@@ -338,13 +339,12 @@ router.post(ROUTE_ADMIN_SAVEDESIGN,  isAdmin,  (req,res)=>{
 router.post('/api/admin/content', isAdmin, async (req,res)=>{
   const  {content, type, fontFile, label, id, order} = req.body;
   try{
-    if(type === 'faq' || type === 'privacy-policy' || type === "terms-conditions")
+    if(type === 'faq' || type === 'privacy-policy' || type === "terms")
     { 
       await commonService.contentService.addOrUpdateContentAsync(label,content,type,true);       
       return res.status(200).send({status:"success",message:"Content updated successfully!"});      
     }
-
-    if(type === 'custom-text')
+    else if(type === 'custom-text')
     {
       if(id && id.length === 24)
       {
