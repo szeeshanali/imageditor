@@ -58,7 +58,7 @@ const projectHtml = `
                   <h5 class="card-body-title">{{title}}</h5>
                   <p class="card-subtitle tx-normal mg-b-15">{{desc}}</p>
                   <p class="card-text">
-                  <img src="{{src}}" class=" wd-100" alt="Image">
+                    <img src="{{src}}" class="img-fluid" alt="Image">
                   </p>
                   <a href="#"  onclick="loadProject('{{code}}',false)" class="card-link">Edit</a>
                   <a href="#" onclick="deleteProject('{{code}}',this)" class="card-link">Delete</a>
@@ -67,11 +67,11 @@ const projectHtml = `
             </div>
 `
 
-const designHtml = `<div class='pre-designed'>
-<div class="list-group-item  pd-0">
+const designHtml = `<div class='pre-designed col-md-3 p-lg-1 align-self-normal'>
+<div class="list-group-item pd-0">
 <div class="media d-block ">
-  <div class="d-block ">
-    <img src="{{base64}}" class="wd-100" alt="Image">
+  <div class="d-block text-center">
+    <img src="{{base64}}" class="card-img-fluid" alt="Image">
   </div>
   <div class="media-body pd-15">
     <h6 class="mg-b-5 tx-14 "><a href="#" class="tx-inverse hover-primary tx-bold"  id='{{code}}' >{{title}}</a></h6>

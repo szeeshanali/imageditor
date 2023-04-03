@@ -56675,3 +56675,15 @@ a.hover-white-8:hover, a.hover-white-8:focus {
     width: 100%;
   }
 
+/* Sajid CSS */
+.align-self-normal{
+  align-self: normal !important;
+}
+
+.my-flex-card > div > div.list-group-item {
+  height: calc(100% - 2.5px);
+}
+.card-img-fluid{
+  max-width: 100%;
+  height: 120px;
+}
