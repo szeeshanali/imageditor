@@ -749,6 +749,10 @@ categories.forEach(category => {
 var items = cliparts?.filter(i=>i.category == category.id);
 if(items != null && items.length > 0)
 {
+  items = items.map(i=>{
+    i.path = i.path?.replace("../app/public","");
+    return i; 
+});
     ca.push({
        categoryName:category.name,
        items: items
@@ -781,10 +785,7 @@ router.put('/api/admin/template/:id?', isAdmin, async (req,res)=>{
       return res.status(400).send({"status":400,"message":"Can't Update. Id is missing."});
     }
     
-    /// removing default check from all templates
-    /// request payload should have one default selected. 
-
-    await uploads.updateMany({type:'template', by_admin:true }, {$set: {default: false} });
+    
 
     let requestOrder = req.body.order_no;
     /// find document by new Order no. 
@@ -799,36 +800,50 @@ router.put('/api/admin/template/:id?', isAdmin, async (req,res)=>{
     {
       let range = [];
       for(let i=inputOrder;i<targetOrder;i++)
+      { range.push(i) }
+
+      if(range.length>0)
       {
-        range.push(i)
+        let findRangeIds = await uploads.find({order_no:{$in:range}},{_id:1,order_no:1});
+        findTargetDocumentOrderNo.order_no = inputOrder;
+        findTargetDocumentOrderNo.save();  
+        findRangeIds.forEach(item=>{
+          item.order_no = item.order_no+1; 
+          item.save();
+        })
+        console.log("update order upword");
       }
-      let findRangeIds = await uploads.find({order_no:{$in:range}},{_id:1,order_no:1});
-      findTargetDocumentOrderNo.order_no = inputOrder;
-      findTargetDocumentOrderNo.save();
-
-      findRangeIds.forEach(item=>{
-        item.order_no = item.order_no+1; 
-        item.save();
-      })
-
-      console.log("update order upword");
 
     }else{
+
+
       let range = [];
       for(let i=inputOrder;i>targetOrder;i--)
-      {
-        range.push(i)
-      }
-      let findRangeIds = await uploads.find({order_no:{$in:range}},{_id:1,order_no:1});
-      findTargetDocumentOrderNo.order_no = inputOrder;
-      findTargetDocumentOrderNo.save();
+      { range.push(i); }
 
-      findRangeIds.forEach(item=>{
-        item.order_no = item.order_no-1; 
-        item.save();
-      })
-      console.log("update order downword");
-    } 
+      if(range.length>0)
+      {
+        let findRangeIds = await uploads.find({order_no:{$in:range}},{_id:1,order_no:1});
+        findTargetDocumentOrderNo.order_no = inputOrder;
+        findTargetDocumentOrderNo.save();
+        findRangeIds.forEach(item=>{
+          item.order_no = item.order_no-1; 
+          item.save();
+        })
+        console.log("update order downword");
+      }
+      
+    }
+    
+    await uploads.updateMany({type:'template', by_admin:true }, {$set: {default: false} });
+    await uploads.findOneAndUpdate({type:'template', by_admin:true, code:id }, {
+      active  : req.body.active,
+      default : req.body.default, 
+      ref_code : req.body.ref_code, 
+      file_name : req.body.file_name, 
+      link : req.body.link
+    } ,{returnDocument:'before'});
+    
 
 
 
