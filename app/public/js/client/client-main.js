@@ -58,7 +58,7 @@ const projectHtml = `
                   <h5 class="card-body-title">{{title}}</h5>
                   <p class="card-subtitle tx-normal mg-b-15">{{desc}}</p>
                   <p class="card-text">
-                  <img src="{{src}}" class=" wd-100" alt="Image">
+                    <img src="{{src}}" class="img-fluid" alt="Image">
                   </p>
                   <a href="#"  onclick="loadProject('{{code}}',false)" class="card-link">Edit</a>
                   <a href="#" onclick="deleteProject('{{code}}',this)" class="card-link">Delete</a>

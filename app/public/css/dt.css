@@ -881,7 +881,8 @@ font-weight: bold;
   border-right:solid 1px #666;
 }
 .card-subtitle{
-  height:32px; 
+  /* height:32px;  */
+  min-height:42px; 
   overflow: hidden;
 }
 .design-steps{
