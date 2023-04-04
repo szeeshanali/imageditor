@@ -67,24 +67,44 @@ const projectHtml = `
             </div>
 `
 
-const designHtml = `<div class='pre-designed col-md-3 p-lg-1 align-self-normal'>
-<div class="list-group-item pd-0">
-<div class="media d-block ">
-  <div class="d-block text-center">
+const designHtml = `<div class='pre-designed col-md-6 p-lg-1 align-self-normal'>
+<div class="card" style='border: 1px solid rgba(0, 0, 0, 0.125);'>
+  <div class="row no-gutters align-items-center" style="background-color:#fff">
+    <div class="col-md-5 text-center">
     <img src="{{base64}}" class="card-img-fluid" alt="Image">
+    </div>
+    <div class="col-md-7">
+      <div class="card-body" style="background-color:#fff">
+      <h6 class="mg-b-5 tx-14 "><a href="#" class="tx-inverse hover-primary tx-bold"  id='{{code}}' >{{title}}</a></h6>
+        <p class="mg-b-0 tx-12 tx-bold">{{created_dt}}</p>
+        <p class="mg-b-0 tx-12 tx-bold">Sheet Size: {{sheetSize}}</p>
+        <p class="mg-b-0 tx-12 tx-bold">Logo Size: {{logoSize}}</p>
+        <p class="mg-b-0 tx-12 tx-bold">Total Logos: {{totalLogos}}</p>
+        <p class="mg-b-0 tx-12 tx-bold tx-uppercase">Format: {{pageFormat}}</p>
+        <a href="#" class="btn btn-sm btn-primary"  onclick="loadProject('{{code}}')" class="card-link">Edit</a>
+      </div>
+    </div>
   </div>
-  <div class="media-body pd-15">
-    <h6 class="mg-b-5 tx-14 "><a href="#" class="tx-inverse hover-primary tx-bold"  id='{{code}}' >{{title}}</a></h6>
-    <p class="mg-b-0 tx-12 tx-bold">{{created_dt}}</p>
-    <p class="mg-b-0 tx-12 tx-bold">Sheet Size: {{sheetSize}}</p>
-    <p class="mg-b-0 tx-12 tx-bold">Logo Size: {{logoSize}}</p>
-    <p class="mg-b-0 tx-12 tx-bold">Total Logos: {{totalLogos}}</p>
-    <p class="mg-b-0 tx-12 tx-bold tx-uppercase">Format: {{pageFormat}}</p>
-    <a href="#" class="btn btn-sm btn-primary"  onclick="loadProject('{{code}}')" class="card-link">Edit</a>
-  </div>
-</div>
 </div>
 </div>`;
+// const designHtml = `<div class='pre-designed col-md-3 p-lg-1 align-self-normal'>
+// <div class="list-group-item pd-0">
+// <div class="media d-block ">
+//   <div class="d-block text-center">
+//     <img src="{{base64}}" class="card-img-fluid" alt="Image">
+//   </div>
+//   <div class="media-body pd-15">
+//     <h6 class="mg-b-5 tx-14 "><a href="#" class="tx-inverse hover-primary tx-bold"  id='{{code}}' >{{title}}</a></h6>
+//     <p class="mg-b-0 tx-12 tx-bold">{{created_dt}}</p>
+//     <p class="mg-b-0 tx-12 tx-bold">Sheet Size: {{sheetSize}}</p>
+//     <p class="mg-b-0 tx-12 tx-bold">Logo Size: {{logoSize}}</p>
+//     <p class="mg-b-0 tx-12 tx-bold">Total Logos: {{totalLogos}}</p>
+//     <p class="mg-b-0 tx-12 tx-bold tx-uppercase">Format: {{pageFormat}}</p>
+//     <a href="#" class="btn btn-sm btn-primary"  onclick="loadProject('{{code}}')" class="card-link">Edit</a>
+//   </div>
+// </div>
+// </div>
+// </div>`;
 
 
 // vars
