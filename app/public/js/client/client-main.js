@@ -278,6 +278,7 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
 
         this.callSuper('initialize', options);
         this.set('lockUniScaling', true);
+        
 
         // Draw curved text here initially too, while we need to know the width and height.
         var ___canvas = this.getCircularText();
@@ -438,14 +439,19 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
                 if (this.width < 1) {
                     this.width = 1;
                 }
+                canvas.requestRenderAll();
                 break;
+            
 
             case 'scaleY':
+                
                 this.height *= value;
+
                 this.scaleY = 1;
                 if (this.height < 1) {
                     this.height = 1;
                 }
+                canvas.requestRenderAll();
                 break;
 
             default:
@@ -493,7 +499,7 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
 
 fabric.util.addListener(canvas.upperCanvasEl, 'dblclick', function (e) {
     var target = canvas.findTarget(e);
-    ungroup(e);
+    //ungroup(e);
 });
 
 
@@ -1566,12 +1572,16 @@ function saveDesign() {
 
 function onObjectSelectionCleared(o) {
     hideObjectControls();
+
 }
 
 function onObjectSelection(o) {
-    var _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
-    var t = _canvas.getActiveObject().get('type');
-    if (t == "i-text" || t == "curved-text") {
+    let _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
+    let _ = _canvas.getActiveObject()    
+    let t = _.get('type');
+    if (t == "i-text" || t == "curved-text") {   
+       // _.lockScalingX = _.lockScalingY = true;    
+       //_.hasControls = false;
 
         textControls(true);
         updateTextControls(o);
@@ -1622,6 +1632,9 @@ function updateTextControls(e){
 }
 
 function initCanvasEvents() {
+
+   
+
 
     canvas.on({
         "selection:updated": onObjectSelection, 

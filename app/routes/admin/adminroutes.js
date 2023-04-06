@@ -350,8 +350,58 @@ router.post('/api/admin/content', isAdmin, async (req,res)=>{
       {
 
       
-        let doc = await contents.findOneAndUpdate({_id:id,type:'custom-text'},{order:order,content:content});
-        await contents.findOneAndUpdate({order:order,type:'custom-text'},{order:doc.order});
+        // let previousDoc = await contents.findOneAndUpdate({_id:id,type:'custom-text'},{order:order,content:content},{returnDocument:'before'});
+        // await contents.findOneAndUpdate({order:order,type:'custom-text'},{order:previ.order});
+        let findDocumentByOrderNo = await contents.findOne({type:'custom-text', by_admin:true, order:order },{_id:1,order:1});
+        let findTargetDocumentOrderNo = await contents.findOne({type:'custom-text', by_admin:true, _id:id },{_id:1,order:1} );
+        let inputOrder = order;
+        let targetOrder =  findTargetDocumentOrderNo.order;
+
+    
+        if(inputOrder<targetOrder)
+        {
+          let range = [];
+          for(let i=inputOrder;i<targetOrder;i++)
+          { range.push(i) }
+    
+          if(range.length>0)
+          {
+            let findRangeIds = await contents.find({order:{$in:range}},{_id:1,order:1});
+            findTargetDocumentOrderNo.order = inputOrder;
+            findTargetDocumentOrderNo.save();  
+            findRangeIds.forEach(item=>{
+              item.order = item.order+1; 
+              item.save();
+            })
+            console.log("update order upword");
+          }
+    
+        }else{
+    
+    
+          let range = [];
+          for(let i=inputOrder;i>targetOrder;i--)
+          { range.push(i); }
+    
+          if(range.length>0)
+          {
+            let findRangeIds = await contents.find({order:{$in:range}},{_id:1,order:1});
+            findTargetDocumentOrderNo.order = inputOrder;
+            findTargetDocumentOrderNo.save();
+            findRangeIds.forEach(item=>{
+              item.order = item.order-1; 
+              item.save();
+            })
+            console.log("update order downword");
+          }
+          
+        }
+
+        await contents.findOneAndUpdate({_id:id }, {
+          label:label          
+        } ,{returnDocument:'before'});
+
+
         return res.status(200).send({status:"success",message:"Content updated successfully!"});  
         
       }
