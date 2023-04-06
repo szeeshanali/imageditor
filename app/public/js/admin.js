@@ -1852,6 +1852,7 @@ function saveDesign() {
             $("#inputCustomText").val(txt);
             $("#btnCustomText").text("Update Text");
             $("#hiddenCustomTextId").val(id.replace("custom-text-",""));
+            $("#customTxtDisplayOrder").removeClass("hidden");
             $("#customTxtDisplayOrder").val(order);
         })
 
@@ -1868,7 +1869,7 @@ function saveDesign() {
                 url: `/api/admin/custom-text/${id}`,
                 success: function (res) {
                     toast("Deleted successfully!");
-                    $(`#custom-text-${id}`).remove();
+                    window.location.reload();
                 },
                 error: function (res) {
                     toast("Error while deleting.");
@@ -1877,10 +1878,11 @@ function saveDesign() {
 
         });
         $("#btnCustomTextClear").on("click", function (e) {
-          $('#inputCustomText').val("");
-          $("#hiddenCustomTextId").val("");
-          $("#btnCustomText").val("Add Text");
-          $("#customTxtDisplayOrder").val("");
+        //   $('#inputCustomText').val("");
+        //   $("#hiddenCustomTextId").val("");
+        //   $("#btnCustomText").val("Add Text");
+        //   $("#customTxtDisplayOrder").val("");
+                window.location.reload();
         })
         $("#btnCustomText").on("click", function (e) {
           if(customTextInProgress){
@@ -1904,7 +1906,10 @@ function saveDesign() {
           }
           let customTextId = $("#hiddenCustomTextId").val();
           let order = $("#customTxtDisplayOrder").val();
-
+if(!order || order < 1){
+    toast("Invalid Order No.");
+    return; 
+}
           $.ajax({
               type: "POST",
               url: "/api/admin/content",
@@ -1912,7 +1917,7 @@ function saveDesign() {
                   content   : text,
                   type      : type,
                   id        : customTextId,
-                  order     : order || 0
+                  order     : order || 1
               },
               success: function (res) {
                 window.location.reload();
