@@ -207,6 +207,14 @@ router.delete('/api/admin/custom-text/:id', isAdmin, async (req,res)=>{
   }  
   try{
     await contents.findOneAndDelete({type:'custom-text', by_admin:true, _id:id }); 
+    let items = await contents.find({type:"custom-text"}).sort({order:1}); 
+    if(items && items.length>0){
+      
+      for(let j =0;j<items.length;j++){
+        await contents.findOneAndUpdate({_id:items[j]._id},{order:j+1})       
+      }
+      
+    }
     return res.status(200).send({"status":400,"message":`Deleted successfully, Id:${id}`});
   }catch(e)
   { return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."}); }
@@ -349,6 +357,8 @@ router.post('/api/admin/content', isAdmin, async (req,res)=>{
       if(id && id.length === 24)
       {
 
+        if(!order || order < 1)
+        {order=1}
       
         // let previousDoc = await contents.findOneAndUpdate({_id:id,type:'custom-text'},{order:order,content:content},{returnDocument:'before'});
         // await contents.findOneAndUpdate({order:order,type:'custom-text'},{order:previ.order});
@@ -398,7 +408,8 @@ router.post('/api/admin/content', isAdmin, async (req,res)=>{
         }
 
         await contents.findOneAndUpdate({_id:id }, {
-          label:label          
+          label:label,
+          content:content          
         } ,{returnDocument:'before'});
 
 
