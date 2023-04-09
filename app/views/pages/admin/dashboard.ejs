@@ -194,7 +194,7 @@
       <td >${ d.title || 'N/A' }<br> <a  href='${d.link}'>${d.ref_code}</a></td><td>${ new Date(item.created_dt).toLocaleString() }</td>` ) });
         table = table.replace("{tr}", temp);
         if (filteredHistory.length == 0) {
-            table = "<p clsss='pd-y-20'>No PDF Downloads yet!</p>"
+            table = "<p clsss='pd-y-20'>No Records Found.</p>"
         }
         $("#downloadHistoryTitle").text(_title);
         $("#downloadHistoryContent").html(table);
@@ -273,7 +273,7 @@
       <td>${ new Date(item.created_dt).toLocaleString() }</td><td><a href='/app/admin/user-project/${item._id}'   >View</a></td>` ) });
         table = table.replace("{tr}", temp);
         if (filteredUserProjects.length == 0) {
-            table = "<p clsss='pd-y-20'>No PDF Downloads yet!</p>"
+            table = "<p clsss='pd-y-20'>No Records Found.</p>"
         }
         $("#projectHistoryTitle").text(_title);
         $("#projectHistoryContent").html(table);

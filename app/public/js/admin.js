@@ -826,8 +826,33 @@ function saveDesign() {
         canvas.renderAll();
     }
 
+    function deleteCustomProject(id){
+        
+        if(!confirm('This design will be permanently deleted! Are you sure?')){
+            return; 
+        }
+$loader.removeClass("hidden");
+        $.ajax({
+            type: "DELETE",
+            url: `/app/admin/shared-library/${id}`,
+            success: function (res) {                
+                toast("Deleted Successfully!");
+               
+                setTimeout(function () {
+                    $loader.addClass("hidden");
+                    window.location.reload();
+                }, 2000)
+            },  
+            error: function (res) {
+                $loader.addClass("hidden");
+                toast("Server Error.");
+               
+            }
+        })
+    }
     function initUICustomProjects(){
 
+       
         $(".custom-project").on("click",function(){
             const $elem = $(this);
             const meta = $elem.attr("data-meta");
@@ -838,7 +863,7 @@ function saveDesign() {
             .replace("{sheet-size}", getInches(metaJSON.sheetWidth,metaJSON.sheetHeight) + " inches")
             .replace("{total-logos}",metaJSON.totalLogos)
             .replace("{logo-size}",getInches(metaJSON.logoWidth,metaJSON.logoHeight)+ " inches")
-            .replace("{design-id}",$elem.attr('id'));
+            .replace(/{design-id}/ig,$elem.attr('id'));
             
             $("#customDesignDetails").html(html);
         })

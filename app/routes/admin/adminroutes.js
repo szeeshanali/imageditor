@@ -938,6 +938,21 @@ router.get("/app/admin/shared-library", isAdmin, async (req,res)=>{
 })
 
 
+
+router.delete("/app/admin/shared-library/:id", isAdmin, async (req,res)=>{
+  var id = req.params["id"]; 
+  try{
+  
+    if(!id){ throw "Error while deleting. Id is missing."; }
+    await uploads.findOneAndDelete({type:'pre-designed', by_admin:true, _id:id }); 
+    return ok(res,`${id} has been deleted.`);
+
+  }catch(ex)
+  { 
+    return error(res,ex)
+ }
+ 
+})
 // per
 router.delete('/api/admin/template/:id', isAdmin, async (req,res)=>{
   var id = req.params["id"]; 
