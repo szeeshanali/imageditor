@@ -1892,15 +1892,12 @@ function initCanvasTextEvents() {
         }
         if (e.target.checked) {
   
-        // var item = curveText(obj);
-        // item.globalCompositeOperation = "source-atop";
-        // canvas.add(item);
-        // canvas.renderAll();
-        // canvas.remove(obj)
-        // canvas.setActiveObject(item);
-
-        let txt = new CurvedText( canvas, {angle:0} );
-        txt.center();
+        var item = curveText(obj);
+        item.globalCompositeOperation = "source-atop";
+        canvas.add(item);
+        canvas.renderAll();
+        canvas.remove(obj)
+        canvas.setActiveObject(item);
        
         } else {
             //$("#inputFlipText").prop('checked',false);
