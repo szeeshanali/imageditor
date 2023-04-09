@@ -26,8 +26,9 @@ function getPageFormatByDimensions(widthPx, heightPx)
 
 function getInches(widthInPx, heightInPx)
 {
-    const w = getInch(widthInPx/dpi);
-    const h = getInch(heightInPx/dpi);
+   
+    const w = getInch(widthInPx);
+    const h = getInch(heightInPx);
     return `${w.toFixed(1)}x${h.toFixed(1)}`;
 }
 

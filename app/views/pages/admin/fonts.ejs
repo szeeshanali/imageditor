@@ -51,10 +51,22 @@
           <%for(var i=0;i<fonts?.length;i++){%>
           <div class="list-group-item rounded-top-0  pd-0 bd-0" id="fonts-<%=fonts[i]._id%>">
             <div >
-              <label class="ckbox tx-bold "  id="cbFontEnabled" style="color:#494699">               
-                <input type="checkbox" id="<%=fonts[i]._id%>" <%=fonts[i].active?'checked':''%>><span><%=fonts[i].content.split('-')[0]%></span>
+
+              <%if(fonts[i].disable){%>
+                <label class="ckbox tx-bold "  id="cbFontEnabled" style="color:#494699">    
+                  <input type="checkbox" disabled  id="<%=fonts[i]._id%>" <%=fonts[i].active?'checked':''%>>
+                  <span title="Default font can't be deleted"><%=fonts[i].content.split('-')[0]%> (default)</span>
               </label>
-              <button style="border-radius: 50%; padding: 0 8px;" class="btn btn-sm btn-primary btnDelFont pull-right type="button" id="<%=fonts[i]._id%>"><i class="icon ion-ios-trash-outline tx-18"></i></button>
+
+                <%}else{%>
+                  <label class="ckbox tx-bold "  id="cbFontEnabled" style="color:#494699">    
+                    <input type="checkbox" id="<%=fonts[i]._id%>" <%=fonts[i].active?'checked':''%>>
+                    <span title="Default font can't be deleted"><%=fonts[i].content.split('-')[0]%></span>
+                 
+                </label>
+                <button style="border-radius: 50%; padding: 0 8px;" class="btn btn-sm btn-primary btnDelFont pull-right type="button" id="<%=fonts[i]._id%>"><i class="icon ion-ios-trash-outline tx-18"></i></button>
+                <%}%>
+             
             <p class="tx-16" style="color:black;font-family:<%=fonts[i].content.replace('.ttf','')%>">The quick brown fox jumps over the lazy dog</p>
             <span class="pull-right">
               

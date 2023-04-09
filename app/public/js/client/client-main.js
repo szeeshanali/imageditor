@@ -486,7 +486,8 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
             'fontWeight',
             'fontStyle',
             'strokeStyle',
-            'strokeWidth'
+            'strokeWidth',
+            'underline'
         ].concat(propertiesToInclude));
     }
 });
@@ -1318,7 +1319,7 @@ $("#btnStartOverModel").on("click",function(e){
         let __canvas = state.isPreviewCanvas?canvasPrev:canvas;
         var value = $(this).attr("data-value");
         var o = __canvas.getActiveObject();
-        if (o && o.type === 'i-text') {
+        if (o && o.type === 'i-text' || o.type === 'curved-text') {
          
             let isTextSelection; 
             if(o.getSelectionStyles)
@@ -1350,6 +1351,12 @@ $("#btnStartOverModel").on("click",function(e){
                 })}
 
             } else if (value === 'underline') {
+                if( o.type === 'curved-text')
+                {
+                    debugger;
+                    o.set({"textDecoration": "underline"})
+                    toast('Underline is not supported for Circular Text.');
+                    return}
                 var isTrue = !o['underline'];
                 if(isTextSelection)
                 { o.setSelectionStyles({"underline":isTrue}) }
@@ -1884,36 +1891,16 @@ function initCanvasTextEvents() {
             return;
         }
         if (e.target.checked) {
-        //   var flipped = $("#inputFlipText").prop("checked");
-        //   obj.flipped = flipped;
-        //   var item = new fabric.CurvedText(obj.text, {
-        //     type: 'curved-text',
-        //     diameter: parseInt($("#curveTextCtrl").val()) || 500,
-        //     left: 100,
-        //     top: 40,
-        //     fontFamily: obj.fontFamily,
-        //     fontSize: obj.fontSize,
-        //     kerning: 0,
-        //     flipped: flipped,
-        //     fill: obj.fill,
-        //     fontSize: obj.fontSize, // in px
-        //     fontWeight: obj.fontWeight,
-        //     fontStyle: obj.fontStyle,
-        //     cacheProperties: fabric.Object.prototype.cacheProperties.concat('diameter', 'kerning', 'flipped', 'fill', 'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'strokeStyle', 'strokeWidth','stroke'),
-        //     stroke: $("#inputStrokeText").is(":checked")?$("#strokecolor").val():null,
-        //     strokeWidth: $("#inputStrokeText").is(":checked")?parseInt($("#text-stroke-width").val()):0,
-        //     id: obj.id,
-        //     index:obj.index
-        //     //strokeStyle: obj.strokeStyle,
-        //     //stroke:obj.stroke,
-        //     //strokeWidth: 2
-        // });
-        var item = curveText(obj);
-        item.globalCompositeOperation = "source-atop";
-        canvas.add(item);
-        canvas.renderAll();
-        canvas.remove(obj)
-        canvas.setActiveObject(item);
+  
+        // var item = curveText(obj);
+        // item.globalCompositeOperation = "source-atop";
+        // canvas.add(item);
+        // canvas.renderAll();
+        // canvas.remove(obj)
+        // canvas.setActiveObject(item);
+
+        let txt = new CurvedText( canvas, {angle:0} );
+        txt.center();
        
         } else {
             //$("#inputFlipText").prop('checked',false);

@@ -306,6 +306,7 @@ const commonService = (function() {
             fonts.push({
                 label : "Arial",
                 content: "Arial",
+                disable: true
 
             })
             fonts = fonts.sort(function(a, b) {

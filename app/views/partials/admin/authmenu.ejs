@@ -1,51 +1,42 @@
 <%if( user != null)  {%>
-<div class="am-header-right">
-  
-    <!-- dropdown -->
-    <div class="dropdown dropdown-profile">
-        <a href="http://themepixels.me/demo/amanda/app/index.html?storefront=envato-elements" class="nav-link nav-link-profile" data-toggle="dropdown" aria-expanded="false">
-            <img src="/images/img3.png" class="wd-32 rounded-circle" alt="">
-            <span class="logged-name">
-                <span class="hidden-xs-down"><%= user.fname %></span>
-                <i class="fa fa-angle-down mg-l-3"></i>
-            </span>
-        </a>
-        <div class="dropdown-menu wd-200" x-placement="bottom-start" style="position: absolute; transform: translate3d(20px, 48px, 0px); top: 0px; left: 0px; will-change: transform;">
-            <ul class="list-unstyled user-profile-nav">
-                <!-- <li>
-                    <a href="http://themepixels.me/demo/amanda/app/index.html?storefront=envato-elements">
-                        <i class="icon ion-ios-person-outline"></i>
-                        Edit Profile</a>
-                </li>
-                <li>
-                    <a href="http://themepixels.me/demo/amanda/app/index.html?storefront=envato-elements">
-                        <i class="icon ion-ios-gear-outline"></i>
-                        Settings</a>
-                </li>
-                <li>
-                    <a href="http://themepixels.me/demo/amanda/app/index.html?storefront=envato-elements">
-                        <i class="icon ion-ios-download-outline"></i>
-                        Downloads</a>
-                </li>
-                <li>
-                    <a href="http://themepixels.me/demo/amanda/app/index.html?storefront=envato-elements">
-                        <i class="icon ion-ios-star-outline"></i>
-                        Favorites</a>
-                </li>
-                <li>
-                    <a href="http://themepixels.me/demo/amanda/app/index.html?storefront=envato-elements">
-                        <i class="icon ion-ios-folder-outline"></i>
-                        Collections</a>
-                </li> -->
-                <li>
-                    <a href="/app/signout">
-                        <i class="icon ion-power"></i>
-                        Sign Out</a>
-                </li>
-            </ul>
+    <div class="am-header-right">
+        <div class="dropdown dropdown-profile">
+            <a href="#" class="nav-link nav-link-profile" data-toggle="dropdown" aria-expanded="false">
+    
+                <span class="logged-name">
+                    <span class="hidden-xs-down"><%= user.fname %></span>
+                    <i class="fa fa-angle-down mg-l-3"></i>
+                </span>
+            </a>
+    
+            <div class="dropdown-menu wd-200" x-placement="bottom-start" style="position: absolute; transform: translate3d(20px, 48px, 0px); top: 0px; left: 0px; will-change: transform;">
+                <ul class="list-unstyled user-profile-nav">
+                    <!-- <li>
+                        <a href="/app/profile">
+                            <i class="icon ion-ios-person-outline"></i>
+                            Edit Profile</a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="icon ion-ios-gear-outline"></i>
+                            Settings</a>
+                    </li>
+                   -->
+                    <li>
+                        <a href="/app">
+                            <i class="icon ion-person"></i>
+                            App</a>
+                    </li> 
+                    <li>
+                        <a href="/app/signout">
+                            <i class="icon ion-power"></i>
+                            Sign Out</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- dropdown-menu -->
         </div>
-        <!-- dropdown-menu -->
+    
+        <!-- dropdown -->
     </div>
-    <!-- dropdown -->
-</div>
-<%}%>
+    <%}%>
