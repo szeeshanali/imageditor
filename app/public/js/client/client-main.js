@@ -1764,6 +1764,12 @@ $btnDownloadPDF.on("click", () => {
 });
 
 $btnUploadImage.on("click", () => {
+    const ack = $("#ackUploadImage").prop("checked");
+    if(!ack)
+    {
+        toast("Please confirm you have the rights to use these images.")
+        return; 
+    }
     $btnUploadImageHidden.click();
 })
 

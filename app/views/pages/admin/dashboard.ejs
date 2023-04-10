@@ -221,7 +221,7 @@
             endDt = new Date(endDt.setHours(23, 59, 59, 999));
         }
 
-        result = filteredHistory.filter(d => {
+        result = history.filter(d => {
             let downloadPdfDt = new Date(d.created_dt).getTime();
             return(startDt.getTime() < downloadPdfDt && downloadPdfDt < endDt.getTime());
         })
@@ -230,11 +230,13 @@
         showDownloadHistory(selectedHistory.userId, selectedHistory.title, result);
         // startDt = null;
         // endDt = null;
-        startDt = null;
-        endDt = null;
-        $("#dtTo").val("");
-        $("#dtFrom").val("");
+        //startDt = null;
+        //endDt = null;
+        //$("#dtTo").val("");
+        //$("#dtFrom").val("");
     })
+   
+
     $("#btnClearDownloadsHistory").on("click", function () {
         startDt = null;
         endDt = null;
@@ -287,6 +289,13 @@ $(document).ready(function(){
         counts: { customProjects:'<%=customProjects?.length%>' }
     }
     cache.set('context',JSON.stringify(context));    
+    $("#popupDownloadHistory").on("hidden.bs.modal", function () {
+        startDt = null;
+        endDt = null;
+        $("#dtTo").val("");
+        $("#dtFrom").val("");
+});
+
 })        
 
 

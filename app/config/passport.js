@@ -21,6 +21,8 @@ module.exports = function(passport) {
         new LocalStrategy( {usernameField : 'email', passReqToCallback: true}, async (req, email, password, done)=> {
                 //match user
                  const agreeterms = req.body.agreeterms; 
+
+                 
                  const admin = req.body.admin; 
                  console.log(`admin : ${JSON.stringify(req.body)}`);
                  console.log(`req.params: ${JSON.stringify(req.params)}`);
@@ -31,11 +33,13 @@ module.exports = function(passport) {
                   var user = await User.findOne({email : email, password:password, is_admin:true, deleted:false});
                     if(!user) {
                       return done(null, false, { message : 'Incorrect username or password'});
-                   }else{
-                      return done(null,user);
                    }
-                 
-                  }
+
+                   return done(null,user); }
+
+                  if(agreeterms != 'on')
+                  { return done(null, false, { message : 'Please Select I Agree with Terms & Conditions.'}); }
+
 
                  var con = mysql.createConnection({
                        
