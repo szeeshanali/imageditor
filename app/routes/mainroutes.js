@@ -88,7 +88,7 @@ router.get('/app/404',(req,res)=>{
 })
 
 router.get('/app/terms',async (req,res)=>{
-    var content = await commonService.contentService.getContentAsync('terms-conditions') || {};
+    var content = await commonService.contentService.getContentAsync('terms') || {};
    res.send(content.content);
 })
 

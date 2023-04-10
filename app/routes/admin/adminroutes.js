@@ -593,6 +593,19 @@ function thisMonthFilter(value)
   res.render(PATH_ADMIN_DASHBOARD,res.locals.page);
 })
 
+
+
+router.get("/app/admin/reports", isAdmin, async (req,res)=>{
+
+  res.locals.page = {
+    title  : "Reports",
+    id     : "__reports",
+    user   : req.user
+  };
+
+  res.render("pages/admin/reports",res.locals.page);
+})
+
 /** End */
 /** Template */
 /**---------------------------- */
