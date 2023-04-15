@@ -1,9 +1,9 @@
 <div id="accordion-left" class="accordion" role="tablist" aria-multiselectable="true">
   <div class="card">
     <div class="card-header" role="tab" id="addphotos-headingOne">
-      <h6 class="mg-b-0">
+      <h6 class="mg-b-0 tx-uppercase tx-bold">
         <a data-toggle="collapse"  data-parent="#accordion-left" href="#addphotos-collapseOne" aria-expanded="true" aria-controls="addphotos-collapseOne" class="tx-gray-800 transition tx-bold accordion-left-menu">
-       <span class="design-steps tx">1</span> Add Photos
+       <span class="design-steps tx ">1</span> Add Images
         </a>
       </h6>
     </div>
@@ -26,10 +26,24 @@
       </div>
   </div>
   <div class="card">
+    <div class="card-header" role="tab" id="addtext-headingThree">
+      <h6 class="mg-b-0 tx-uppercase tx-bold">
+        <a class="transition collapsed tx-bold accordion-left-menu"  data-toggle="collapse" data-parent="#accordion-left" href="#addtext-collapseThree" aria-expanded="false" aria-controls="addtext-collapseThree">
+          <span class="design-steps">3</span>  Add Text      </a>
+        </a>
+      </h6>
+    </div>
+    <div id="addtext-collapseThree" class="collapse" role="tabpanel" aria-labelledby="addtext-headingThree" >
+      <div class="card-body">
+        <%- include('../../partials/client/typo'); %> 
+      </div>
+    </div>
+  </div>
+  <div class="card">
     <div class="card-header" role="tab" id="addclipart-headingTwo">
-      <h6 class="mg-b-0">
+      <h6 class="mg-b-0 tx-uppercase tx-bold ">
         <a class="transition collapsed tx-bold accordion-left-menu" data-toggle="collapse" data-parent="#accordion-left" href="#addclipart-collapseTwo" aria-expanded="false" aria-controls="addclipart-collapseTwo ">
-          <span class="design-steps">2</span>  Choose Clip Arts       </a>
+          <span class="design-steps">2</span>  ADD ClipArts       </a>
       </h6>
     </div>
     <div id="addclipart-collapseTwo" class="collapse" role="tabpanel" aria-labelledby="addclipart-headingTwo" style="">
@@ -38,18 +52,5 @@
        </div>
     </div>
   </div>
-  <div class="card">
-    <div class="card-header" role="tab" id="addtext-headingThree">
-      <h6 class="mg-b-0">
-        <a class="transition collapsed tx-bold accordion-left-menu"  data-toggle="collapse" data-parent="#accordion-left" href="#addtext-collapseThree" aria-expanded="false" aria-controls="addtext-collapseThree">
-          <span class="design-steps">3</span>  Add Text      </a>
-        </a>
-      </h6>
-    </div>
-    <div id="addtext-collapseThree" class="collapse" role="tabpanel" aria-labelledby="addtext-headingThree" style="">
-      <div class="card-body">
-        <%- include('../../partials/client/typo'); %> 
-      </div>
-    </div>
-  </div>
+ 
 </div>

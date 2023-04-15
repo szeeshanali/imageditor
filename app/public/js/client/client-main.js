@@ -1375,10 +1375,13 @@ $("#btnStartOverModel").on("click",function(e){
     })
     $("#font-list-container a").on("click", function (e) {
         let __canvas = state.isPreviewCanvas?canvasPrev:canvas;
-        var value = $(this).text() || "Arial, sans-serif";
+        let value = $(this).text() || "Arial, sans-serif";
+        let dataValue = $(this).attr("data-value");
         $("#fontlist").text(value);
+        $("#fontlist").attr('data-value',dataValue);
+        $("#fontlist").attr('style',$(this).attr('style'));
         //$("#selected-font").html($(this).html())
-        __canvas.getActiveObject().set("fontFamily", $(this).attr("data-value"));
+        __canvas.getActiveObject().set("fontFamily",dataValue);
         __canvas.requestRenderAll();
     })
     $("#text-letter-spacing, #text-letter-spacing-range").on("change", function () {
@@ -1633,7 +1636,7 @@ function updateTextControls(e){
    if(item.stroke)
    { document.querySelector('#strokecolor')?.jscolor.fromString(item.stroke); }
    document.querySelector('#fontColorBox').jscolor.fromString(item.fill);
-   
+
    $("#fontlist").text(item.fontFamily);
    
 }
@@ -1927,11 +1930,7 @@ function initCanvasTextEvents() {
 
             };
             
-        
-            var item = new fabric.IText(obj.text, textInfo);
-            
-            
-            //var item = addText(obj)
+            let item = new fabric.IText(obj.text, textInfo);
             item.globalCompositeOperation = 'source-atop';
             canvas.add(item);            
             canvas.setActiveObject(item);
