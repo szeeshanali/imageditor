@@ -2271,9 +2271,7 @@ if(!order || order < 1){
                     data: selectedUser,
                     success: function (res) {
                         toast("Updated successfully!");
-                        setTimeout(function () {
-                            window.location.reload();
-                        }, 1000)
+                        $("#btnFilterUsers").trigger('click');
                     },
                     error: function (res) {
                         toast("Error while Updating.");
@@ -3198,7 +3196,7 @@ if(!order || order < 1){
         $("#edit-user-container .email").val(user.email);
         $("#edit-user-container .company").val(user.company_name);
         $("#edit-user-container .project_lmt").val(user.project_limit);
-        $("#edit-user-container .created_dt").val(user.created_dt);
+        $("#edit-user-container .created_dt").val(new Date(user.created_dt).toLocaleDateString("en-GB"));
         $("#edit-user-container .is_admin").prop("checked", user.is_admin);
         $("#edit-user-container .is_active").prop("checked", user.active);
         $("#edit-user-container .watermark").prop("checked", user.watermark);

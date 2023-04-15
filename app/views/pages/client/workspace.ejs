@@ -251,9 +251,13 @@
     <div class="table-responsive">
       
       <div class="workarea" id="workarea" >
-        <div style="text-align: right;">
+        <!-- <div style="text-align: right;">
           <i class="ion-reply tx-32 " style="cursor:pointer" title="Undo" id="undo"></i>
           <i class="ion-forward tx-32" style="cursor:pointer" title="Redo" id="redo"></i>
+        </div> -->
+        <div class="btn-group pull-right" role="group" >
+          <button type="button" id="undo" class="btn btn-primary  active  tx-bold tx-12 hand"><i class="ion-reply tx-22"></i> <br>Undo</button>
+          <button type="button" id="redo" class="btn btn-primary   tx-bold tx-12 hand "> <i class="ion-forward tx-22"></i><br>Redo </button>
         </div>
 
         <div  id="canvas-holder" >

@@ -174,7 +174,13 @@ $("#btnDisplayGrid").on("click", function (e) {
                             canvasPrev.setBackgroundImage(obj, canvasPrev.renderAll.bind(canvasPrev));           
                             canvasPrev.setDimensions({width:viewBoxWidth,height:viewBoxHeight})
                             canvasPrev.renderAll.bind(canvas); 
-                            canvasPrev.meta = {title,_id,code,ref_code,link} = data;    
+                            canvasPrev.meta = {
+                                title,
+                                _id,
+                                code,
+                                ref_code,
+                                link,
+                                created_dt} = data;    
                           },function (item, object) {
                                 object.set({ 
                                     fill:"#fff",

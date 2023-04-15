@@ -46,7 +46,18 @@ $(document).ready(function(){
         onPageLoad(context);
 
     }
-     $( "#datepickerFrom" ).datepicker();
+     $( "#datepickerFrom" ).datepicker({
+       todayBtn: "linked",
+       autoclose: true,
+       todayHighlight: true,
+       dateFormat: 'dd/mm/yy' 
+   });
+     $( "#datepickerTo" ).datepicker({
+       todayBtn: "linked",
+       autoclose: true,
+       todayHighlight: true,
+       dateFormat: 'dd/mm/yy' 
+   });
 }); 
 </script>
     </body>
