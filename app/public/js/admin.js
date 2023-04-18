@@ -1569,7 +1569,8 @@ $loader.removeClass("hidden");
         var customTextInProgress = false;
 
         $btnDownloadPDF.on("click", () => {
-            generatePDFfromPreview();
+           $("#ws-btn-download").click();
+            //generatePDFfromPreview();
         });
         
         $btnUploadImage.on("click", () => {
@@ -2881,7 +2882,7 @@ if(!order || order < 1){
 
 
     function hideWorkspaceControls() {
-        $layers.html("Empty! please upload an image.");
+        $layers.html("No Layer");
         mainControls(false);
         hideObjectControls();
     }
