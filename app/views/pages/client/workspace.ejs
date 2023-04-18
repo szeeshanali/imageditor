@@ -19,19 +19,10 @@
             
             <div  id="templatepanel" class="tab-pane active"   >
              
-              <div class="list-group widget-list-group bg-app-primary sticky-header-left-panel">
-                <div class="list-group-item d-flex">
-                  <div class="media d-block d-sm-flex">
-                    <div class="media-body mg-t-10 mg-sm-t-0">
-                      <h6 class="mg-b-5 tx-12 tx-inverse tx-bold tx-white"><span class="ion-ios-lightbulb pd-r-5 text-warning"></span>Choose from the below templates and click next to create design.</h6>
-                    </div>
-                  </div>
-                   <div class="btn-group mg-b-0 mg-l-auto lh-2">
-                      <button type="button" class="btn btn-primary wd-120 ht-50 tx-18" id="btn-step-design">
-                        NEXT <div class="tx-12 text-warning tx-bold underline">Create Design</div></button>
-                    </div>
-                </div>
-              </div>
+              <div class="card pd-15 sticky-header-left-panel">
+                <button type="button" class="btn  btn-block btn-warning tx-bold tx-16 tx-uppercase " id="btn-step-design">
+                  Click NEXT <br><small>Create Design </small></button>
+               </div>
 
               <div>
                   <div class="row mg-0 sticky-body-left-panel">
@@ -42,36 +33,13 @@
               </div>
             </div>            
             <div id="uploadpanel" class="tab-pane"  >
-                <div class="list-group widget-list-group bg-app-primary ">
-                  <div class="list-group-item d-flex" id="create-design-heading">
-                    <div class="media d-block d-sm-flex">
-                      <div class="media-body mg-t-10 mg-sm-t-0 ">
-                        <h6 class="mg-b-5 tx-12 tx-bold pd-x-5 tx-white "><span class="ion-ios-lightbulb pd-r-5 text-warning"></span>Now, create your design by adding Photos, Clip Arts and Text and click next to preview or save button to save your design.</h6>
-                      </div><!-- media-body -->
-                    </div><!-- media -->
-                    <div class="btn-group mg-b-0 mg-l-auto">
-                      <button type="button" class="btn btn-secondary disabled" onclick="$btnTemplate.click()" ><i class="icon ion-ios-arrow-back tx-20"></i></button>
-                      <button type="button" class="btn btn-primary wd-120 ht-50 tx-18" id="btn-step-preview">
-                        NEXT  <div class="tx-12 text-warning tx-bold underline">Preview Design</div>
+                <div class="card pd-15 btn-group" role="group" aria-label="Basic example">
+                  
+                  <button type="button" class="btn btn-secondary disabled" onclick="$btnTemplate.click()" ><i class="icon ion-ios-arrow-back tx-20"></i></button>
+                      <button type="button" class="btn  btn-warning tx-bold tx-16 tx-uppercase " id="btn-step-preview">
+                        NEXT  <br><small >Preview Design</small>
                       </button>
-                    </div>
-                    <!-- <a href="#"  class="btn btn-primary pd-lg-x-20 mg-l-auto " id="btn-step-preview" >Preview</a> -->
-                  </div>
-                  <div class="list-group-item d-flex hidden" id="preview-design-heading" style="height:90px">
-                    <div class="media d-block d-sm-flex">
-                      <div class="media-body mg-t-10 mg-sm-t-0">
-                        <h6 class="mg-b-5 tx-12 tx-white"><span class="ion-ios-lightbulb pd-r-5 text-warning"></span>You are almost done! Click next to download or save button to save your design.</h6>
-                      </div><!-- media-body -->
-                    </div><!-- media -->
-                    <div class="btn-group mg-b-0 mg-l-auto">
-
-                    <button type="button" class="btn btn-secondary disabled"  id="btnBack" ><i class="icon ion-ios-arrow-back tx-20"></i></button>
-
-                    <button type="button" class="btn btn-primary wd-120 ht-50 tx-18"  id="btn-step-download">
-                      NEXT  <div class="tx-12 text-warning tx-bold underline">Download PDF</div>
-                    </button>
-                    </div>
-                  </div>
+              
                 </div>
                 
                 <%- include('../../partials/client/imgupload'); %>
