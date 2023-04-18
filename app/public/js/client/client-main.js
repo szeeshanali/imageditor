@@ -1217,7 +1217,6 @@ $("#btnStartOverModel").on("click",function(e){
 
         showLayerControls(this);
         $(this).unbind().on("click", ".bring-fwd", function (evt) {
-            alert(selected)
             evt.stopPropagation();
 
             if (selected > 0) {
