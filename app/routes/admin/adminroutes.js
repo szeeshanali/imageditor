@@ -145,6 +145,14 @@ router.get("/app/admin/reporting", isAdmin, async (req,res)=>{
   res.render("pages/admin/reporting",res.locals.page);
 })
 
+
+router.get("/app/admin/template-report", isAdmin, async (req,res)=>{
+  res.locals.page = {
+    user   : req.user
+   } ;
+  res.render("pages/admin/template-reports",res.locals.page);
+})
+
 router.get("/app/admin/", isAdmin, async (req,res)=>{
   res.redirect("/app/admin/dashboard");
 })
@@ -528,7 +536,15 @@ router.get(ROUTE_ADMIN_DASHBOARD, isAdmin, async (req,res)=>{
   let allusers = await appusers.find({deleted:false, active:true},{password:0,is_admin:0,deleted:0,date:0,lname:0});
   let userIds =  allusers.map(function(i){return i._id});
   let allDownloads = await logs.find({"type":"download_pdf"},{ user_id:1,created_dt:1, content:1, data:1  });
-  let _uploads = await uploads.find({ "type":{$in:["project","pre-designed"]}, deleted:false},{ _id:1,created_dt:1,uploaded_by:1, title:1,type:1 })
+  
+  let _uploads = await uploads.find({ "type":{$in:["project","pre-designed"]}, deleted:false},{ 
+    _id:1,
+    created_dt:1,
+    uploaded_by:1,
+    title:1,
+    type:1
+   })
+
   let allCustomProjects = _uploads.filter(function(i){return i.type === "pre-designed"});
   let allUserProjects = _uploads.filter(function(i){return i.type === "project"}); 
   
@@ -583,10 +599,6 @@ function thisMonthFilter(value)
    title  : "Dashboard",
    id     : "__dashboard",
    user   : req.user,
-   users  : allusers,
-   userProjects   : allUserProjects,
-   customProjects : allCustomProjects,
-   downloads      : allDownloads,
    report         : report
 
   } ;
@@ -623,6 +635,194 @@ router.get('/app/admin/template-designer',  isAdmin, async (req,res)=>{
   res.render("pages/admin/templatedesigner",{user:req.user,next_order:1000});
 })
 
+
+router.post('/api/filter/users',  isAdmin, async (req,res)=>{ 
+  try{
+    const {startDate, endDate, name, email} = req.body;
+    let filter = { deleted:false };
+    
+    if(startDate){
+      let _d = startDate.split('/')[0];
+      let _m = startDate.split('/')[1];
+      let _y = startDate.split('/')[2]; 
+      let _sd = new Date(_y,_m,_d);  
+      let year =_sd.getFullYear();
+      let month =_sd.getMonth();
+      let date =  _sd.getDate();
+      filter.created_dt = { $gte: new Date(year ,month ,date)}
+    }
+    
+    if(endDate){
+      let _d = endDate.split('/')[0];
+      let _m = endDate.split('/')[1];
+      let _y = endDate.split('/')[2]; 
+      let _ed = new Date(_y,_m,_d);
+
+      let year =_ed.getFullYear();
+      let month =_ed.getMonth();
+      let date =  _ed.getDate();
+
+      if(!startDate)
+      {filter.created_dt= { $lte: new Date(year ,month ,date)} }else{
+        filter.created_dt.$lte = new Date(year, month, date,23,59,59);
+      }
+            
+    }
+
+    if(name)
+    { filter.fname = {$regex:name} }
+    if(email)
+    {filter.email = email }
+
+    let users = await appusers.find(filter,{password:0}).sort({created_dt:-1}); 
+    let userIds = users?.map(i=>i._id);
+    let projects =[];
+    let downloads =[];
+    if(userIds && userIds.length >0)
+    {
+      projects =await uploads.find( {uploaded_by:{$in:userIds}, type:'project'},{_id:1,uploaded_by:1})
+      downloads = await logs.find({user_id:{$in:userIds}, type:'download_pdf'},{_id:1,user_id:1});      
+    } 
+
+    users.downloads = downloads;
+    const out = {
+      users : users, 
+      projects: projects,
+      downloads: downloads
+    }
+    
+    return ok(res,out)
+  }catch(ex){
+    return error(res,ex)
+  }
+  
+})
+
+
+router.post('/api/filter/templates',  isAdmin, async (req,res)=>{ 
+  try{
+    const {startDate, endDate, name, partNo} = req.body;
+    let filter = { type:"download_pdf"};
+    
+    if(startDate){
+      let _d = startDate.split('/')[0];
+      let _m = startDate.split('/')[1];
+      let _y = startDate.split('/')[2]; 
+      let _sd = new Date(_y,_m,_d);  
+      let year =_sd.getFullYear();
+      let month =_sd.getMonth();
+      let date =  _sd.getDate();
+      filter.created_dt = { $gte: new Date(year ,month ,date)}
+    }
+    
+    if(endDate){
+      let _d = endDate.split('/')[0];
+      let _m = endDate.split('/')[1];
+      let _y = endDate.split('/')[2]; 
+      let _ed = new Date(_y,_m,_d);
+
+      let year =_ed.getFullYear();
+      let month =_ed.getMonth();
+      let date =  _ed.getDate();
+
+      if(!startDate)
+      {filter.created_dt= { $lte: new Date(year ,month ,date)} }else{
+        filter.created_dt.$lte = new Date(year, month, date,23,59,59);
+      }
+            
+    }
+
+    let _logs = await logs.find(filter).sort({created_dt:-1}); 
+    let out = [];
+    if(_logs)
+    {
+       
+      _logs.forEach(log=>{
+        if(log.data)
+        {
+          let json = JSON.parse(log.data)
+          let templateFound = out.find(o=>o.templateId === json._id); 
+          if(!templateFound)
+          {
+            out.push({
+              title       : json.title,
+              count       : 1,
+              ref_code    : json.ref_code,
+              created_dt  : json.created_dt,
+              link        : json.link,
+              templateId  : json._id,
+              code        : json.code
+            })
+          }else{
+            out.find(o=>o.templateId === json._id).count +=1; 
+          }
+        }
+      })
+    }
+    if(partNo)
+    {
+      out = out.filter(function(o){
+        return o.ref_code?.toLowerCase().indexOf(partNo.toLowerCase()) != -1 
+      })
+    }
+    
+    if(name)
+    {
+      out = out.filter(function(o){
+        return o.title?.toLowerCase().indexOf(name.toLowerCase()) != -1 
+      })
+    }
+    return ok(res,out)
+  }catch(ex){
+    return error(res,ex)
+  }
+  
+})
+
+router.get('/api/filter/top-templates',  isAdmin, async (req,res)=>{ 
+  try{
+    let filter = { type:"download_pdf"};
+    let _logs = await logs.find(filter); 
+    let out = [];
+    if(_logs)
+    {
+       
+      _logs.forEach(log=>{
+        if(log.data)
+        {
+          let json = JSON.parse(log.data)
+          let templateFound = out.find(o=>o.templateId === json._id); 
+          if(!templateFound)
+          {
+            out.push({
+              title       : json.title,
+              count       : 1,
+              ref_code    : json.ref_code,
+              created_dt  : json.created_dt,
+              link        : json.link,
+              templateId  : json._id,
+              code        : json.code
+            })
+          }else{
+            out.find(o=>o.templateId === json._id).count +=1; 
+          }
+        }
+      })
+    }
+    out = out.sort(function(a,b){
+      if(a.count > b.count)
+      {return -1}
+      return 1;
+    })
+    out = out.splice(0,10)
+
+
+    return ok(res,out)
+  }catch(ex){
+    return error(res,ex)
+  }
+  
+})
 
 
 router.get('/app/admin/templates', isAdmin, async (req,res)=>{
