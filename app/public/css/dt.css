@@ -65,17 +65,19 @@
 /*  */
 
 #layers .layer-item {
-  border: solid 1px #b3b3b3;
-
+  border-bottom: solid 1px #ccc;
+color:#333;
   cursor: pointer;
   padding: 5px;
-  box-shadow: 1px 1px 1px #ccc;
+  /* box-shadow: 1px 1px 1px #ccc; */
 }
 
 .selected-layer {
   z-index: 2;
-  box-shadow: rgb(67 64 141) 0px 1px 3px, rgb(72 69 150) 0px 1px 2px;
+  box-shadow: rgb(67 64 148) 0px 0px 1px, rgb(72 69 150) 0px 1px 2px;
   background-color: #cac8ff;
+  
+  
 
 }
 
@@ -222,7 +224,7 @@
 }
 
 .sidebar li {
-  border-bottom: solid 1px #bfbcff;
+  border-bottom: solid 1px #3a3789;
   width: 100px;
   padding: 5px 5px;
 
@@ -615,11 +617,14 @@
 
 #btnDisplayGrid,
 #btnDisplayRuler {
-  font-size: 12px;
   text-align: center;
-  line-height: 12px;
-  padding: 12px;
   cursor: pointer;
+  width: 16px;
+  height: 18px;
+  font-size: 22px;
+  margin: 6px;
+  accent-color: rgba(255, 255, 255, 0.8);
+
 }
 
 .leftpanel {
@@ -955,7 +960,9 @@
   font-weight: bold;
   margin-right: 5px;
 }
-
+.hand{
+  cursor: pointer;
+}
 /* 
 #clipartContainer {
   position: relative;
@@ -1092,4 +1099,8 @@
 
 .sticky-body-left-panel {
   padding-top: 90px;
+}
+
+.soft{
+  color:rgba(255, 255, 255, 0.8)
 }

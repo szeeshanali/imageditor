@@ -1,6 +1,59 @@
 // main canvas. 
 // zeeshan01@gmail.com
 var selectedTemplateId = 'default';
+
+//#toolbar
+const    $btnToolbarLarger   =   $("#btnToolbarLarger"); 
+const    $btnToolbarSmaller  =   $("#btnToolbarSmaller");
+const    $btnToolbarRotate   =   $("#btnToolbarRotate");
+const    $btnToolbarFlip     =   $("#btnToolbarFlip");
+
+$btnToolbarLarger.on("click",function(e){
+    e.preventDefault();
+    let obj = canvas.getActiveObject();
+    if(!obj)
+    {  toast("Please select an object");
+        return; }
+    let inc = 20; 
+    let w = obj.getScaledWidth()+inc; 
+    let h = obj.getScaledHeight()+inc;    
+    obj.scaleToWidth(w); 
+    obj.getScaledHeight(h);
+    obj.setCoords(); 
+    canvas.renderAll(); 
+
+})
+
+$btnToolbarSmaller.on("click",function(e){
+    e.preventDefault();
+    let obj = canvas.getActiveObject();
+    if(!obj)
+    {  toast("Please select an object");
+        return; }
+    let inc = 20; 
+    let w = obj.getScaledWidth()-inc; 
+    let h = obj.getScaledHeight()-inc;    
+    obj.scaleToWidth(w); 
+    obj.getScaledHeight(h);
+    obj.setCoords(); 
+    canvas.renderAll(); 
+
+})
+
+$btnToolbarRotate.on("click",function(e){
+    $(`#rotate`).trigger("click");
+})
+
+$btnToolbarFlip.on("click",function(e){
+    e.preventDefault();
+    $("#flipW").trigger("click");
+})
+
+
+
+//#end toolbar
+
+
 $("#btnDisplayRuler").on("click", function () {
     var style = !($(".ruler").is(':visible'));
     if (style) {
@@ -53,18 +106,21 @@ $("#btnDisplayGrid").on("click", function (e) {
     
     
                 let firstLogo = objects[0];
-                let aspectRatio = firstLogo.width/firstLogo.height;
-                let displayWidth = 500; 
+                let aspectRatio = firstLogo.width/firstLogo.height;                
+                
+                let displayWidth = $("#workarea").width()-50 || 500;                 
                 let logoDisplayWidth = displayWidth; 
-                let logoDisplayHeight = displayWidth/aspectRatio; 
+                let logoDisplayHeight = displayWidth/aspectRatio;                 
                 canvas.setBackgroundImage(firstLogo, canvas.renderAll.bind(canvas));
-                firstLogo.scaleToWidth(logoDisplayWidth);
-                firstLogo.setCoords();
-
                 canvas.backgroundImage.set({
                     left:0,
                     top:0,
                 })
+
+                firstLogo.scaleToWidth(logoDisplayWidth);
+                firstLogo.setCoords();
+
+              
                 canvas.setDimensions({width:logoDisplayWidth,height:logoDisplayHeight});
                 canvas.renderAll(); 
 
@@ -174,7 +230,13 @@ $("#btnDisplayGrid").on("click", function (e) {
                             canvasPrev.setBackgroundImage(obj, canvasPrev.renderAll.bind(canvasPrev));           
                             canvasPrev.setDimensions({width:viewBoxWidth,height:viewBoxHeight})
                             canvasPrev.renderAll.bind(canvas); 
-                            canvasPrev.meta = {title,_id,code,ref_code,link} = data;    
+                            canvasPrev.meta = {
+                                title,
+                                _id,
+                                code,
+                                ref_code,
+                                link,
+                                created_dt} = data;    
                           },function (item, object) {
                                 object.set({ 
                                     fill:"#fff",
@@ -332,7 +394,7 @@ $("#btnDisplayGrid").on("click", function (e) {
      $(".step-item:nth-child(3)").removeClass("active");
      $(".step-item:nth-child(2)").addClass("active");
      $("#canvas-holder").css({"background-color":"#9293cb","padding":"27px"});
- 
+     $("#quick-tool").removeClass("hidden");
      // 2.
      // $("#btnSave").unbind().click(function(){
      //     toast("Please go back and save your design.");
@@ -364,6 +426,7 @@ $("#btnDisplayGrid").on("click", function (e) {
      $("#ws-btn-download").removeClass("hidden");
      $("#btnStartOverModel").addClass("hidden");
      $("#previewMsg").removeClass("hidden");
+     $("#quick-tool").addClass("hidden");
     // $("#client-main-canvas-logo").attr("style","width:80%")
     // $("#admin-main-canvas-logo").attr("style","width:80%")
      /***
@@ -402,7 +465,7 @@ $("#btnDisplayGrid").on("click", function (e) {
              {
                 let logoWidth = logos[0].width; 
                // img.scaleToWidth(logoWidth+10);
-                img.scaleToWidth(logos[0].getScaledWidth()+6);
+                img.scaleToWidth(logos[0].getScaledWidth());
                 img.setCoords();
 
                  for (let i = 0; i < logos.length; i++) {
@@ -600,7 +663,7 @@ function addLayer(o) {
         { $("#ws-btn-preview").removeClass('hidden');  }
 
     } else {
-        $layers.html("Empty! please upload an image.");
+        $layers.html("No Layer.");
         $("#ws-btn-save").addClass('hidden');
 
         if(!state.isPreviewCanvas)

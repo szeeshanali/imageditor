@@ -107,8 +107,11 @@ function curveText(obj)
     return ct; 
 }
 
-function textCurrentValues(text){
-    return new fabric.IText(text.text, text);
+function textCurrentValues(textObject){
+    debugger;
+    let selectedFontFamily = $("#fontlist").attr('data-value');
+    textObject.fontFamily = selectedFontFamily;
+    return new fabric.IText(textObject.text, textObject);
 }
 
 function addText(text)

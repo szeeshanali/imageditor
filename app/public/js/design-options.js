@@ -35,7 +35,8 @@ $btnAddText.on("click", function () {
         return;
     }
     //resetTextControls();
-    let item = addText({text:text});
+    let item = addText({
+        text:text });
     if (state.isPreviewCanvas) {
         canvasPrev.add(item);
         canvasPrev.renderAll();

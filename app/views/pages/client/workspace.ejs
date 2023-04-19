@@ -19,20 +19,10 @@
             
             <div  id="templatepanel" class="tab-pane active"   >
              
-              <div class="list-group widget-list-group bg-app-primary sticky-header-left-panel">
-                <div class="list-group-item d-flex">
-                  <div class="media d-block d-sm-flex">
-                    <div class="media-body mg-t-10 mg-sm-t-0">
-                      <h6 class="mg-b-5 tx-12 tx-inverse tx-bold tx-white"><span class="ion-ios-lightbulb pd-r-5 text-warning"></span>Choose from the below templates and click next to create design.</h6>
-                    </div>
-                    <!-- media-body -->
-                  </div><!-- media -->
-                   <div class="btn-group mg-b-0 mg-l-auto lh-2">
-                      <button type="button" class="btn btn-primary wd-120 ht-50 tx-18" id="btn-step-design">
-                        NEXT <div class="tx-12 text-warning tx-bold underline">Create Design</div></button>
-                    </div>
-                </div>
-              </div>
+              <div class="card pd-15 sticky-header-left-panel">
+                <button type="button" class="btn  btn-block btn-warning tx-bold tx-16 tx-uppercase " id="btn-step-design">
+                  Click NEXT <br><small>Create Design </small></button>
+               </div>
 
               <div>
                   <div class="row mg-0 sticky-body-left-panel">
@@ -43,39 +33,13 @@
               </div>
             </div>            
             <div id="uploadpanel" class="tab-pane"  >
-                <div class="list-group widget-list-group bg-app-primary ">
-                  <div class="list-group-item d-flex" id="create-design-heading">
-                    <div class="media d-block d-sm-flex">
-                      <div class="media-body mg-t-10 mg-sm-t-0 ">
-                        <h6 class="mg-b-5 tx-12 tx-bold pd-x-5 tx-white "><span class="ion-ios-lightbulb pd-r-5 text-warning"></span>Now, create your design by adding Photos, Clip Arts and Text and click next to preview or save button to save your design.</h6>
-                      </div><!-- media-body -->
-                    </div><!-- media -->
-                    <div class="btn-group mg-b-0 mg-l-auto">
-                      <button type="button" class="btn btn-secondary disabled" onclick="$btnTemplate.click()" ><i class="icon ion-ios-arrow-back tx-20"></i></button>
-                      <button type="button" class="btn btn-primary wd-120 ht-50 tx-18" id="btn-step-preview">
-                        NEXT  <div class="tx-12 text-warning tx-bold underline">Preview Design</div>
+                <div class="card pd-15 btn-group" role="group" aria-label="Basic example">
+                  
+                  <button type="button" class="btn btn-secondary disabled" onclick="$btnTemplate.click()" ><i class="icon ion-ios-arrow-back tx-20"></i></button>
+                      <button type="button" class="btn  btn-warning tx-bold tx-16 tx-uppercase " id="btn-step-preview">
+                        NEXT  <br><small >Preview Design</small>
                       </button>
-                    </div>
-                    <!-- <a href="#"  class="btn btn-primary pd-lg-x-20 mg-l-auto " id="btn-step-preview" >Preview</a> -->
-                  </div>
-                  <div class="list-group-item d-flex hidden" id="preview-design-heading" style="height:90px">
-                    <div class="media d-block d-sm-flex">
-                      <!-- <div class="d-block d-sm-flex mg-sm-r-20">
-                        <i class="ion-images tx-24 tx-white"></i>
-                      </div> -->
-                      <div class="media-body mg-t-10 mg-sm-t-0">
-                        <h6 class="mg-b-5 tx-12 tx-white"><span class="ion-ios-lightbulb pd-r-5 text-warning"></span>You are almost done! Click next to download or save button to save your design.</h6>
-                      </div><!-- media-body -->
-                    </div><!-- media -->
-                    <div class="btn-group mg-b-0 mg-l-auto">
-
-                    <button type="button" class="btn btn-secondary disabled"  id="btnBack" ><i class="icon ion-ios-arrow-back tx-20"></i></button>
-
-                    <button type="button" class="btn btn-primary wd-120 ht-50 tx-18" id="btn-step-download">
-                      NEXT  <div class="tx-12 text-warning tx-bold underline">Download PDF</div>
-                    </button>
-                    </div>
-                  </div>
+              
                 </div>
                 
                 <%- include('../../partials/client/imgupload'); %>
@@ -179,7 +143,7 @@
 </div>
 <!-- Workspace canvas-->
 <div class="col-lg-6">
-  <div class="list-group widget-list-group bg-app-primary" style="height:90px">
+  <div class="list-group widget-list-group bg-app-primary hidden" style="height:90px">
     <div class="list-group-item d-flex">
       <ul class="step d-flex flex-nowrap">
         <li class="step-item ">
@@ -197,8 +161,8 @@
       </ul> 
     </div>
   </div>
-  <div class="card pd-x-20 pd-y-15">
-    <div class="alert alert-primary pd-y-20 hidden" role="alert" id="previewMsg">
+
+  <div class="alert alert-primary pd-y-20 hidden" role="alert" id="previewMsg">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">×</span>
       </button>
@@ -208,56 +172,56 @@
           <p class="mg-b-0 tx-gray">You may edit individual Circle / Square by selecting the Layers on the Right. Alternatively you may also modify the overall sheet in order to get your desired output</p>
         </div>
       </div><!-- d-flex -->
-    </div>
-    <div class="email-content-header">
-      <div>
-          <div class="d-flex" id="ruler-ctrl">
-            <div class=" mg-r-10">
-              <label class="ckbox">
-                <input type="checkbox"  id="btnDisplayGrid" ><span>Grid</span>
-              </label>
-            </div>
-            <div class="mg-r-10">
-              <label class="ckbox">
-                <input type="checkbox"  id="btnDisplayRuler" ><span>Ruler</span>
-              </label>
-            </div>
-
-          <!-- <button type="button" id="btnDisplayGrid" class="btn btn-secondary bd-0 pd-x-20">Grid</button>
-          <button type="button" id="btnDisplayRuler" class="btn btn-secondary bd-0 pd-x-20">Ruler</button> -->
-
-        </div><!-- btn-group -->
-      </div>
-      <div class="mg-l-auto">
-        <div class="d-flex">
-          <button type="button" onclick="$('#btn-menu-peview').click()" class="hidden btn btn-sm btn-success tx-12 tx-uppercase tx-bold bd-0 pd-x-20 " id="ws-btn-preview">Preview <br> Your Design</button>
-
-          <button type="button" data-toggle="modal" data-target="#downloadPDFModel" class="btn btn-sm btn-success tx-12 tx-uppercase tx-bold  bd-0 pd-x-20 hidden" id="ws-btn-download" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?" data-toggle="popover" ><i class="ion-checkmark-circled mg-r-5"></i> Finalize & Download <br> your PDF</button>
-          <button type="button" onclick="$('#menu-save-design').click()" class=" hidden btn btn-primary btn-sm tx-12 tx-uppercase tx-bold bd-0 pd-x-20" id="ws-btn-save"><i class="fa fa-floppy-o mg-r-5"></i>Save <br>  Design</button>
-
-          <button type="button" onclick="$('#btnBack').click()" class="btn btn-danger tx-12 btn-sm tx-uppercase tx-bold  bd-0 pd-x-20 hidden" id="ws-btn-back"><i class="fa fa-pencil-square-o mg-r-5"></i> Continue Editing <br> your Design</button>
-
-          <a href="#" id="btnStartOverModel" data-toggle="modal" data-target="#confirmbox"  class="btn btn-sm btn-danger bd-0 pd-x-20 mg-l-1 tx-12 tx-uppercase tx-bold" ><i class="ion-refresh mg-r-5"></i>Restart Designing from <br>the Beginning</a>
-        </div>
-
-        <div class="btn-group mg-b-0">
-        </div><!-- btn-group -->
-
-      </div>
-    </div>
+  </div>
+   
 
     
     
     <div class="table-responsive">
-      
       <div class="workarea" id="workarea" >
-        <div style="text-align: right;">
-          <i class="ion-reply tx-32 " style="cursor:pointer" title="Undo" id="undo"></i>
-          <i class="ion-forward tx-32" style="cursor:pointer" title="Redo" id="redo"></i>
-        </div>
+         <div class=" bg-primary bd-b pd-5 bd-t">
+          <ul class="nav nav-white-800 flex-column flex-md-row justify-content-end" role="tablist">
+            <li class="nav-item ">
+            <button type="button" onclick="$('#btn-menu-peview').click()" class="soft hidden btn btn-sm btn-success tx-12 tx-uppercase tx-bold bd-0 pd-x-20 " id="ws-btn-preview">Preview <br> Your Design</button>
+          </li>
 
+            <li class="nav-item ">
+
+            <button type="button" data-toggle="modal" data-target="#downloadPDFModel" class=" soft btn btn-sm btn-success tx-12 tx-uppercase tx-bold  bd-0 pd-x-20 hidden" id="ws-btn-download" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?" data-toggle="popover" ><i class="ion-checkmark-circled mg-r-5"></i> Finalize & Download <br> your PDF</button>
+          </li>
+
+            <li class="nav-item ">
+
+            <button type="button" onclick="$('#menu-save-design').click()" class=" soft hidden btn btn-success btn-sm tx-12 tx-uppercase tx-bold bd-0 pd-x-20" id="ws-btn-save"><i class="fa fa-floppy-o mg-r-5"></i>Save <br>  Design</button>
+          </li>
+
+            <li class="nav-item ">
+  
+            <button type="button" onclick="$('#btnBack').click()" class=" soft btn btn-danger tx-12 btn-sm tx-uppercase tx-bold  bd-0 pd-x-20 hidden" id="ws-btn-back"><i class="fa fa-pencil-square-o mg-r-5"></i> Continue Editing <br> your Design</button>
+          </li>
+
+            <li class="nav-item ">
+  
+            <a href="#" id="btnStartOverModel" data-toggle="modal" data-target="#confirmbox"  class="soft btn btn-sm btn-danger bd-0 pd-x-20 mg-l-1 tx-12 tx-uppercase tx-bold" ><i class="ion-refresh mg-r-5"></i>Restart Designing from <br>the Beginning</a>
+  
+          </li>
+
+          </ul>
+        </div>
+        <div class=" bg-primary" id="quick-tool">
+          <ul class="nav nav-white-800 flex-column flex-md-row justify-content-center" role="tablist">
+            <li class="nav-item bd-r"><span  class=" nav-link lh-4 tx-center tx-bold tx-uppercase tx-11"  >      <input type="checkbox"  id="btnDisplayGrid" ><br><span>Grid</span></span></li>
+            <li class="nav-item bd-r"><span class=" nav-link lh-4 tx-center tx-bold tx-uppercase tx-11" ><input type="checkbox"  id="btnDisplayRuler" ><br><span>Ruler</span></span></li>
+            <li class="nav-item bd-r"><a id="btnToolbarLarger" class=" nav-link lh-4 tx-center tx-bold tx-uppercase tx-11"  data-toggle="tab" href="#" role="tab"><i class="ion-android-add-circle tx-22"></i> <br>Larger</a></li>
+            <li class="nav-item bd-r"><a id="btnToolbarSmaller"  class=" nav-link lh-4 tx-center tx-bold tx-uppercase tx-11" data-toggle="tab" href="#" role="tab"><i class="ion-android-remove-circle tx-22"></i><br>Smaller</a></li>
+            <li class="nav-item bd-r"><a id="btnToolbarRotate" class=" nav-link lh-4 tx-center tx-bold tx-uppercase tx-11" data-toggle="tab" href="#" role="tab"><i class="ion-android-refresh tx-22"></i><br>Rotate</a></li>
+            <li class="nav-item bd-r"><a id="btnToolbarFlip" class=" nav-link lh-4 tx-center tx-bold tx-uppercase tx-11" data-toggle="tab" href="#" role="tab"><i class="ion-arrow-swap tx-22"></i><br>Flip</a></li>
+            <li class="nav-item bd-r"><a  class=" nav-link lh-4 tx-center tx-bold tx-uppercase tx-11" id="undo" data-toggle="tab" href="#" role="tab"><i class="ion-reply tx-22"></i> <br>Undo</a></li>
+            <li class="nav-item"><a  class=" nav-link lh-4 tx-center tx-bold tx-uppercase tx-11" id="redo" data-toggle="tab" href="#" role="tab"><i class="ion-forward tx-22"></i><br>Redo</a></li>
+          </ul>
+        </div>
         <div  id="canvas-holder" >
-            <div class="content tx-center" >
+            <div class="content tx-center" id="canvas-holder-inner" >
                 <canvas id="client-main-canvas"   ></canvas>
                 <canvas id="client-main-canvas-logo"   ></canvas>                    
             </div>
@@ -272,7 +236,7 @@
   </div>
    
     
-</div>
+
 <!--Workspace Right panel-->
 <div class="col-lg-3 pd-x-0" id="workspace-right-panel" >
     <%- include('../../partials/client/popups/rfq.ejs',{user:user}); %>
@@ -316,7 +280,7 @@
         <input type="text" id="downloadFileName" class="form-control" placeholder="Enter File Name">
       </div>
       <div class="modal-footer justify-content-center">
-        <button type="button" onclick="$('#btn-download-pdf').click()" data-dismiss="modal" class="btn-sm tx-12 tx-uppercase btn btn-success pd-x-20">Download your design <br> in PDF</button>
+        <button type="button" id="btnGenerateAndDownloadPDF" data-dismiss="modal" class="btn-sm tx-12 tx-uppercase btn btn-success pd-x-20">Download your design <br> in PDF</button>
         <button type="button" data-toggle="modal" data-target="#rfq" class="btn btn-sm tx-12 tx-uppercase btn-primary pd-x-20" data-dismiss="modal">Send to KakePrints <br> for a Quote.</button>
       </div>
     </div>
@@ -336,8 +300,8 @@
         <canvas id="cropCanvas" >
       </div>
       <div class="modal-footer justify-content-center">
-        <button type="button"  id="btnCrop" class="btn btn-sm tx-12 tx-uppercase btn-primary pd-x-20" >Crop Image</button>
-        <button type="button"  id="btnCropDone" class="btn btn-sm tx-12 tx-uppercase btn-primary pd-x-20" data-dismiss="modal" >Done</button>
+        <button type="button"  id="btnCrop" class="btn btn-sm tx-12 tx-uppercase btn-primary pd-x-20" >Show Image</button>
+        <button type="button"  id="btnCropDone" class="btn btn-sm tx-12 tx-uppercase btn-primary pd-x-20" data-dismiss="modal" >Use Image</button>
 
         <button type="button" class="btn btn-sm tx-12 tx-uppercase btn-secondary pd-x-20" data-dismiss="modal">Close</button>
       </div>

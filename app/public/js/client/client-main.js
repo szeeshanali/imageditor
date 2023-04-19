@@ -1,8 +1,20 @@
 
 
-var canvas      = new fabric.Canvas("client-main-canvas",       {preserveObjectStacking: true})
+var canvas      = new fabric.Canvas("client-main-canvas",       {
+    preserveObjectStacking: true,
+    selectionDashArray: [13, 16],
+         selectionLineWidth: 5,
+         selectionBorderColor: "green",
+})
 var canvasPrev  = new fabric.Canvas("client-main-canvas-logo",  {preserveObjectStacking: true});
 var cropCanvas  = new fabric.Canvas("cropCanvas",               {preserveObjectStacking: true});
+//fabric.Object.prototype.transparentCorners = false;
+//fabric.Object.prototype.cornerStyle = 'circle';
+//fabric.Object.prototype.borderColor = '#494699';
+//fabric.Object.prototype.cornerColor = '#494699';
+//fabric.Object.prototype.cornerStrokeColor = '#000';
+//fabric.Object.prototype.cornerSize = 10;
+//fabric.Object.prototype.padding = 3;
 
 const dpi = 72;
 // const defaults = {
@@ -157,13 +169,6 @@ $mainCtrl = $("#workspace-right-panel .main-ctrl");
 /** */
 
 
-fabric.Object.prototype.transparentCorners = false;
-fabric.Object.prototype.cornerStyle = 'circle';
-fabric.Object.prototype.borderColor = '#000';
-fabric.Object.prototype.cornerColor = '#494699';
-fabric.Object.prototype.cornerStrokeColor = '#000';
-fabric.Object.prototype.cornerSize = 10;
-fabric.Object.prototype.padding = 3;
 
 
 var Direction = {
@@ -968,6 +973,9 @@ function initUIEvents() {
 
     initContextMenu();
    
+    $("#btnGenerateAndDownloadPDF").on("click",function(){
+        generatePDFfromPreview();
+    })
 
     $("#btnFaqPopup").on("click",(e)=>{
         $.get('/app/faq',(res)=>{
@@ -1208,8 +1216,9 @@ $("#btnStartOverModel").on("click",function(e){
         _canvas.setActiveObject(obj).renderAll();
 
         showLayerControls(this);
-        $(this).on("click", ".bring-fwd", function (evt) {
+        $(this).unbind().on("click", ".bring-fwd", function (evt) {
             evt.stopPropagation();
+
             if (selected > 0) {
                 _canvas.bringForward(obj);
                 jQuery($(layers).children().eq(selected - 1)).before(jQuery($(layers).children().eq(selected)));
@@ -1218,13 +1227,15 @@ $("#btnStartOverModel").on("click",function(e){
         });
 
         $(this).on("click", ".bring-back", function (evt) {
+
             evt.stopPropagation();
-            if (selected < len) {
+            if (selected < len-1) {
                 _canvas.sendBackwards(obj);
                 jQuery($(layers).children().eq(selected + 1)).after(jQuery($(layers).children().eq(selected)));
                 selected = selected + 1;
             }
         });
+
         $(this).on("click", ".duplicate", function (evt) {
          
             evt.stopPropagation();
@@ -1375,10 +1386,13 @@ $("#btnStartOverModel").on("click",function(e){
     })
     $("#font-list-container a").on("click", function (e) {
         let __canvas = state.isPreviewCanvas?canvasPrev:canvas;
-        var value = $(this).text() || "Arial, sans-serif";
+        let value = $(this).text() || "Arial, sans-serif";
+        let dataValue = $(this).attr("data-value");
         $("#fontlist").text(value);
+        $("#fontlist").attr('data-value',dataValue);
+        $("#fontlist").attr('style',$(this).attr('style'));
         //$("#selected-font").html($(this).html())
-        __canvas.getActiveObject().set("fontFamily", $(this).attr("data-value"));
+        __canvas.getActiveObject().set("fontFamily",dataValue);
         __canvas.requestRenderAll();
     })
     $("#text-letter-spacing, #text-letter-spacing-range").on("change", function () {
@@ -1633,7 +1647,7 @@ function updateTextControls(e){
    if(item.stroke)
    { document.querySelector('#strokecolor')?.jscolor.fromString(item.stroke); }
    document.querySelector('#fontColorBox').jscolor.fromString(item.fill);
-   
+
    $("#fontlist").text(item.fontFamily);
    
 }
@@ -1808,7 +1822,7 @@ function toast(message) {
 }
 
 function hideWorkspaceControls() {
-    $layers.html("Empty! please upload an image.");
+    $layers.html("No Layer.");
     mainControls(false);
     hideObjectControls();
 }
@@ -1927,11 +1941,7 @@ function initCanvasTextEvents() {
 
             };
             
-        
-            var item = new fabric.IText(obj.text, textInfo);
-            
-            
-            //var item = addText(obj)
+            let item = new fabric.IText(obj.text, textInfo);
             item.globalCompositeOperation = 'source-atop';
             canvas.add(item);            
             canvas.setActiveObject(item);

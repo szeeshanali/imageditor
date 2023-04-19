@@ -64,7 +64,6 @@ mongoose.connect(MONGO_CONN,
 app.use(expressLayouts);
  
 app.set('view engine', 'ejs');
-// app.use(express.static('public'))
 
 app.use(express.static("public"));
 app.use(express.json({limit: '25mb'}));
