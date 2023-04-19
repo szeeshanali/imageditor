@@ -104,8 +104,8 @@ app.use("/",  clientroutes);
 app.use("/",  authroutes);  
 app.use("/",  mainroutes);  
 
-app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}`)
+app.listen(5001, () => {
+  console.log(`Example app listening on port 5001`)
 })
 
 
