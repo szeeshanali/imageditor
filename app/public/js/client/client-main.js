@@ -1217,6 +1217,7 @@ $("#btnStartOverModel").on("click",function(e){
 
         showLayerControls(this);
         $(this).unbind().on("click", ".bring-fwd", function (evt) {
+
             evt.stopPropagation();
 
             if (selected > 0) {
@@ -1364,7 +1365,7 @@ $("#btnStartOverModel").on("click",function(e){
             } else if (value === 'underline') {
                 if( o.type === 'curved-text')
                 {
-                    debugger;
+
                     o.set({"textDecoration": "underline"})
                     toast('Underline is not supported for Circular Text.');
                     return}

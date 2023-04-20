@@ -670,9 +670,9 @@ router.post('/api/filter/users',  isAdmin, async (req,res)=>{
     }
 
     if(name)
-    { filter.fname = {$regex:name} }
+    { filter.fname = {$regex:new RegExp(name, "i")} }
     if(email)
-    {filter.email = email }
+    {filter.email = new RegExp(email, "i") }
 
     let users = await appusers.find(filter,{password:0}).sort({created_dt:-1}); 
     let userIds = users?.map(i=>i._id);
@@ -692,6 +692,29 @@ router.post('/api/filter/users',  isAdmin, async (req,res)=>{
     }
     
     return ok(res,out)
+  }catch(ex){
+    return error(res,ex)
+  }
+  
+})
+
+router.get('/api/filter/user-downloads/:id',  isAdmin, async (req,res)=>{ 
+  try{
+
+    const id = req.params["id"];
+    let downloads = await logs.find({user_id:id,  type:"download_pdf"}); 
+    return ok(res,downloads)
+  }catch(ex){
+    return error(res,ex)
+  }
+  
+})
+router.get('/api/filter/user-projects/:id',  isAdmin, async (req,res)=>{ 
+  try{
+
+    const id = req.params["id"];
+    let projects = await uploads.find({uploaded_by:id,  type:"project"},{json:0,base64:0, deleted:false}); 
+    return ok(res,projects)
   }catch(ex){
     return error(res,ex)
   }

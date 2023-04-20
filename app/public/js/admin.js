@@ -3404,3 +3404,123 @@ function initContextMenu()
         $('#pasteClipboard').css({'display':'none'});
     })
 }
+
+function getUserDownloads(userId, userName)
+{
+    $loader.removeClass("hidden");
+  $.ajax({
+                type: "GET",
+                url: `/api/filter/user-downloads/${userId}`,
+                success: function (res) {
+                  $loader.addClass("hidden");
+                  let d = [];
+                  if(res.data)
+                  {  showDownloadHistory(userId,userName,res.data) }
+
+                },error: function (request, status, error) {
+                  $loader.addClass("hidden");
+                },
+               
+            });
+}
+
+function getUserSavedProjects(userId, userName)
+{
+    $loader.removeClass("hidden");
+  $.ajax({
+                type: "GET",
+                url: `/api/filter/user-projects/${userId}`,
+                success: function (res) {
+                  $loader.addClass("hidden");
+                  let d = [];
+                  if(res.data)
+                  {  showProjectHistory(userId,userName,res.data) }
+
+                },error: function (request, status, error) {
+                  $loader.addClass("hidden");
+                },
+               
+            });
+}
+
+function showProjectHistory(userId, title, userProjects) {
+    let _title = `${title}`;
+
+    let filteredUserProjects = userProjects.filter(function (f) {
+        return f.uploaded_by == userId
+    });
+
+    let table = `<div class='table-responsive'>
+    <table  class='table mg-b-0'>
+        <thead>
+            <th>Project Name</th>
+            <th>Created Date</th>
+            <th>View</th>
+            </thead>
+            <tbody>{tr}</tbody>
+      </table></div>`;
+    let tr = `<tr>{td}</tr>`;
+    let temp = "";
+    filteredUserProjects ?. forEach(item => {
+        let d = {};
+        if (item.data) {
+            d = JSON.parse(item.data);
+        }
+
+        temp += tr.replace(
+            "{td}",
+            `
+  <td><strong>${ item.title }</strong></td>
+  <td>${ new Date(item.created_dt).toLocaleString() }</td><td><a href='/app/admin/user-project/${item._id}'   >View</a></td>` ) });
+    table = table.replace("{tr}", temp);
+    if (filteredUserProjects.length == 0) {
+        table = "<p clsss='pd-y-20'>No Records Found.</p>"
+    }
+    $("#projectHistoryTitle").text(_title);
+    $("#projectHistoryContent").html(table);
+}
+
+
+function showDownloadHistory(userId, title, filteredDownloads) {
+    selectedHistory = {
+          userId: userId,
+          title: title
+      }
+
+      let _title = `${title}`;
+
+
+      filteredHistory = filteredDownloads ? filteredDownloads : history.filter(function (f) {
+          return f.user_id == userId
+      });
+      let table = `<div class='table-responsive'>
+      <table  class='table mg-b-0 tx-12 tx-bold tx-uppercase' >
+          <thead>
+              <th>File Name</th>
+            
+              <th>Template</th>
+              <th>Download Date</th>
+              </thead>
+              <tbody>{tr}</tbody>
+        </table></div>`;
+      let tr = `<tr>{td}</tr>`;
+      let temp = "";
+      filteredHistory ?. forEach(item => {
+          let d = {};
+          if (item.data) {
+              d = JSON.parse(item.data);
+          }
+
+          temp += tr.replace(
+              "{td}",
+              `
+    <td><strong>${ item.content }</strong></td>
+    
+    <td >${ d.title || 'N/A' }<br> <a  href='${d.link}'>${d.ref_code}</a></td><td>${ new Date(item.created_dt).toLocaleString() }</td>` ) });
+      table = table.replace("{tr}", temp);
+      if (filteredHistory.length == 0) {
+          table = "<p clsss='pd-y-20'>No Records Found.</p>"
+      }
+      $("#downloadHistoryTitle").text(_title);
+      $("#downloadHistoryContent").html(table);
+  }
