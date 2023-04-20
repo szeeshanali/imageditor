@@ -108,7 +108,6 @@ function curveText(obj)
 }
 
 function textCurrentValues(textObject){
-    debugger;
     let selectedFontFamily = $("#fontlist").attr('data-value');
     textObject.fontFamily = selectedFontFamily;
     return new fabric.IText(textObject.text, textObject);
