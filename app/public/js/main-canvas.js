@@ -53,6 +53,24 @@ $btnToolbarFlip.on("click",function(e){
 
 //#end toolbar
 
+$("#btnDisplayBorder").on("click",function(e){
+    // let mainLogo = canvas.backgroundImage;
+    // let preview = canvasPrev.backgroundImage._objects;
+    // if(preview){
+    //     for(let i=0;i<preview.length;i++){
+    //         let o = preview[i]; 
+    //         let strokeWidth = e.target.checked?o.originalStrokeWidth:0;
+    //         o.strokeWidth = strokeWidth;
+    //     }    
+    // }
+    // let o = mainLogo; 
+    // let strokeWidth = e.target.checked?o.originalStrokeWidth:0;
+    // o.strokeWidth = strokeWidth;
+
+    // canvas.renderAll();
+    // canvasPrev.renderAll();
+
+})
 
 $("#btnDisplayRuler").on("click", function () {
     var style = !($(".ruler").is(':visible'));
@@ -238,10 +256,13 @@ $("#btnDisplayGrid").on("click", function (e) {
                                 link,
                                 created_dt} = data;    
                           },function (item, object) {
+                            
                                 object.set({ 
                                     fill:"#fff",
-                                strokeWidth:0,
-                                   strokeMiterLimit:0
+                                    originalStrokeWidth  :   object.strokeWidth,
+                                    originalStrokeMiterLimit   :   object.strokeMiterLimit,
+                                    strokeWidth:0,
+                                    strokeMiterLimit:0
                                 });
                                 
                                 })
@@ -254,7 +275,9 @@ $("#btnDisplayGrid").on("click", function (e) {
               },function (item, object) {
     
                         object.set({
-                            fill:"#fff"
+                            fill:"#fff",
+                            originalStrokeWidth : object.strokeWidth,
+                            originalStrokeMiterLimit  : object.strokeMiterLimit,
                         });
                         object.set({ 
                             strokeWidth:0,
