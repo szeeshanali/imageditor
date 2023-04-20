@@ -68,6 +68,7 @@ app.set('view engine', 'ejs');
 app.use(express.static("public"));
 app.use(express.json({limit: '25mb'}));
 app.use(express.urlencoded({limit: '25mb', extended: true }));
+
 app.use(session(
   {   
     secret            : SESSION_SECRET,

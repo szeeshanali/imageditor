@@ -103,8 +103,7 @@
     </div>
 
 </div>
-<%- include('../../partials/admin/popups/PopupPDFDownloadHistory'); %>
-<%- include('../../partials/admin/popups/PopupUserProjectHistory'); %>
+
 <%- include('../../partials/admin/popups/edit-user'); %>
 
 <script type="text/javascript"> 
@@ -126,7 +125,7 @@
                   { 
                     d = res.data.map(i=>{
                       return [
-                        `<img src='/uploads/admin/template/template-${i.code}.png' class='wd-50' ></img>`,
+                        `<img src='/uploads/admin/template/template-${i.code}.svg' class='wd-50' ></img>`,
                         i.title, 
                         `<a href='${i.link}' target='_blank' class='tx-bold tx-underline'>${i.ref_code}</a>`,
                         i.count, 

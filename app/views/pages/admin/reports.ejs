@@ -87,6 +87,8 @@
     </div>
 
 </div>
+<%- include('../../partials/admin/popups/PopupPDFDownloadHistory'); %>
+<%- include('../../partials/admin/popups/PopupUserProjectHistory'); %>
 <%- include('../../partials/admin/popups/edit-user'); %>
 <script type="text/javascript"> 
 (function(){
@@ -174,8 +176,8 @@
                         (i.active==true)?"<i title='Enabled' class='tx-20 text-success ion-checkmark-circled' ></i>":"<i title='Enabled' class='tx-20 text-danger ion-close-circled' ></i>", 
                         new Date(i.created_dt)?.toLocaleString("en-GB")?.split(',')[0],                         
                         i.project_limit,
-                         projects == 0?projects:`<a href='#' class='tx-bold tx-underline'>${projects}</a>`,
-                         downloads == 0?downloads:`<a href='#' class='tx-bold tx-underline'>${downloads}</a>`,
+                         projects == 0?projects:`<a href='#' onclick='getUserSavedProjects("${i._id}","${i.fname}")' data-target='#popupProjectHistory' data-toggle='modal' class='tx-bold tx-underline'>${projects}</a>`,
+                         downloads == 0?downloads:`<a href='#' data-target='#popupDownloadHistory' onclick='getUserDownloads("${i._id}","${i.fname}")' data-toggle='modal' class='tx-bold tx-underline'>${downloads}</a>`,
                         (i.watermark==true)?"<i title='Enabled' class='tx-20 text-success ion-checkmark-circled' ></i>":"<i title='Enabled' class='tx-20 text-danger ion-close-circled' ></i>", 
                         `<i class='ion-ios-compose tx-20 text-primary hand' onclick='editCustomer(${JSON.stringify(i)})'  data-target='#edituser' data-toggle='modal'></i>`  
                       ]
@@ -191,6 +193,8 @@
     })
 
 });
+
+
 
 
 })($);
