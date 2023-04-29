@@ -1,14 +1,47 @@
 <div>
 <div id="rfq" class="modal fade" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg modal-dialog-vertical-center " role="document">
+    <div class="modal-dialog  modal-dialog-scrollable modal-lg modal-dialog-vertical-center " role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title modal-title tx-bold tx-inverse">Send your Design to Kopykake for Printing Quote. </h6>
+          <button type="button" class="close" data-dismiss="modal">×</button>
+        </div>
+        <div class="modal-body" style="overflow-y: auto; max-height: calc(100vh - 200px);">
+
+
         <form method="post" id="formRFQ" enctype="multipart/form-data" action="/api/rfq" data-parsley-validate>
             <div class="modal-content bd-0 tx-14">
              
                 <div class="modal-body pd-0">
                     <div class="form-layout">
                         <div class="card pd-20 pd-sm-40">
-                            <h6 class="card-body-title">Request a Quote</h6>
-                            <p class="mg-b-20 mg-sm-b-30">Send us your PDF to Print.</p>
+                          <ul class="list-group widget-list-group">
+                            <li class="list-group-item rounded-top-0 pd-x-0 pd-y-5">
+                              <p class="mg-b-0"><i class="fa fa-check tx-success mg-r-8"></i>
+                                Complete this form to email your PDF design to Kopykake for a quote and let Kopykake do the printing on our Frosting Sheets and edible inks for you! 
+                              </p>
+                            </li>
+                            <li class="list-group-item pd-x-0 pd-y-5" >
+                              <p class="mg-b-0"><i class="fa fa-check tx-success mg-r-8"></i>
+                                Be sure to enter only the number of sheets you need printed, NOT the number of logos.</p>
+                            </li>
+                            <li class="list-group-item pd-x-0 pd-y-5">
+                              <p class="mg-b-0"><i class="fa fa-check tx-success mg-r-8"></i>
+                                Be sure to enter the date you require the printed sheets in hand.  Print jobs are typically processed in 1-2 business days, plus shipping time.  Your quoted price will include shipping charges to meet the due date you entered.  
+                              </p>
+                            </li>
+                            <li class="list-group-item pd-x-0 pd-y-5">
+                              <p class="mg-b-0"><i class="fa fa-check tx-success mg-r-8"></i>
+                                Submitting this request does not generate an actual order.  
+                                Kopykake will review your request and will contact you shortly via email or phone to confirm the request and provide you with a price and shipping quote. Please be sure your email address and phone information is entered correctly.
+                              </p>
+                            </li>
+                            <li class="list-group-item rounded-bottom-0 pd-x-0 pd-y-15">
+                              <label class="ckbox">
+                                <input type="checkbox" required><span class="text-danger tx-bold">Yes, i understand.</span>
+                              </label>
+                            </li>
+                          </ul>
                   
                             <div class="form-layout">
                               <div class="row mg-b-25">
@@ -32,12 +65,7 @@
                                     <input class="form-control" type="number"   title="Please enter valid phone number" id="customerPhone" name="phone" value="<%=user.phone%>" required  placeholder="Phone Number">
                                   </div>
                                 </div><!-- col-8 -->
-                                <div class="col-lg-4">
-                                  <div class="form-group mg-b-10-force">
-                                    <input class="form-control" min="1" required placeholder="Total Sheets" oninput="this.value < 1?this.value=1:this.value" max="1000" type="number" name="sheets" >
-
-                                  </div>
-                                </div><!-- col-4 -->
+                              <!-- col-4 -->
                                 <div class="col-lg-4">
                                     <label class="ckbox ">
                                         <input type="checkbox" name="pickup" id="cbRfqShip" ><span>Pick up in Torrance.</span>
@@ -73,16 +101,39 @@
                                          
                                           <!-- col-8 -->
                                     </div>
-                                    <div class="col-lg-3">
-                                      <div class="input-group mg-b-10-force">
-                                        <input type="date"  id="rfqRequiredByDt" name="date" class="form-control" min="<%= new Date() %>" placeholder="Required By">
-                                      </div>
+                                    <div class="col-lg-6 mg-b-10">
+                                      <label>
+                                        Select the date you need these prints IN HAND (Rush charges may apply, and expedited shipping may be required).”
+                                      </label>
+                                      <input type="date"  id="rfqRequiredByDt" name="date" class="wd-200 form-control" min="<%= new Date() %>" placeholder="Required By">
+                                    </div>
+                                    <div class="col-lg-4">
+                                      <label>
+                                        Total Sheets Required (NOT Total Logos!)
+                                      </label>
+                                      <input class="form-control" min="1" required placeholder="" oninput="this.value < 1?this.value=1:this.value" max="1000" type="number" name="sheets" >
                                     </div>
                                   <div class="col-lg-12">
                                     <div class="form-group mg-b-10-force">
                                         <textarea rows="3" class="form-control" placeholder="Additional Information" name="additionalInfo" spellcheck="false"></textarea>
 
                                     </div>
+                                </div>
+                                <div class="col-lg-12">
+                                  <div class="tx-center pd-y-10">
+                                    <strong>Help Us, Help You!</strong>
+                                  </div>
+                                  <p>
+
+                                    
+We know you need these prints quickly and we do our best to process these requests quickly, but because these are custom jobs, we need all questions answered and payment in advance before we can proceed.
+	
+Please keep an eye on your email for our reply.  During our normal M-F business hours we will typically reply within an hour and provide you with a quote and a method to pay for your order.   
+If you have not heard from us, please check your spam folder or feel free to call us at <strong>310-373-8906</strong> (option 1) or email us at <strong>kustom@kopykake.com</strong> to follow up.
+
+The faster we can finalize your order, the faster we can begin printing and that will often save you money as we may be able to use a less expensive shipping method and still meet your deadline.
+
+                                  </p>
                                 </div>
                                 <!-- <div class="col-lg-4">
                                     <div class="form-group mg-b-10-force">
@@ -93,13 +144,15 @@
                               </div><!-- row -->
                   
                               <div class="form-layout-footer">
-                                <button type="submit" class="btn  btn-primary mg-r-5">Submit</button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="$('#formRFQ').trigger('reset')">Cancel</button>
+                                <button type="submit" class="btn tx-bold tx-uppercase  btn-success mg-r-5">Submit</button>
+                                <button type="button" class="btn btn-warning tx-bold tx-uppercase" data-dismiss="modal" onclick="$('#formRFQ').trigger('reset')">Cancel</button>
                               </div><!-- form-layout-footer -->
                             </div><!-- form-layout -->
                           </div>
                 </div>
          </form>
+        </div>
+        </div>
      </div>
                             <!-- modal-dialog -->
                         </div>

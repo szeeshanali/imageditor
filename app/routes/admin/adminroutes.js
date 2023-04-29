@@ -194,7 +194,7 @@ router.get("/app/admin/terms", isAdmin, async (req,res)=>{
 router.get("/app/admin/faq", isAdmin, async (req,res)=>{
   var content = await commonService.contentService.getContentAsync('faq') || {};
   res.locals.page = {
-    title  : "FAQs",
+    title  : "FAQ",
     id     : "__faq",
     user   : req.user,
     content : content

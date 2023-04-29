@@ -201,8 +201,8 @@ a {
   -webkit-text-decoration-skip: objects;
 }
 a:hover {
-  color: #494699;
-  text-decoration: none;
+  /* color: #494699; 
+  text-decoration: none;*/
 }
 
 a:not([href]):not([tabindex]) {
