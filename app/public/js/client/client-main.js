@@ -816,6 +816,7 @@ function applyFilterValue(index, prop, value) {
     }
 }
 function crop(currentImage) {
+    
     let rect = new fabric.Rect({
         left: selectionRect.left,
         top: selectionRect.top,
@@ -833,12 +834,7 @@ function crop(currentImage) {
     // init new image instance
     var cropped = new Image();
     // set src value of canvas croped area as toDataURL
-    cropped.src = cropCanvas.toDataURL({
-        left: rect.left,
-        top: rect.top,
-        width: rect.width,
-        height: rect.height,
-    });
+    cropped.src = cropCanvas.toDataURL();
 
  
     // after onload clear the canvas and add cropped image to the canvas
@@ -847,10 +843,13 @@ function crop(currentImage) {
         image = new fabric.Image(cropped);
         image.left = rect.left;
         image.top = rect.top;
+        image.scaleToWidth(rect.width),
+        image.scaleToHeight(rect.height),
+    
         image.setCoords();
         //let originalImage = canvas.getActiveObject();
         //canvas.remove(originalImage);
-        cropCanvas.add(image);
+        //cropCanvas.add(image);
         cropCanvas.renderAll();
     };
 }
@@ -864,14 +863,11 @@ function addSelectionRect(currentImage) {
         width: currentImage.getScaledWidth()-50,
         height: currentImage.getScaledHeight()-50,
         hasRotatingPoint: false,
-        transparentCorners: false,
-        cornerColor: "white",
-        cornerStrokeColor: "black",
-        borderColor: "black",
+        transparentCorners: true,
+        
         cornerSize: 12,
         padding: 0,
-        cornerStyle: "circle",
-        borderDashArray: [5, 5],
+        borderDashArray: [3, 3],
         borderScaleFactor: 1.3,
     });
     //selectionRect.scaleToWidth(200);
@@ -1010,6 +1006,9 @@ function initUIEvents() {
         top: rect.top,
         width: rect.width,
         height: rect.height,
+        quality:1,
+        format:"jpg",
+        multiplier:2
     });
 
  
@@ -1020,6 +1019,8 @@ function initUIEvents() {
         image = new fabric.Image(cropped);
         image.left = rect.left;
         image.top = rect.top;
+        image.scaleToWidth(rect.width);
+        image.scaleToHeight(rect.height);
         image.setCoords();      
         let originalImg = canvas.getActiveObject(); 
         canvas.remove(originalImg); 
@@ -1043,16 +1044,22 @@ function initUIEvents() {
         if(img)
         {
             let imgSrc = img._element.src;
-            fabric.Image.fromURL(imgSrc, function (img) {
-                img.scaleToWidth(250);
-                img.scaleToHeight(250);
-                let w = img.getScaledWidth(); 
-                let h = img.getScaledHeight();
+            fabric.Image.fromURL(imgSrc, function (newImage) {
+                //img.scaleToWidth(450);
+                //img.scaleToHeight(450);
+                //let w = img.getScaledWidth(); 
+                //let h = img.getScaledHeight();
+                //cropCanvas.setDimensions({width:w,height:h})
+                newImage.scaleToWidth(img.getScaledWidth())
+                newImage.scaleToHeight(img.getScaledHeight())
+                let w = newImage.getScaledWidth(); 
+                let h = newImage.getScaledHeight();
                 cropCanvas.setDimensions({width:w,height:h})
-                cropCanvas.add(img);
+                cropCanvas.add(newImage);
                 cropCanvas.renderAll();
-                addSelectionRect(img);
+                addSelectionRect(newImage);
             })
+
 
         }
 
