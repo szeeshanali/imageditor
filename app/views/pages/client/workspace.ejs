@@ -20,8 +20,10 @@
             <div  id="templatepanel" class="tab-pane active"   >
              
               <div class="card pd-15 sticky-header-left-panel">
-                <button type="button" class="btn  btn-block btn-warning tx-bold tx-16 tx-uppercase " id="btn-step-design">
-                  Click NEXT <br><small>Create Design </small></button>
+                <button type="button" class="btn  btn-block btn-success tx-bold tx-16 tx-uppercase " id="btn-step-design">
+                  SELECT TEMPLATE
+<br><small class="tx-bold">then
+  NEXT, CREATE YOUR DESIGN</small></button>
                </div>
 
               <div>
@@ -33,11 +35,15 @@
               </div>
             </div>            
             <div id="uploadpanel" class="tab-pane"  >
-                <div class="card pd-15 btn-group" role="group" aria-label="Basic example">
+                <div class="card pd-15 " aria-label="Basic example">
                   
-                  <button type="button" class="btn btn-secondary disabled" onclick="$btnTemplate.click()" ><i class="icon ion-ios-arrow-back tx-20"></i></button>
-                      <button type="button" class="btn  btn-warning tx-bold tx-16 tx-uppercase " id="btn-step-preview">
-                        NEXT  <br><small >Preview Design</small>
+                  <button type="button" class="bd-b mg-b-3 tx-16 tx-uppercase tx-bold btn btn-warning " onclick="$btnTemplate.click()" >
+                    <i class="icon ion-ios-arrow-back tx-16"></i>
+                    Back  <br><small >Choose Template</small>
+                  
+                  </button>
+                      <button type="button" class="btn bd-b btn-success tx-bold tx-16 tx-uppercase " id="btn-step-preview">
+                        NEXT  <i class="icon ion-ios-arrow-forward tx-16"></i> <br><small >Preview Design</small>
                       </button>
               
                 </div>
@@ -169,7 +175,9 @@
       <div class="d-sm-flex align-items-center justify-content-start">
         <i class="icon ion-ios-information alert-icon tx-52 mg-r-20"></i>
         <div class="mg-t-20 mg-sm-t-0">
-          <p class="mg-b-0 tx-gray">You may edit individual Circle / Square by selecting the Layers on the Right. Alternatively you may also modify the overall sheet in order to get your desired output</p>
+          <p class="mg-b-0 tx-gray">
+            Before you finalize your design, you may delete any unwanted Logos by simply deleting the Layer(s).  Any deleted Layers or other changes made in Preview Mode will be lost if you click Continue Editing. 
+          </p>
         </div>
       </div><!-- d-flex -->
   </div>
@@ -272,7 +280,7 @@
   <div class="modal-dialog modal-md" role="document">
     <div class="modal-content bd-0 tx-14">
       <div class="modal-header pd-x-20">
-        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Finalize And Download your Design </h6>
+        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Finalize Your Design</h6>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -281,18 +289,20 @@
         <input type="text" id="downloadFileName" class="form-control" placeholder="Enter File Name">
       </div>
       <div class="modal-footer justify-content-center">
-        <button type="button" id="btnGenerateAndDownloadPDF" data-dismiss="modal" class="btn-sm tx-12 tx-uppercase btn btn-success pd-x-20">Download your design <br> in PDF</button>
-        <button type="button" data-toggle="modal" data-target="#rfq" class="btn btn-sm tx-12 tx-uppercase btn-primary pd-x-20" data-dismiss="modal">Send to KakePrints <br> for a Quote.</button>
+        <button type="button" id="btnGenerateAndDownloadPDF" data-dismiss="modal" class="tx-bold btn-sm tx-12 tx-uppercase btn btn-success pd-x-20">
+          Download your design <br> as a ready to print PDF</button>
+        <button type="button" data-toggle="modal" data-target="#rfq" class=" tx-bold btn btn-sm tx-12 tx-uppercase btn-primary pd-x-20" data-dismiss="modal">
+          Send your design to <br>Kopykake for a Printing Quote</button>
       </div>
     </div>
   </div>
 </div>
 
 <div id="cropModal" class="modal fade">
-  <div class="modal-dialog modal-md" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content bd-0 tx-14">
       <div class="modal-header pd-x-20">
-        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Crop Image</h6>
+        <h6 class="tx-14 pd-r-10 mg-b-0 tx-uppercase tx-inverse tx-bold">Drag handles and move window to desired crop, then click Crop as Shown</h6>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -301,17 +311,17 @@
         <canvas id="cropCanvas" >
       </div>
       <div class="modal-footer justify-content-center">
-        <button type="button"  id="btnCrop" class="btn btn-sm tx-12 tx-uppercase btn-primary pd-x-20" >Show Image</button>
-        <button type="button"  id="btnCropDone" class="btn btn-sm tx-12 tx-uppercase btn-primary pd-x-20" data-dismiss="modal" >Use Image</button>
+        <button type="button"  id="btnCrop" class="btn btn-sm tx-12 tx-uppercase btn-primary tx-bold pd-x-20" >Crop as Shown</button>
+        <button type="button"  id="btnCropDone" class="btn btn-sm tx-12 tx-uppercase btn-success tx-bold pd-x-20" data-dismiss="modal" >Insert as Shown</button>
 
-        <button type="button" class="btn btn-sm tx-12 tx-uppercase btn-secondary pd-x-20" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-sm tx-12 tx-uppercase btn-warning tx-bold pd-x-20" data-dismiss="modal">Cancel</button>
       </div>
     </div>
   </div><!-- modal-dialog -->
 </div><!-- modal -->
 <%- include('../../partials/client/popups/popup-clipart'); %>
 <%- include('../../partials/client/popups/faq'); %>
-
+<%- include('../../partials/client/popups/terms'); %>
 
 <div id="my-proj-modal" class="modal fade" aria-hidden="true" >
   <div class="modal-dialog modal-lg modal-dialog-vertical-center " role="document">
@@ -387,5 +397,8 @@
    $.get('/app/faq',(res)=>{
     $("#faq-contanier").html(res);
   })
+  $.get('/app/terms',(res)=>{
+      $("#terms-contanier").html(res);
+    })
 </script>
    

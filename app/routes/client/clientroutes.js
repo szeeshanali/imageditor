@@ -573,7 +573,7 @@ router.post('/api/rfq', isLoggedIn, async (req,res)=>{
     
                 
                }catch(ex){
-                res.status(500).send(ex);
+                return error(res,ex);
                }
    
         })
