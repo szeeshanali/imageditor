@@ -93,17 +93,19 @@ $("#btnDisplayGrid").on("click", function (e) {
 
 
 
+
+
  function loadSVGTemplate(id,onComplete) {
         selectedTemplateId = id;
         var group = [];
         state.isPreviewCanvas = false;
         $.get(`/api/svg-templates/${id}`, function (data) {
-            
-            fabric.loadSVGFromURL(data.base64, function(objects, options) {         
-                if (typeof(data) === 'string') {
-                    window.location.reload();
-                    return;
-                }
+            if (isSessionExpired(data)) {
+                return;
+            }
+             
+            fabric.loadSVGFromURL(data.base64, function(objects, options) {      
+
                 const svgBase64 = data.base64;
                 if (! svgBase64) {
                 toast("Error loading Template.");       
@@ -125,8 +127,8 @@ $("#btnDisplayGrid").on("click", function (e) {
     
                 let firstLogo = objects[0];
                 let aspectRatio = firstLogo.width/firstLogo.height;                
-                
-                let displayWidth = $("#workarea").width()-50 || 500;                 
+                const workspaceSize =$("#workarea").width() || 500;
+                let displayWidth = (workspaceSize-50)>800?800:workspaceSize-50;                 
                 let logoDisplayWidth = displayWidth; 
                 let logoDisplayHeight = displayWidth/aspectRatio;                 
                 canvas.setBackgroundImage(firstLogo, canvas.renderAll.bind(canvas));

@@ -24,6 +24,20 @@ function getPageFormatByDimensions(widthPx, heightPx)
     return "letter";
 }
 
+
+function isSessionExpired(data){
+    if (typeof(data) === 'string') {
+        toast(`Your session has expired. Redirecting to the Login page...`);
+        setTimeout(function(){
+            window.location.reload();
+        },2000)
+        return true; 
+    }
+    return false;
+
+
+}
+
 function getInches(widthInPx, heightInPx)
 {
    
@@ -66,15 +80,16 @@ const cache = (function(){
 })($);
 
 function getCanvasCenter(objectWidth,objectHeight){
+    
     if(!canvas || !canvas.context)
-    {return {left:0,top:0}}
+    { return {left:0,top:0}}
 
     if(objectWidth>canvas.width)
     { return { left:0, top: 0 } }
 
     return {
         left:    (canvas.width/2)-(objectWidth/2),
-        top:    (canvas.height/2)-(objectHeight/2)
+        top:     (canvas.height/2)-(objectHeight/2)
     }
 
 }
@@ -110,16 +125,18 @@ function curveText(obj)
 function textCurrentValues(textObject){
     let selectedFontFamily = $("#fontlist").attr('data-value');
     textObject.fontFamily = selectedFontFamily;
-    return new fabric.IText(textObject.text, textObject);
+    textObject.cache          = false
+    return  new fabric.IText(textObject.text, textObject);
 }
 
 function addText(text)
 {
-    
-    var item = textCurrentValues(text);
-    let canvasCenter = getCanvasCenter(item.width,item.height);
-    item.left = canvasCenter.left  ;
-    item.top = canvasCenter.top ;
+    let item            = textCurrentValues(text);
+    let canvasCenter    = getCanvasCenter(item.width,item.height);
+    item.left           = canvasCenter.left;
+    item.top            = canvasCenter.top;
+    item.padding        = 15;
+    item.dirty = true;
     return item; 
 }
 

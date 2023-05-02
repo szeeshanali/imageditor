@@ -13,6 +13,7 @@ $("#clipartmenu .clipart").on("click", (e) => {
            img.set({ left:canvasCenter.left , top: canvasCenter.top });                 
            img.globalCompositeOperation = 'source-atop';
             _canvas.add(img);
+            _canvas.setActiveObject(img);
             _canvas.renderAll();
             mainControls(true);
         });
@@ -29,23 +30,24 @@ function resetTextControls(){
 }
 
 $btnAddText.on("click", function () {
+    
     $("#inputCurvedText").prop("checked",false);
     var text = $textarea.val();
-    if (! text || text.length == 0) { // /toast("Please enter text");
-        return;
-    }
-    //resetTextControls();
-    let item = addText({
-        text:text });
+    if (! text || text.length == 0) { return; }
+
+    let item = addText({ text:text });
+    
     if (state.isPreviewCanvas) {
         canvasPrev.add(item);
         canvasPrev.renderAll();
     } else {
-        item.globalCompositeOperation = "source-atop";
+        
+        //item.globalCompositeOperation = "source-atop";        
         canvas.add(item);
         canvas.renderAll();
     } 
-    canvas.setActiveObject(item);
+    
     mainControls(true);
     textControls(true);
+
 })

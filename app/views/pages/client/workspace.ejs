@@ -80,22 +80,22 @@
                   <div class="row ">
                     <div class="col-lg-12">
                       <div class="form-group">
-                        <label class="form-control-label">Project title: <span class="tx-danger">*</span></label>
-                        <input class="form-control" minlength="3"  maxlength="50" pattern=".{3,30}" title="Minimum 3 and maximum 30 characters." required type="text" id="input-project-title" name="firstname"  placeholder="Enter project title">
+                        <label class="form-control-label">Project Name: <span class="tx-danger">*</span></label>
+                        <input class="form-control" minlength="3"  maxlength="50" pattern=".{3,30}" title="Minimum 3 and maximum 30 characters." required type="text" id="input-project-title" name="firstname"  >
                       </div>
                     </div>
                     <div class="col-lg-12">
                       <div class="form-group">
                         <label class="form-control-label">Description: </label>
-                        <textarea rows="2" class="form-control" pattern=".{3,100}" title="Minimum 3 and maximum 100 characters." minlength="3"  maxlength="50"  id="input-project-desc" required placeholder="Enter Description" spellcheck="false"></textarea>
+                        <textarea rows="2" class="form-control" pattern=".{3,100}" title="Minimum 3 and maximum 100 characters." minlength="3"  maxlength="50"  id="input-project-desc" required  spellcheck="false"></textarea>
                       </div>
                     </div>
 
                   </div><!-- row -->
       
-                  <div >
-                    <button class="btn  btn-primary mg-r-5" data-toggle="modal" data-target="#confirmbox" id="btnSaveModel">Save Project</button>
-                    <button class="btn btn-secondary" id="btnCancelSaveDesign">Cancel</button>
+                  <div class="btn-group" >
+                    <button class="btn tx-12 btn-success  tx-bold tx-uppercase" data-toggle="modal" data-target="#confirmbox" id="btnSaveModel">Save Project</button>
+                    <button class="btn tx-12 btn-warning tx-bold tx-uppercase" id="btnCancelSaveDesign">Cancel</button>
                   </div><!-- form-layout-footer -->
                 </div><!-- form-layout -->
               </div>
@@ -190,7 +190,7 @@
          <div class=" bg-primary bd-b pd-5 bd-t">
           <ul class="nav nav-white-800 flex-column flex-md-row justify-content-end" role="tablist">
             <li class="nav-item ">
-            <button type="button" onclick="$('#btn-menu-peview').click()" class="soft hidden btn btn-sm btn-success tx-12 tx-uppercase tx-bold bd-0 pd-x-20 " id="ws-btn-preview">Preview <br> Your Design</button>
+            <button type="button" onclick="$('#btn-menu-peview').click()" class=" hand soft hidden btn btn-sm btn-success tx-12 tx-uppercase tx-bold bd-0 pd-x-20 " id="ws-btn-preview">Preview <br> Your Design</button>
           </li>
 
             <li class="nav-item ">
@@ -200,12 +200,12 @@
 
             <li class="nav-item ">
 
-            <button type="button" onclick="$('#menu-save-design').click()" class=" soft hidden btn btn-success btn-sm tx-12 tx-uppercase tx-bold bd-0 pd-x-20" id="ws-btn-save"><i class="fa fa-floppy-o mg-r-5"></i>Save <br>  Design</button>
+            <button type="button" onclick="$('#menu-save-design').click()" class=" hand soft hidden btn btn-success btn-sm tx-12 tx-uppercase tx-bold bd-0 pd-x-20" id="ws-btn-save"><i class="fa fa-floppy-o mg-r-5"></i>Save <br>Your  Project</button>
           </li>
 
             <li class="nav-item ">
   
-            <button type="button" onclick="backFromPreview()" class=" soft btn btn-danger tx-12 btn-sm tx-uppercase tx-bold  bd-0 pd-x-20 hidden" id="ws-btn-back"><i class="fa fa-pencil-square-o mg-r-5"></i> Continue Editing <br> your Design</button>
+            <button type="button" onclick="backFromPreview()" class=" hand soft btn btn-danger tx-12 btn-sm tx-uppercase tx-bold  bd-0 pd-x-20 hidden" id="ws-btn-back"><i class="fa fa-pencil-square-o mg-r-5"></i> Continue Editing <br> Your Design</button>
           </li>
 
             <li class="nav-item ">
@@ -255,6 +255,8 @@
 <%- include('../../partials/canvas-controls'); %>
 
 
+
+
  <!-- SMALL MODAL -->
  <div id="confirmbox" class="modal fade">
   <div class="modal-dialog modal-sm" role="document">
@@ -269,12 +271,18 @@
         <p class="mg-b-5" id="confirmBoxBody"></p>
       </div>
       <div class="modal-footer justify-content-center">
-        <button type="button" id="btnModelContinue" data-dismiss="modal" class="btn btn-primary pd-x-20">Continue</button>
-        <button type="button" class="btn btn-secondary pd-x-20" data-dismiss="modal">Close</button>
+        <div class="btn-group">
+
+        <button type="button" id="btnModelContinue" data-dismiss="modal" class="tx-12 tx-uppercase tx-bold  btn btn-success pd-x-20">Continue</button>
+        <button type="button" class="btn btn-warning pd-x-20 tx-12 tx-uppercase tx-bold " data-dismiss="modal">Close</button>
+      </div>
+
       </div>
     </div>
   </div><!-- modal-dialog -->
 </div><!-- modal -->
+
+
 
 <div id="downloadPDFModel" class="modal fade">
   <div class="modal-dialog modal-md" role="document">
@@ -327,15 +335,13 @@
   <div class="modal-dialog modal-lg modal-dialog-vertical-center " role="document">
     <div class="modal-content bd-0">
       <div class="modal-header pd-y-20 pd-x-25">
-        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">MY SAVED PROJECTS</h6>
+        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">My Saved Projects</h6>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span>
         </button>
       </div>
       <div class="modal-body pd-25">
-        <div class="row row-sm" id="my-proj-container">
-
-        </div>      
+        <div class="row row-sm" id="my-proj-container"></div>      
       </div>
     </div>
    </div>
@@ -394,11 +400,6 @@
 
    }
 
-   $.get('/app/faq',(res)=>{
-    $("#faq-contanier").html(res);
-  })
-  $.get('/app/terms',(res)=>{
-      $("#terms-contanier").html(res);
-    })
+
 </script>
    
