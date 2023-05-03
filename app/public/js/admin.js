@@ -707,7 +707,7 @@ function saveDesign() {
 
 
         if (! title) {
-            toast("Please enter project title.");
+            toast("Please Enter Project Name");
             return;
         }
 
@@ -730,7 +730,7 @@ function saveDesign() {
                 templateId: canvas.templateId
             },
             success: function (res) {
-                toast("Design has been Saved.");
+                toast("Your Project has been Saved.");
             },
             error: function (res) {
                 if (res.status === 401) {

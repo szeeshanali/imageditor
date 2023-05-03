@@ -41,6 +41,7 @@
       fabric.Object.prototype.cornerSize = 5;
       fabric.Object.prototype.padding = 0;
 
+
       // retrieve active selection to react state
       fabricCanvas.on('selection:created', (e) => {})
       fabricCanvas.on('selection:updated', (e) => this.setActiveSelection(e.target))
