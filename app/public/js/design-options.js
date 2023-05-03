@@ -44,6 +44,6 @@ $btnAddText.on("click", function () {
         _canvas.renderAll.bind(_canvas);
         mainControls(true);
         textControls(true);    
-    },300)
+    },500)
 
 })
