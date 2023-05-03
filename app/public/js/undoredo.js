@@ -8,7 +8,7 @@ var canvasUndo = (function(canvas){
           redoStatus              : false,
           undoFinishedStatus      : 1,
           redoFinishedStatus      : 1,
-        undoButton              : document.getElementById('undo'),
+          undoButton              : document.getElementById('undo'),
           redoButton              : document.getElementById('redo'),
       };
       _canvasObject.on(
@@ -31,7 +31,7 @@ var canvasUndo = (function(canvas){
               width  : 200,
               height : 200
       });
-          _canvasObject.add(rect);
+        _canvasObject.add(rect);
           _canvasObject.setActiveObject(rect);
       _canvasObject.renderAll();
     }
@@ -116,6 +116,16 @@ var canvasUndo = (function(canvas){
               }
           }
       }
+
+      var _dispose = function(){
+          _config.canvasState             = [];
+          _config.currentStateIndex       = -1;
+          _config.undoStatus              = false;
+          _config.redoStatus              = false;
+          _config.undoFinishedStatus      = 1;
+          _config.redoFinishedStatus      = 1; 
+
+      }
     
       
        return {
@@ -124,6 +134,8 @@ var canvasUndo = (function(canvas){
           redoButton : _config.redoButton,
           undo       : undo,
           redo       : redo,
+          config     : _config, 
+          dispose    : _dispose
     }
    
     })(canvas);

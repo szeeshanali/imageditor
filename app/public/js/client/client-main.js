@@ -49,35 +49,29 @@ var layerHtml = `<div class="media d-block d-flex layer-item object-options" dat
     </div>
    </div>`;
 
-// var projectHtml = `<div class='my-projects'><div class="list-group-item d-flex">
-// <div class="media d-block d-sm-flex">
-//   <div class="d-block d-sm-flex ">
-//     <img src="{base64}" class=" wd-100" alt="Image">
-//   </div><!-- d-flex -->
-//   <div class="media-body pd-15">
-//     <h6 class="mg-b-5 tx-14"><a href="#" class="tx-inverse hover-primary tx-bold" onclick="loadProject('{code}',false)" id='{code}' >{title}</a></h6>
-//     <p class='tx-12'>{desc}</p>
-//     <p class="mg-b-0 tx-12">{created_dt}</p>
-//   </div><!-- media-body -->
-// </div><!-- media -->
-// <a href="#" class="pd-lg-x-20 mg-l-auto ion-trash-a tx-30 text-secondary delete"  onclick="deleteProject('{code}',this)" ></a>
-// </div></div>`;
 
 const projectHtml = `
-<div class="col-md">
-              <div class="card bg-gray-200">
-                <div class="card-body">
-                  <h5 class="card-body-title">{{title}}</h5>
-                  <p class="card-subtitle tx-normal mg-b-15">{{desc}}</p>
-                  <p class="card-text">
+<div class="col-lg-3">
+              <div class="card ">
+                <div class="card-body bg-white">
+                
+                <h5 class="mg-0 tx-14 tx-bold tx-dark ">{{title}}</h5>
+                <div class="tx-12 mg-b-10">{{created_dt}}</div>  
+                  <div class="card-text bd pd-15 mg-b-10" style='height:150px;overflow:hidden'>
                     <img src="{{src}}" class="img-fluid" alt="Image">
-                  </p>
-                  <a href="#"  onclick="loadProject('{{code}}',false)" class="card-link">Edit</a>
-                  <a href="#" onclick="deleteProject('{{code}}',this)" class="card-link">Delete</a>
+                  </div>
+                  <p class="tx-12 card-subtitle">{{desc}}</p>
+                  <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button" id="{{code}}"  class="hand soft btn btn-success tx-12 tx-bold tx-uppercase btn-edit-project">Edit</button>
+                <button type="button" onclick="deleteProject('{{code}}',this)" class="hand soft btn btn-warning tx-12  tx-bold tx-uppercase ">Delete</button>
+              </div>
+
+
                 </div>
-              </div><!-- card -->
-            </div>
-`
+              </div>
+            </div>`
+
+
 
 const designHtml = `<div class='pre-designed col-md-6 p-lg-1 align-self-normal'>
 <div class="card" style='border: 1px solid rgba(0, 0, 0, 0.125);'>
@@ -93,7 +87,7 @@ const designHtml = `<div class='pre-designed col-md-6 p-lg-1 align-self-normal'>
         <p class="mg-b-0 tx-12 tx-bold">Logo Size: {{logoSize}}</p>
         <p class="mg-b-0 tx-12 tx-bold">Total Logos: {{totalLogos}}</p>
         <p class="mg-b-0 tx-12 tx-bold tx-uppercase">Format: {{pageFormat}}</p>
-        <a href="#" class="btn btn-sm btn-primary"  onclick="loadProject('{{code}}')" class="card-link">Edit</a>
+        <a href="#" class="btn btn-sm btn-success tx-bold tx-12 tx-uppercase btn-edit-customdesign" id="{{code}}"  >Edit Project</a>
       </div>
     </div>
   </div>
@@ -182,16 +176,16 @@ var Direction = {
 fabric.util.addListener(document.body, 'keydown', function (options) {
     
 
-    if (options.repeat) {
-        return;
-    }
-
+    // if (options.repeat) {
+    //     return;
+    // }
+    let __canvas =  state.isPreviewCanvas?canvasPrev:canvas;
     var key = options.which || options.keyCode; // key detection
 
-    if(!(key === 37 || key === 38 || key === 39 || key === 40 ) )
+    if(!(key === 37 || key === 38 || key === 39 || key === 40 || key === 46) )
     return; 
 
-    if(!canvas.getActiveObject()) return;
+    if(!__canvas.getActiveObject()) return;
 
     options.stopPropagation();
     options.preventDefault();
@@ -204,6 +198,10 @@ fabric.util.addListener(document.body, 'keydown', function (options) {
         moveSelected(Direction.RIGHT);
     } else if (key === 40) { // handle Down key
         moveSelected(Direction.DOWN);
+    } else if(key === 46){
+        __canvas.remove(__canvas.getActiveObject())
+        __canvas.renderAll();
+        addLayer();
     }
 });
 
@@ -225,10 +223,14 @@ async function parseClipboardData() {
               
               item.getType(type).then((imageBlob) => {
                 let url = window.URL.createObjectURL(imageBlob);
-                fabric.Image.fromURL(url, function (img) {
-                    
+                fabric.Image.fromURL(url, function (img) {                    
+                    let ratio = canvas.width/1.5; 
+                    img.scaleToWidth(ratio);     
+                    let canvasCenter = getCanvasCenter(img.getScaledWidth(),img.getScaledHeight())
+                    img.set({ left:canvasCenter.left , top: canvasCenter.top });                                
                     img.globalCompositeOperation = 'source-atop';
                     canvas.add(img);
+                    canvas.setActiveObject(img);
                     canvas.renderAll();
                 })
                   // const image = `<img src="${}" />`;
@@ -554,18 +556,34 @@ function getUserProjects() {
 
         var projects = res.data || [];
         var temp = "";
-        $("#my-proj-container").html("<p>No Project found.</p>");
+        $("#my-proj-container").html("<strong>You haven't saved any project yet!</strong>");
         for (var i = 0; i < projects.length; i++) {
             var p = projects[i];
             var desc = p.title.lenght>50?p.title.substring(0, p.title.length):p.title;
             temp += projectHtml.replace(/{{code}}/ig, p._id)
             .replace(/{{src}}/ig, p.path)
             .replace(/{{title}}/ig, p.title)
-            .replace(/{created_dt}/ig, new Date(p.created_dt).toDateString())
+            .replace(/{{created_dt}}/ig, new Date(p.created_dt).toDateString())
             .replace(/{{desc}}/ig, p.desc);
             $("#my-proj-container").html(temp);
         }
         $loader.addClass("hidden");
+
+        $(".btn-edit-project").unbind().on("click",function(e){
+            const  _id = $(this).attr("id");
+            if (canvas.getObjects().length == 0) {
+                loadProject(`${_id}`,false);                
+                return;
+            }else{
+                $("#my-proj-modal").modal("hide");
+                $("#confirmbox").modal("toggle");
+                $("#confirmBoxBody").text("Are you sure you wish to open this design?  Your current design will be lost!");
+                $("#btnModelContinue").unbind().on("click",function(e){
+                    loadProject(`${_id}`,false);                
+                })
+                
+            }
+        })
     })
 
 }
@@ -574,11 +592,14 @@ function getUserProjects() {
 function getSharedProjects() {
     $loader.removeClass("hidden");
     $.get(`/api/custom-designs`, function (res) {
+         
+        if (isSessionExpired(res)) {  return; } 
+
         $loader.addClass("hidden");
         var projects = res.data || [];
 
         var temp = "";
-        $("#kp-designs-container").html("<p>No Project found.</p>");
+        $("#kp-designs-container").html("<strong>You haven't saved any project yet!</strong>");
 
         projects?.forEach(item=>{
             let meta = JSON.parse(item.meta);
@@ -592,8 +613,22 @@ function getSharedProjects() {
             .replace(/{{pageFormat}}/ig, meta.pageFormat)
             .replace(/{{totalLogos}}/ig, meta.totalLogos);
         })
-       
         $("#kp-designs-container").html(temp);
+        $(".btn-edit-customdesign").unbind().on("click",function(e){
+            const  _id = $(this).attr("id");
+            if (canvas.getObjects().length == 0) {
+                loadProject(`${_id}`,false);                
+                return;
+            }else{
+                $("#shared-lib-modal").modal("hide");
+                $("#confirmbox").modal("toggle");
+                $("#confirmBoxBody").text("Are you sure you wish to open this design?  Your current design will be lost!");
+                $("#btnModelContinue").unbind().on("click",function(e){
+                    loadProject(`${_id}`,false);                
+                })
+                
+            }
+        })
 
     }).fail(function (ex) {
         console.log(ex);
@@ -951,6 +986,18 @@ function initUIUndoRedo(){
 
 var selectionRect;
 function initUIEvents() {
+
+
+
+
+    $("#terms-window, #image-terms-window").on("click",function(e){
+        var win = window.open("/app/terms", "Terms and Conditions.", "toolbar=no, location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width="+(screen.width-200)+",height=500,top="+(screen.height-400)+",left="+(screen.width-200));
+    })
+
+    $("#faq-window").on("click",function(e){
+        var win = window.open("/app/faq", "FAQ", "toolbar=no, location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width="+(screen.width-200)+",height=500,top="+(screen.height-400)+",left="+(screen.width-200));
+    })
+
     initUIUndoRedo();
     initImageSelectionUIControls();
     /// disable previous date in rfq calandar.
@@ -1007,8 +1054,7 @@ function initUIEvents() {
         width: rect.width,
         height: rect.height,
         quality:1,
-        format:"jpg",
-        multiplier:2
+        multiplier:3
     });
 
  
@@ -1017,14 +1063,20 @@ function initUIEvents() {
         //canvas.clear();
         cropCanvas.clear();
         image = new fabric.Image(cropped);
-        image.left = rect.left;
-        image.top = rect.top;
+        //image.left = rect.left;
+        //image.top = rect.top;
         image.scaleToWidth(rect.width);
         image.scaleToHeight(rect.height);
-        image.setCoords();      
         let originalImg = canvas.getActiveObject(); 
-        canvas.remove(originalImg); 
+        canvas.remove(originalImg);
+        
+        
+        let canvasCenter = getCanvasCenter(image.getScaledWidth(),image.getScaledHeight())
+        image.set({left: canvasCenter.left, top: canvasCenter.top})
+        image.setCoords();
+
         image.globalCompositeOperation = 'source-atop';
+
         canvas.add(image);
         canvas.renderAll();
     };
@@ -1120,8 +1172,6 @@ function initUIEvents() {
         e.preventDefault();
         e.stopPropagation(); 
         return false;
-        
-        
     })
 /**
  * Confirm Boxes
@@ -1130,17 +1180,6 @@ function initUIEvents() {
 
 
 $("#btnLibraryModal").on("click",function(e){
-    // $("#btnModelContinue").text("Continue");
-    // $("#confirmBoxBody").text("Do you want to discard your changes?");
-    // $("#btnModelContinue").unbind().on("click", function (e) {
-    //     e.preventDefault();       
-    //     canvas.clear();
-    //     canvasPrev.clear();
-    //     $layers.html();
-    //     getSharedProjects();
-    //     $("#libraryLink").click();
-    //     menuHighlighter("#btnLibrary");
-    // })
     getSharedProjects();
 })
 
@@ -1148,30 +1187,23 @@ $("#btnLibraryModal").on("click",function(e){
 
  $("#btnMyProjectsModal").on("click",function(e){
     getUserProjects();
-//     // $("#btnModelContinue").text("Continue");
-//     // $("#confirmBoxBody").text("Do you want to discard your changes?");
-//     // $("#btnModelContinue").unbind().on("click", function (e) {
-//     //     e.preventDefault();
-//     //     canvas.clear();
-//     //     canvasPrev.clear();
-//     //     $layers.html();
-
-//     //     getUserProjects();
-//     //     $("#myProjectLink").click();
-//     //     menuHighlighter("#btnMyProjects");        
-//     // });
-
  })
 
  $("#btnSaveModel").on("click",function(e){
         e.preventDefault();
+        if (canvas.getObjects().length == 0) {
+            toast("Your project is empty, Please create your design and save.");
+            return;
+        }
+    
+        $("#confirmbox").modal("toggle");
         $("#btnModelContinue").text("Save Changes");
         $("#confirmBoxBody").text("Do you want to save your changes?");
         $("#btnModelContinue").unbind().on("click",function(e){
             e.preventDefault();
-            //saveDesign();
             saveDesign();
         })
+        
        
 })
     
@@ -1185,6 +1217,7 @@ $("#btnStartOverModel").on("click",function(e){
             $("#ws-btn-preview").addClass("hidden");
             $("#ws-btn-save").addClass("hidden");
             $btnTemplate.click();
+            canvasUndo.dispose();
         }); 
 
         $("#btnSave").unbind().on("click",function(e){
@@ -1335,6 +1368,7 @@ $("#btnStartOverModel").on("click",function(e){
     
    
     $txtDecorationCtrl.on("click", function (e) {
+        
         let __canvas = state.isPreviewCanvas?canvasPrev:canvas;
         var value = $(this).attr("data-value");
         var o = __canvas.getActiveObject();
@@ -1385,6 +1419,7 @@ $("#btnStartOverModel").on("click",function(e){
                 })
                 }
             } else if (value === "left" || value === "right" || value === "center") {
+                $(this).parent().addClass('active');
                 o.set({"textAlign": value})
             }
 
@@ -1533,7 +1568,7 @@ function setSelectedTextStyle(prop, value) {
 
 }
 
-function saveDesign() {
+function  saveDesign() {
     /**
      * . Check is Canvas is not Preview Canvas. 
      * . Check if canvas has atleast one item. 
@@ -1553,7 +1588,7 @@ function saveDesign() {
     var desc = $("#input-project-desc").val();
 
     if (!title) {
-        toast("Please enter project title.");
+        toast("Please Enter Project Name");
         return;
     }
     if (title?.length < 3 || title?.length > 50) {
@@ -1586,12 +1621,20 @@ function saveDesign() {
                 window.location.reload();
                 return;
             }
-            toast("Design has been Saved.");
+            toast("Your Project has been Saved.");
             $("#input-project-title").val("");
             $("#input-project-desc").val("");
         },
         error: function (res) {
-            if (res.status != 200) {
+
+            if(res.status === 403)
+            {
+
+                 $("#confirmbox").modal();
+                 $("#noticebox").modal();
+                 $("#noticeboxBody").text("You have reached your allowable limit of Saved Projects.  Please select My Saved Projects and delete any unwanted Projects, then you can return to save this project.");
+
+            }else if (res.status != 200) {
                 toast(`${ res.responseJSON.message}`);
             } else {}
         }
@@ -1632,8 +1675,16 @@ function onObjectSelection(o) {
 
 
 function updateTextControls(e){
-   var item = e.selected[0]; 
+   let item         = e.selected[0];
+   let isBold       = item.fontWeight?.toLowerCase() === "bold"; 
+   let isItalic     = item.fontStyle?.toLowerCase() === "italic"; 
+   let isUnderline  = item.underline;  
+   let isLeft       = item.textAlign === "left";
+   let isRight      = item.textAlign === "right";
+   let isCenter     = item.textAlign === "center";
+   let isCurvedText = item.type === 'curved-text';
    $("#btnTextSize").val(item.fontSize);
+
    if(item.charSpacing)
    { $("#text-letter-spacing").val(item.charSpacing);}
 
@@ -1641,6 +1692,24 @@ function updateTextControls(e){
 
    $("#text-letter-spacing").val(item.charSpacing||10)
    
+   if(isBold)
+   { $("#bold").parent().addClass("active"); }
+   else{ $("#bold").parent().removeClass("active"); }
+
+   if(isItalic)
+   { $("#italic").parent().addClass("active"); }
+   else{ $("#italic").parent().removeClass("active"); }
+
+   if(isUnderline)
+   { $("#underline").parent().addClass("active"); }
+   else{ $("#underline").parent().removeClass("active"); }
+
+
+
+
+   
+
+
 
    if(item.strokeWidth)
    { 
@@ -1655,6 +1724,22 @@ function updateTextControls(e){
    if(item.stroke)
    { document.querySelector('#strokecolor')?.jscolor.fromString(item.stroke); }
    document.querySelector('#fontColorBox').jscolor.fromString(item.fill);
+
+
+   if(isCurvedText)
+   { 
+    $("#inputCurvedText").prop("checked",true);
+    $("#inputFlipText").prop("checked",item.flipped);
+    $("#curveTextCtrl").val(item.diameter);
+    
+    
+}
+   else 
+   { 
+    $("#inputCurvedText").prop("checked",false);
+    $("#inputFlipText").prop("checked",false);
+    $("#curveTextCtrl").val("1250");
+}
 
    $("#fontlist").text(item.fontFamily);
    
@@ -2103,13 +2188,15 @@ function pasteImage(event) { // get the raw clipboardData
             // format the imageData into a URL
             var imageURL = window.webkitURL.createObjectURL(imageData);
             fabric.Image.fromURL(imageURL, (img) => { // img.scaleToWidth(300);
-                let ratio = canvas.width/1.5; 
+                    let ratio = canvas.width/1.5; 
                     img.scaleToWidth(ratio);                
                     let canvasCenter = getCanvasCenter(img.getScaledWidth(),img.getScaledHeight())
                     img.set({left: canvasCenter.left, top: canvasCenter.top})
                     img.setCoords();
                 img.globalCompositeOperation = "source-atop";
-                canvas.add(img).renderAll();
+                canvas.add(img);
+                canvas.setActiveObject(img);
+                canvas.renderAll();
             })
             // We've got an imageURL, add code to use it as needed
             // the imageURL can be used as src for an Image object
