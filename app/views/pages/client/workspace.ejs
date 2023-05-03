@@ -94,8 +94,8 @@
                   </div><!-- row -->
       
                   <div class="btn-group" >
-                    <button class="btn tx-12 btn-success  tx-bold tx-uppercase" data-toggle="modal" data-target="#confirmbox" id="btnSaveModel">Save Project</button>
-                    <button class="btn tx-12 btn-warning tx-bold tx-uppercase" id="btnCancelSaveDesign">Cancel</button>
+                    <button class="btn tx-12 btn-success  tx-bold tx-uppercase"  id="btnSaveModel">Save Project</button>
+                    <button class="btn tx-12 btn-warning tx-bold tx-uppercase" data-dismiss="modal" id="btnCancelSaveDesign">Cancel</button>
                   </div><!-- form-layout-footer -->
                 </div><!-- form-layout -->
               </div>
@@ -258,7 +258,7 @@
 
 
  <!-- SMALL MODAL -->
- <div id="confirmbox" class="modal fade">
+ <div id="confirmbox" class="modal fade show">
   <div class="modal-dialog modal-sm" role="document">
     <div class="modal-content bd-0 tx-14">
       <div class="modal-header pd-x-20">
@@ -274,6 +274,29 @@
         <div class="btn-group">
 
         <button type="button" id="btnModelContinue" data-dismiss="modal" class="tx-12 tx-uppercase tx-bold  btn btn-success pd-x-20">Continue</button>
+        <button type="button" class="btn btn-warning pd-x-20 tx-12 tx-uppercase tx-bold " data-dismiss="modal">Close</button>
+      </div>
+
+      </div>
+    </div>
+  </div><!-- modal-dialog -->
+</div><!-- modal -->
+
+ <!-- SMALL MODAL -->
+ <div id="noticebox" class="modal fade">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content bd-0 tx-14">
+      <div class="modal-header pd-x-20">
+        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Notice</h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body pd-20">
+        <p class="mg-b-5" id="noticeboxBody"></p>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <div class="btn-group">
         <button type="button" class="btn btn-warning pd-x-20 tx-12 tx-uppercase tx-bold " data-dismiss="modal">Close</button>
       </div>
 

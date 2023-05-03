@@ -258,7 +258,6 @@ $("#btnDisplayGrid").on("click", function (e) {
                                 link,
                                 created_dt} = data;    
                           },function (item, object) {
-                            
                                 object.set({ 
                                     fill:"#fff",
                                     originalStrokeWidth  :   object.strokeWidth,
@@ -266,14 +265,9 @@ $("#btnDisplayGrid").on("click", function (e) {
                                     strokeWidth:0,
                                     strokeMiterLimit:0
                                 });
-                                
-                                })
-
-
+                            })
                         });
 
-    
-    
               },function (item, object) {
     
                         object.set({

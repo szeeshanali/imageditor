@@ -179,13 +179,13 @@ fabric.util.addListener(document.body, 'keydown', function (options) {
     // if (options.repeat) {
     //     return;
     // }
-
+    let __canvas =  state.isPreviewCanvas?canvasPrev:canvas;
     var key = options.which || options.keyCode; // key detection
 
-    if(!(key === 37 || key === 38 || key === 39 || key === 40 ) )
+    if(!(key === 37 || key === 38 || key === 39 || key === 40 || key === 46) )
     return; 
 
-    if(!canvas.getActiveObject()) return;
+    if(!__canvas.getActiveObject()) return;
 
     options.stopPropagation();
     options.preventDefault();
@@ -198,6 +198,10 @@ fabric.util.addListener(document.body, 'keydown', function (options) {
         moveSelected(Direction.RIGHT);
     } else if (key === 40) { // handle Down key
         moveSelected(Direction.DOWN);
+    } else if(key === 46){
+        __canvas.remove(__canvas.getActiveObject())
+        __canvas.renderAll();
+        addLayer();
     }
 });
 
@@ -1168,8 +1172,6 @@ function initUIEvents() {
         e.preventDefault();
         e.stopPropagation(); 
         return false;
-        
-        
     })
 /**
  * Confirm Boxes
@@ -1189,8 +1191,13 @@ $("#btnLibraryModal").on("click",function(e){
 
  $("#btnSaveModel").on("click",function(e){
         e.preventDefault();
+        if (canvas.getObjects().length == 0) {
+            toast("Your project is empty, Please create your design and save.");
+            return;
+        }
+    
+        $("#confirmbox").modal("toggle");
         $("#btnModelContinue").text("Save Changes");
-        $("#confirmBoxBody").modal("toggle");
         $("#confirmBoxBody").text("Do you want to save your changes?");
         $("#btnModelContinue").unbind().on("click",function(e){
             e.preventDefault();
@@ -1619,11 +1626,13 @@ function  saveDesign() {
             $("#input-project-desc").val("");
         },
         error: function (res) {
-            if(res.state === 403)
+
+            if(res.status === 403)
             {
-                // $("#confirmbox").modal("toggle");
-                // $("#noticebox").modal("toggle");
-                // $("#noticeboxBody").text("You have reached your allowable limit of Saved Projects.  Please select My Saved Projects and delete any unwanted Projects, then you can return to save this project.");
+
+                 $("#confirmbox").modal();
+                 $("#noticebox").modal();
+                 $("#noticeboxBody").text("You have reached your allowable limit of Saved Projects.  Please select My Saved Projects and delete any unwanted Projects, then you can return to save this project.");
 
             }else if (res.status != 200) {
                 toast(`${ res.responseJSON.message}`);

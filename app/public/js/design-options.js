@@ -36,18 +36,14 @@ $btnAddText.on("click", function () {
     if (! text || text.length == 0) { return; }
 
     let item = addText({ text:text });
-    
-    if (state.isPreviewCanvas) {
-        canvasPrev.add(item);
-        canvasPrev.renderAll();
-    } else {
-        
-        //item.globalCompositeOperation = "source-atop";        
-        canvas.add(item);
-        canvas.renderAll();
-    } 
-    
-    mainControls(true);
-    textControls(true);
+    const _canvas = state.isPreviewCanvas?canvasPrev:canvas;  
+    setTimeout(function(){
+        _canvas.add(item);
+
+        _canvas.setActiveObject(item);
+        _canvas.renderAll.bind(_canvas);
+        mainControls(true);
+        textControls(true);    
+    },300)
 
 })
