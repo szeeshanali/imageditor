@@ -77,7 +77,7 @@
                         </div>
                         <!-- d-flex -->
 
-                        <p class="tx-12 mg-b-0">Total Number of Porjects saved by users (<%=report.totalProjects%>)</p>
+                        <p class="tx-12 mg-b-0">Total Number of Projects Saved by Users (<%=report.totalProjects%>)</p>
                     </div>
                     <!-- card -->
                 </div>
@@ -127,7 +127,7 @@
                       return [
                         `<img src='/uploads/admin/template/template-${i.code}.svg' class='wd-50' ></img>`,
                         i.title, 
-                        `<a href='${i.link}' target='_blank' class='tx-bold tx-underline'>${i.ref_code}</a>`,
+                        `<span class='tx-bold tx-underline'>${i.ref_code}</span>`,
                         i.count, 
                         new Date(i.created_dt)?.toLocaleString("en-GB")?.split(',')[0],                         
                         ]
