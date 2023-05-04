@@ -35,20 +35,20 @@
               </div>
             </div>            
             <div id="uploadpanel" class="tab-pane"  >
-                <div class="card pd-15 " aria-label="Basic example">
-                  
-                  <button type="button" class="bd-b mg-b-3 tx-16 tx-uppercase tx-bold btn btn-warning " onclick="$btnTemplate.click()" >
-                    <i class="icon ion-ios-arrow-back tx-16"></i>
-                    Back  <br><small >Choose Template</small>
-                  
-                  </button>
-                      <button type="button" class="btn bd-b btn-success tx-bold tx-16 tx-uppercase " id="btn-step-preview">
-                        NEXT  <i class="icon ion-ios-arrow-forward tx-16"></i> <br><small >Preview Design</small>
-                      </button>
-              
-                </div>
+              <div class="mg-10">
+              <button type="button" class="btn-block bd-b mg-b-3 tx-16 tx-uppercase tx-bold btn btn-warning " onclick="$btnTemplate.click()" >
+                <i class="icon ion-ios-arrow-back tx-16"></i>
+                Back  <br><small >Choose Template</small>
+              </button>
+            </div>
                 
                 <%- include('../../partials/client/imgupload'); %>
+                <div class="mg-10">
+                  <button type="button" class="btn-block btn bd-b btn-success tx-bold tx-16 tx-uppercase " id="btn-step-preview">
+                    NEXT  <i class="icon ion-ios-arrow-forward tx-16"></i> <br><small >Preview Design</small>
+                  </button>
+                </div>
+
             </div>
            
             <div id="shared-library" class="tab-pane"  >
