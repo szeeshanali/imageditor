@@ -150,9 +150,11 @@ const processFiles = (files) => {
     const allowedTypes = ['image/jpeg','image/gif', 'image/png', 'image/svg+xml', 'application/pdf']
     for (let file of files) {
         var fileSizeInMB = file.size / 1024 / 1024;
-        var limit = 5;
+        
+        var limit = FILE_SIZE_LIMIT;
+        limit = limit || 5;
         if (fileSizeInMB > limit) {
-            toast(`File size exceeds ${limit} Mb`);
+            toast(`File size should be less than ${limit}mb.`);
             return;
         }
         // check type

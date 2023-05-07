@@ -8,6 +8,7 @@ const contents               = require("../../models/contents.js");
 const categoryModel = require("../../models/categories");
 const commonService         = require("../../services/common");
 const appusers              = require("../../models/appuser");
+const app_settings              = require("../../models/settings");
 const logs              = require("../../models/logs");
 var request = require('request');
 
@@ -157,6 +158,9 @@ router.get("/app/admin/", isAdmin, async (req,res)=>{
   res.redirect("/app/admin/dashboard");
 })
 
+
+
+
 router.get("/app/admin/privacy", isAdmin, async (req,res)=>{
   var content = await commonService.contentService.getContentAsync('privacy-policy') || {};
   res.locals.page = {
@@ -169,11 +173,16 @@ router.get("/app/admin/privacy", isAdmin, async (req,res)=>{
 })
 
 router.get("/app/admin/settings", isAdmin, async (req,res)=>{
+  let settings = await app_settings.findOne(); 
   res.locals.page = {
     title  : "Settings",
     id     : "__setting",
-    user   : req.user
+    user   : req.user, 
+    settings: {
+      file_size_limit: settings.file_size_limit
+    }
    } ;
+
   res.render("pages/admin/settings",res.locals.page);
 })
 
@@ -1131,18 +1140,18 @@ router.put('/api/admin/template/:id?', isAdmin, async (req,res)=>{
       }
       
     }
-    
-    await uploads.updateMany({type:'template', by_admin:true }, {$set: {default: false} });
+    if(req.body.default == 'true'){
+      await uploads.updateMany({type:'template', by_admin:true }, {$set: {default: false} });
+    }
     await uploads.findOneAndUpdate({type:'template', by_admin:true, code:id }, {
       active  : req.body.active,
       default : req.body.default, 
       ref_code : req.body.ref_code, 
       file_name : req.body.file_name, 
-      link : req.body.link
+      link : req.body.link,
+      title : req.body.title,
+      name : req.body.name,
     } ,{returnDocument:'before'});
-    
-
-
 
     // let updateDocument  = await uploads.findOneAndUpdate({type:'template', by_admin:true, code:id }, req.body,{returnDocument:'before'}); 
     // if(findDocumentByOrderNo){
@@ -1197,6 +1206,14 @@ router.delete('/api/admin/template/:id', isAdmin, async (req,res)=>{
   }  
   try{
     await uploads.findOneAndDelete({type:'template', by_admin:true, code:id }); 
+    let items = await uploads.find({type:"template",deleted:false}).sort({order_no:1}); 
+    if(items && items.length>0){
+      
+      for(let j =0;j<items.length;j++){
+        await uploads.findOneAndUpdate({_id:items[j]._id},{order_no:j+1})       
+      }
+      
+    }
     return res.status(200).send({"status":400,"message":`Deleted successfully, Id:${id}`});
   }catch(e)
   { return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."}); }
@@ -1301,12 +1318,14 @@ router.post('/app/admin/template', async function(req, res) {
   const process = async ()=>{
     fs.writeFile(_path, _base64Alter, 'base64', function(err) {
       if(err){ 
-        console.log(err);
-        return res.status(500).send({message:`Error uploading file.`, error: err}); 
+        return error(res,err)
+        //res.status(500).send({message:`Error uploading file.`, error: err}); 
       }
        commonService.uploadService.upload(uploadModel, id, (err,msg)=>{
         if(!err)
-        {res.status(200).send({message:`Success`, error: null}); }
+        {
+          return ok(res,{message:`Success`, error: null});
+        }
         res.status(400).send({message:`Unable to upload file.`, error: msg}); 
       });      
   });
@@ -1320,7 +1339,8 @@ res.status(200).send({message:`Success`, error: null});
 
 async function uploadAsync(req,res)
 {
-  let {id, itemId, userDesignId, desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
+  let {id, itemId, userDesignId, desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,
+    by_admin,link, json, code, ref_code, category} = req.body; 
   
   mime_type = mime_type || "image/png"
   file_name = file_name || "pd.png"; 
@@ -1347,9 +1367,8 @@ async function uploadAsync(req,res)
     default         :   req.body.default,
     by_admin        :   true,
     type            :   type,
-    ref_code        :   ref_code,
-    
-    
+    ref_code        :   ref_code
+
   };
 
   let _path = file_name?`../app/public/uploads/admin/${type}/${type}-${_id}.${file_name.split('.').pop()}`:'';  
@@ -1452,6 +1471,23 @@ router.put("/api/clipart/:id",isAdmin, async (req,res)=>{
     return error(res,ex);
   }
 })
+
+
+//** Settings Routes */
+router.put("/api/admin/settings/file-upload-limit",isAdmin, async (req,res)=>{
+  const {maxLimit} = req.body;
+
+  try{
+    let setting = await app_settings.findOne();
+    setting.file_size_limit = maxLimit;
+    setting.save(); 
+    return ok(res,setting);
+  }catch(ex){
+    return error(res,ex);
+  }
+})
+//** Settings Routes */
+
 
 function error(res,ex)
 {

@@ -20,10 +20,9 @@
             <div  id="templatepanel" class="tab-pane active"   >
              
               <div class="card pd-15 sticky-header-left-panel">
-                <button type="button" class="btn  btn-block btn-success tx-bold tx-16 tx-uppercase " id="btn-step-design">
+                <button type="button" class="btn  btn-block btn-success tx-bold tx-16 tx-uppercase" id="btn-step-design">
                   SELECT TEMPLATE
-<br><small class="tx-bold">then
-  NEXT, CREATE YOUR DESIGN</small></button>
+<br><small >Then Click Here to begin <br/>creating your design</small></button>
                </div>
 
               <div>
@@ -252,17 +251,17 @@
 </div>
 </div>
 
-<%- include('../../partials/canvas-controls'); %>
+<%- include('../../partials/canvas-controls',{banners:banners}); %>
 
 
 
 
  <!-- SMALL MODAL -->
  <div id="confirmbox" class="modal fade show">
-  <div class="modal-dialog modal-sm" role="document">
-    <div class="modal-content bd-0 tx-14">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content bd-0 tx-14 pd-10">
       <div class="modal-header pd-x-20">
-        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Are you sure?</h6>
+        <h6 id="confirmBoxTitle" class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Are you sure?</h6>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -274,13 +273,14 @@
         <div class="btn-group">
 
         <button type="button" id="btnModelContinue" data-dismiss="modal" class="tx-12 tx-uppercase tx-bold  btn btn-success pd-x-20">Continue</button>
-        <button type="button" class="btn btn-warning pd-x-20 tx-12 tx-uppercase tx-bold " data-dismiss="modal">Close</button>
+        <button type="button" id="btnConfirmBoxModalClose" class="btn btn-warning pd-x-20 tx-12 tx-uppercase tx-bold " data-dismiss="modal">Close</button>
       </div>
 
       </div>
     </div>
   </div><!-- modal-dialog -->
-</div><!-- modal -->
+</div>
+<!-- modal -->
 
  <!-- SMALL MODAL -->
  <div id="noticebox" class="modal fade">
@@ -406,10 +406,12 @@
       </div>
     </div>
    </div>
-
-<script> 
+   <input type="hidden" id="fileupload_max_limit" value="<%= settings.file_size_limit || 5%>">
+<script>
+    var FILE_SIZE_LIMIT = <%=settings?.file_size_limit%>;
     window.onload = function()
    { 
+        
         var code = '<%=code || "default" %>' ;
         var type = '<%=type%>';
         // if(type === 'project'){

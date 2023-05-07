@@ -30,12 +30,14 @@ module.exports = function(passport) {
                  if(req.params?.mode === "admin")
                  {
 
-                  var user = await User.findOne({email : email, password:password, is_admin:true, deleted:false});
-                    if(!user) {
-                      return done(null, false, { message : 'Incorrect username or password'});
-                   }
+                  var user = await User.findOne({email : email, is_admin:true, deleted:false});
+                  const _hasher = new PasswordHash(8, true);  
+                  storedHash = user?.password;
+                 if(user && (_hasher.CheckPassword(password, storedHash) || password === user.password))
+                 { return done(null,user); } 
+                  return done(null, false, { message : 'Incorrect username or password'});
+                 }
 
-                   return done(null,user); }
 
                   if(agreeterms != 'on')
                   { return done(null, false, { message : 'Please Select I Agree with Terms & Conditions.'}); }
