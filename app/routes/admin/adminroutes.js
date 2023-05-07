@@ -1140,14 +1140,18 @@ router.put('/api/admin/template/:id?', isAdmin, async (req,res)=>{
       }
       
     }
+    if(req.body.default == 'true'){
+      await uploads.updateMany({type:'template', by_admin:true }, {$set: {default: false} });
+    }
     
-    await uploads.updateMany({type:'template', by_admin:true }, {$set: {default: false} });
     await uploads.findOneAndUpdate({type:'template', by_admin:true, code:id }, {
       active  : req.body.active,
       default : req.body.default, 
       ref_code : req.body.ref_code, 
       file_name : req.body.file_name, 
-      link : req.body.link
+      link : req.body.link,
+      title : req.body.title,
+      name : req.body.name,
     } ,{returnDocument:'before'});
     
 
@@ -1206,6 +1210,14 @@ router.delete('/api/admin/template/:id', isAdmin, async (req,res)=>{
   }  
   try{
     await uploads.findOneAndDelete({type:'template', by_admin:true, code:id }); 
+    let items = await uploads.find({type:"template",deleted:false}).sort({order_no:1}); 
+    if(items && items.length>0){
+      
+      for(let j =0;j<items.length;j++){
+        await uploads.findOneAndUpdate({_id:items[j]._id},{order_no:j+1})       
+      }
+      
+    }
     return res.status(200).send({"status":400,"message":`Deleted successfully, Id:${id}`});
   }catch(e)
   { return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."}); }
@@ -1310,12 +1322,14 @@ router.post('/app/admin/template', async function(req, res) {
   const process = async ()=>{
     fs.writeFile(_path, _base64Alter, 'base64', function(err) {
       if(err){ 
-        console.log(err);
-        return res.status(500).send({message:`Error uploading file.`, error: err}); 
+        return error(res,err)
+        //res.status(500).send({message:`Error uploading file.`, error: err}); 
       }
        commonService.uploadService.upload(uploadModel, id, (err,msg)=>{
         if(!err)
-        {res.status(200).send({message:`Success`, error: null}); }
+        {
+          return ok(res,{message:`Success`, error: null});
+        }
         res.status(400).send({message:`Unable to upload file.`, error: msg}); 
       });      
   });
