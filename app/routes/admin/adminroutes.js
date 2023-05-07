@@ -1143,7 +1143,6 @@ router.put('/api/admin/template/:id?', isAdmin, async (req,res)=>{
     if(req.body.default == 'true'){
       await uploads.updateMany({type:'template', by_admin:true }, {$set: {default: false} });
     }
-    
     await uploads.findOneAndUpdate({type:'template', by_admin:true, code:id }, {
       active  : req.body.active,
       default : req.body.default, 
@@ -1153,9 +1152,6 @@ router.put('/api/admin/template/:id?', isAdmin, async (req,res)=>{
       title : req.body.title,
       name : req.body.name,
     } ,{returnDocument:'before'});
-    
-
-
 
     // let updateDocument  = await uploads.findOneAndUpdate({type:'template', by_admin:true, code:id }, req.body,{returnDocument:'before'}); 
     // if(findDocumentByOrderNo){

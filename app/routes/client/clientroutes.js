@@ -7,6 +7,7 @@ const commonService                 = require('../../services/common');
 const formidable                    = require('formidable');
 const { default: mongoose, mongo }  = require('mongoose');
 const appusers                      = require('../../models/appuser');
+const app_settings                      = require('../../models/settings');
 const nodemailer                    = require('nodemailer');
 
 const PATH_TEMPLATES                = 'pages/client/templates';
@@ -428,6 +429,7 @@ router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
    let customText = await commonService.contentService.getContentAsync('custom-text');
    let fonts = await commonService.contentService.getContentAsync('fonts',false);
    let ca = [];
+   let settings = await app_settings.findOne();
 
    let categories = await commonService.categoryService.getCategoriesAsync();
    categories.forEach(category => {
@@ -460,7 +462,8 @@ router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
         project_limit:req.user.project_limit,
         customText:customText,
         fonts:fonts,
-        banners:banners
+        banners:banners,
+        settings: settings
     });
 });
 

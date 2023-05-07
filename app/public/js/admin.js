@@ -1512,6 +1512,9 @@ $loader.removeClass("hidden");
         $("#btnLibraryModal").on("click",function(e){
             $("#btnModelContinue").text("Continue");
             $("#confirmBoxBody").text("Do you want to discard your changes?");
+            $("#confirmBoxTitle").text("Are you Sure?");
+            $("#btnConfirmBoxModalClose").text("Close");
+
             $("#btnModelContinue").unbind().on("click", function (e) {
                 e.preventDefault();       
                 canvas.clear();
@@ -1526,6 +1529,9 @@ $loader.removeClass("hidden");
         $("#btnMyProjectsModal").on("click",function(e){   
             $("#btnModelContinue").text("Continue");
             $("#confirmBoxBody").text("Do you want to discard your changes?");
+            $("#confirmBoxTitle").text("Are you Sure?");
+            $("#btnConfirmBoxModalClose").text("Close");
+            
             $("#btnModelContinue").unbind().on("click", function (e) {
                 e.preventDefault();
                 canvas.clear();
@@ -1552,8 +1558,9 @@ $loader.removeClass("hidden");
     
         $("#btnStartOverModel").on("click",function(e){
                 e.preventDefault();
-                $("#btnModelContinue").text("Continue"); 
-                $("#confirmBoxBody").text("Do you want to discard your changes?"); 
+                $("#confirmBoxTitle").text("RESTART DESIGN FROM THE BEGINNING.  ALL EDITS WILL BE LOST");
+                $("#btnModelContinue").text("Yes, I Want to Start Over"); 
+                $("#confirmBoxBody").text("Are you sure you want to start over?"); 
                 $("#btnModelContinue").unbind().on("click",function(e){
                     const templateId  = selectedTemplateId || 'default';
                     loadSVGTemplate(templateId);
