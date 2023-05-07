@@ -1511,6 +1511,7 @@ $loader.removeClass("hidden");
         
         $("#btnLibraryModal").on("click",function(e){
             $("#btnModelContinue").text("Continue");
+            $("#confirmBoxTitle").text("ARE YOU SURE?");
             $("#confirmBoxBody").text("Do you want to discard your changes?");
             $("#confirmBoxTitle").text("Are you Sure?");
             $("#btnConfirmBoxModalClose").text("Close");
@@ -1528,6 +1529,7 @@ $loader.removeClass("hidden");
 
         $("#btnMyProjectsModal").on("click",function(e){   
             $("#btnModelContinue").text("Continue");
+            $("#confirmBoxTitle").text("ARE YOU SURE?");
             $("#confirmBoxBody").text("Do you want to discard your changes?");
             $("#confirmBoxTitle").text("Are you Sure?");
             $("#btnConfirmBoxModalClose").text("Close");
@@ -1549,6 +1551,7 @@ $loader.removeClass("hidden");
         $("#btnSaveModel").on("click",function(e){
                 e.preventDefault();
                 $("#btnModelContinue").text("Save Changes");
+                $("#confirmBoxTitle").text("ARE YOU SURE?");
                 $("#confirmBoxBody").text("Do you want to save your changes?");
                 $("#btnModelContinue").unbind().on("click",function(e){
                     e.preventDefault();

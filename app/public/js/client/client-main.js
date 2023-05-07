@@ -581,6 +581,7 @@ function getUserProjects() {
             }else{
                 $("#my-proj-modal").modal("hide");
                 $("#confirmbox").modal("toggle");
+                $("#confirmBoxTitle").text("ARE YOU SURE?");
                 $("#confirmBoxBody").text("Are you sure you wish to open this design?  Your current design will be lost!");
                 $("#btnModelContinue").unbind().on("click",function(e){
                     loadProject(`${_id}`,false);                
@@ -626,6 +627,7 @@ function getSharedProjects() {
             }else{
                 $("#shared-lib-modal").modal("hide");
                 $("#confirmbox").modal("toggle");
+                $("#confirmBoxTitle").text("ARE YOU SURE?");                
                 $("#confirmBoxBody").text("Are you sure you wish to open this design?  Your current design will be lost!");
                 $("#btnModelContinue").unbind().on("click",function(e){
                     loadProject(`${_id}`,false);                
@@ -1203,6 +1205,7 @@ $("#btnLibraryModal").on("click",function(e){
         }
     
         $("#confirmbox").modal("toggle");
+        $("#confirmBoxTitle").text("ARE YOU SURE?")
         $("#btnModelContinue").text("Save Changes");
         $("#confirmBoxBody").text("Do you want to save your changes?");
         $("#btnModelContinue").unbind().on("click",function(e){
