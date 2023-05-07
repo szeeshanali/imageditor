@@ -81,7 +81,7 @@ const commonService = (function() {
     this.getUploads = (type,all) =>
     { 
         let filter = {}; 
-        let projection = {code:1,title:1,type:1,name:1,ref_code:1,id:1,category:1,file_ext:1,active:1,base64:1 };
+        let projection = {code:1,title:1,type:1,name:1,ref_code:1,id:1,category:1,file_ext:1,active:1,base64:1, meta:1,link:1 };
 
         if(all)
         { 

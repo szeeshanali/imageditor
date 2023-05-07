@@ -8,6 +8,7 @@ const contents               = require("../../models/contents.js");
 const categoryModel = require("../../models/categories");
 const commonService         = require("../../services/common");
 const appusers              = require("../../models/appuser");
+const app_settings              = require("../../models/settings");
 const logs              = require("../../models/logs");
 var request = require('request');
 
@@ -157,6 +158,9 @@ router.get("/app/admin/", isAdmin, async (req,res)=>{
   res.redirect("/app/admin/dashboard");
 })
 
+
+
+
 router.get("/app/admin/privacy", isAdmin, async (req,res)=>{
   var content = await commonService.contentService.getContentAsync('privacy-policy') || {};
   res.locals.page = {
@@ -169,11 +173,16 @@ router.get("/app/admin/privacy", isAdmin, async (req,res)=>{
 })
 
 router.get("/app/admin/settings", isAdmin, async (req,res)=>{
+  let settings = await app_settings.findOne(); 
   res.locals.page = {
     title  : "Settings",
     id     : "__setting",
-    user   : req.user
+    user   : req.user, 
+    settings: {
+      file_size_limit: settings.file_size_limit
+    }
    } ;
+
   res.render("pages/admin/settings",res.locals.page);
 })
 
@@ -1320,7 +1329,8 @@ res.status(200).send({message:`Success`, error: null});
 
 async function uploadAsync(req,res)
 {
-  let {id, itemId, userDesignId, desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
+  let {id, itemId, userDesignId, desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,
+    by_admin,link, json, code, ref_code, category} = req.body; 
   
   mime_type = mime_type || "image/png"
   file_name = file_name || "pd.png"; 
@@ -1347,9 +1357,8 @@ async function uploadAsync(req,res)
     default         :   req.body.default,
     by_admin        :   true,
     type            :   type,
-    ref_code        :   ref_code,
-    
-    
+    ref_code        :   ref_code
+
   };
 
   let _path = file_name?`../app/public/uploads/admin/${type}/${type}-${_id}.${file_name.split('.').pop()}`:'';  
@@ -1452,6 +1461,23 @@ router.put("/api/clipart/:id",isAdmin, async (req,res)=>{
     return error(res,ex);
   }
 })
+
+
+//** Settings Routes */
+router.put("/api/admin/settings/file-upload-limit",isAdmin, async (req,res)=>{
+  const {maxLimit} = req.body;
+
+  try{
+    let setting = await app_settings.findOne();
+    setting.file_size_limit = maxLimit;
+    setting.save(); 
+    return ok(res,setting);
+  }catch(ex){
+    return error(res,ex);
+  }
+})
+//** Settings Routes */
+
 
 function error(res,ex)
 {
