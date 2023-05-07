@@ -1079,14 +1079,13 @@ $loader.removeClass("hidden");
          })
 
          $("#btnUploadBanner").on("click",(e)=>{
-            const bannerName       = $("#inputBannerName").val();
-            if(!isValidBanner(bannerName))
+            let bannerName       = $("#inputBannerName").val();
+            let bannerUrl        = $("#inputBannerUrl").val();
+            let bannerType       = $("#banner-type").val();
+            if(!isValidBanner(bannerName,bannerType))
             {return;}
 
             $loader.removeClass("hidden");
-
-            
-           
 
             const meta = {
                 name        :   bannerName,
@@ -1096,6 +1095,8 @@ $loader.removeClass("hidden");
                 height      :   selectedBanner.image.height,
                 fileType    :   selectedBanner.file.type,
                 file_ext    : `.${selectedBanner.file.name.split('.').pop()}`,
+                url         :  bannerUrl,
+                type        :  bannerType
             };
           
             const dataUrl         = selectedBanner.base64;       
@@ -1116,6 +1117,8 @@ $loader.removeClass("hidden");
                     active: active,
                     base64: dataUrl,
                     type: designType,
+                    ref_code: bannerType,
+                    link:bannerUrl,
                     by_admin: true
                 },
                 success: function (res) {
@@ -1142,15 +1145,20 @@ $loader.removeClass("hidden");
 
       
 
-        function isValidBanner(name)
+        function isValidBanner(name, type)
         {
             if (!selectedBanner || !selectedBanner.base64 ) {
                 toast("Please Browse and select an image.");
                 return false;
             }            
-            
+        
+            if (!type || type.length == 0) {
+                toast("Please Select Banner Type");
+                return false;
+            }
+        
             if (!name || name.length == 0) {
-                toast("Please Enter Name");
+                toast("Please Enter Banner Name");
                 return false;
             }
             if(name.length > 50)
@@ -1404,6 +1412,25 @@ $loader.removeClass("hidden");
         initUIClipArts();
         initUIBanner();
 
+
+        $("#edituser .is_admin").on("click",function(e){
+            $("#confirmbox").modal("toggle");
+            let text = "";
+            if(e.currentTarget.checked){
+                text = `Do you want to grant Administrator rights to this user? <strong>${$("#edit-user-container .email").val()}</strong>`;
+            }else{
+                text = `Do you want to remove the Administrator rights from this user? <strong>${$("#edit-user-container .email").val()}</strong>`;
+            }
+            $("#confirmBoxBody").html(text); 
+            $("#btnModelContinue").text("Yes, I Agree");
+            $("#btnModelContinue").unbind().on("click",function(e){
+                 $("#btnEditUser").click();
+            })
+
+
+
+
+        })
         $("#categoryContainer .category").on("click",function(e){
           
             const id = e.currentTarget.id; 
@@ -1485,6 +1512,9 @@ $loader.removeClass("hidden");
         $("#btnLibraryModal").on("click",function(e){
             $("#btnModelContinue").text("Continue");
             $("#confirmBoxBody").text("Do you want to discard your changes?");
+            $("#confirmBoxTitle").text("Are you Sure?");
+            $("#btnConfirmBoxModalClose").text("Close");
+
             $("#btnModelContinue").unbind().on("click", function (e) {
                 e.preventDefault();       
                 canvas.clear();
@@ -1499,6 +1529,9 @@ $loader.removeClass("hidden");
         $("#btnMyProjectsModal").on("click",function(e){   
             $("#btnModelContinue").text("Continue");
             $("#confirmBoxBody").text("Do you want to discard your changes?");
+            $("#confirmBoxTitle").text("Are you Sure?");
+            $("#btnConfirmBoxModalClose").text("Close");
+            
             $("#btnModelContinue").unbind().on("click", function (e) {
                 e.preventDefault();
                 canvas.clear();
@@ -1525,8 +1558,9 @@ $loader.removeClass("hidden");
     
         $("#btnStartOverModel").on("click",function(e){
                 e.preventDefault();
-                $("#btnModelContinue").text("Continue"); 
-                $("#confirmBoxBody").text("Do you want to discard your changes?"); 
+                $("#confirmBoxTitle").text("RESTART DESIGN FROM THE BEGINNING.  ALL EDITS WILL BE LOST");
+                $("#btnModelContinue").text("Yes, I Want to Start Over"); 
+                $("#confirmBoxBody").text("Are you sure you want to start over?"); 
                 $("#btnModelContinue").unbind().on("click",function(e){
                     const templateId  = selectedTemplateId || 'default';
                     loadSVGTemplate(templateId);
@@ -2261,7 +2295,7 @@ if(!order || order < 1){
                 }
 
 
-                //selectedUser.is_admin = $("#edit-user-container .is_admin").prop("checked");
+                selectedUser.is_admin = $("#edit-user-container .is_admin").prop("checked");
                 selectedUser.active = $("#edit-user-container .is_active").prop("checked");
                 selectedUser.watermark = $("#edit-user-container .watermark").prop("checked");
                 selectedUser.project_limit = parseInt($("#edit-user-container .project_lmt").val());

@@ -442,21 +442,18 @@
                             
 
             </div>
-            <div class="card hidden" id="kpweblink-panel">
-                            <div class="list-group-item pd-y-20">
-                                <div class="media">
-                                    <div class="d-flex mg-r-10 wd-50">
-                                        <i class="ion-link tx-primary tx-40"></i>
-                                    </div>
-                                    <!-- d-flex -->
-                                    <div class="media-body">
-                                        <h6 class="tx-inverse tx-14">Kopykake Web link</h6>
-                                        <p class="mg-b-0">
-                                            <a href="#" id="kp-link" target="_blank">Here's a link to order more.</a>
-                                        </p>
-                                    </div>
-                                    <!-- media-body -->
-                                </div>
-                                <!-- media -->
-                            </div>
+            <div class="card " >
+                <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+
+                <div class="carousel-inner">
+
+                    <%for(var i=0;i<banners?.length;i++){ let banner = banners[i]; %>
+                        <div class="carousel-item <%=i==0?'active':''%>">
+                        <a href="<%=banner.link.indexOf('://') !== -1?banner.link:'https://'+banner.link%>" target="_blank">
+                            <img class="d-block w-100" src="<%=banner.base64%>" >
+                        </a>
+                    </div>                           
+                    <%}%>
+                </div>
+                </div>
             </div>

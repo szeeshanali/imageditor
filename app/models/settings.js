@@ -1,4 +1,4 @@
-const mongoose = require('app_settings');
+const mongoose = require('mongoose');
 
 const schema  = new mongoose.Schema({
     file_size_limit:    {   type    :   Number, default: 5 },

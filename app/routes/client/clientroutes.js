@@ -7,6 +7,7 @@ const commonService                 = require('../../services/common');
 const formidable                    = require('formidable');
 const { default: mongoose, mongo }  = require('mongoose');
 const appusers                      = require('../../models/appuser');
+const app_settings                      = require('../../models/settings');
 const nodemailer                    = require('nodemailer');
 
 const PATH_TEMPLATES                = 'pages/client/templates';
@@ -217,7 +218,7 @@ router.get("/app/templates",  isLoggedIn, async (req, res) => {
 
 
 router.get("/app/main",  async (req, res) => {
-   const banners = await commonService.uploadService.getUploads('banner',true, true)
+   const banners = await uploads.find({type:'banner', active:true, deleted:false, ref_code:{$ne:'home-page'}})
     res.render('pages/client/main',{layout:false, banners:banners});
 }); 
 
@@ -415,14 +416,20 @@ router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
     let template = {};
     let meta = {};
     
-   let _uploads = await uploads.find({$or:[{type:"template"},{type:"clipart"},{type:"pre-designed"}],active:true,deleted:false},{json:0,base64:0,thumbBase64:0}).sort({order_no:1});
+   let _uploads = await uploads.find({$or:[
+     {type:"template"}
+    ,{type:"clipart"}
+    ,{type:"pre-designed"}
+
+  ],active:true,deleted:false},{json:0,base64:0,thumbBase64:0}).sort({order_no:1});
    let templates = _uploads.filter(function(i){return i.type === 'template'});
    let cliparts = _uploads.filter(function(i){return i.type === 'clipart'});
    let customDesigns = _uploads.filter(function(i){return i.type === 'pre-designed'});
-   
+   let banners = await uploads.find({type:'banner', active:true, deleted:false, ref_code:'home-page'});
    let customText = await commonService.contentService.getContentAsync('custom-text');
    let fonts = await commonService.contentService.getContentAsync('fonts',false);
    let ca = [];
+   let settings = await app_settings.findOne();
 
    let categories = await commonService.categoryService.getCategoriesAsync();
    categories.forEach(category => {
@@ -454,7 +461,9 @@ router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
         code:id,
         project_limit:req.user.project_limit,
         customText:customText,
-        fonts:fonts
+        fonts:fonts,
+        banners:banners,
+        settings: settings
     });
 });
 

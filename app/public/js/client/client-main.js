@@ -182,7 +182,7 @@ fabric.util.addListener(document.body, 'keydown', function (options) {
     let __canvas =  state.isPreviewCanvas?canvasPrev:canvas;
     var key = options.which || options.keyCode; // key detection
 
-    if(!(key === 37 || key === 38 || key === 39 || key === 40 || key === 46) )
+    if(!(key === 37 || key === 38 || key === 39 || key === 40 || key === 46  || key === 187 || key === 189) )
     return; 
 
     if(!__canvas.getActiveObject()) return;
@@ -202,6 +202,10 @@ fabric.util.addListener(document.body, 'keydown', function (options) {
         __canvas.remove(__canvas.getActiveObject())
         __canvas.renderAll();
         addLayer();
+    } else if(key === 187){
+            $("#btnToolbarLarger").click();
+    } else if(key === 189){
+        $("#btnToolbarSmaller").click();
     }
 });
 
@@ -1093,9 +1097,11 @@ function initUIEvents() {
         cropCanvas.clear();
         cropCanvas.isCropped = false; 
         let img = canvas.getActiveObject(); 
+        
         if(img)
         {
-            let imgSrc = img._element.src;
+
+            let imgSrc = img.getSrc();
             fabric.Image.fromURL(imgSrc, function (newImage) {
                 //img.scaleToWidth(450);
                 //img.scaleToHeight(450);
@@ -1209,8 +1215,10 @@ $("#btnLibraryModal").on("click",function(e){
     
 $("#btnStartOverModel").on("click",function(e){
         e.preventDefault();
-        $("#btnModelContinue").text("Continue"); 
-        $("#confirmBoxBody").text("Do you want to discard your changes?"); 
+        $("#confirmBoxTitle").text("RESTART DESIGN FROM THE BEGINNING.  ALL EDITS WILL BE LOST");
+        $("#btnModelContinue").text("Yes, I Want to Start Over"); 
+        $("#confirmBoxBody").text("Are you sure you want to start over?"); 
+        $("#btnConfirmBoxModalClose").text("No, Return to Design");
         $("#btnModelContinue").unbind().on("click",function(e){
             const templateId  = selectedTemplateId || 'default';
             loadSVGTemplate(templateId);
@@ -1661,6 +1669,7 @@ function onObjectSelection(o) {
 
     } else {
         textControls(false);
+        updateImageControls(o);
         imageControls(true);
     }
 
@@ -1672,9 +1681,24 @@ function onObjectSelection(o) {
     $(`#${id}`).addClass("selected-layer");
 
 }
+function updateImageControls(e){
 
+    let item         = e.selected[0];
+    let isGrayscaleSelected = item.filters[0]?.mode === "average";
+    let brightnessValue = item.filters[5]?.brightness || 0.0;
+    let contrastValue = item.filters[6]?.contrast || 0.0;
+    
+    
+     
+    $("#contrast-value").val(contrastValue);
+    $("#brightness-value").val(brightnessValue);
+    $("#btnGrayscale").prop("checked",!!isGrayscaleSelected);
+    
+     
+}
 
 function updateTextControls(e){
+    
    let item         = e.selected[0];
    let isBold       = item.fontWeight?.toLowerCase() === "bold"; 
    let isItalic     = item.fontStyle?.toLowerCase() === "italic"; 

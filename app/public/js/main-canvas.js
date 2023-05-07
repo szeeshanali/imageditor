@@ -19,7 +19,11 @@ $btnToolbarLarger.on("click",function(e){
     let h = obj.getScaledHeight()+inc;    
     obj.scaleToWidth(w); 
     obj.getScaledHeight(h);
-    obj.setCoords(); 
+
+    let canvasCenter = getCanvasCenter(obj.getScaledWidth(),obj.getScaledHeight())
+    obj.set({ left:canvasCenter.left , top: canvasCenter.top });                 
+    obj.setCoords();
+
     canvas.renderAll(); 
 
 })
@@ -35,7 +39,11 @@ $btnToolbarSmaller.on("click",function(e){
     let h = obj.getScaledHeight()-inc;    
     obj.scaleToWidth(w); 
     obj.getScaledHeight(h);
-    obj.setCoords(); 
+     
+    let canvasCenter = getCanvasCenter(obj.getScaledWidth(),obj.getScaledHeight())
+    obj.set({ left:canvasCenter.left , top: canvasCenter.top });                 
+    obj.setCoords();
+
     canvas.renderAll(); 
 
 })
