@@ -921,7 +921,8 @@ res.render('pages/admin/UserProject',{
     code:id,
     project_limit:req.user.project_limit,
     fonts:fonts,
-    customText:customText
+    customText:customText,
+    banners:[],
 
 });
 });
@@ -1079,7 +1080,8 @@ res.render('pages/admin/custom-design',{
     code:id,
     project_limit:req.user.project_limit,
     fonts:fonts,
-    customText:customText
+    customText:customText,
+    banners:[]
 
 });
 
@@ -1177,7 +1179,8 @@ router.get("/app/admin/shared-library", isAdmin, async (req,res)=>{
     title  : "Shared Library",
     id     : "__sharedlibrary",
     user   : req.user,
-    kpDesigns : kpDesigns
+    kpDesigns : kpDesigns,
+    banners:[]
    } ;
    res.render("pages/admin/shared-library",res.locals.page);
 })
