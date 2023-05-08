@@ -19,13 +19,13 @@
             
             <div  id="templatepanel" class="tab-pane active"   >
              
-              <div class="card pd-15 sticky-header-left-panel">
+              <div class="pd-y-10 pd-l-10  sticky-header-left-panel">
                 <button type="button" class="btn  btn-block btn-success tx-bold tx-16 tx-uppercase" id="btn-step-design">
                   SELECT TEMPLATE
 <br><small >Then Click Here to begin <br/>creating your design</small></button>
                </div>
 
-              <div>
+              <div style="overflow: auto; height: calc(100vh - 10px)">
                   <div class="row mg-0 sticky-body-left-panel">
                     <%for(var i=0; i<templates.length; i++){ %>
                       <%- include('../../partials/template',{template:templates[i]}); %>
