@@ -784,7 +784,9 @@ color:#333;
   padding: 5px 0px;
   margin: 0px -5px;
 }
-
+#image-editor-container{
+  /* min-width: 1660px; */
+}
 /* .background{
     background-image: url(../img/bg.jpg);
     background-size: cover;

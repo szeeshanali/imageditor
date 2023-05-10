@@ -91,11 +91,14 @@ router.get(ROUTE_USER_HOME,  async (req, res) => {
 router.get("/api/project/:id?", isLoggedIn,  async (req, res) => {
     var id = req.params.id; 
     try{
-       
-        //var data  = //await commonService.uploadService.getUserDesignsAsync(req.user._id,id);
-        var data = await uploads.findOne({_id:id,deleted:false,active:true},{code:1,title:1,meta:1,json:1,desc:1})
-        //var svgTemplate = await uploads.findOne({code:data.templateId},{base64:1})
-        //res.status(200).send({data:data,template:svgTemplate});
+        var data = await uploads.findOne({_id:id,deleted:false,active:true},
+            {
+                code    :1,
+                title   :1,
+                meta    :1,
+                json    :1,
+                desc    :1,
+                comments:1})
         return ok(res,data);
     }catch(ex){
         //res.status(500).send();
@@ -317,7 +320,7 @@ try{
             valid:false
         });
     }        
-    let {id, itemId, userDesignId, desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
+    let {comments, id, itemId, userDesignId, desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
      
     if(totalProjects.find(i=>i.title?.toLowerCase()?.trim() === title?.toLowerCase().trim()))
     {
@@ -331,6 +334,7 @@ try{
         });
     }
         
+    
     let _id = mongoose.Types.ObjectId();
     let uploadModel = {
       title           :   title,
@@ -344,9 +348,24 @@ try{
       meta            :   meta,
       by_admin        :   false,
       type            :   'project',
-      uploaded_by     :   req.user._id      
+      uploaded_by     :   req.user._id
     };
-  
+    if(comments){
+        uploadModel.comments=[];
+        comments.name = req.user.fname;
+        comments.email = req.user.email;
+        comments.created_dt = new Date();
+        uploadModel.comments.push({
+
+            name        :   req.user.fname,
+            email       :   req.user.email,
+            created_dt  :   new Date(),
+            comments    :   comments
+
+        })
+    }
+
+    
     let _path = `../app/public/uploads/client/pre-designed/pre-designed-${_id}.jpg`;    
     let _base64Alter = base64.replace(`data:${"image/png"};base64,`, "");
     await fs.writeFileSync(_path,_base64Alter,{ encoding: 'base64' }); 

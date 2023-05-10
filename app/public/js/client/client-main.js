@@ -261,7 +261,7 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
     kerning: 0,
     //flipped:    $("#inputFlipText").prop("checked") || false,
     fill:       $("#fontColorBox").val() || '#000000',
-    fontFamily: $("#fontlist").attr("data-value") || 'Arial',
+    fontFamily: $("#fontlist").attr("data-value") || 'Comin-Sans',
     fontSize: parseInt($("#btnTextSize").val()), // in px
     fontWeight: 'normal',
     fontStyle: '', // "normal", "italic" or "oblique".
@@ -622,7 +622,8 @@ function getSharedProjects() {
         $(".btn-edit-customdesign").unbind().on("click",function(e){
             const  _id = $(this).attr("id");
             if (canvas.getObjects().length == 0) {
-                loadProject(`${_id}`,false);                
+                loadProject(`${_id}`,false);
+                                
                 return;
             }else{
                 $("#shared-lib-modal").modal("hide");
@@ -1440,7 +1441,7 @@ $("#btnStartOverModel").on("click",function(e){
     })
     $("#font-list-container a").on("click", function (e) {
         let __canvas = state.isPreviewCanvas?canvasPrev:canvas;
-        let value = $(this).text() || "Arial, sans-serif";
+        let value = $(this).text() || "Comic-Sans";
         let dataValue = $(this).attr("data-value");
         $("#fontlist").text(value);
         $("#fontlist").attr('data-value',dataValue);
@@ -1597,7 +1598,9 @@ function  saveDesign() {
 
     var title = $("#input-project-title").val();
     var desc = $("#input-project-desc").val();
-
+    var comments =$("#input-project-comments").val();
+    
+  
     if (!title) {
         toast("Please Enter Project Name");
         return;
@@ -1612,7 +1615,6 @@ function  saveDesign() {
         return;
     }
 
-
     $.ajax({
         type: "POST",
         url: "/app/client/save-design",
@@ -1625,7 +1627,8 @@ function  saveDesign() {
             base64: JSON.stringify(canvas.toDataURL()),
             json: JSON.stringify(canvas.toDatalessJSON()),
             type: "project",
-            by_admin: false,            
+            by_admin: false,
+            comments: comments           
         },
         success: function (res) {
             if (typeof(res) === "string") {
