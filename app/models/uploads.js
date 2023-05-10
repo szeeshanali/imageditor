@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+
+
 const schema  = new mongoose.Schema({
     
     title           :   {   type    :   String    },
@@ -29,7 +31,9 @@ const schema  = new mongoose.Schema({
     uploaded_by     :   {   type    :   mongoose.ObjectId  },
     modified_dt     :   {   type    :   Date    },
     ref_code        :   {   type    :   String    },
-    copyright_flag  :   {   type    :   Boolean}});
+    copyright_flag  :   {   type    :   Boolean},
+    comments        :   {type    :   Array},
+    });
 
 const uploads   = mongoose.model('uploads',schema);
 module.exports  = uploads;

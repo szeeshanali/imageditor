@@ -127,7 +127,7 @@ async function parseClipboardData() {
     kerning: 0,
     flipped:    $("#inputFlipText").prop("checked") || false,
     fill:       $("#fontColorBox").val() || '#000000',
-    fontFamily: $("#fontlist").attr("data-value") || 'Arial',
+    fontFamily: $("#fontlist").attr("data-value") || 'Comic-Sans',
     fontSize: parseInt($("#btnTextSize").val()), // in px
     fontWeight: 'normal',
     fontStyle: '', // "normal", "italic" or "oblique".
@@ -684,7 +684,8 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
     $(itemToHighlight).addClass("bg-menu-highlight");
 }
 
-function saveDesign() {
+function saveDesign(type) {
+
         /**
    * . Check is Canvas is not Preview Canvas. 
    * . Check if canvas has atleast one item. 
@@ -700,6 +701,9 @@ function saveDesign() {
             return;
         }
 
+        if(!(type === "project" || type=== "pre-designed"))
+        { toast("Invalid Design Type.");
+        return;}
 
         var title = $("#input-project-title").val();
         var desc = $("#input-project-desc").val();
@@ -711,23 +715,26 @@ function saveDesign() {
             return;
         }
 
-        if (! canvas.templateId) {
+        if (!canvas.templateId) {
             console.error("templateId is not present in canvas.");
             toast("Can't save project. please contact admin.");
             return;
         }
 
-        var thumbBase64 = canvas.toDataURL({format: 'jpg', quality: 0.8});
+        var thumbBase64 = canvas.toDataURL({format: 'png', quality: 0.8});
+
         $.ajax({
             type: "POST",
-            url: "/app/admin/save-design",
+            url: "/api/admin/save-design",
             data: {
-                title: title || "N/A",
-                desc: desc || "N/A",
-                thumbBase64: thumbBase64,
-                active: active,
-                json: JSON.stringify(canvas.toJSON()),
-                templateId: canvas.templateId
+                meta        : JSON.stringify(canvas.context),
+                title       : title     || "Untitled",
+                desc        : desc      || "Untitled",
+                base64      : thumbBase64,
+                active      : true,
+                json        : JSON.stringify(canvas.toJSON()),
+                templateId  : canvas.templateId, 
+                type        : type
             },
             success: function (res) {
                 toast("Your Project has been Saved.");
@@ -744,6 +751,54 @@ function saveDesign() {
         })
     }
 
+    function editAndCommitUserProject(projectId) {
+
+        /**
+   * . Check is Canvas is not Preview Canvas. 
+   * . Check if canvas has atleast one item. 
+   * . Validate project info. atleast title should be provided. 
+   * . Submit canvas json and project info to api. 
+   * . Notify success or failed. 
+   */
+        // if(state.isPreviewCanvas)
+        // {toast("Please go back and save your design."); return;}
+
+        if (canvas.getObjects().length == 0) {
+            toast("Please create your design before save.");
+            return;
+        }
+
+
+        if (!canvas.templateId) {
+            console.error("templateId is not present in canvas.");
+            toast("Can't save project. please contact admin.");
+            return;
+        }
+
+        let thumbBase64 = canvas.toDataURL({format: 'png', quality: 0.8});
+        let comments = $("#input-project-comments").val(); 
+        $.ajax({
+            type: "PUT",
+            url: `/api/admin/edit-user-design/${projectId}`,
+            data: {
+                base64      :thumbBase64,
+                json        : JSON.stringify(canvas.toJSON()),
+                comments    : comments
+            },
+            success: function (res) {
+                toast("Project has been Saved.");
+            },
+            error: function (res) {
+                if (res.status === 401) {
+                    toast(`${
+                        res.statusText
+                    }:${
+                        res.responseJSON.message
+                    }`);
+                } else {}
+            }
+        })
+    }
 
     
 
@@ -1412,6 +1467,29 @@ $loader.removeClass("hidden");
         initUIClipArts();
         initUIBanner();
 
+        $("#btn-edit-user-project").on("click", function(e){
+            let _id = $(this).attr("data-project-id");
+            editAndCommitUserProject(_id);
+        })
+
+
+        $("#btnCancelSaveDesign").on("click",function(){
+            $("#menu-panel .tab-content  .tab-pane").each(function(){
+                $(this).removeClass("active");
+            })
+            $("#uploadpanel").addClass("active");
+        })
+
+    $("#btn-back-template").on("click",function(){
+        $("#menu-panel .tab-content  .tab-pane").each(function(){
+            $(this).removeClass("active");
+        })
+        $("#templatepanel").addClass("active");
+    })
+        
+    $("#terms-window, #image-terms-window").on("click",function(e){
+        var win = window.open("/app/terms", "Terms and Conditions.", "toolbar=no, location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width="+(screen.width-200)+",height=500,top="+(screen.height-400)+",left="+(screen.width-200));
+    })
 
         $("#edituser .is_admin").on("click",function(e){
             $("#confirmbox").modal("toggle");
@@ -1550,32 +1628,28 @@ $loader.removeClass("hidden");
 
         $("#btnSaveModel").on("click",function(e){
                 e.preventDefault();
-                $("#btnModelContinue").text("Save Changes");
-                $("#confirmBoxTitle").text("ARE YOU SURE?");
-                $("#confirmBoxBody").text("Do you want to save your changes?");
-                $("#btnModelContinue").unbind().on("click",function(e){
-                    e.preventDefault();
-                    saveDesign();
-                })       
+                let type = $(this).attr("data-type");
+                saveDesign(type);
         })
     
         $("#btnStartOverModel").on("click",function(e){
                 e.preventDefault();
-                $("#confirmBoxTitle").text("RESTART DESIGN FROM THE BEGINNING.  ALL EDITS WILL BE LOST");
-                $("#btnModelContinue").text("Yes, I Want to Start Over"); 
-                $("#confirmBoxBody").text("Are you sure you want to start over?"); 
-                $("#btnModelContinue").unbind().on("click",function(e){
-                    const templateId  = selectedTemplateId || 'default';
-                    loadSVGTemplate(templateId);
-                    $("#ws-btn-preview").addClass("hidden");
-                    //$("#ws-btn-save").addClass("hidden");
-                })
-                $("#btnSave").unbind().on("click",function(e){
+                window.location.href="/app/admin/custom-design"
+                // $("#confirmBoxTitle").text("RESTART DESIGN FROM THE BEGINNING.  ALL EDITS WILL BE LOST");
+                // $("#btnModelContinue").text("Yes, I Want to Start Over"); 
+                // $("#confirmBoxBody").text("Are you sure you want to start over?"); 
+                // $("#btnModelContinue").unbind().on("click",function(e){
+                //     const templateId  = selectedTemplateId || 'default';
+                //     loadSVGTemplate(templateId);
+                //     $("#ws-btn-preview").addClass("hidden");
+                //     //$("#ws-btn-save").addClass("hidden");
+                // })
+                // $("#btnSave").unbind().on("click",function(e){
                     
-                    const templateId  = selectedTemplateId || 'default';
-                    loadSVGTemplate(templateId);
+                //     const templateId  = selectedTemplateId || 'default';
+                //     loadSVGTemplate(templateId);
                 
-                })
+                // })
 
             
                 
@@ -1611,6 +1685,12 @@ $loader.removeClass("hidden");
         });
         
         $btnUploadImage.on("click", () => {
+            const ack = $("#ackUploadImage").prop("checked");
+            if(!ack)
+            {
+                toast("Please confirm you have the rights to use these images.")
+                return; 
+            }
             $btnUploadImageHidden.click();
         })
         
@@ -2151,18 +2231,31 @@ if(!order || order < 1){
   
 
 
-        $("#menu-save-design").on("click", function () { /**
-       * 1. validate - please create design before save.
-       * 2. show save design form. 
-       * 3. save design. 
-       */
+        $("#ws-btn-save").on("click", function () {
+            
+            $("#menu-panel .tab-content  .tab-pane").each(function(){
+                $(this).removeClass("active");
+            })
+            $("#savedesign").addClass("active");
 
-            if (canvas.backgroundImage == null || canvas._objects.length == 0) {
-                toast("Please create your design before save.");
-                return;
-            }
-             saveCustomDesign(true);
-        });
+        })
+
+    //     $("#btnSaveModel").on("click",function(){
+    
+            
+    //         /**
+    //    * 1. validate - please create design before save.
+    //    * 2. show save design form. 
+    //    * 3. save design. 
+    //    */
+
+    //         if (canvas.backgroundImage == null || canvas._objects.length == 0) {
+    //             toast("Please create your design before save.");
+    //             return;
+    //         }
+    //          saveCustomDesign(true);
+
+    //     });
 
         $("#saveUserDesign").on("click",function(e){
             let designId = $("#hiddenDesignId").val();

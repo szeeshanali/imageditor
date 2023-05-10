@@ -878,53 +878,60 @@ router.get('/app/admin/user-project/:id', isAdmin, async (req,res)=>{
     user: req.user
   }
 
-const id = req.params.id;
-const type = req.params.type;
-let template = {};
-let meta = {};
+  const id = req.params.id;
+  const type = req.params.type;
+  let template = {};
+  let meta = {};
+  
+ let _uploads = await uploads.find({$or:[
+   {type:"template"}
+  ,{type:"clipart"}
+  ,{type:"pre-designed"}
 
-//let customDesigns = await uploads.find({type:'pre-designed', active:true, deleted:false, base64:{$ne:null},json:{$ne:null}},{code:1,base64:1}) || [];
-let adminUploadItems = await uploads.find({deleted:false,active:true},{
-  json:0,
-  base64:0,
-  thumbBase64:0
-});
-let templates = adminUploadItems.filter(function(item){ return item.type == 'template'});
-let cliparts = adminUploadItems.filter(function(item){ return item.type == 'clipart'});
-let customDesigns = adminUploadItems.filter(function(item){ return item.type == 'pre-designed'});
-let categories  = await commonService.categoryService.getCategoriesAsync();
-let fonts       = await commonService.contentService.getContentAsync('fonts',false);
-let customText  = await commonService.contentService.getContentAsync('custom-text');
+],active:true,deleted:false},{json:0,base64:0,thumbBase64:0}).sort({order_no:1});
+ let templates = _uploads.filter(function(i){return i.type === 'template'});
+ let cliparts = _uploads.filter(function(i){return i.type === 'clipart'});
+ let customDesigns = _uploads.filter(function(i){return i.type === 'pre-designed'});
+ let banners = await uploads.find({type:'banner', active:true, deleted:false, ref_code:'home-page'});
+ let customText = await commonService.contentService.getContentAsync('custom-text');
+ let fonts = await commonService.contentService.getContentAsync('fonts',false);
+ let ca = [];
+ let settings = await app_settings.findOne();
 
-let ca = [];
+ let categories = await commonService.categoryService.getCategoriesAsync();
+ categories.forEach(category => {
+  var items = cliparts?.filter(i=>i.category == category.id);
+  if(items != null && items.length > 0)
+  {
+      items = items.map(i=>{
+          i.path = i.path?.replace("../app/public","");
+          return i; 
+      });
 
-categories.forEach(category => {
-var items = cliparts?.filter(i=>i.category == category.id);
-if(items != null && items.length > 0)
-{
-    ca.push({
-       categoryName:category.name,
-       items: items
-    })
-}
-
-});
-res.render('pages/admin/UserProject',{
-    user:req.user,
-    template:template,
-    templateMeta:meta,
-    templates: templates,
-    customDesigns: customDesigns,
-    cliparts:ca,
-    categories:categories,
-    type:type,
-    code:id,
-    project_limit:req.user.project_limit,
-    fonts:fonts,
-    customText:customText,
-    banners:[],
-
-});
+      ca.push({
+         categoryName:category.name,
+         items: items
+      }); 
+      
+  }
+ 
+ });
+  res.render('pages/admin/UserProject',{
+      user:req.user,
+      template:template,
+      templateMeta:meta,
+      templates: templates,
+      customDesigns: customDesigns,
+      cliparts:ca,
+      categories:categories,
+      type:type,
+      code:id,
+      project_limit:req.user.project_limit,
+      customText:customText,
+      fonts:fonts,
+      banners:banners,
+      settings: settings
+  });
 });
 
 router.get('/app/admin/categories', isAdmin, async (req,res)=>{
@@ -997,35 +1004,130 @@ router.get('/app/admin/manage/banners', isAdmin, async (req,res)=>{
 })
 
 //****Save Design */
-router.post('/app/admin/save-design', isAdmin, async function(req, res) {
-  try{
 
-    const {json,thumbBase64,title, desc, templateId, active} = req.body; 
-      var _id = mongoose.Types.ObjectId();
-      var uploadModel = {
-        title           :   title || `design${_id}`,
-        name            :   desc || "",
-        order_no        :   1,
+router.post('/api/admin/save-design', isAdmin, async function(req, res) {
+  try{
+    
+
+      const totalProjects =  await uploads.find({ 
+          uploaded_by     :   req.user._id,  
+          deleted         :   false,
+          active          :   true,
+          type            :   'pre-designed'  
+      },{title:1}); 
+  
+      let {id, itemId, userDesignId, desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
+       
+      if(totalProjects.find(i=>i.title?.toLowerCase()?.trim() === title?.toLowerCase().trim()))
+      {
+          ///return res.status(400).send({message:`A project with the same name  (${title}) is already exists. `, error: `Project with the same name  (${title}) is already exists. `});
+          return res.status(400).send({
+              status:401,
+              message:`Project with the same name is already exists, please choose different name.`,
+              exception:null,
+              error:true,
+              valid:false
+          });
+      }
+          
+      let _id = mongoose.Types.ObjectId();
+      let uploadModel = {
+        title           :   title,
+        name            :   title,
+        desc            :   desc,
         code            :   _id,
-        active          :   active,
+        active          :   true,
         json            :   json,
-        thumbBase64     :   thumbBase64,
-        default         :   false,
-        by_admin        :   false,
-        type            :   "pre-designed",
-        uploaded_by     :    req.user._id  ,
-        templateId      :    templateId 
+        base64          :   base64,
+        path            :   null,
+        meta            :   meta,
+        by_admin        :   true,
+        type            :   type,
+        uploaded_by     :   req.user._id      
       };
-      commonService.uploadService.upload(uploadModel,(err,msg)=>{
-          if(!err)
-              {res.status(200).send({message:`Success`, error: msg}); }
-              else{res.status(400).send({message:`Unable to upload file.`, error: msg});  }
-              
-          })
-      }catch{
-          res.status(500).send({message:`Something went wrong!`, error: msg});
+    
+      let _path = `../app/public/uploads/admin/${type}/${type}-${_id}.jpg`;    
+      let _base64Alter = base64.replace(`data:${"image/png"};base64,`, "");
+      await fs.writeFileSync(_path,_base64Alter,{ encoding: 'base64' }); 
+      uploadModel.path = _path;
+      var upload = new uploads(uploadModel);
+      await upload.save();
+      res.status(200).send({message:`Success`, error: null});
+  
+      }catch(ex) {
+          res.status(500).send({message:`Something went wrong!`, error: ex.message});
       }
    })
+
+   
+router.put('/api/admin/edit-user-design/:id', isAdmin, async function(req, res) {
+  try{
+    
+      const project_id = req.params["id"];
+      if(!project_id){
+        return error(res)
+      }
+
+      let {json,comments,base64} = req.body; 
+          
+      let _path = `../app/public/uploads/client/pre-designed/pre-designed-${project_id}.jpg`;    
+      let _base64Alter = base64.replace(`data:${"image/png"};base64,`, "");
+      await fs.writeFileSync(_path,_base64Alter,{ encoding: 'base64' }); 
+      //uploadModel.path = _path;
+      //var upload = new uploads(uploadModel);
+      ///await upload.save();
+      
+      var project = await uploads.findOne({_id: project_id});
+      project.json = json;
+      project.modified_dt = new Date();
+      if(!project.comments){
+        project.comments = [];
+      }
+      project.comments.push(
+        {
+          name        :   'Admin',
+          created_dt  :   new Date(),
+          comments    :   comments
+      });
+      
+      project.save();
+      return ok(res);
+  
+      }catch(ex) {
+        return error(res,ex);
+      }
+   })
+// router.post('/app/admin/save-design', isAdmin, async function(req, res) {
+//   try{
+
+//     const {json,thumbBase64,title, desc, templateId, active} = req.body; 
+//       var _id = mongoose.Types.ObjectId();
+//       var uploadModel = {
+//         title           :   title || `design${_id}`,
+//         name            :   desc || "",
+//         order_no        :   1,
+//         code            :   _id,
+//         active          :   active,
+//         json            :   json,
+//         thumbBase64     :   thumbBase64,
+//         default         :   false,
+//         by_admin        :   false,
+//         type            :   "pre-designed",
+//         uploaded_by     :    req.user._id  ,
+//         templateId      :    templateId 
+//       };
+//       commonService.uploadService.upload(uploadModel,(err,msg)=>{
+//           if(!err)
+//               {res.status(200).send({message:`Success`, error: msg}); }
+//               else{res.status(400).send({message:`Unable to upload file.`, error: msg});  }
+              
+//           })
+//       }catch{
+//           res.status(500).send({message:`Something went wrong!`, error: msg});
+//       }
+//    })
+
+
     
 router.get('/app/admin/custom-design/:id?', isAdmin, async (req,res)=>{
     
@@ -1050,7 +1152,7 @@ const customDesigns = _uploads.filter(function(i){return i.type === 'pre-designe
 let categories  = await commonService.categoryService.getCategoriesAsync();
 let fonts       = await commonService.contentService.getContentAsync('fonts',false);
 let customText  = await commonService.contentService.getContentAsync('custom-text');
-
+let settings = await app_settings.findOne();
 let ca = [];
 categories.forEach(category => {
 var items = cliparts?.filter(i=>i.category == category.id);
@@ -1081,7 +1183,8 @@ res.render('pages/admin/custom-design',{
     project_limit:req.user.project_limit,
     fonts:fonts,
     customText:customText,
-    banners:[]
+    banners:[],
+    settings:settings
 
 });
 

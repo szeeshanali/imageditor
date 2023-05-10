@@ -37,13 +37,11 @@ $btnAddText.on("click", function () {
 
     let item = addText({ text:text });
     const _canvas = state.isPreviewCanvas?canvasPrev:canvas;  
-    setTimeout(function(){
-        _canvas.add(item);
+    _canvas.add(item);
+    _canvas.setActiveObject(item);
+    _canvas.renderAll.bind(_canvas);
+    mainControls(true);
+    textControls(true);    
 
-        _canvas.setActiveObject(item);
-        _canvas.renderAll.bind(_canvas);
-        mainControls(true);
-        textControls(true);    
-    },500)
 
 })
