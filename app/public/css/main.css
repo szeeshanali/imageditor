@@ -12060,6 +12060,7 @@ textarea.parsley-success:focus {
 /***** LEFT SIDEBAR *****/
 .am-sideleft {
   position: fixed;
+  z-index:100;
   top: 40px;
   /* left: -350px; */
   /* left: -400px; */

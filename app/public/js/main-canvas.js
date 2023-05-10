@@ -104,6 +104,7 @@ $("#btnDisplayGrid").on("click", function (e) {
 
 
  function loadSVGTemplate(id,onComplete) {
+    
         selectedTemplateId = id;
         var group = [];
         state.isPreviewCanvas = false;
@@ -134,11 +135,15 @@ $("#btnDisplayGrid").on("click", function (e) {
     
     
                 let firstLogo = objects[0];
-                let aspectRatio = firstLogo.width/firstLogo.height;                
-                const workspaceSize =$("#workarea").width() || 500;
-                let displayWidth = (workspaceSize-50)>800?800:workspaceSize-50;                 
+                let aspectRatio = firstLogo.width/firstLogo.height;
+                                
+                const workspaceSize = $("#workarea").width() || 500;
+                let displayWidth = 500;//(workspaceSize-50)>800?800:workspaceSize-50;                 
+                
                 let logoDisplayWidth = displayWidth; 
                 let logoDisplayHeight = displayWidth/aspectRatio;                 
+                
+                
                 canvas.setBackgroundImage(firstLogo, canvas.renderAll.bind(canvas));
                 canvas.backgroundImage.set({
                     left:0,
@@ -732,22 +737,43 @@ function loadProject(projectId)
            console.error("Missing TemplateId Meta Information");                
            throw msg;
            }
-           
 
            loadSVGTemplate(meta.templateId,(data)=>{
-
             $loader.addClass("hidden");               
             canvas.designId = projectId;
-               canvas.loadFromJSON(res.data.json,canvas.renderAll.bind(canvas));                               
-               canvas.requestRenderAll();
-               $('#my-proj-modal').modal('hide');
+            canvas.loadFromJSON(res.data.json,canvas.renderAll.bind(canvas));                               
+
+            setTimeout(function(){
+                canvas.loadFromJSON(res.data.json,canvas.renderAll.bind(canvas));   
+                canvas._objects.forEach(o=>{
+                    if(o.type === "i-text"){
+                        o._forceClearCache = true;
+                        canvas.renderAll();
+
+                    }
+ 
+                })  
+            },1000)
+
+            canvas.renderAll();
+
+            $('#my-proj-modal').modal('hide');
                $('#shared-lib-modal').modal('hide');
-               
-               
+               $("#input-project-title").val(res.data.title);
+               $("#input-project-desc").val(res.data.desc);
 
+               if(res.data.comments){
+                let html = "";
+                res.data.comments.forEach(item=>{
+                    html += `<div class='pd-y-5'><i class='ion-chatbubble-working pd-r-5'></i><strong>${item.name}</strong>: ${item.comments} </br><span class='tx-12'>${new Date(item.created_dt)?.toLocaleString("en-US")}</span></div>`;
+                })
+
+                if(!html)
+                { html = "No Comments"; }
+                
+                $("#user-comments-container").html(html);
+               }
            });
-
-
        },
        error: function (xhr, ajaxOptions, thrownError) {
            toast(thrownError);
@@ -765,7 +791,8 @@ function saveCustomDesign(byAdmin) {
     {  toast("Please Wait while Saving Design.");
     return; }
     var meta = canvas.context; 
-    meta.title =  $("#customDesignName").val() || "Untitled";
+    meta.title =  $("#input-project-title").val() || "Untitled";
+    meta.desc =  $("#input-project-desc").val() || "";
     
     if(meta.title.length > 50)
     {
@@ -781,7 +808,7 @@ function saveCustomDesign(byAdmin) {
         type: "POST",
         url: "/app/"+isAdmin+"/uploads",
         data: {
-            desc: "",
+            desc: meta.desc,
             meta: JSON.stringify(meta),
             title: meta.title,
             name: meta.title,

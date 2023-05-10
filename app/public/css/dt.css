@@ -629,10 +629,7 @@ color:#333;
 
 .leftpanel {
   height: 100%;
-  overflow-y: auto;
-  position: absolute;
   width: 100%;
-  height: calc(100vh - 40px);
 }
 
 ::-webkit-scrollbar {
@@ -787,7 +784,9 @@ color:#333;
   padding: 5px 0px;
   margin: 0px -5px;
 }
-
+#image-editor-container{
+  /* min-width: 1660px; */
+}
 /* .background{
     background-image: url(../img/bg.jpg);
     background-size: cover;
@@ -1092,13 +1091,13 @@ color:#333;
 }
 
 .sticky-header-left-panel {
-  position: fixed;
+  /* position: fixed;
   width: 23.7%;
-  z-index: 1;
+  z-index: 1; */
 }
 
 .sticky-body-left-panel {
-  padding-top: 90px;
+  /* padding-top: 110px; */
 }
 
 .soft{

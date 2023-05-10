@@ -2,7 +2,7 @@
 const defaults = {
     fontSize:36,
     fontFill: '#000',
-    fontFamily:'Arial',
+    fontFamily:'Comic-Sans',
     strokeWidth: 10,
     logoDisplaySize:500
 }
