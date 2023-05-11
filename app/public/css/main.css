@@ -8544,15 +8544,15 @@ a.text-dark:focus, a.text-dark:hover {
 }
 .accordion .card-header a, .accordion .card-header a:hover, .accordion .card-header a:focus {
   /* background-color: #cbcae5; */
-  background-color: #fff;
-
+    background-color: #dbdbdb;
     color: #494699;
     margin-top: 1px;
     border-bottom: solid 1px #ccc;
+    box-shadow: 2px 2px 4px #999;
 }
 .accordion .card-header a.collapsed {
   /* background-color: #cbcae5; */
-  background-color: #fff;
+  background-color: #efefef;
 
   color: #494699;
 }
@@ -53271,6 +53271,7 @@ a.hover-white-8:hover, a.hover-white-8:focus {
     min-width: 70% !important;
   }
 
+
   .wd-md-75 {
     width: 75px;
   }
@@ -56709,14 +56710,16 @@ a.hover-white-8:hover, a.hover-white-8:focus {
   background-color: transparent;
 }
 
-.btn-outline-theme:not(:disabled):not(.disabled):active, .btn-outline-theme:not(:disabled):not(.disabled).active,
+/* .btn-outline-theme:not(:disabled):not(.disabled):active, .btn-outline-theme:not(:disabled):not(.disabled).active,
 .show > .btn-outline-theme.dropdown-toggle {
   color: #fff;
   background-color: #494699;
   border-color: #494699;
-}
+} */
 
 .btn-outline-theme:not(:disabled):not(.disabled):active:focus, .btn-outline-theme:not(:disabled):not(.disabled).active:focus,
 .show > .btn-outline-theme.dropdown-toggle:focus {
   box-shadow: 0 0 0 0.2rem rgba(52, 58, 64, 0.5);
 }
+
+

@@ -46,8 +46,6 @@ function getInches(widthInPx, heightInPx)
     return `${w.toFixed(1)}x${h.toFixed(1)}`;
 }
 
- 
-
 function getInch(size)
 {
     return size/dpi;
@@ -140,6 +138,18 @@ function addText(text)
     return item; 
 }
 
+function measureImageDimensions(img,canvas)
+{
+    const factor = 1.5;
+    if(img.height>canvas.height && img.height>img.width){
+        let ratio = canvas.height/factor; 
+        img.scaleToHeight(ratio);    
+       }else{
+            let ratio = canvas.width/factor; 
+            img.scaleToWidth(ratio);    
+       }
+}
+
 function getPath(path){
     return path.replace("../app/public/",'');
 }
@@ -197,10 +207,10 @@ const processFiles = (files) => {
         } else {
             reader.onload = (e) => {
                 fabric.Image.fromURL(e.target.result, (img) => {
-                    //let logoSize = canvas.context.originalWidth;
-                    //img.scaleToWidth(logoSize/1.5);  
-                    let ratio = canvas.width/1.5; 
-                    img.scaleToWidth(ratio);                
+                    // let ratio = canvas.width/1.5; 
+                    // img.scaleToWidth(ratio);           
+                    
+                    measureImageDimensions(img,canvas);                    
                     let canvasCenter = getCanvasCenter(img.getScaledWidth(),img.getScaledHeight())
                     img.set({left: canvasCenter.left, top: canvasCenter.top})
                     img.globalCompositeOperation = 'source-atop';
