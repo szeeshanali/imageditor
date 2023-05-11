@@ -228,8 +228,13 @@ async function parseClipboardData() {
               item.getType(type).then((imageBlob) => {
                 let url = window.URL.createObjectURL(imageBlob);
                 fabric.Image.fromURL(url, function (img) {                    
-                    let ratio = canvas.width/1.5; 
-                    img.scaleToWidth(ratio);     
+                    if(img.height>canvas.height && img.height>img.width){
+                        let ratio = canvas.height/1.5; 
+                        img.scaleToHeight(ratio);    
+                       }else{
+                            let ratio = canvas.width/1.5; 
+                            img.scaleToWidth(ratio);    
+                       }
                     let canvasCenter = getCanvasCenter(img.getScaledWidth(),img.getScaledHeight())
                     img.set({ left:canvasCenter.left , top: canvasCenter.top });                                
                     img.globalCompositeOperation = 'source-atop';
@@ -1405,8 +1410,18 @@ $("#btnStartOverModel").on("click",function(e){
    
     $txtDecorationCtrl.on("click", function (e) {
         
+        $("#font-panel .text-decoration").each(function(e){
+            let $self =$(this);
+            if(['bold','italic','underline'].indexOf(this.id) === -1 ){
+                $self.removeClass('active');
+            } 
+            
+        })
         let __canvas = state.isPreviewCanvas?canvasPrev:canvas;
         var value = $(this).attr("data-value");
+        
+        $(this).addClass('active');
+
         var o = __canvas.getActiveObject();
         if (o && o.type === 'i-text' || o.type === 'curved-text') {
          
@@ -1416,7 +1431,9 @@ $("#btnStartOverModel").on("click",function(e){
              
             if (value === 'bold') {
                 var isTrue = o['fontWeight'] === 'bold';
-
+                if(isTrue){
+                    $(this).removeClass('active');
+                }
 
                 
                
@@ -1432,6 +1449,10 @@ $("#btnStartOverModel").on("click",function(e){
 
             } else if (value === 'italic') {
                 var isTrue = o['fontStyle'] === 'italic';
+                if(isTrue){
+                    $(this).removeClass('active');
+                }
+
                 if(isTextSelection)
                 { o.setSelectionStyles({"fontStyle":isTrue ? '' : 'italic'}) }
                 else{
@@ -1447,6 +1468,10 @@ $("#btnStartOverModel").on("click",function(e){
                     toast('Underline is not supported for Circular Text.');
                     return}
                 var isTrue = !o['underline'];
+                if(!isTrue){
+                    $(this).removeClass('active');
+                }
+
                 if(isTextSelection)
                 { o.setSelectionStyles({"underline":isTrue}) }
                 else{
@@ -1721,7 +1746,8 @@ function updateImageControls(e){
     let contrastValue = item.filters[6]?.contrast || 0.0;
     
     
-     
+    $("#brightnessVal").text(`(${(brightnessValue  * 100).toFixed(0)}%)`);
+    $("#contrastVal").text(`(${(contrastValue * 100).toFixed(0)}%)`);
     $("#contrast-value").val(contrastValue);
     $("#brightness-value").val(brightnessValue);
     $("#btnGrayscale").prop("checked",!!isGrayscaleSelected);
@@ -2244,8 +2270,15 @@ function pasteImage(event) { // get the raw clipboardData
             // format the imageData into a URL
             var imageURL = window.webkitURL.createObjectURL(imageData);
             fabric.Image.fromURL(imageURL, (img) => { // img.scaleToWidth(300);
-                    let ratio = canvas.width/1.5; 
-                    img.scaleToWidth(ratio);                
+                   if(img.height>canvas.height && img.height>img.width){
+                    let ratio = canvas.height/1.5; 
+                    img.scaleToHeight(ratio);    
+                   }else{
+                        let ratio = canvas.width/1.5; 
+                        img.scaleToWidth(ratio);    
+                   }
+  
+                              
                     let canvasCenter = getCanvasCenter(img.getScaledWidth(),img.getScaledHeight())
                     img.set({left: canvasCenter.left, top: canvasCenter.top})
                     img.setCoords();

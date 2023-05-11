@@ -611,9 +611,9 @@ color:#333;
   transition: transform .25s;
 }
 
-#font-panel i {
+/* #font-panel i {
   padding: 0px 10px;
-}
+} */
 
 #btnDisplayGrid,
 #btnDisplayRuler {
@@ -784,6 +784,8 @@ color:#333;
   padding: 5px 0px;
   margin: 0px -5px;
 }
+
+
 #image-editor-container{
   /* min-width: 1660px; */
 }

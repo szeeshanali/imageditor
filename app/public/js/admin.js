@@ -751,6 +751,73 @@ function saveDesign(type) {
         })
     }
 
+function editProject(type) {
+
+        /**
+   * . Check is Canvas is not Preview Canvas. 
+   * . Check if canvas has atleast one item. 
+   * . Validate project info. atleast title should be provided. 
+   * . Submit canvas json and project info to api. 
+   * . Notify success or failed. 
+   */
+        // if(state.isPreviewCanvas)
+        // {toast("Please go back and save your design."); return;}
+
+        if (canvas.getObjects().length == 0) {
+            toast("Please create your design before save.");
+            return;
+        }
+
+        if(!(type === "project" || type=== "pre-designed"))
+        { toast("Invalid Design Type.");
+        return;}
+
+        var title = $("#input-project-title").val();
+        var desc = $("#input-project-desc").val();
+        var active = $("#designActive").prop("checked");
+
+
+        if (! title) {
+            toast("Please Enter Project Name");
+            return;
+        }
+
+        if (!canvas.templateId) {
+            console.error("templateId is not present in canvas.");
+            toast("Can't save project. please contact admin.");
+            return;
+        }
+
+        var thumbBase64 = canvas.toDataURL({format: 'png', quality: 0.8});
+
+        $.ajax({
+            type: "POST",
+            url: "/api/admin/save-design",
+            data: {
+                meta        : JSON.stringify(canvas.context),
+                title       : title     || "Untitled",
+                desc        : desc      || "Untitled",
+                base64      : thumbBase64,
+                active      : true,
+                json        : JSON.stringify(canvas.toJSON()),
+                templateId  : canvas.templateId, 
+                type        : type
+            },
+            success: function (res) {
+                toast("Your Project has been Saved.");
+            },
+            error: function (res) {
+                if (res.status === 401) {
+                    toast(`${
+                        res.statusText
+                    }:${
+                        res.responseJSON.message
+                    }`);
+                } else {}
+            }
+        })
+    }
+
     function editAndCommitUserProject(projectId) {
 
         /**
@@ -1937,6 +2004,7 @@ $loader.removeClass("hidden");
                     o.set({"textAlign": value})
                 }
     
+                $(this).addClass('active');
                 canvas.renderAll();
             }
     
