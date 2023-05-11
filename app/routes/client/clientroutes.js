@@ -230,7 +230,7 @@ router.get("/app/main",  async (req, res) => {
 router.delete("/api/my-designs/:id", isLoggedIn,  async (req, res) => {
     try{
         var id = req.params["id"]; 
-        var data  =  await uploads.remove({_id:id});
+        var data  =  await uploads.remove({_id:id, uploaded_by:req.user._id});
         return ok(res, data);
     }catch(ex)
     {
@@ -261,6 +261,45 @@ function ok(res,data)
         data:data
     });
 }
+
+ 
+router.put('/api/client/edit-user-design/:id',isLoggedIn, async function(req, res) {
+    try{
+      
+        const project_id = req.params["id"];
+        if(!project_id){
+          return error(res)
+        }
+  
+        let {json,comments,base64} = req.body; 
+            
+        let _path = `../app/public/uploads/client/project/project-${project_id}.jpg`;    
+        let _base64Alter = base64.replace(`data:${"image/png"};base64,`, "");
+        await fs.writeFileSync(_path,_base64Alter,{ encoding: 'base64' }); 
+        //uploadModel.path = _path;
+        //var upload = new uploads(uploadModel);
+        ///await upload.save();
+        
+        var project = await uploads.findOne({_id: project_id});
+        project.json = json;
+        project.modified_dt = new Date();
+        if(!project.comments){
+          project.comments = [];
+        }
+        project.comments.push(
+          {
+            name        :   "You",
+            created_dt  :   new Date(),
+            comments    :   comments
+        });
+        
+        project.save();
+        return ok(res);
+    
+        }catch(ex) {
+          return error(res,ex);
+        }
+     })
 
 router.get("/api/my-designs", isLoggedIn, async function(req,res){
 

@@ -708,9 +708,19 @@ function addLayer(o) {
 }
 
 
-function loadProject(projectId)
+function loadProject(projectId, type)
 {
    $loader.removeClass("hidden");
+   if(type==="pre-designed")
+   {
+    $("#btn-edit-project").addClass("hidden");
+    $("#btnSaveModel").removeClass("hidden");
+   }else{
+    $("#btn-edit-project").removeClass("hidden");
+    $("#btnSaveModel").addClass("hidden");
+   }
+
+
    $.ajax({
        type: "GET",
        url: `/api/project/${projectId}`,
@@ -749,9 +759,7 @@ function loadProject(projectId)
                     if(o.type === "i-text"){
                         o._forceClearCache = true;
                         canvas.renderAll();
-
                     }
- 
                 })  
             },1000)
 
@@ -761,7 +769,9 @@ function loadProject(projectId)
                $('#shared-lib-modal').modal('hide');
                $("#input-project-title").val(res.data.title);
                $("#input-project-desc").val(res.data.desc);
-
+               $("#btn-edit-project").unbind().on("click",function(){
+                editAndCommitUserProject(projectId)
+               })
                if(res.data.comments){
                 let html = "";
                 res.data.comments.forEach(item=>{
@@ -784,7 +794,54 @@ function loadProject(projectId)
 }
 
 
+function editAndCommitUserProject(projectId) {
 
+    /**
+* . Check is Canvas is not Preview Canvas. 
+* . Check if canvas has atleast one item. 
+* . Validate project info. atleast title should be provided. 
+* . Submit canvas json and project info to api. 
+* . Notify success or failed. 
+*/
+    // if(state.isPreviewCanvas)
+    // {toast("Please go back and save your design."); return;}
+
+    if (canvas.getObjects().length == 0) {
+        toast("Please create your design before save.");
+        return;
+    }
+
+
+    if (!canvas.templateId) {
+        console.error("templateId is not present in canvas.");
+        toast("Can't save project. please contact admin.");
+        return;
+    }
+
+    let thumbBase64 = canvas.toDataURL({format: 'png', quality: 0.8});
+    let comments = $("#input-project-comments").val(); 
+    $.ajax({
+        type: "PUT",
+        url: `/api/client/edit-user-design/${projectId}`,
+        data: {
+            base64      :thumbBase64,
+            json        : JSON.stringify(canvas.toJSON()),
+            comments    : comments
+        },
+        success: function (res) {
+            toast("Project Changes has been Saved.");
+        },
+        error: function (res) {
+            if (res.status === 401) {
+                toast(`${
+                    res.statusText
+                }:${
+                    res.responseJSON.message
+                }`);
+            } else {}
+        }
+    })
+}
 function saveCustomDesign(byAdmin) {
     canvas.state = "init";
     if(canvas.state === "inprogress")

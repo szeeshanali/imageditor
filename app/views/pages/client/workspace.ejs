@@ -101,6 +101,8 @@
       
                   <div class="btn-group" >
                     <button class="btn tx-12 btn-success  tx-bold tx-uppercase"  id="btnSaveModel">Save Project</button>
+                    <button class="btn tx-12 btn-success  tx-bold tx-uppercase hidden"  id="btn-edit-project">Save Changes</button>
+                    
                     <button class="btn tx-12 btn-warning tx-bold tx-uppercase" data-dismiss="modal" id="btnCancelSaveDesign">Cancel</button>
                   </div><!-- form-layout-footer -->
                 </div><!-- form-layout -->
@@ -426,13 +428,7 @@
    { 
         
         var code = '<%=code || "default" %>' ;
-        var type = '<%=type%>';
-        // if(type === 'project'){
-        //     loadProject(code);
-        // }else{
-        //     loadSVGTemplate(code);
-
-        // }
+        var type = '<%=type%>';        
         loadSVGTemplate(code);
         $('[data-toggle="popover"]').popover()
 
