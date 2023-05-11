@@ -581,8 +581,10 @@ function getUserProjects() {
             }else{
                 $("#my-proj-modal").modal("hide");
                 $("#confirmbox").modal("toggle");
-                $("#confirmBoxTitle").text("ARE YOU SURE?");
+                $("#confirmBoxTitle").text("ARE YOU SURE? ALL EDITS WILL BE LOST");
                 $("#confirmBoxBody").text("Are you sure you wish to open this design?  Your current design will be lost!");
+                $("#btnModelContinue").text("Yes, Open this Design");
+                $("#btnConfirmBoxModalClose").text("No, Return To Design");
                 $("#btnModelContinue").unbind().on("click",function(e){
                     loadProject(`${_id}`,false);                
                 })
@@ -622,16 +624,17 @@ function getSharedProjects() {
         $(".btn-edit-customdesign").unbind().on("click",function(e){
             const  _id = $(this).attr("id");
             if (canvas.getObjects().length == 0) {
-                loadProject(`${_id}`,false);
-                                
+                loadProject(`${_id}`,'pre-designed');                                
                 return;
             }else{
                 $("#shared-lib-modal").modal("hide");
                 $("#confirmbox").modal("toggle");
-                $("#confirmBoxTitle").text("ARE YOU SURE?");                
+                $("#confirmBoxTitle").text("ARE YOU SURE? ALL EDITS WILL BE LOST. ");                
                 $("#confirmBoxBody").text("Are you sure you wish to open this design?  Your current design will be lost!");
+                $("#btnModelContinue").text("Yes, Open this Design")
+                $("#btnConfirmBoxModalClose").text("No, Return to Design")
                 $("#btnModelContinue").unbind().on("click",function(e){
-                    loadProject(`${_id}`,false);                
+                    loadProject(`${_id}`,'pre-designed');                
                 })
                 
             }
@@ -1207,14 +1210,35 @@ $("#btnLibraryModal").on("click",function(e){
     
         $("#confirmbox").modal("toggle");
         $("#confirmBoxTitle").text("ARE YOU SURE?")
-        $("#btnModelContinue").text("Save Changes");
-        $("#confirmBoxBody").text("Do you want to save your changes?");
+        $("#confirmBoxBody").text("Are you sure you wish to save this project?");
+        $("#btnModelContinue").text("Save Project");
+        $("#btnConfirmBoxModalClose").text("No, Return to Design");
         $("#btnModelContinue").unbind().on("click",function(e){
             e.preventDefault();
             saveDesign();
         })
         
        
+})
+
+$("#btn-edit-project").on("click",function(e){
+    e.preventDefault();
+    if (canvas.getObjects().length == 0) {
+        toast("Your project is empty, Please create your design and save.");
+        return;
+    }
+
+    $("#confirmbox").modal("toggle");
+    $("#confirmBoxTitle").text("ARE YOU SURE?")
+    $("#confirmBoxBody").text("Are you sure you wish to save this project?");
+    $("#btnModelContinue").text("Save Project");
+    $("#btnConfirmBoxModalClose").text("No, Return to Design");
+    $("#btnModelContinue").unbind().on("click",function(e){
+        e.preventDefault();
+
+    })
+    
+   
 })
     
 $("#btnStartOverModel").on("click",function(e){
@@ -1654,6 +1678,8 @@ function  saveDesign() {
         }
     })
 }
+
+
 
 
 function onObjectSelectionCleared(o) {
