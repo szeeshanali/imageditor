@@ -7,7 +7,7 @@ var canvas      = new fabric.Canvas("client-main-canvas",       {
          selectionBorderColor: "green",
 })
 var canvasPrev  = new fabric.Canvas("client-main-canvas-logo",  {preserveObjectStacking: true});
-var cropCanvas  = new fabric.Canvas("cropCanvas",               {preserveObjectStacking: true});
+
 //fabric.Object.prototype.transparentCorners = false;
 //fabric.Object.prototype.cornerStyle = 'circle';
 //fabric.Object.prototype.borderColor = '#494699';
@@ -235,10 +235,11 @@ async function parseClipboardData() {
                             let ratio = canvas.width/1.5; 
                             img.scaleToWidth(ratio);    
                        }
-                    let canvasCenter = getCanvasCenter(img.getScaledWidth(),img.getScaledHeight())
-                    img.set({ left:canvasCenter.left , top: canvasCenter.top });                                
+                    img.set({ originX:"center", originY:"center" });
+                    img.setCoords();
                     img.globalCompositeOperation = 'source-atop';
                     canvas.add(img);
+                    canvas.centerObject(img);
                     canvas.setActiveObject(img);
                     canvas.renderAll();
                 })
@@ -588,7 +589,7 @@ function getUserProjects() {
                 $("#confirmbox").modal("toggle");
                 $("#confirmBoxTitle").text("ARE YOU SURE? ALL EDITS WILL BE LOST");
                 $("#confirmBoxBody").text("Are you sure you wish to open this design?  Your current design will be lost!");
-                $("#btnModelContinue").text("Yes, Open this Design");
+                $("#btnModelContinue").text("Yes, Open Saved Project");
                 $("#btnConfirmBoxModalClose").text("No, Return To Design");
                 $("#btnModelContinue").unbind().on("click",function(e){
                     loadProject(`${_id}`,false);                
@@ -865,67 +866,8 @@ function applyFilterValue(index, prop, value) {
         canvas.renderAll();
     }
 }
-function crop(currentImage) {
-    
-    let rect = new fabric.Rect({
-        left: selectionRect.left,
-        top: selectionRect.top,
-        width: selectionRect.getScaledWidth(),
-        height: selectionRect.getScaledHeight(),
-        absolutePositioned: true,
-    });
 
-    // add to the current image clicpPath property
-    currentImage.clipPath = rect;
 
-    // remove the mask layer
-    cropCanvas.remove(selectionRect);
-
-    // init new image instance
-    var cropped = new Image();
-    // set src value of canvas croped area as toDataURL
-    cropped.src = cropCanvas.toDataURL();
-
- 
-    // after onload clear the canvas and add cropped image to the canvas
-    cropped.onload = function () {
-        //canvas.clear();
-        image = new fabric.Image(cropped);
-        image.left = rect.left;
-        image.top = rect.top;
-        image.scaleToWidth(rect.width),
-        image.scaleToHeight(rect.height),
-    
-        image.setCoords();
-        //let originalImage = canvas.getActiveObject();
-        //canvas.remove(originalImage);
-        //cropCanvas.add(image);
-        cropCanvas.renderAll();
-    };
-}
-function addSelectionRect(currentImage) {
-    selectionRect = new fabric.Rect({
-        fill: "rgba(0,0,0,0.3)",
-        originX: "left",
-        originY: "top",
-        stroke: "black",
-        opacity: 1,
-        width: currentImage.getScaledWidth()-50,
-        height: currentImage.getScaledHeight()-50,
-        hasRotatingPoint: false,
-        transparentCorners: true,
-        
-        cornerSize: 12,
-        padding: 0,
-        borderDashArray: [3, 3],
-        borderScaleFactor: 1.3,
-    });
-    //selectionRect.scaleToWidth(200);
-    cropCanvas.centerObject(selectionRect);
-    cropCanvas.add(selectionRect);
-    cropCanvas.setActiveObject(selectionRect);
-
-}
 
 function menuHighlighter(itemToHighlight) {
     $("#toolbar .nav-item").each(function (e) {
@@ -1041,98 +983,7 @@ function initUIEvents() {
           })
     })
 
-    $("#btnCrop").on("click",(e)=>{
-        var img = cropCanvas.item(0);
-        cropCanvas.isCropped = true;
-        crop(img);
-         
-    }); 
 
-
-    $("#btnCropDone").on("click",(e)=>{
-        if(!cropCanvas.isCropped)
-        {return;}
-        let rect = new fabric.Rect({
-            left: selectionRect.left,
-            top: selectionRect.top,
-            width: selectionRect.getScaledWidth(),
-            height: selectionRect.getScaledHeight(),
-            absolutePositioned: true,
-        });
-
-        
-        var cropped = new Image();
-    // set src value of canvas croped area as toDataURL
-    cropped.src = cropCanvas.toDataURL({
-        left: rect.left,
-        top: rect.top,
-        width: rect.width,
-        height: rect.height,
-        quality:1,
-        multiplier:3
-    });
-
- 
-    // after onload clear the canvas and add cropped image to the canvas
-    cropped.onload = function () {
-        //canvas.clear();
-        cropCanvas.clear();
-        image = new fabric.Image(cropped);
-        //image.left = rect.left;
-        //image.top = rect.top;
-        image.scaleToWidth(rect.width);
-        image.scaleToHeight(rect.height);
-        let originalImg = canvas.getActiveObject(); 
-        canvas.remove(originalImg);
-        
-        
-        let canvasCenter = getCanvasCenter(image.getScaledWidth(),image.getScaledHeight())
-        image.set({left: canvasCenter.left, top: canvasCenter.top})
-        image.setCoords();
-
-        image.globalCompositeOperation = 'source-atop';
-
-        canvas.add(image);
-        canvas.renderAll();
-    };
-
-        
-
-
-
-
-    })
-
-    $("#btnCropModal").on("click",(e)=>{
-        cropRect=null; 
-        cropCanvas.clear();
-        cropCanvas.isCropped = false; 
-        let img = canvas.getActiveObject(); 
-        
-        if(img)
-        {
-
-            let imgSrc = img.getSrc();
-            fabric.Image.fromURL(imgSrc, function (newImage) {
-                //img.scaleToWidth(450);
-                //img.scaleToHeight(450);
-                //let w = img.getScaledWidth(); 
-                //let h = img.getScaledHeight();
-                //cropCanvas.setDimensions({width:w,height:h})
-                newImage.scaleToWidth(img.getScaledWidth())
-                newImage.scaleToHeight(img.getScaledHeight())
-                let w = newImage.getScaledWidth(); 
-                let h = newImage.getScaledHeight();
-                cropCanvas.setDimensions({width:w,height:h})
-                cropCanvas.add(newImage);
-                cropCanvas.renderAll();
-                addSelectionRect(newImage);
-            })
-
-
-        }
-
-    })
 
     $("#cbRfqShip").on("click", function (e) {
       
@@ -1220,6 +1071,7 @@ $("#btnLibraryModal").on("click",function(e){
         $("#btnConfirmBoxModalClose").text("No, Return to Design");
         $("#btnModelContinue").unbind().on("click",function(e){
             e.preventDefault();
+            
             saveDesign();
         })
         
@@ -1253,23 +1105,11 @@ $("#btnStartOverModel").on("click",function(e){
         $("#confirmBoxBody").text("Are you sure you want to start over?"); 
         $("#btnConfirmBoxModalClose").text("No, Return to Design");
         $("#btnModelContinue").unbind().on("click",function(e){
-            const templateId  = selectedTemplateId || 'default';
-            loadSVGTemplate(templateId);
-            $("#ws-btn-preview").addClass("hidden");
-            $("#ws-btn-save").addClass("hidden");
-            $btnTemplate.click();
-            canvasUndo.dispose();
+            $loader.removeClass("hidden");
+            window.location.reload(); 
         }); 
 
-        $("#btnSave").unbind().on("click",function(e){
-            
-            const templateId  = selectedTemplateId || 'default';
-            loadSVGTemplate(templateId);
-           
-        })
-
        
-        
 })
 
  /********* */   
@@ -1285,81 +1125,6 @@ $("#btnStartOverModel").on("click",function(e){
         var selectedValue = $(this).val();
         $("#textarea").val(selectedValue);
         $(this).val("");
-    })
-    $("#collapse-layers").on("click", ".layer-item", function (e) {
-        var _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
-        // layerSelectEventHandler(this);
-        var selected = $(this).index();
-        var len = $(layers).children().length;
-        _canvas.discardActiveObject().renderAll();
-
-        var obj = _canvas.getObjects().find(i => i.id == this.id);
-        _canvas.setActiveObject(obj).renderAll();
-
-        showLayerControls(this);
-        $(this).unbind().on("click", ".bring-fwd", function (evt) {
-
-            evt.stopPropagation();
-
-            if (selected > 0) {
-                _canvas.bringForward(obj);
-                jQuery($(layers).children().eq(selected - 1)).before(jQuery($(layers).children().eq(selected)));
-                selected = selected - 1;
-            }
-        });
-
-        $(this).on("click", ".bring-back", function (evt) {
-
-            evt.stopPropagation();
-            if (selected < len-1) {
-                _canvas.sendBackwards(obj);
-                jQuery($(layers).children().eq(selected + 1)).after(jQuery($(layers).children().eq(selected)));
-                selected = selected + 1;
-            }
-        });
-
-        $(this).on("click", ".duplicate", function (evt) {
-         
-            evt.stopPropagation();
-            let activeObj = _canvas.getActiveObject();
-            var t = activeObj.get('type');
-           // var object = fabric.util.object.clone(activeObj);
-
-             activeObj.clone(function(object){
-                if (t == "i-text" || t == "curved-text") {
-                    object.left = object.left + 10; 
-                    object.top = object.top + 10; 
-                    if(t == "curved-text"){
-                      object =   curveText(object);
-                    }else{
-                        object = addText(object);
-                    }
-    
-                    object.set("top", object.top + 5);
-                    object.set("left", object.left + 5);
-                    object.set("id", _canvas._objects.length)
-                    object.set("index", _canvas._objects.length-1)
-                   
-                }else
-                {
-                    
-                    object.set("top", object.top + 5);
-                    object.set("left", object.left + 5);
-                    object.set("id", _canvas._objects.length)
-                    object.set("index", _canvas._objects.length-1)
-                }
-               
-                _canvas.add(object);
-                _canvas.renderAll();
-            })
-            
-        });
-        $(this).on("click", ".delete", function (evt) {
-            evt.stopPropagation();
-            _canvas.remove(_canvas.getActiveObject()).renderAll();
-            addLayer();
-        })
-
     })
 
 
@@ -1663,7 +1428,7 @@ function  saveDesign() {
         toast("Description should be less than 100 characters.");
         return;
     }
-
+$loader.removeClass("hidden");
     $.ajax({
         type: "POST",
         url: "/app/client/save-design",
@@ -1687,9 +1452,10 @@ function  saveDesign() {
             toast("Your Project has been Saved.");
             $("#input-project-title").val("");
             $("#input-project-desc").val("");
+            $loader.addClass("hidden");
         },
         error: function (res) {
-
+            $loader.addClass("hidden");
             if(res.status === 403)
             {
 
@@ -1845,20 +1611,25 @@ function initCanvasEvents() {
 
     canvas.selectedLayerId = null;
     canvas.on("object:added", (o) => {
-        if(o.target.type != "curved-text")
+        // do not create new index of layer if object is cropped or curved-text; 
+        // creating curved text or cropped image we remove previous object and insert new object 
+        // at same position so no need to create new index and id. 
+        if(!(o.target.type === "curved-text" || o.target.type === "cropped"))
            {
             o.target.id = `obj${canvas._objects.length}`;
             o.target.index = canvas._objects.length - 1;
-           }
+         
+        }
         onObjectAdded(o);
     })
 
     canvasPrev.on("object:added", (o) => {
-        o.target.id = `obj${
-            canvasPrev._objects.length
-        }`;
-        o.target.index = canvasPrev._objects.length - 1;
-        onObjectAdded(o);
+        if(!(o.target.type === "curved-text" || o.target.type === "cropped"))
+           {
+            o.target.id = `obj${canvasPrev._objects.length}`;
+            o.target.index = canvasPrev._objects.length - 1;
+           }
+           onObjectAdded(o);
     })
 
     canvas.on("object:modified", (o) => {
@@ -2255,43 +2026,7 @@ function brightnessObject() {
     });
 }
 
-window.addEventListener("paste", pasteImage);
 
-function pasteImage(event) { // get the raw clipboardData
-    var cbData = event.clipboardData;
-
-    for (var i = 0; i < cbData.items.length; i++) { // get the clipboard item
-        var cbDataItem = cbData.items[i];
-        var type = cbDataItem.type;
-
-        // warning: most browsers don't support image data type
-        if (type.indexOf("image") != -1) { // grab the imageData (as a blob)
-            var imageData = cbDataItem.getAsFile();
-            // format the imageData into a URL
-            var imageURL = window.webkitURL.createObjectURL(imageData);
-            fabric.Image.fromURL(imageURL, (img) => { // img.scaleToWidth(300);
-                   if(img.height>canvas.height && img.height>img.width){
-                    let ratio = canvas.height/1.5; 
-                    img.scaleToHeight(ratio);    
-                   }else{
-                        let ratio = canvas.width/1.5; 
-                        img.scaleToWidth(ratio);    
-                   }
-  
-                              
-                    let canvasCenter = getCanvasCenter(img.getScaledWidth(),img.getScaledHeight())
-                    img.set({left: canvasCenter.left, top: canvasCenter.top})
-                    img.setCoords();
-                img.globalCompositeOperation = "source-atop";
-                canvas.add(img);
-                canvas.setActiveObject(img);
-                canvas.renderAll();
-            })
-            // We've got an imageURL, add code to use it as needed
-            // the imageURL can be used as src for an Image object
-        }
-    }
-}
 function contrastObject() {
     $("#contrastVal").text(`(0%)`);
 

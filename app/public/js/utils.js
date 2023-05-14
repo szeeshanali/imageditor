@@ -7,6 +7,155 @@ const defaults = {
     logoDisplaySize:500
 }
 
+function cropInit(){
+    var cropCanvas  = new fabric.Canvas("cropCanvas",               {preserveObjectStacking: true});
+    $("#btnCrop").on("click",(e)=>{
+        var img = cropCanvas.item(0);
+        cropCanvas.isCropped = true;
+        crop(img);
+         
+    }); 
+    $("#btnCropDone").on("click",(e)=>{
+        if(!cropCanvas.isCropped)
+        {return;}
+        let rect = new fabric.Rect({
+            left: selectionRect.left,
+            top: selectionRect.top,
+            width: selectionRect.getScaledWidth(),
+            height: selectionRect.getScaledHeight(),
+            absolutePositioned: true,
+        });
+    
+        
+        var cropped = new Image();
+    // set src value of canvas croped area as toDataURL
+    cropped.src = cropCanvas.toDataURL({
+        left: rect.left,
+        top: rect.top,
+        width: rect.width,
+        height: rect.height,
+        quality:1,
+        multiplier:3
+    });
+    
+    
+    // after onload clear the canvas and add cropped image to the canvas
+    cropped.onload = function () {        
+        cropCanvas.clear();
+        image = new fabric.Image(cropped);
+        image.scaleToWidth(rect.width);
+        image.scaleToHeight(rect.height);
+        
+        let originalImg = canvas.getActiveObject(); 
+        let objId = originalImg.id; 
+        let objIndex = originalImg.index; 
+        let originalImageIndex = canvas.getObjects().indexOf(originalImg);
+        canvas.remove(originalImg);
+        canvas.renderAll(); 
+
+
+        //let canvasCenter = getCanvasCenter(image.getScaledWidth(),image.getScaledHeight())
+        //image.set({left: canvasCenter.left, top: canvasCenter.top})
+        image.setCoords();
+        image.id = objId; 
+        image.index = objIndex;
+        image.globalCompositeOperation = 'source-atop';
+        image.type = "cropped";
+        image.set({
+            originX:"center",
+            originY:"center",
+        }) ;
+        canvas.insertAt(image,originalImageIndex,false);
+        canvas.centerObject(image);
+        canvas.renderAll();
+        //addLayer();
+    };
+    
+    })
+    $("#btnCropModal").on("click",(e)=>{
+        cropRect=null; 
+        cropCanvas.clear();
+        cropCanvas.isCropped = false; 
+        let img = canvas.getActiveObject(); 
+        if(!img)
+        {toast("Please select image.");return;}
+        let _img =new fabric.Image(img.getElement());
+        let w = img.getScaledWidth(); 
+        let h = img.getScaledHeight();   
+        _img.scaleToWidth(w);
+        _img.scaleToHeight(h);
+        cropCanvas.setDimensions({width:w,height:h})
+        cropCanvas.add(_img);
+        cropCanvas.renderAll();
+        addSelectionRect(_img);
+    
+    })
+
+    function crop(currentImage) {
+    
+        let rect = new fabric.Rect({
+            left: selectionRect.left,
+            top: selectionRect.top,
+            width: selectionRect.getScaledWidth(),
+            height: selectionRect.getScaledHeight(),
+            absolutePositioned: true,
+        });
+    
+        // add to the current image clicpPath property
+        currentImage.clipPath = rect;
+    
+        // remove the mask layer
+        cropCanvas.remove(selectionRect);
+    
+        // init new image instance
+        var cropped = new Image();
+        // set src value of canvas croped area as toDataURL
+        cropped.src = cropCanvas.toDataURL();
+    
+     
+        // after onload clear the canvas and add cropped image to the canvas
+        cropped.onload = function () {
+            //canvas.clear();
+            image = new fabric.Image(cropped);
+            image.left = rect.left;
+            image.top = rect.top;
+            image.scaleToWidth(rect.width),
+            image.scaleToHeight(rect.height),
+        
+            image.setCoords();
+            //let originalImage = canvas.getActiveObject();
+            //canvas.remove(originalImage);
+            //cropCanvas.add(image);
+            cropCanvas.renderAll();
+        };
+    }
+    function addSelectionRect(currentImage) {
+        selectionRect = new fabric.Rect({
+            fill: "rgba(0,0,0,0.3)",
+            originX: "left",
+            originY: "top",
+            stroke: "black",
+            opacity: 1,
+            width: currentImage.getScaledWidth()-50,
+            height: currentImage.getScaledHeight()-50,
+            hasRotatingPoint: false,
+            transparentCorners: true,
+            
+            cornerSize: 12,
+            padding: 0,
+            borderDashArray: [3, 3],
+            borderScaleFactor: 1.3,
+        });
+        //selectionRect.scaleToWidth(200);
+        cropCanvas.centerObject(selectionRect);
+        cropCanvas.add(selectionRect);
+        cropCanvas.setActiveObject(selectionRect);
+    
+    }
+}
+
+
+
 function getPageFormatByDimensions(widthPx, heightPx)
 {
     let wi = widthPx/dpi; 
@@ -211,14 +360,22 @@ const processFiles = (files) => {
                     // img.scaleToWidth(ratio);           
                     
                     measureImageDimensions(img,canvas);                    
-                    let canvasCenter = getCanvasCenter(img.getScaledWidth(),img.getScaledHeight())
-                    img.set({left: canvasCenter.left, top: canvasCenter.top})
+                    // let canvasCenter = getCanvasCenter(img.getScaledWidth(),img.getScaledHeight())
+                     img.set({ 
+                         originX:"center", 
+                         originY:"center" })
+                     img.setCoords();
                     img.globalCompositeOperation = 'source-atop';
+
                     if (state.isPreviewCanvas) {
                         canvasPrev.add(img);
+                        canvasPrev.renderAll();
                     } else {
+
                         canvas.add(img);
+                        canvas.centerObject(img);
                         canvas.setActiveObject(img);
+                        canvas.renderAll();
                     } mainControls(true);
                 })
             } 
@@ -256,3 +413,44 @@ function moveSelected(direction) {
     }
 
 }
+
+window.addEventListener("paste", pasteImage);
+
+function pasteImage(event) { // get the raw clipboardData
+    var cbData = event.clipboardData;
+
+    for (var i = 0; i < cbData.items.length; i++) { // get the clipboard item
+        var cbDataItem = cbData.items[i];
+        var type = cbDataItem.type;
+
+        // warning: most browsers don't support image data type
+        if (type.indexOf("image") != -1) { // grab the imageData (as a blob)
+            var imageData = cbDataItem.getAsFile();
+            // format the imageData into a URL
+            var imageURL = window.webkitURL.createObjectURL(imageData);
+            fabric.Image.fromURL(imageURL, (img) => { // img.scaleToWidth(300);
+                //    if(img.height>canvas.height && img.height>img.width){
+                //     let ratio = canvas.height/1.5; 
+                //     img.scaleToHeight(ratio);    
+                //    }else{
+                //         let ratio = canvas.width/1.5; 
+                //         img.scaleToWidth(ratio);    
+                //    }
+                    measureImageDimensions(img,canvas);
+                   // let canvasCenter = getCanvasCenter(img.getScaledWidth(),img.getScaledHeight())
+                    img.set({originX: "center", originY:"center"})
+                    img.setCoords();
+                img.globalCompositeOperation = "source-atop";
+                canvas.add(img);
+                canvas.centerObject(img);
+                canvas.setActiveObject(img);
+                canvas.renderAll();
+            })
+            // We've got an imageURL, add code to use it as needed
+            // the imageURL can be used as src for an Image object
+        }
+    }
+}
+
+
+cropInit();

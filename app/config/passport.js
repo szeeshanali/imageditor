@@ -63,7 +63,6 @@ module.exports = function(passport) {
                      let queryFindUserByEmail = `select * from wp_users where user_email = '${email}'`; 
                      
                      con.query(queryFindUserByEmail,  async function (err, result, fields) {
-                       
                       if (err) {
                         console.error("Error: Database Query Error: " + err);
                         return done(null, false, { message : 'Server Error.'});
@@ -73,8 +72,8 @@ module.exports = function(passport) {
                         console.error('Error: User email not found in KopyKake DB');  
                         return done(null, false, { message : 'Incorrect username or password'});   
                        }
+                       console.info('User found in Kopykake DB.');
                        const {user_login, user_pass, user_nicename, user_email, user_url,  user_registered,  user_activation_key, user_status, display_name} = result[0];
-                      
                        const kakePrintUser = {
                        
                             fname         : display_name,
@@ -101,40 +100,60 @@ module.exports = function(passport) {
                        var user = await User.findOne({email : user_email, deleted:false});
                       //.then((user)=>{
                          if(!user) {
-                          console.info("Could'nt find KopyKake user in KakePrint DB, Syncing user in KakePrint...");
-                          // new user model.
-                            const newUser = new User(kakePrintUser).save().then((value)=>
+                          console.info("User found in KopyKake DB, but not found in KakePrint DB.");
+                          console.info("Coping user found in KopyKake DB into KakePrint DB.");
+                            
+                          const newUser = new User(kakePrintUser).save().then((value)=>
                             {
                               console.log(`User (${display_name}) Synced On KakePrint DB.`)
                               return done(null,user); 
-
                             }).catch(value=> { 
-                              return done(null, false, { message : `DB_CONN_ERR: KakePrint DB connection Error.`});
-                             
+                              return done(null, false, { message : `DB_CONN_ERR: KakePrint DB connection Error.`});                             
                             });
                          }
                          else{
-
+                          console.info("User exists in KakePrints DB");
                            if(user && !user.active) {
                               return done(null, false, { message : 'Account has been blocked by Admin.'});
                             }
 
                           if(user.password != user_pass ||  user.fname != display_name)
                             {
-                              console.log("User password Or user name is update on KopyKake DB."); 
-                              console.log("Deleting existing user from KakePrint DB.");
-                              User.deleteOne({email : user_email}).then(()=>{
-                                console.log("Existing User Deleted from KakePrint DB");
-                                console.log("Adding New user in KakePrint DB");
-                                let newUser2 = new User(kakePrintUser).save().then((value)=>
-                                {
-                                  console.log(`User (${display_name}) Created On KakePrint DB.`);
-                                  console.log(`User (${display_name}) Login Success`);
-                                 
-                                  return done(null, kakePrintUser); 
-                                }).catch(value=> { console.log(value);});
 
-                              });  
+                              console.log("User has changed his password or user name in KopyKake DB. which is not found in KakePrints DB"); 
+                              console.log(`Updating existing user ${user_email}. password, fname, modified_dt`);
+                              User.updateOne({email : user_email},{
+                                password    : user_pass,
+                                fname       : display_name,
+                                modified_dt : new Date()
+                              }).then((u)=>{
+                                console.log("User password,fname and modified date updated in kakeprint db.");
+                                return done(null, kakePrintUser);
+                                // let newUser2 = new User(kakePrintUser).save().then((value)=>
+                                // {
+                                //   console.log(`User (${display_name}) Created On KakePrint DB.`);
+                                //   console.log(`User (${display_name}) Login Success`);
+                                 
+                                //   return done(null, kakePrintUser); 
+                                // }).catch(value=> { console.log(value);});
+
+                              }).catch(error=>{
+                                console.log(value);
+                                return done(null, false, { message : 'Incorrect username or password'});   
+
+                              })
+                              // User.deleteOne({email : user_email}).then(()=>{
+                              //   console.log("Existing User Deleted from KakePrint DB");
+                              //   console.log("Adding New user in KakePrint DB");
+                              //   let newUser2 = new User(kakePrintUser).save().then((value)=>
+                              //   {
+                              //     console.log(`User (${display_name}) Created On KakePrint DB.`);
+                              //     console.log(`User (${display_name}) Login Success`);
+                                 
+                              //     return done(null, kakePrintUser); 
+                              //   }).catch(value=> { console.log(value);});
+
+                              // });  
 
                             }
 
