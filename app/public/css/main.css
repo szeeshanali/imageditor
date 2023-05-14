@@ -1051,6 +1051,11 @@ pre code {
     max-width: 25%;
   }
 
+  .col-lg-2_5 {
+    flex: 0 0 20.83333%;
+    max-width: 20.83333%;
+  }
+
   .col-lg-4 {
     flex: 0 0 33.3333333333%;
     max-width: 33.3333333333%;
@@ -56721,5 +56726,4 @@ a.hover-white-8:hover, a.hover-white-8:focus {
 .show > .btn-outline-theme.dropdown-toggle:focus {
   box-shadow: 0 0 0 0.2rem rgba(52, 58, 64, 0.5);
 }
-
 
