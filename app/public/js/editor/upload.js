@@ -124,7 +124,9 @@
              img.scaleToHeight(h);
              img.id = `item${canvas._objects.length}`; 
              img.index = canvas._objects.length;
-            //
+            
+             
+
           img.globalCompositeOperation = 'source-atop';
             canvas.add(img).renderAll();
            //canvaspreview.item(0).cloneObject = canvas.item(1);

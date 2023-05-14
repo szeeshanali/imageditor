@@ -8,7 +8,7 @@
     // }
     var canvas = new fabric.Canvas("admin-main-canvas", {preserveObjectStacking: true})
     var canvasPrev = new fabric.Canvas("admin-main-canvas-logo", {preserveObjectStacking: true});
-    var cropCanvas  = new fabric.Canvas("cropCanvas",  {preserveObjectStacking: true});
+    
     var state = {
         isPreviewCanvas: false
     }
@@ -467,80 +467,7 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
             canvas.renderAll();
         })
     }
-    function cropObject() {
-        // $(`#crop`).on("click",function(e){
-        // var selectedObj = canvas.getActiveObject();
-        //     if(!selectedObj)
-        //     {
-        //         toast("Please select an object.");
-        //         return;
-        //     }
 
-
-        //     var pos = [0, 0];
-        //     var c = document.getElementById('admin-main-canvas');
-        //     var r = c.getBoundingClientRect();
-        //     pos[0] = r.left;
-        //     pos[1] = r.top;
-
-        //     var mousex = 0;
-        //     var mousey = 0;
-        //     var crop = false;
-        //     var disabled = false;
-
-        //     //console.log(pos);
-
-        //     var el = new fabric.Rect({
-        //         //left: 100,
-        //         //top: 100,
-        //         fill: 'transparent',
-        //         originX: 'left',
-        //         originY: 'top',
-        //         stroke: '#ccc',
-        //         strokeDashArray: [2, 2],
-        //         opacity: 1,
-        //         width: 1,
-        //         height: 1
-        //     });
-
-        //     el.visible = false;
-        //     canvas.add(el);
-        //     var object;
-
-
-        //     canvas.on("mouse:down", function (event) {
-        //         if (disabled) return;
-        //         el.left = event.e.pageX - pos[0];
-        //         el.top = event.e.pageY - pos[1];
-        //         //el.selectable = false;
-        //         el.visible = true;
-        //         mousex = event.e.pageX;
-        //         mousey = event.e.pageY;
-        //         crop = true;
-        //         canvas.bringToFront(el);
-        //     });
-
-        //     canvas.on("mouse:move", function (event) {
-        //         //console.log(event);
-        //         if (crop && !disabled) {
-        //             if (event.e.pageX - mousex > 0) {
-        //                 el.width = event.e.pageX - mousex;
-        //             }
-
-        //             if (event.e.pageY - mousey > 0) {
-        //                 el.height = event.e.pageY - mousey;
-        //             }
-        //         }
-        //     });
-
-        //     canvas.on("mouse:up", function (event) {
-        //         crop = false;
-        //    });
-
-
-        // })
-
-    }
 
 
     function grayscaleObject() {
@@ -568,32 +495,6 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
         });
     }
 
-
-    window.addEventListener("paste", pasteImage);
-
-    function pasteImage(event) { // get the raw clipboardData
-        var cbData = event.clipboardData;
-    
-        for (var i = 0; i < cbData.items.length; i++) { // get the clipboard item
-            var cbDataItem = cbData.items[i];
-            var type = cbDataItem.type;
-    
-            // warning: most browsers don't support image data type
-            if (type.indexOf("image") != -1) { // grab the imageData (as a blob)
-                var imageData = cbDataItem.getAsFile();
-                // format the imageData into a URL
-                var imageURL = window.webkitURL.createObjectURL(imageData);
-                fabric.Image.fromURL(imageURL, (img) => { // img.scaleToWidth(300);
-                    img.scaleToHeight(300);
-    
-                    img.globalCompositeOperation = "source-atop";
-                    canvas.add(img).renderAll();
-                })
-                // We've got an imageURL, add code to use it as needed
-                // the imageURL can be used as src for an Image object
-            }
-        }
-    }
     function contrastObject() {
         $("#contrastVal").text(`(0%)`);
 
@@ -1186,10 +1087,11 @@ $loader.removeClass("hidden");
                              
                      img.scaleToHeight(250);   
                                      
-                     let canvasCenter = getCanvasCenter(img.width,img.height)
-                     img.set({left: canvasCenter.left, top: canvasCenter.top})
+                     //let canvasCenter = getCanvasCenter(img.width,img.height)
+                     //img.set({left: canvasCenter.left, top: canvasCenter.top})
                      canvas.add(img);
-                    canvas.renderAll();
+                     canvas.centerObject(img);
+                     canvas.renderAll();
                      selectedBanner={
                         file:file,
                         base64:e.target.result,
@@ -1343,10 +1245,12 @@ $loader.removeClass("hidden");
                              
                      img.scaleToHeight(250);   
                                      
-                     let canvasCenter = getCanvasCenter(img.width,img.height)
-                     img.set({left: canvasCenter.left, top: canvasCenter.top})
+                     //let canvasCenter = getCanvasCenter(img.width,img.height)
+                     //img.set({left: canvasCenter.left, top: canvasCenter.top})
+
                      canvas.add(img);
-                    canvas.renderAll();
+                     canvas.centerObject(img);
+                     canvas.renderAll();
                      selectedClipArt={
                         file:file,
                         base64:e.target.result,
@@ -1770,123 +1674,13 @@ $loader.removeClass("hidden");
             // $("#menu-clipart > a").click();
         })
 
-        $("#btnCrop").on("click",(e)=>{
-            var img = cropCanvas.item(0);
-            crop(img);
-        }); 
-    
-    
-        $("#btnCropDone").on("click",(e)=>{
-    
-            let rect = new fabric.Rect({
-                left: selectionRect.left,
-                top: selectionRect.top,
-                width: selectionRect.getScaledWidth(),
-                height: selectionRect.getScaledHeight(),
-                absolutePositioned: true,
-            });
-    
-            
-            var cropped = new Image();
-        // set src value of canvas croped area as toDataURL
-        cropped.src = cropCanvas.toDataURL({
-            left: rect.left,
-            top: rect.top,
-            width: rect.width,
-            height: rect.height,
-        });
-    
-     
-        // after onload clear the canvas and add cropped image to the canvas
-        cropped.onload = function () {
-            //canvas.clear();
-            cropCanvas.clear();
-            image = new fabric.Image(cropped);
-            image.left = rect.left;
-            image.top = rect.top;
-            image.setCoords();      
-            let originalImg = canvas.getActiveObject(); 
-            canvas.remove(originalImg); 
-            canvas.add(image);
-            canvas.renderAll();
-        };
-    
-            
-    
-    
-    
-    
-        })
-    
-        $("#btnCropModal").on("click",(e)=>{
-            cropRect=null; 
-            cropCanvas.clear();
-            let img = canvas.getActiveObject(); 
-            if(img)
-            {
-                let imgSrc = img._element.src;
-                fabric.Image.fromURL(imgSrc, function (img) {
-                    img.scaleToWidth(250);
-                    img.scaleToHeight(250);
-                    let w = img.getScaledWidth(); 
-                    let h = img.getScaledHeight();
-                    cropCanvas.setDimensions({width:w,height:h})
-                    cropCanvas.add(img);
-                    cropCanvas.renderAll();
-                    addSelectionRect(img);
-                })
-    
-            }
-    
-        })
+
+
         $("#predefinedText").on("change",function(){
             var selectedValue = $(this).val();
             $("#textarea").val(selectedValue);
         })
-        $("#collapse-layers").on("click", ".layer-item", function (e) {
-            var _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
-            // layerSelectEventHandler(this);
-            var selected = $(this).index();
-            var len = $(layers).children().length;
-            _canvas.discardActiveObject().renderAll();
-    
-            var obj = _canvas.getObjects().find(i => i.id == this.id);
-            _canvas.setActiveObject(obj).renderAll();
-    
-            showLayerControls(this);
-            $(this).on("click", ".bring-fwd", function (evt) {
-                evt.stopPropagation();
-                if (selected > 0) {
-                    _canvas.bringForward(obj);
-                    jQuery($(layers).children().eq(selected - 1)).before(jQuery($(layers).children().eq(selected)));
-                    selected = selected - 1;
-                }
-            });
-    
-            $(this).on("click", ".bring-back", function (evt) {
-                evt.stopPropagation();
-                if (selected < len) {
-                    _canvas.sendBackwards(obj);
-                    jQuery($(layers).children().eq(selected + 1)).after(jQuery($(layers).children().eq(selected)));
-                    selected = selected + 1;
-                }
-            });
-    
-            $(this).on("click", ".duplicate", function (evt) {
-                evt.stopPropagation();
-                var object = fabric.util.object.clone(_canvas.getActiveObject());
-                object.set("top", object.top + 5);
-                object.set("left", object.left + 5);
-                _canvas.add(object);
-                _canvas.renderAll();
-            });
-            $(this).on("click", ".delete", function (evt) {
-                evt.stopPropagation();
-                _canvas.remove(_canvas.getActiveObject()).renderAll();
-                addLayer();
-            })
-    
-        })
+
        
         
         $("#templatepanel .template").on("click", (e) => {
@@ -1958,9 +1752,21 @@ $loader.removeClass("hidden");
         })
       
         $txtDecorationCtrl.on("click", function (e) {
+        
+            $("#font-panel .text-decoration").each(function(e){
+                let $self =$(this);
+                if(['bold','italic','underline'].indexOf(this.id) === -1 ){
+                    $self.removeClass('active');
+                } 
+                
+            })
+            let __canvas = state.isPreviewCanvas?canvasPrev:canvas;
             var value = $(this).attr("data-value");
-            var o = canvas.getActiveObject();
-            if (o && o.type === 'i-text') {
+            
+            $(this).addClass('active');
+    
+            var o = __canvas.getActiveObject();
+            if (o && o.type === 'i-text' || o.type === 'curved-text') {
              
                 let isTextSelection; 
                 if(o.getSelectionStyles)
@@ -1968,7 +1774,9 @@ $loader.removeClass("hidden");
                  
                 if (value === 'bold') {
                     var isTrue = o['fontWeight'] === 'bold';
-    
+                    if(isTrue){
+                        $(this).removeClass('active');
+                    }
     
                     
                    
@@ -1984,6 +1792,10 @@ $loader.removeClass("hidden");
     
                 } else if (value === 'italic') {
                     var isTrue = o['fontStyle'] === 'italic';
+                    if(isTrue){
+                        $(this).removeClass('active');
+                    }
+    
                     if(isTextSelection)
                     { o.setSelectionStyles({"fontStyle":isTrue ? '' : 'italic'}) }
                     else{
@@ -1992,7 +1804,17 @@ $loader.removeClass("hidden");
                     })}
     
                 } else if (value === 'underline') {
+                    if( o.type === 'curved-text')
+                    {
+    
+                        o.set({"textDecoration": "underline"})
+                        toast('Underline is not supported for Circular Text.');
+                        return}
                     var isTrue = !o['underline'];
+                    if(!isTrue){
+                        $(this).removeClass('active');
+                    }
+    
                     if(isTextSelection)
                     { o.setSelectionStyles({"underline":isTrue}) }
                     else{
@@ -2001,11 +1823,11 @@ $loader.removeClass("hidden");
                     })
                     }
                 } else if (value === "left" || value === "right" || value === "center") {
+                    $(this).parent().addClass('active');
                     o.set({"textAlign": value})
                 }
     
-                $(this).addClass('active');
-                canvas.renderAll();
+                __canvas.renderAll();
             }
     
         })
@@ -2355,8 +2177,7 @@ if(!order || order < 1){
         })
 
         
-        rotateObject();
-        cropObject();
+        rotateObject();        
         flipXYObject();
         grayscaleObject();
         brightnessObject();
@@ -2385,38 +2206,6 @@ if(!order || order < 1){
 
         
 
-        $txtDecorationCtrl.on("click", function (e) {
-            var value = $(this).attr("data-value");
-            var o = canvas.getActiveObject();
-            if (o && o.type === 'i-text') {
-
-                if (value === 'bold') {
-                    var isTrue = o['fontWeight'] === 'bold';
-                    o.set({
-                        "fontWeight": isTrue ? '' : 'bold'
-                    })
-
-
-                } else if (value === 'italic') {
-                    var isTrue = o['fontStyle'] === 'italic';
-                    o.set({
-                        "fontStyle": isTrue ? '' : 'italic'
-                    })
-
-                } else if (value === 'underline') {
-                    var isTrue = o['textDecoration'] === 'underline';
-                    o.set({
-                        "textDecoration": isTrue ? '' : 'underline'
-                    })
-
-                } else if (value === "left" || value === "right" || value === "center") {
-                    o.set({"textAlign": value})
-                }
-
-                canvas.renderAll();
-            }
-
-        })
 
         $("#font-list-container .fontfamily").on("click", function (e) {
             var value = $(this).attr("data-value");
@@ -2641,10 +2430,11 @@ if(!order || order < 1){
                 fabric.Image.fromURL(e.target.result, (img) => {
                     selectedDesign = img;
                     img.scaleToHeight(250);                    
-                    let canvasCenter = getCanvasCenter(img.width,img.height)
-                    img.set({left: canvasCenter.left, top: canvasCenter.top})
+                    //let canvasCenter = getCanvasCenter(img.width,img.height)
+                    //img.set({left: canvasCenter.left, top: canvasCenter.top})
                     canvas.add(img);
-                    
+                    canvas.centerObjct(img);
+                    canvas.renderAll();
                 })
             } 
             reader.readAsDataURL(file);
@@ -2947,11 +2737,24 @@ if(!order || order < 1){
         
             canvas.selectedLayerId = null;
             canvas.on("object:added", (o) => {
-                o.target.id = `obj${
-                    canvas._objects.length
-                }`;
-                o.target.index = canvas._objects.length - 1;
-                onObjectAdded(o);
+                // o.target.id = `obj${
+                //     canvas._objects.length
+                // }`;
+                // o.target.index = canvas._objects.length - 1;
+              
+              
+                                // do not create new index of layer if object is cropped or curved-text; 
+                        // creating curved text or cropped image we remove previous object and insert new object 
+                        // at same position so no need to create new index and id. 
+                        if(!(o.target.type === "curved-text" || o.target.type === "cropped"))
+                        {
+                        o.target.id = `obj${canvas._objects.length}`;
+                        o.target.index = canvas._objects.length - 1;
+                        }
+                    onObjectAdded(o);
+              
+              
+              
             })
         
             canvasPrev.on("object:added", (o) => {
@@ -3161,92 +2964,13 @@ if(!order || order < 1){
         }, 3000);
     }
     
-    function crop(currentImage) {
-        let rect = new fabric.Rect({
-            left: selectionRect.left,
-            top: selectionRect.top,
-            width: selectionRect.getScaledWidth(),
-            height: selectionRect.getScaledHeight(),
-            absolutePositioned: true,
-        });
     
-        // add to the current image clicpPath property
-        currentImage.clipPath = rect;
-    
-        // remove the mask layer
-        cropCanvas.remove(selectionRect);
-    
-        // init new image instance
-        var cropped = new Image();
-        // set src value of canvas croped area as toDataURL
-        cropped.src = cropCanvas.toDataURL({
-            left: rect.left,
-            top: rect.top,
-            width: rect.width,
-            height: rect.height,
-        });
-    
-     
-        // after onload clear the canvas and add cropped image to the canvas
-        cropped.onload = function () {
-            //canvas.clear();
-            image = new fabric.Image(cropped);
-            image.left = rect.left;
-            image.top = rect.top;
-            image.setCoords();
-            //let originalImage = canvas.getActiveObject();
-            //canvas.remove(originalImage);
-            cropCanvas.add(image);
-            cropCanvas.renderAll();
-        };
-    }
-    function addSelectionRect(currentImage) {
-        selectionRect = new fabric.Rect({
-            fill: "rgba(0,0,0,0.3)",
-            originX: "left",
-            originY: "top",
-            stroke: "black",
-            opacity: 1,
-            width: currentImage.width,
-            height: currentImage.height,
-            hasRotatingPoint: false,
-            transparentCorners: false,
-            cornerColor: "white",
-            cornerStrokeColor: "black",
-            borderColor: "black",
-            cornerSize: 12,
-            padding: 0,
-            cornerStyle: "circle",
-            borderDashArray: [5, 5],
-            borderScaleFactor: 1.3,
-        });
-    
-        selectionRect.scaleToWidth(200);
-        cropCanvas.centerObject(selectionRect);
-        cropCanvas.add(selectionRect);
-    }
-
    
     function onCanvasModified(o) {
-        // if (! enabledSaveInBrowser) {
-        //     return;
-        // }
-    
-        // setTimeout(function () {
-    
-        //     //saveInBrowser.save('kp-editor', canvas.toJSON());
-        //     //$saveBrowserTxt.fadeIn();
-        //     setTimeout(function () {
-        //         $saveBrowserTxt.fadeOut("slow");
-        //     }, 2000)
-        // }, 2000)
-    
+        
     }
     
     function onObjectAdded(o) {
-        // $pageTitle.addClass("hidden");
-        // $("#maintools > .image-tools").removeClass("hidden");
-    
         addLayer(o);
     }
 

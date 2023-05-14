@@ -19,14 +19,11 @@ $btnToolbarLarger.on("click",function(e){
     let h = obj.getScaledHeight()+inc;    
     obj.scaleToWidth(w); 
     obj.getScaledHeight(h);
-
-    let canvasCenter = getCanvasCenter(obj.getScaledWidth(),obj.getScaledHeight())
-    obj.set({ left:canvasCenter.left , top: canvasCenter.top });                 
     obj.setCoords();
-
-    canvas.renderAll(); 
-
+    canvas.renderAll();
+    onToolbarClick(canvas,this); 
 })
+
 
 $btnToolbarSmaller.on("click",function(e){
     e.preventDefault();
@@ -38,28 +35,113 @@ $btnToolbarSmaller.on("click",function(e){
     let w = obj.getScaledWidth()-inc; 
     let h = obj.getScaledHeight()-inc;    
     obj.scaleToWidth(w); 
-    obj.getScaledHeight(h);
-     
-    let canvasCenter = getCanvasCenter(obj.getScaledWidth(),obj.getScaledHeight())
-    obj.set({ left:canvasCenter.left , top: canvasCenter.top });                 
+    obj.getScaledHeight(h);                 
     obj.setCoords();
-
     canvas.renderAll(); 
+    onToolbarClick(canvas,this);
 
 })
 
 $btnToolbarRotate.on("click",function(e){
     $(`#rotate`).trigger("click");
+    onToolbarClick(canvas,this);
 })
 
 $btnToolbarFlip.on("click",function(e){
     e.preventDefault();
     $("#flipW").trigger("click");
+    onToolbarClick(canvas,this);
 })
 
 
 
 //#end toolbar
+
+
+// layers
+$("#collapse-layers").on("click", ".layer-item", function (e) {
+    var _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
+    // layerSelectEventHandler(this);
+    var selected = $(this).index();
+    var len = $(layers).children().length;
+    _canvas.discardActiveObject().renderAll();
+    var obj = _canvas.getObjects().find(i => i.id == this.id);
+    _canvas.setActiveObject(obj).renderAll();
+    showLayerControls(this);
+    $(this).unbind().on("click", ".bring-fwd", function (evt) {
+        evt.stopPropagation();
+        if (selected > 0) {
+            _canvas.bringForward(obj);
+            jQuery($(layers).children().eq(selected - 1)).before(jQuery($(layers).children().eq(selected)));
+            selected = selected - 1;
+        }
+    });
+    $(this).on("click", ".bring-back", function (evt) {
+
+        evt.stopPropagation();
+        if (selected < len-1) {
+            _canvas.sendBackwards(obj);
+            jQuery($(layers).children().eq(selected + 1)).after(jQuery($(layers).children().eq(selected)));
+            selected = selected + 1;
+        }
+    });
+    $(this).on("click", ".duplicate", function (evt) {
+     
+        evt.stopPropagation();
+        let activeObj = _canvas.getActiveObject();
+        var t = activeObj.get('type');
+
+         activeObj.clone(function(object){
+            if (t == "i-text" || t == "curved-text") {
+                object.left = object.left + 10; 
+                object.top = object.top + 10; 
+                if(t == "curved-text"){
+                  object =   curveText(object);
+                }else{
+                    object = addText(object);
+                }
+
+                object.set("top", object.top + 5);
+                object.set("left", object.left + 5);
+                object.set("id", _canvas._objects.length)
+                object.set("index", _canvas._objects.length-1)
+               
+            }else
+            {
+                
+                // object.set("top", object.top + 5);
+                // object.set("left", object.left + 5);
+                // object.set("id", _canvas._objects.length);
+                // object.set("index", _canvas._objects.length-1);
+                object.set({
+                    top     : object.top+5,
+                    left    : object.left+5,
+                    id      : _canvas._objects.length,
+                    index   : _canvas._objects.length-1
+                    
+                })
+                object.scaleToHeight(activeObj.getScaledHeight());
+                object.scaleToWidth(activeObj.getScaledWidth());
+                object.setCoords();
+
+            }
+
+
+           
+            _canvas.add(object);
+            _canvas.renderAll();
+        })
+        
+    });
+    $(this).on("click", ".delete", function (evt) {
+        evt.stopPropagation();
+        _canvas.remove(_canvas.getActiveObject()).renderAll();
+        addLayer();
+    })
+
+})
+
+//
 
 $("#btnDisplayBorder").on("click",function(e){
     // let mainLogo = canvas.backgroundImage;
@@ -890,3 +972,8 @@ function saveCustomDesign(byAdmin) {
         }
     })
   }
+
+  function onToolbarClick(canvas,o){
+    canvas.fire('object:modified');
+  }
+

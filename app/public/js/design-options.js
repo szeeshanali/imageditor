@@ -9,10 +9,12 @@ $("#clipartmenu .clipart").on("click", (e) => {
         fabric.Image.fromURL(url, function (img) {            
            var ratio = canvas.width/2;   
            img.scaleToWidth(ratio);
-           let canvasCenter = getCanvasCenter(img.getScaledWidth(),img.getScaledHeight())
-           img.set({ left:canvasCenter.left , top: canvasCenter.top });                 
+           //let canvasCenter = getCanvasCenter(img.getScaledWidth(),img.getScaledHeight())
+           img.set({ originX:"center",originY:"center" });                 
+           img.setCoords();
            img.globalCompositeOperation = 'source-atop';
             _canvas.add(img);
+            _canvas.centerObject(img); 
             _canvas.setActiveObject(img);
             _canvas.renderAll();
             mainControls(true);
