@@ -14,11 +14,14 @@ $btnToolbarLarger.on("click",function(e){
     if(!obj)
     {  toast("Please select an object");
         return; }
-    let inc = 20; 
+    let inc = 20;
     let w = obj.getScaledWidth()+inc; 
     let h = obj.getScaledHeight()+inc;    
+    let a = obj.angle;
+    obj.angle = 0; 
     obj.scaleToWidth(w); 
-    obj.getScaledHeight(h);
+    obj.scaleToHeight(h);
+    obj.angle = a;
     obj.setCoords();
     canvas.renderAll();
     onToolbarClick(canvas,this); 
@@ -34,10 +37,13 @@ $btnToolbarSmaller.on("click",function(e){
     let inc = 20; 
     let w = obj.getScaledWidth()-inc; 
     let h = obj.getScaledHeight()-inc;    
+    let a = obj.angle;
+    obj.angle = 0; 
     obj.scaleToWidth(w); 
-    obj.getScaledHeight(h);                 
+    obj.scaleToHeight(h);
+    obj.angle = a;
     obj.setCoords();
-    canvas.renderAll(); 
+    canvas.renderAll();
     onToolbarClick(canvas,this);
 
 })
