@@ -639,6 +639,7 @@ function saveDesign(type) {
             },
             success: function (res) {
                 toast("Your Project has been Saved.");
+                window.location.reload();
             },
             error: function (res) {
                 if (res.status === 401) {
@@ -1674,14 +1675,10 @@ $loader.removeClass("hidden");
             // $("#menu-clipart > a").click();
         })
 
-
-
         $("#predefinedText").on("change",function(){
             var selectedValue = $(this).val();
             $("#textarea").val(selectedValue);
         })
-
-       
         
         $("#templatepanel .template").on("click", (e) => {
             enabledTextMode = false;

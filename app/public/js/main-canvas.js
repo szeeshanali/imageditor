@@ -705,8 +705,8 @@ $("#btnDisplayGrid").on("click", function (e) {
                 bg.globalCompositeOperation = "destination-in";
                 clonedCanvas.add(bg);
                 clonedCanvas.renderAll();
-                var imgData = canvasPrev.toDataURL({format:"jpg",quality:1,multiplier:3});
-                pdf.addImage(imgData, 'jpg', 0, 0,width,height);
+                var imgData = canvasPrev.toDataURL({format:"png",quality:1.0,multiplier:3});
+                pdf.addImage(imgData, 'jpeg', 0, 0,width,height,undefined,'FAST');
                
 
                 
