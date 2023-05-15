@@ -8,22 +8,28 @@ const    $btnToolbarSmaller  =   $("#btnToolbarSmaller");
 const    $btnToolbarRotate   =   $("#btnToolbarRotate");
 const    $btnToolbarFlip     =   $("#btnToolbarFlip");
 
+//# 1. Issue Fixed:  scaleToWidth not working with rotation.
+
 $btnToolbarLarger.on("click",function(e){
     e.preventDefault();
     let obj = canvas.getActiveObject();
     if(!obj)
     {  toast("Please select an object");
         return; }
-    let inc = 20; 
+    let inc = 20;
     let w = obj.getScaledWidth()+inc; 
     let h = obj.getScaledHeight()+inc;    
+    let a = obj.angle;
+    obj.angle = 0; 
     obj.scaleToWidth(w); 
-    obj.getScaledHeight(h);
+    obj.scaleToHeight(h);
+    obj.angle = a;
     obj.setCoords();
     canvas.renderAll();
     onToolbarClick(canvas,this); 
 })
 
+//# 1. Issue Fixed:  scaleToWidth not working with rotation.
 
 $btnToolbarSmaller.on("click",function(e){
     e.preventDefault();
@@ -34,10 +40,13 @@ $btnToolbarSmaller.on("click",function(e){
     let inc = 20; 
     let w = obj.getScaledWidth()-inc; 
     let h = obj.getScaledHeight()-inc;    
+    let a = obj.angle;
+    obj.angle = 0; 
     obj.scaleToWidth(w); 
-    obj.getScaledHeight(h);                 
+    obj.scaleToHeight(h);
+    obj.angle = a;
     obj.setCoords();
-    canvas.renderAll(); 
+    canvas.renderAll();
     onToolbarClick(canvas,this);
 
 })
