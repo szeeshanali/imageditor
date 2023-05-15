@@ -8,6 +8,8 @@ const    $btnToolbarSmaller  =   $("#btnToolbarSmaller");
 const    $btnToolbarRotate   =   $("#btnToolbarRotate");
 const    $btnToolbarFlip     =   $("#btnToolbarFlip");
 
+//# 1. Issue Fixed:  scaleToWidth not working with rotation.
+
 $btnToolbarLarger.on("click",function(e){
     e.preventDefault();
     let obj = canvas.getActiveObject();
@@ -27,6 +29,7 @@ $btnToolbarLarger.on("click",function(e){
     onToolbarClick(canvas,this); 
 })
 
+//# 1. Issue Fixed:  scaleToWidth not working with rotation.
 
 $btnToolbarSmaller.on("click",function(e){
     e.preventDefault();
