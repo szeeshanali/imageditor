@@ -59,9 +59,9 @@ module.exports = function(passport) {
                   con.connect(function(err) {
                      
                     if (err) {
-                      log(req, 'login-failed :'+"Error: MySQL Connection Error:" + err);
+                      log(req, 'login-failed :'+"ERR_ACCESS_DENIED::403 MySQL Connection Error:" + err);
                       console.log('Error: MySQL Connection Error:' + err);  
-                      return done(null, false, { message : 'Server Error.'});
+                      return done(null, false, { message : 'ERR_ACCESS_DENIED::403'});
                      }
 
                      console.log("KopyKake DB Connected");
