@@ -39,6 +39,10 @@ $btnAddText.on("click", function () {
 
     let item = addText({ text:text });
     const _canvas = state.isPreviewCanvas?canvasPrev:canvas;  
+    item.set({ originX:"center", originY:"center" });
+    item.setCoords();
+
+    _canvas.centerObject(item);
     _canvas.add(item);
     _canvas.setActiveObject(item);
     _canvas.renderAll.bind(_canvas);

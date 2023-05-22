@@ -209,7 +209,7 @@
 
             <li class="nav-item ">
 
-            <button type="button" data-toggle="modal" data-target="#downloadPDFModel" class=" soft btn btn-sm btn-success tx-12 tx-uppercase tx-bold  bd-0 pd-x-20 hidden" id="ws-btn-download" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?" data-toggle="popover" ><i class="ion-checkmark-circled mg-r-5"></i> Finalize & Download <br> your PDF</button>
+            <button type="button" data-toggle="modal" data-target="#downloadPDFModel" class="hand soft btn btn-sm btn-success tx-12 tx-uppercase tx-bold  bd-0 pd-x-20 hidden" id="ws-btn-download" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?" data-toggle="popover" ><i class="ion-checkmark-circled mg-r-5"></i> Finalize & Download <br> your PDF</button>
           </li>
 
             <li class="nav-item ">
@@ -333,11 +333,12 @@
       </div>
       <div class="modal-body pd-20">
         <input type="text" id="downloadFileName" class="form-control" placeholder="Enter File Name">
+        <span class="error hidden tx-12 tx-bold pd-y-5">Please Enter File Name</span>
       </div>
       <div class="modal-footer justify-content-center">
-        <button type="button" id="btnGenerateAndDownloadPDF" data-dismiss="modal" class="tx-bold btn-sm tx-12 tx-uppercase btn btn-success pd-x-20">
+        <button type="button" id="btnGenerateAndDownloadPDF"  class=" hand soft tx-bold btn-sm tx-12 tx-uppercase btn btn-success pd-x-20">
           Download your design <br> as a ready to print PDF</button>
-        <button type="button" data-toggle="modal" data-target="#rfq" class=" tx-bold btn btn-sm tx-12 tx-uppercase btn-primary pd-x-20" data-dismiss="modal">
+        <button type="button" id="btnRFQ" class=" hand soft tx-bold btn btn-sm tx-12 tx-uppercase btn-primary pd-x-20">
           Send your design to <br>Kopykake for a Printing Quote</button>
       </div>
     </div>
@@ -426,7 +427,8 @@
     var FILE_SIZE_LIMIT = <%=settings?.file_size_limit%>;
     window.onload = function()
    { 
-        
+
+
         var code = '<%=code || "default" %>' ;
         var type = '<%=type%>';        
         loadSVGTemplate(code);

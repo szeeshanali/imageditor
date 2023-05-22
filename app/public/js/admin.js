@@ -2743,7 +2743,7 @@ if(!order || order < 1){
                                 // do not create new index of layer if object is cropped or curved-text; 
                         // creating curved text or cropped image we remove previous object and insert new object 
                         // at same position so no need to create new index and id. 
-                        if(!(o.target.type === "curved-text" || o.target.type === "cropped"))
+                        if(!(o.target.type === "curved-text" || o.target.subType === "cropped"))
                         {
                         o.target.id = `obj${canvas._objects.length}`;
                         o.target.index = canvas._objects.length - 1;

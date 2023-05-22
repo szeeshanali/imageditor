@@ -1105,3 +1105,18 @@ color:#333;
 .soft{
   color:rgba(255, 255, 255, 0.8)
 }
+
+#quick-tool .nav-item {
+  box-shadow: 1px 1px 3px #6463b1;
+  
+}
+#quick-tool .nav-item:hover {
+  background-color: #47458b;
+  
+}
+.error{
+  color:#d00;  
+}
+.error-field{
+  border:solid 1px #D00;
+}
