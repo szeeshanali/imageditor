@@ -1,5 +1,6 @@
 
 
+
 var canvas      = new fabric.Canvas("client-main-canvas",       {
     preserveObjectStacking: true,
     selectionDashArray: [13, 16],
@@ -976,6 +977,12 @@ function initUIEvents() {
     $("#btnGenerateAndDownloadPDF").on("click",function(){
         generatePDFfromPreview();
     })
+    $("#btnRFQ").on("click",function(){
+        if(isFieldValid("downloadFileName")){
+            $("#downloadPDFModel").modal("toggle");
+            $("#rfq").modal("toggle");
+        }
+    })
 
     $("#btnFaqPopup").on("click",(e)=>{
         $.get('/app/faq',(res)=>{
@@ -1450,9 +1457,10 @@ $loader.removeClass("hidden");
                 return;
             }
             toast("Your Project has been Saved.");
-            $("#input-project-title").val("");
-            $("#input-project-desc").val("");
-            $loader.addClass("hidden");
+            // $("#input-project-title").val("");
+            // $("#input-project-desc").val("");
+            // $loader.addClass("hidden");
+            window.location.reload();
         },
         error: function (res) {
             $loader.addClass("hidden");
@@ -1614,7 +1622,7 @@ function initCanvasEvents() {
         // do not create new index of layer if object is cropped or curved-text; 
         // creating curved text or cropped image we remove previous object and insert new object 
         // at same position so no need to create new index and id. 
-        if(!(o.target.type === "curved-text" || o.target.type === "cropped"))
+        if(!(o.target.type === "curved-text" || o.target.subType === "cropped"))
            {
             o.target.id = `obj${canvas._objects.length}`;
             o.target.index = canvas._objects.length - 1;
@@ -1624,7 +1632,7 @@ function initCanvasEvents() {
     })
 
     canvasPrev.on("object:added", (o) => {
-        if(!(o.target.type === "curved-text" || o.target.type === "cropped"))
+        if(!(o.target.type === "curved-text" || o.target.subType === "cropped"))
            {
             o.target.id = `obj${canvasPrev._objects.length}`;
             o.target.index = canvasPrev._objects.length - 1;
@@ -1860,10 +1868,12 @@ function initCanvasTextEvents() {
   
         var item = curveText(obj);
         item.globalCompositeOperation = "source-atop";
+        canvas.centerObject(item);
+        item.setCoords();
         canvas.add(item);
+        canvas.setActiveObject(item);
         canvas.renderAll();
         canvas.remove(obj)
-        canvas.setActiveObject(item);
        
         } else {
             //$("#inputFlipText").prop('checked',false);
@@ -1889,6 +1899,8 @@ function initCanvasTextEvents() {
             
             let item = new fabric.IText(obj.text, textInfo);
             item.globalCompositeOperation = 'source-atop';
+            item.id = obj.id;
+            item.index = obj.index;
             canvas.add(item);            
             canvas.setActiveObject(item);
             canvas.renderAll();
@@ -1904,7 +1916,8 @@ function initCanvasTextEvents() {
     })
 
     $("#curveTextCtrl").on("input", function (e) {   
-        let val =  e.currentTarget.value;
+        let val =  e.currentTarget.value/2;
+        val = (val<=180)?180:val;
        console.log(val);
         updateCurveText({"diameter":val});
     })
@@ -1949,35 +1962,8 @@ function flipXYObject() {
         }
         selectedObj.set('flipY', ! selectedObj.flipY);
         canvas.renderAll();
-
     });
 
-
-    // $deleteItem = $(`#${obj.id} .delete`);
-    // $duplicateItem = $(`#${obj.id} .duplicate`);
-    // $moveUpItem = $("#layers .bring-fwd");
-    // $moveDownItem = $("#layers .bring-back");
-
-    // $deleteItem.on("click",function(){
-    //     //$(this).parent().parent().remove();
-    //     var selectedObj = canvas.selectedObj.target;
-    //     canvas.remove(selectedObj).renderAll();
-    //     $(`#${selectedObj.id}`).remove();
-    // });
-
-
-    // $duplicateItem.on("click",function(){
-    //     var object = fabric.util.object.clone(canvas.getActiveObject());
-    //     object.set("top", object.top+5);
-    //     object.set("left", object.left+5);
-
-    //     canvas.add(object);
-
-    // });
-    // $moveUpItem.on("click",function(){});
-    // $moveDownItem.on("click",function(){});
-    // $moveTopItem.on("click",function(){});
-    // $moveBottomItem.on("click",function(){});
 }
 
 

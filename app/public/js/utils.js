@@ -34,7 +34,7 @@ function cropInit(){
         top: rect.top,
         width: rect.width,
         height: rect.height,
-        quality:1,
+        quality:1.0,
         multiplier:3
     });
     
@@ -60,7 +60,7 @@ function cropInit(){
         image.id = objId; 
         image.index = objIndex;
         image.globalCompositeOperation = 'source-atop';
-        image.type = "cropped";
+        image.subType = "cropped";
         image.set({
             originX:"center",
             originY:"center",
@@ -364,19 +364,23 @@ const processFiles = (files) => {
                      img.set({ 
                          originX:"center", 
                          originY:"center" })
-                     img.setCoords();
+                         img.setCoords();
                     img.globalCompositeOperation = 'source-atop';
 
                     if (state.isPreviewCanvas) {
                         canvasPrev.add(img);
                         canvasPrev.renderAll();
                     } else {
-
-                        canvas.add(img);
+                        
                         canvas.centerObject(img);
+                        canvas.add(img);
+                        img.setCoords();
                         canvas.setActiveObject(img);
+
                         canvas.renderAll();
-                    } mainControls(true);
+                    } 
+                    mainControls(true);
+
                 })
             } 
             reader.readAsDataURL(file);
@@ -452,5 +456,20 @@ function pasteImage(event) { // get the raw clipboardData
     }
 }
 
+function isFieldValid(fieldId){
+    let fld = $(`#${fieldId}`);
+    let isError = !fld.val();
+
+    if(isError){
+        fld.addClass('error-field');
+        fld.next().removeClass("hidden");
+        return false; 
+
+    }
+    fld.removeClass('error-field');
+    fld.next().addClass("hidden");
+    return true; 
+
+}
 
 cropInit();
