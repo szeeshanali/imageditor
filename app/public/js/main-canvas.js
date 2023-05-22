@@ -17,13 +17,19 @@ $btnToolbarLarger.on("click",function(e){
     {  toast("Please select an object");
         return; }
     let inc = 20;
-    let w = obj.getScaledWidth()+inc; 
-    let h = obj.getScaledHeight()+inc;    
-    let a = obj.angle;
-    obj.angle = 0; 
-    obj.scaleToWidth(w); 
-    obj.scaleToHeight(h);
-    obj.angle = a;
+    let w = obj.getScaledWidth()+inc;
+    let h = obj.getScaledHeight()+inc; 
+    let originalAngle = obj.angle;
+    obj.angle = 0;     
+    
+    if(obj.type === 'i-text' || obj.type === 'curved-text')
+    { obj.fontSize =  parseInt(obj.fontSize)+2; }
+    else{ 
+        obj.scaleToWidth(w);
+        obj.scaleToHeight(h);
+     }  
+
+    obj.angle = originalAngle;
     obj.setCoords();
     canvas.renderAll();
     onToolbarClick(canvas,this); 
@@ -37,14 +43,18 @@ $btnToolbarSmaller.on("click",function(e){
     if(!obj)
     {  toast("Please select an object");
         return; }
-    let inc = 20; 
-    let w = obj.getScaledWidth()-inc; 
-    let h = obj.getScaledHeight()-inc;    
-    let a = obj.angle;
-    obj.angle = 0; 
-    obj.scaleToWidth(w); 
-    obj.scaleToHeight(h);
-    obj.angle = a;
+    let inc = 20;
+    let w = obj.getScaledWidth()-inc;
+    let h = obj.getScaledHeight()-inc; 
+    let originalAngle = obj.angle;
+    obj.angle = 0;
+    if(obj.type === 'i-text' || obj.type === 'curved-text')
+    {obj.fontSize = parseInt(obj.fontSize)-2;
+    }else{
+        obj.scaleToWidth(w); 
+        obj.scaleToHeight(h); 
+    } 
+    obj.angle = originalAngle;
     obj.setCoords();
     canvas.renderAll();
     onToolbarClick(canvas,this);
@@ -110,10 +120,11 @@ $("#collapse-layers").on("click", ".layer-item", function (e) {
                     object = addText(object);
                 }
 
-                object.set("top", object.top + 5);
-                object.set("left", object.left + 5);
-                object.set("id", _canvas._objects.length)
-                object.set("index", _canvas._objects.length-1)
+
+                // object.set("top", object.top + 5);
+                // object.set("left", object.left + 5);
+                // object.set("id", _canvas._objects.length)
+                // object.set("index", _canvas._objects.length-1)
                
             }else
             {
@@ -129,14 +140,16 @@ $("#collapse-layers").on("click", ".layer-item", function (e) {
                     index   : _canvas._objects.length-1
                     
                 })
-                object.scaleToHeight(activeObj.getScaledHeight());
-                object.scaleToWidth(activeObj.getScaledWidth());
-                object.setCoords();
+                object.set({
+                    scaleX:activeObj.scaleX,
+                    scaleY:activeObj.scaleY
+                })
 
             }
 
 
-           
+           _canvas.centerObject(object);
+           object.setCoords();
             _canvas.add(object);
             _canvas.renderAll();
         })
@@ -561,6 +574,7 @@ $("#btnDisplayGrid").on("click", function (e) {
     * cleanup preview canvas objects. 
     */ 
      canvas.clone(function (clonedCanvas) {
+        
          var bg = clonedCanvas.backgroundImage;
          clonedCanvas.backgroundImage.set({
                 left:0,
@@ -648,7 +662,11 @@ $("#btnDisplayGrid").on("click", function (e) {
  }
 
  function generatePDFfromPreview(onServer, callback) {
-
+    var fn = $("#downloadFileName").val();
+    if(!isFieldValid("downloadFileName")){
+        return; 
+    }
+    $("#downloadPDFModel").modal("toggle");
     if (!state.isPreviewCanvas) {
         toast("Please preview your design before download.");
         return;
@@ -736,7 +754,7 @@ $("#btnDisplayGrid").on("click", function (e) {
                        
                     }
                    
-                    var fn = $("#downloadFileName").val(); 
+                     
                     fn = fn || "KakePrints.pdf";
                     fn = (fn.indexOf('.pdf') === -1)?(fn+".pdf"):fn;
                     pdf.save(fn);

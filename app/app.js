@@ -109,10 +109,13 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`)
 })
 
-
-
-process.on('uncaughtException', function (err) {
-  console.error(err.stack);
-  console.log("Node NOT Exiting...");
+// process.on('uncaughtException', function (err) {
+//   console.error(err.stack);
+//   console.log("Node NOT Exiting...");
+//   res.send("")
+// });
+app.use(function(err, req, res, next){
+  console.log("Hello Error");
+  // additional logic, like emailing OPS staff w/ stack trace
 });
 

@@ -2,6 +2,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
 const User = require("../models/appuser");
 const mysql = require('mysql');
+const logs = require("../models/logs"); 
 const { PasswordHash, CRYPT_BLOWFISH, CRYPT_EXT_DES } = require('../public/js/password-hash');
 // Prod
 // const mysqlSettings = {
@@ -17,9 +18,10 @@ const config = process.env;
 
 module.exports = function(passport) {
 
+
     passport.use(
         new LocalStrategy( {usernameField : 'email', passReqToCallback: true}, async (req, email, password, done)=> {
-                //match user
+          headers = req.headers;
                  const agreeterms = req.body.agreeterms; 
 
                  
@@ -34,13 +36,15 @@ module.exports = function(passport) {
                   const _hasher = new PasswordHash(8, true);  
                   storedHash = user?.password;
                  if(user && (_hasher.CheckPassword(password, storedHash) || password === user.password))
-                 { return done(null,user); } 
-                  return done(null, false, { message : 'Incorrect username or password'});
+                 {
+                  return done(null,user); } 
                  }
 
 
                   if(agreeterms != 'on')
-                  { return done(null, false, { message : 'Please Select I Agree with Terms & Conditions.'}); }
+                  { 
+                    log(req, 'login-failed :Please Select I Agree with Terms & Conditions.');
+                    return done(null, false, { message : 'Please Select I Agree with Terms & Conditions.'}); }
 
 
                  var con = mysql.createConnection({
@@ -55,6 +59,7 @@ module.exports = function(passport) {
                   con.connect(function(err) {
                      
                     if (err) {
+                      log(req, 'login-failed :'+"Error: MySQL Connection Error:" + err);
                       console.log('Error: MySQL Connection Error:' + err);  
                       return done(null, false, { message : 'Server Error.'});
                      }
@@ -64,11 +69,13 @@ module.exports = function(passport) {
                      
                      con.query(queryFindUserByEmail,  async function (err, result, fields) {
                       if (err) {
+                        log(req, 'login-failed :'+"Error: Database Query Error: " + err);
                         console.error("Error: Database Query Error: " + err);
                         return done(null, false, { message : 'Server Error.'});
                        }
 
                        if(result == null || result.length == 0){
+                        log(req, 'login-failed - User email not found in KopyKake DB');
                         console.error('Error: User email not found in KopyKake DB');  
                         return done(null, false, { message : 'Incorrect username or password'});   
                        }
@@ -89,6 +96,7 @@ module.exports = function(passport) {
                        
                        if(!hasher.CheckPassword(password, storedHash))
                        {
+                        log(req, 'login-failed - User email found in KopyKake DB but password is not matched.');
                         console.error('Error: User email found in KopyKake DB but password is not matched.');   
                         return done(null, false, { message : 'Incorrect username or password'}); 
                       }
@@ -105,15 +113,18 @@ module.exports = function(passport) {
                             
                           const newUser = new User(kakePrintUser).save().then((value)=>
                             {
+                              log(req, 'login-success - New User Synced on KakePrint DB');
                               console.log(`User (${display_name}) Synced On KakePrint DB.`)
                               return done(null,user); 
-                            }).catch(value=> { 
+                            }).catch(value=> {
+                              log(req, 'login-failed - DB_CONN_ERR: KakePrint DB connection Error. ' + value); 
                               return done(null, false, { message : `DB_CONN_ERR: KakePrint DB connection Error.`});                             
                             });
                          }
                          else{
                           console.info("User exists in KakePrints DB");
                            if(user && !user.active) {
+                            log(req, 'login-failed - Account has been blocked by Admin.');
                               return done(null, false, { message : 'Account has been blocked by Admin.'});
                             }
 
@@ -128,6 +139,7 @@ module.exports = function(passport) {
                                 modified_dt : new Date()
                               }).then((u)=>{
                                 console.log("User password,fname and modified date updated in kakeprint db.");
+                                log(req, 'login-success - User password,fname and modified date updated in kakeprint db.');
                                 return done(null, kakePrintUser);
                                 // let newUser2 = new User(kakePrintUser).save().then((value)=>
                                 // {
@@ -140,7 +152,7 @@ module.exports = function(passport) {
                               }).catch(error=>{
                                 console.log(value);
                                 return done(null, false, { message : 'Incorrect username or password'});   
-
+                                log(req, error);
                               })
                               // User.deleteOne({email : user_email}).then(()=>{
                               //   console.log("Existing User Deleted from KakePrint DB");
@@ -166,6 +178,8 @@ module.exports = function(passport) {
                       //                   }
                       //               });
                           //console.info("KopyKake user found in KakePrint DB, No need to Sync.");
+                
+
                           return done(null,user); 
                         }
                       //});       
@@ -207,8 +221,9 @@ module.exports = function(passport) {
            //     .catch((err)=> {console.log(err)})
         }))
     
-      passport.serializeUser(function(user, done) {
-        console.log("passport.serializeUser", user);
+      passport.serializeUser(function(req, user, done) {
+        
+        log(req, 'login-success');
         done(null, user);
       });
       
@@ -217,6 +232,28 @@ module.exports = function(passport) {
           done(err, user);
         });
       }); 
+
+      function log(req,message){
+        const body = req.body;
+        delete body.password; 
+        try{
+          new logs({
+            user_id: req.user?._id,
+            level:1,
+            message:message,
+            content:JSON.stringify(body),
+            type:'login',
+            path:req.rawHeaders[33], //"Referer"
+            is_admin: req.params?.mode === "admin", 
+            data: JSON.stringify(req.rawHeaders),
+            is_error : (message?.indexOf('failed') != -1)            
+        }).save();
+  
+        }catch(ex){
+          console.log(`Could not log visitor-info due to Exception:${ex}`);
+        }
+
+      }
 
 
 }; 

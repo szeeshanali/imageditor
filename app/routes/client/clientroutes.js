@@ -461,8 +461,6 @@ router.get("/api/client/download",  isLoggedIn, async (req, res) => {
 });
 
 router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
-
-    
     res.locals.page = {
         id: "__workspace",
         title: "Workspace",

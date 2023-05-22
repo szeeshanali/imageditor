@@ -10,7 +10,8 @@ const schema  = new mongoose.Schema({
     user_id:        {   type    :   mongoose.ObjectId               },
     is_admin:       {   type    :   Boolean },
     level:          {   type    :   Number},
-    data:           {   type    :   String}
+    data:           {   type    :   String},
+    is_error:          {   type    :   Boolean},
     });
 
 const logs   = mongoose.model('logs',schema);
