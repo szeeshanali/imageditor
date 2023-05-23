@@ -47,7 +47,7 @@ module.exports = function(passport) {
                     return done(null, false, { message : 'Please Select I Agree with Terms & Conditions.'}); }
 
 
-                 var con = mysql.createConnection({
+                 var con = mysql.createPool({
                        
                        host     : config.MYSQL_HOST,
                        user     : config.MYSQL_USR,
@@ -56,15 +56,15 @@ module.exports = function(passport) {
 
                  });
                  
-                  con.connect(function(err) {
+                  // con.connect(function(err) {
                      
-                    if (err) {
-                      log(req, 'login-failed :'+"ERR_ACCESS_DENIED::403 MySQL Connection Error:" + err);
-                      console.log('Error: MySQL Connection Error:' + err);  
-                      return done(null, false, { message : 'ERR_ACCESS_DENIED::403'});
-                     }
+                  //   if (err) {
+                  //     log(req, 'login-failed :'+"ERR_ACCESS_DENIED::403 MySQL Connection Error:" + err);
+                  //     console.log('Error: MySQL Connection Error:' + err);  
+                  //     return done(null, false, { message : 'ERR_ACCESS_DENIED::403'});
+                  //    }
 
-                     console.log("KopyKake DB Connected");
+                  //    console.log("KopyKake DB Connected");
                      let queryFindUserByEmail = `select * from wp_users where user_email = '${email}'`; 
                      
                      con.query(queryFindUserByEmail,  async function (err, result, fields) {
@@ -186,7 +186,7 @@ module.exports = function(passport) {
                          
                        
                      });
-                   });
+                   ///});
                
                 /** Local DB */
           

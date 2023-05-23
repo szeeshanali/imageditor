@@ -71,7 +71,7 @@ app.use(express.urlencoded({limit: '25mb', extended: true }));
 
 app.use(session(
   {   
-    secret            : SESSION_SECRET,
+    secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
       cookie: { 
@@ -109,13 +109,13 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`)
 })
 
-// process.on('uncaughtException', function (err) {
-//   console.error(err.stack);
-//   console.log("Node NOT Exiting...");
-//   res.send("")
-// });
-app.use(function(err, req, res, next){
-  console.log("Hello Error");
-  // additional logic, like emailing OPS staff w/ stack trace
+process.on('uncaughtException', function (err) {
+  console.error(err.stack);
+  console.log("Node NOT Exiting...");
+ // res.send("")
 });
+// app.use(function(err, req, res, next){
+//   console.log("Hello Error");
+//   // additional logic, like emailing OPS staff w/ stack trace
+// });
 
