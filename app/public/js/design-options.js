@@ -43,6 +43,7 @@ $btnAddText.on("click", function () {
     item.setCoords();
 
     _canvas.centerObject(item);
+    item.globalCompositeOperation = 'source-atop';
     _canvas.add(item);
     _canvas.setActiveObject(item);
     _canvas.renderAll.bind(_canvas);
