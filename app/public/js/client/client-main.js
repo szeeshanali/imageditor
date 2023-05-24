@@ -1866,14 +1866,21 @@ function initCanvasTextEvents() {
         }
         if (e.target.checked) {
   
-        var item = curveText(obj);
-        item.globalCompositeOperation = "source-atop";
-        canvas.centerObject(item);
-        item.setCoords();
-        canvas.add(item);
-        canvas.setActiveObject(item);
-        canvas.renderAll();
-        canvas.remove(obj)
+            var item = curveText(obj);
+            item.globalCompositeOperation = "source-atop";
+            //canvas.centerObject(item);
+            
+            item.set({
+                originX:obj.originX,
+                originY:obj.originY,
+                left:obj.left,
+                top:obj.top
+            });
+            item.setCoords();
+            canvas.add(item);
+            canvas.setActiveObject(item);
+            canvas.renderAll();
+            canvas.remove(obj);
        
         } else {
             //$("#inputFlipText").prop('checked',false);
@@ -1894,6 +1901,7 @@ function initCanvasTextEvents() {
                 paintFirst  :   "stroke",
                 fontWeight  : obj.fontWeight,
                 fontStyle   : obj.fontStyle,
+                
 
             };
             
@@ -1901,6 +1909,13 @@ function initCanvasTextEvents() {
             item.globalCompositeOperation = 'source-atop';
             item.id = obj.id;
             item.index = obj.index;
+            item.set({
+                originX:obj.originX,
+                originY:obj.originY,
+                left:obj.left,
+                top:obj.top
+            })
+            item.setCoords();
             canvas.add(item);            
             canvas.setActiveObject(item);
             canvas.renderAll();
