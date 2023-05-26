@@ -1011,36 +1011,58 @@ function initUIEvents() {
         var form = $(this);
         var actionUrl = form.attr('action');
         var formData = new FormData(form[0]);
-       
-          
-        generatePDFfromPreview(true,(pdfBase64)=>{
-
-            formData.append('file', pdfBase64);
-            $loader.removeClass("hidden");
-            $.ajax({
-                type: "POST",
-                url: actionUrl,
-                data: formData, // serializes the form's elements.
-                async: false,
-                success: function (data) {
-                    //toast('Thank you, Your request has been submitted, we will contact you soon.');
-                    form.trigger('reset');
-                    $('#rfq').modal('toggle');
-                    $loader.addClass("hidden");
-                    $("#rfq_confirm").modal();
-                },error: function (request, status, error) {
-                    toast('Server Error: Form could not be submitted.');
-                    form.trigger('reset');
-                    $('#rfq').modal('toggle');
-                    $loader.addClass("hidden");
-                },
-                cache: false,
-                contentType: false,
-                processData: false,
-               
-            });
-        
+        var designDataUrl = canvasPrev.toDataURL({format:"png",quality:1.0});
+        formData.append('file', designDataUrl); 
+        $.ajax({
+            type: "POST",
+            url: actionUrl,
+            data: formData, // serializes the form's elements.
+            async: false,
+            success: function (data) {
+                //toast('Thank you, Your request has been submitted, we will contact you soon.');
+                form.trigger('reset');
+                $('#rfq').modal('toggle');
+                $loader.addClass("hidden");
+                $("#rfq_confirm").modal();
+            },error: function (request, status, error) {
+                toast('Server Error: Form could not be submitted.');
+                form.trigger('reset');
+                $('#rfq').modal('toggle');
+                $loader.addClass("hidden");
+            },
+            cache: false,
+            contentType: false,
+            processData: false,
+           
         });
+        // generatePDFfromPreview(true,(pdfBase64)=>{
+
+        //     formData.append('file', pdfBase64);
+        //     $loader.removeClass("hidden");
+        //     $.ajax({
+        //         type: "POST",
+        //         url: actionUrl,
+        //         data: formData, // serializes the form's elements.
+        //         async: false,
+        //         success: function (data) {
+        //             //toast('Thank you, Your request has been submitted, we will contact you soon.');
+        //             form.trigger('reset');
+        //             $('#rfq').modal('toggle');
+        //             $loader.addClass("hidden");
+        //             $("#rfq_confirm").modal();
+        //         },error: function (request, status, error) {
+        //             toast('Server Error: Form could not be submitted.');
+        //             form.trigger('reset');
+        //             $('#rfq').modal('toggle');
+        //             $loader.addClass("hidden");
+        //         },
+        //         cache: false,
+        //         contentType: false,
+        //         processData: false,
+               
+        //     });
+        
+        // });
   
     });
     $("#menu-save-design").on("click",function(e){
@@ -1180,86 +1202,7 @@ $("#btnStartOverModel").on("click",function(e){
     })
     
    
-    $txtDecorationCtrl.on("click", function (e) {
-        
-        $("#font-panel .text-decoration").each(function(e){
-            let $self =$(this);
-            if(['bold','italic','underline'].indexOf(this.id) === -1 ){
-                $self.removeClass('active');
-            } 
-            
-        })
-        let __canvas = state.isPreviewCanvas?canvasPrev:canvas;
-        var value = $(this).attr("data-value");
-        
-        $(this).addClass('active');
 
-        var o = __canvas.getActiveObject();
-        if (o && o.type === 'i-text' || o.type === 'curved-text') {
-         
-            let isTextSelection; 
-            if(o.getSelectionStyles)
-            { isTextSelection  = o.getSelectionStyles().length > 0; }
-             
-            if (value === 'bold') {
-                var isTrue = o['fontWeight'] === 'bold';
-                if(isTrue){
-                    $(this).removeClass('active');
-                }
-
-                
-               
-                if(isTextSelection)
-                { o.setSelectionStyles({"fontWeight":isTrue ? '' : 'bold'}) }
-                else{
-                    o.set({
-                        "fontWeight": isTrue ? '' : 'bold'
-                    })
-                }            
-                
-
-
-            } else if (value === 'italic') {
-                var isTrue = o['fontStyle'] === 'italic';
-                if(isTrue){
-                    $(this).removeClass('active');
-                }
-
-                if(isTextSelection)
-                { o.setSelectionStyles({"fontStyle":isTrue ? '' : 'italic'}) }
-                else{
-                o.set({
-                    "fontStyle": isTrue ? '' : 'italic'
-                })}
-
-            } else if (value === 'underline') {
-                if( o.type === 'curved-text')
-                {
-
-                    o.set({"textDecoration": "underline"})
-                    toast('Underline is not supported for Circular Text.');
-                    return}
-                var isTrue = !o['underline'];
-                if(!isTrue){
-                    $(this).removeClass('active');
-                }
-
-                if(isTextSelection)
-                { o.setSelectionStyles({"underline":isTrue}) }
-                else{
-                o.set({
-                   "underline":isTrue
-                })
-                }
-            } else if (value === "left" || value === "right" || value === "center") {
-                $(this).parent().addClass('active');
-                o.set({"textAlign": value})
-            }
-
-            __canvas.renderAll();
-        }
-
-    })
     $("#font-list-container a").on("click", function (e) {
         let __canvas = state.isPreviewCanvas?canvasPrev:canvas;
         let value = $(this).text() || "Comic-Sans";
