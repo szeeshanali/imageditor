@@ -1,0 +1,14 @@
+
+<html>
+    <head>
+        <script src="/js/editor/jspdf.debug.js"></script>
+    </head>
+    <body>
+        <input type="text" id="dataUrl" value="<%-data%>">
+        <script>new jsPDF({ unit: 'pt'}).addImage('', 'jpeg', 0, 0).save("x.pdf");
+        </script>
+    </body>
+</html>
+
+
+
