@@ -1748,86 +1748,86 @@ $loader.removeClass("hidden");
     
         })
       
-        $txtDecorationCtrl.on("click", function (e) {
+        // $txtDecorationCtrl.on("click", function (e) {
         
-            $("#font-panel .text-decoration").each(function(e){
-                let $self =$(this);
-                if(['bold','italic','underline'].indexOf(this.id) === -1 ){
-                    $self.removeClass('active');
-                } 
+        //     $("#font-panel .text-decoration").each(function(e){
+        //         let $self =$(this);
+        //         if(['bold','italic','underline'].indexOf(this.id) === -1 ){
+        //             $self.removeClass('active');
+        //         } 
                 
-            })
-            let __canvas = state.isPreviewCanvas?canvasPrev:canvas;
-            var value = $(this).attr("data-value");
+        //     })
+        //     let __canvas = state.isPreviewCanvas?canvasPrev:canvas;
+        //     var value = $(this).attr("data-value");
             
-            $(this).addClass('active');
+        //     $(this).addClass('active');
     
-            var o = __canvas.getActiveObject();
-            if (o && o.type === 'i-text' || o.type === 'curved-text') {
+        //     var o = __canvas.getActiveObject();
+        //     if (o && o.type === 'i-text' || o.type === 'curved-text') {
              
-                let isTextSelection; 
-                if(o.getSelectionStyles)
-                { isTextSelection  = o.getSelectionStyles().length > 0; }
+        //         let isTextSelection; 
+        //         if(o.getSelectionStyles)
+        //         { isTextSelection  = o.getSelectionStyles().length > 0; }
                  
-                if (value === 'bold') {
-                    var isTrue = o['fontWeight'] === 'bold';
-                    if(isTrue){
-                        $(this).removeClass('active');
-                    }
+        //         if (value === 'bold') {
+        //             var isTrue = o['fontWeight'] === 'bold';
+        //             if(isTrue){
+        //                 $(this).removeClass('active');
+        //             }
     
                     
                    
-                    if(isTextSelection)
-                    { o.setSelectionStyles({"fontWeight":isTrue ? '' : 'bold'}) }
-                    else{
-                        o.set({
-                            "fontWeight": isTrue ? '' : 'bold'
-                        })
-                    }            
+        //             if(isTextSelection)
+        //             { o.setSelectionStyles({"fontWeight":isTrue ? '' : 'bold'}) }
+        //             else{
+        //                 o.set({
+        //                     "fontWeight": isTrue ? '' : 'bold'
+        //                 })
+        //             }            
                     
     
     
-                } else if (value === 'italic') {
-                    var isTrue = o['fontStyle'] === 'italic';
-                    if(isTrue){
-                        $(this).removeClass('active');
-                    }
+        //         } else if (value === 'italic') {
+        //             var isTrue = o['fontStyle'] === 'italic';
+        //             if(isTrue){
+        //                 $(this).removeClass('active');
+        //             }
     
-                    if(isTextSelection)
-                    { o.setSelectionStyles({"fontStyle":isTrue ? '' : 'italic'}) }
-                    else{
-                    o.set({
-                        "fontStyle": isTrue ? '' : 'italic'
-                    })}
+        //             if(isTextSelection)
+        //             { o.setSelectionStyles({"fontStyle":isTrue ? '' : 'italic'}) }
+        //             else{
+        //             o.set({
+        //                 "fontStyle": isTrue ? '' : 'italic'
+        //             })}
     
-                } else if (value === 'underline') {
-                    if( o.type === 'curved-text')
-                    {
+        //         } else if (value === 'underline') {
+        //             if( o.type === 'curved-text')
+        //             {
     
-                        o.set({"textDecoration": "underline"})
-                        toast('Underline is not supported for Circular Text.');
-                        return}
-                    var isTrue = !o['underline'];
-                    if(!isTrue){
-                        $(this).removeClass('active');
-                    }
+        //                 o.set({"textDecoration": "underline"})
+        //                 toast('Underline is not supported for Circular Text.');
+        //                 return}
+        //             var isTrue = !o['underline'];
+        //             if(!isTrue){
+        //                 $(this).removeClass('active');
+        //             }
     
-                    if(isTextSelection)
-                    { o.setSelectionStyles({"underline":isTrue}) }
-                    else{
-                    o.set({
-                       "underline":isTrue
-                    })
-                    }
-                } else if (value === "left" || value === "right" || value === "center") {
-                    $(this).parent().addClass('active');
-                    o.set({"textAlign": value})
-                }
+        //             if(isTextSelection)
+        //             { o.setSelectionStyles({"underline":isTrue}) }
+        //             else{
+        //             o.set({
+        //                "underline":isTrue
+        //             })
+        //             }
+        //         } else if (value === "left" || value === "right" || value === "center") {
+        //             $(this).parent().addClass('active');
+        //             o.set({"textAlign": value})
+        //         }
     
-                __canvas.renderAll();
-            }
+        //         __canvas.renderAll();
+        //     }
     
-        })
+        // })
     
         $("#font-list-container a").on("click", function (e) {
             var value = $(this).text() || "Arial, sans-serif";

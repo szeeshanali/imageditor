@@ -7,7 +7,7 @@ const    $btnToolbarLarger   =   $("#btnToolbarLarger");
 const    $btnToolbarSmaller  =   $("#btnToolbarSmaller");
 const    $btnToolbarRotate   =   $("#btnToolbarRotate");
 const    $btnToolbarFlip     =   $("#btnToolbarFlip");
-
+const    $btnTextFormatAndAlignments = $("#workspace-right-panel .txt-ctrl .text-decoration");
 //# 1. Issue Fixed:  scaleToWidth not working with rotation.
 
 $btnToolbarLarger.on("click",function(e){
@@ -208,14 +208,21 @@ $("#btnDisplayGrid").on("click", function (e) {
 
  function loadSVGTemplate(id,onComplete) {
     
+        $loader.removeClass("hidden");
         selectedTemplateId = id;
         var group = [];
+        $(".template > .card").each(function(v,i,a){
+            $(this).removeClass('selected-template');                
+        })
+
         state.isPreviewCanvas = false;
         $.get(`/api/svg-templates/${id}`, function (data) {
             if (isSessionExpired(data)) {
                 return;
             }
-             
+
+            $(`#${data.code} > .card`).addClass('selected-template');
+
             fabric.loadSVGFromURL(data.base64, function(objects, options) {      
 
                 const svgBase64 = data.base64;
@@ -358,6 +365,7 @@ $("#btnDisplayGrid").on("click", function (e) {
                     }
 
                     $.get(`/api/svg-templates/${id}`, function (data) {
+                        $loader.addClass("hidden");
                         fabric.loadSVGFromURL(data.base64, function(objects, options) {         
                             var obj = fabric.util.groupSVGElements(objects, options);
                            let firstLogo = objects[0];
@@ -1006,3 +1014,83 @@ function saveCustomDesign(byAdmin) {
     canvas.fire('object:modified');
   }
 
+  $btnTextFormatAndAlignments.on("click", function (e) {
+    let elemId = this.id;
+    let alignmentButtons =['btn-left-align','btn-center-align','btn-right-align']; 
+    if(alignmentButtons.indexOf(elemId) != -1 ){
+        alignmentButtons.forEach((v,i,a)=>{
+            if(v != elemId)
+            { $(`#${v}`).removeClass('active'); }
+        })            
+    }
+
+    let __canvas = state.isPreviewCanvas?canvasPrev:canvas;
+    var value = $(this).attr("data-value");
+    
+    $(this).addClass('active');
+
+    var o = __canvas.getActiveObject();
+    if (o && o.type === 'i-text' || o.type === 'curved-text') {
+     
+        let isTextSelection; 
+        if(o.getSelectionStyles)
+        { isTextSelection  = o.getSelectionStyles().length > 0; }
+         
+        if (value === 'bold') {
+            var isTrue = o['fontWeight'] === 'bold';
+            if(isTrue){
+                $(this).removeClass('active');
+            }
+
+            
+           
+            if(isTextSelection)
+            { o.setSelectionStyles({"fontWeight":isTrue ? '' : 'bold'}) }
+            else{
+                o.set({
+                    "fontWeight": isTrue ? '' : 'bold'
+                })
+            }            
+            
+
+
+        } else if (value === 'italic') {
+            var isTrue = o['fontStyle'] === 'italic';
+            if(isTrue){
+                $(this).removeClass('active');
+            }
+
+            if(isTextSelection)
+            { o.setSelectionStyles({"fontStyle":isTrue ? '' : 'italic'}) }
+            else{
+            o.set({
+                "fontStyle": isTrue ? '' : 'italic'
+            })}
+
+        } else if (value === 'underline') {
+            if( o.type === 'curved-text')
+            {
+
+                o.set({"textDecoration": "underline"})
+                toast('Underline is not supported for Circular Text.');
+                return}
+            var isTrue = !o['underline'];
+            if(!isTrue){
+                $(this).removeClass('active');
+            }
+
+            if(isTextSelection)
+            { o.setSelectionStyles({"underline":isTrue}) }
+            else{
+            o.set({
+               "underline":isTrue
+            })
+            }
+        } else if (value === "left" || value === "right" || value === "center") {
+            $(this).parent().addClass('active');
+            o.set({"textAlign": value})
+        }
+        __canvas.renderAll();
+    }
+
+})

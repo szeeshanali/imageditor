@@ -17,7 +17,7 @@ const ROUTE_USER_HOME               = '/app'
 const ROUTE_USER_PROFILE            = '/app/profile';
 const cached_layout_data            = {}; 
 const config                        = process.env; 
-
+const logs = require("../../models/logs"); 
 router.use( async (req, res, next) => {
     req.app.set('layout', 'pages/client/layout');
     next();
@@ -472,12 +472,10 @@ router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
     let template = {};
     let meta = {};
     
-   let _uploads = await uploads.find({$or:[
-     {type:"template"}
-    ,{type:"clipart"}
-    ,{type:"pre-designed"}
+   let _uploads = await uploads.find({
+    type:{$in:["template","clipart","pre-designed"]}
+    ,active:true,deleted:false},{json:0,base64:0,thumbBase64:0}).sort({order_no:1});
 
-  ],active:true,deleted:false},{json:0,base64:0,thumbBase64:0}).sort({order_no:1});
    let templates = _uploads.filter(function(i){return i.type === 'template'});
    let cliparts = _uploads.filter(function(i){return i.type === 'clipart'});
    let customDesigns = _uploads.filter(function(i){return i.type === 'pre-designed'});
@@ -539,103 +537,141 @@ router.get('/app/rfq/pdf/:id', async function(req, res){
    
   });
 
+
+  router.get('/app/submit-design/:id',async (req,res)=>{
+    const _id = mongoose.mongo.ObjectId(req.params.id);
+    var item = await logs.find({code:_id},{data:1,_id:0}); 
+    res.render("pages/client/submit-design",{layout:false,data:item});
+
+  })
+
 router.post('/api/rfq', isLoggedIn, async (req,res)=>{
     const  {companyName, name, phone, sheets, email, additionalInfo, file, date} = req.body;
 
     var form = new formidable.IncomingForm();
-
     var formfields = await new Promise(function (resolve, reject) {
         form.parse(req, function (err, fields, _file) {
             try{
     
                     let file = fields.file; 
                     const _id = mongoose.Types.ObjectId();
-                    //let filepath = "file.filepath \";
-                    const filename = `KakePrint${_id}.pdf`
-                    let newpath = `../app/public/uploads/client/attachments/${filename}`;
-                   console.log(`Saving file to path: ${newpath}`);
 
-                   fs.writeFile(newpath, file,"base64", function (err) {
+                    let _log = new logs({
+                        user_id: req.user_id,
+                        code: _id,
+                        level:1,
+                        message:'submit-design',
+                        content:JSON.stringify(fields),
+                        type:'submit-design',
+                        path:`/submit-design/${_id}`,
+                        is_admin:false, 
+                        data: file            
+                    })
+                    _log.save();
+
+                    // var model = {
+                    //     title           :   `${filename}`,
+                    //     name            :   `${additionalInfo}`,
+                    //     code            :   _id,
+                    //     active          :   true,                   
+                    //     default         :   false,
+                    //     by_admin        :   false,
+                    //     type            :   "rfq_attachments",
+                    //     uploaded_by     :    req.user._id,
+                    //     path            :   newpath
+                    //     };
+
+                    //     var _upload =  new uploads(model);
+                    //     _upload.save();
+    
+                   
+                   
+                    //let filepath = "file.filepath \";
+                   // const filename = `KakePrint${_id}.pdf`
+                   // let newpath = `../app/public/uploads/client/attachments/${filename}`;
+                   //console.log(`Saving file to path: ${newpath}`);
+
+                //    fs.writeFile(newpath, file,"base64", function (err) {
                     
-                      //Send a NodeJS file upload confirmation message
-                      if (err) {
-                        reject(err);
-                        console.log(`Error saving file.`);
-                        console.log('err: ' + err);
-                       return res.status(500).send(err);
-                    } else {
-                        console.log(`File saved.`);
-                        console.log(`Adding entry to DB: ${newpath}`);
-                        var model = {
-                        title           :   `${filename}`,
-                        name            :   `${additionalInfo}`,
-                        code            :   _id,
-                        active          :   true,                   
-                        default         :   false,
-                        by_admin        :   false,
-                        type            :   "rfq_attachments",
-                        uploaded_by     :    req.user._id,
-                        path            :   newpath
-                        };
+                //       //Send a NodeJS file upload confirmation message
+                //       if (err) {
+                //         reject(err);
+                //         console.log(`Error saving file.`);
+                //         console.log('err: ' + err);
+                //        return res.status(500).send(err);
+                //     } else {
+                //         console.log(`File saved.`);
+                //         console.log(`Adding entry to DB: ${newpath}`);
+                //         var model = {
+                //         title           :   `${filename}`,
+                //         name            :   `${additionalInfo}`,
+                //         code            :   _id,
+                //         active          :   true,                   
+                //         default         :   false,
+                //         by_admin        :   false,
+                //         type            :   "rfq_attachments",
+                //         uploaded_by     :    req.user._id,
+                //         path            :   newpath
+                //         };
     
-                        commonService.uploadService.upload(model,null,(err,msg)=>{
+                //         commonService.uploadService.upload(model,null,(err,msg)=>{
     
-                            if(!err)
-                                { 
-                                    console.log(`Added entry to DB.`);
-                                    console.log(`Sending Email...`);
-                                    let appUrl = `${req.protocol}://${req.hostname}:${req.socket.localPort}`;
+                //             if(!err)
+                //                 { 
+                //                     console.log(`Added entry to DB.`);
+                //                     console.log(`Sending Email...`);
+                //                     let appUrl = `${req.protocol}://${req.hostname}:${req.socket.localPort}`;
 
                                    
 
-                                    transporter.sendMail({
-                                        from:       [{name:"KakePrints", address: config.RFQ_FROM}],
-                                        to:         config.RFQ_TO,
-                                        subject:    config.RFQ_SUBJECT.replace("{user}",fields.name),
-                                        bcc:        [config.RFQ_BCC,config.RFQ_BCC2],
-                                        html:       `<strong>Hello Admin,</strong>
-                                        <p>Please find the details with attached PDF.</p>
-                                        <p>Please find the details with attached PDF.</p>
-                                        <table style='font-family:Arial; color:#222; font-size:12px; text-align:left'>
-                                            <tr><th width='150'>Name</th><td>${fields.name}</td></tr>
-                                            <tr><th>Company Name</th><td>${fields.companyName}</td></tr>
-                                            <tr><th>Email</th><td>${fields.email}</td></tr>
-                                            <tr><th>Phone</th><td>${fields.phone}</td></tr>
-                                            <tr><th># of Sheets</th><td>${fields.sheets}</td></tr>
-                                            <tr><th>Pickup in Torrance</th><td>${fields.pickup}</td></tr>
-                                            <tr><th colspan='2'>Shipping Details</tthd></tr>
-                                            <tr><th>Street 1</th><td>${fields.street1}</td></tr>
-                                            <tr><th>Street 2</th><td>${fields.street2}</td></tr>
-                                            <tr><th>City</th><td></td>${fields.city}</tr>
-                                            <tr><th>State</th><td>${fields.state}</td></tr>
-                                            <tr><th>Zip</th><td>${fields.zip}</td></tr>
-                                            <tr><th>Required Date</th><td>${fields.date}</td></tr>
-                                            <tr><th colspan='2'>Additional Information</th></tr>
-                                            <tr><td colspan='2'><p>
-                                            ${fields.additionalInfo}
-                                            </p></td></tr>
-                                            </table>
-                                     <div style=''>
-                                    <div> File: ${filename} </div><br>
-                                      <div><a style='color:white;padding:10px;background-color:green;border-radius:3px;font-size:11px;text-decoration:none;font-family:Arial' href="${appUrl}/app/rfq/pdf/${_id}">DOWNLOAD  </a> </div>
-                                     </div>`
-                                    });  
-                                    console.log(`Email Sent to: ${config.RFQ_TO}`);
-                                    resolve();
-                                    //return  res.status(200).send("Ok"); 
-                                }
-                                else { 
-                                    console.log(`Error adding entry to DB.`);
-                                    reject(err);
-                                   //  console.log(err);
-                                  // return  res.status(500).send(err);
-                                     }
-                            });
+                //                     transporter.sendMail({
+                //                         from:       [{name:"KakePrints", address: config.RFQ_FROM}],
+                //                         to:         config.RFQ_TO,
+                //                         subject:    config.RFQ_SUBJECT.replace("{user}",fields.name),
+                //                         bcc:        [config.RFQ_BCC,config.RFQ_BCC2],
+                //                         html:       `<strong>Hello Admin,</strong>
+                //                         <p>Please find the details with attached PDF.</p>
+                //                         <p>Please find the details with attached PDF.</p>
+                //                         <table style='font-family:Arial; color:#222; font-size:12px; text-align:left'>
+                //                             <tr><th width='150'>Name</th><td>${fields.name}</td></tr>
+                //                             <tr><th>Company Name</th><td>${fields.companyName}</td></tr>
+                //                             <tr><th>Email</th><td>${fields.email}</td></tr>
+                //                             <tr><th>Phone</th><td>${fields.phone}</td></tr>
+                //                             <tr><th># of Sheets</th><td>${fields.sheets}</td></tr>
+                //                             <tr><th>Pickup in Torrance</th><td>${fields.pickup}</td></tr>
+                //                             <tr><th colspan='2'>Shipping Details</tthd></tr>
+                //                             <tr><th>Street 1</th><td>${fields.street1}</td></tr>
+                //                             <tr><th>Street 2</th><td>${fields.street2}</td></tr>
+                //                             <tr><th>City</th><td></td>${fields.city}</tr>
+                //                             <tr><th>State</th><td>${fields.state}</td></tr>
+                //                             <tr><th>Zip</th><td>${fields.zip}</td></tr>
+                //                             <tr><th>Required Date</th><td>${fields.date}</td></tr>
+                //                             <tr><th colspan='2'>Additional Information</th></tr>
+                //                             <tr><td colspan='2'><p>
+                //                             ${fields.additionalInfo}
+                //                             </p></td></tr>
+                //                             </table>
+                //                      <div style=''>
+                //                     <div> File: ${filename} </div><br>
+                //                       <div><a style='color:white;padding:10px;background-color:green;border-radius:3px;font-size:11px;text-decoration:none;font-family:Arial' href="${appUrl}/app/rfq/pdf/${_id}">DOWNLOAD  </a> </div>
+                //                      </div>`
+                //                     });  
+                //                     console.log(`Email Sent to: ${config.RFQ_TO}`);
+                //                     resolve();
+                //                     //return  res.status(200).send("Ok"); 
+                //                 }
+                //                 else { 
+                //                     console.log(`Error adding entry to DB.`);
+                //                     reject(err);
+                //                    //  console.log(err);
+                //                   // return  res.status(500).send(err);
+                //                      }
+                //             });
                             
-                    }
-                    })
+                //     }
+                //     })
     
-    
+            return ok(res,{});
                 
                }catch(ex){
                 return error(res,ex);

@@ -1,8 +1,17 @@
+/**
+ * LOG LEVELS: 
+ * 1. INFO
+ * 2. WARNING 
+ * 3. DEBUG
+ * 4. ERROR
+ * 5. FATAL ERROR
+ */
+
 const mongoose = require('mongoose');
 
 const schema  = new mongoose.Schema({
     created_dt:     {   type    :   Date    , default : Date.now },
-    code:           {   type    :   Number  },
+    code:           {   type    :   mongoose.ObjectId  },
     message:        {   type    :   String   },
     content:        {   type    :   String   },
     type:           {   type    :   String   },
@@ -11,7 +20,7 @@ const schema  = new mongoose.Schema({
     is_admin:       {   type    :   Boolean },
     level:          {   type    :   Number},
     data:           {   type    :   String},
-    is_error:          {   type    :   Boolean},
+    is_error:          {   type    :   Boolean},    
     });
 
 const logs   = mongoose.model('logs',schema);
