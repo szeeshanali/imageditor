@@ -979,6 +979,7 @@ function initUIEvents() {
     })
     $("#btnRFQ").on("click",function(){
         if(isFieldValid("downloadFileName")){
+            
             $("#downloadPDFModel").modal("toggle");
             $("#rfq").modal("toggle");
         }
@@ -1008,22 +1009,44 @@ function initUIEvents() {
     $("#formRFQ").submit(function(e) {
 
         e.preventDefault();         
-        var form = $(this);
-        var actionUrl = form.attr('action');
-        var formData = new FormData(form[0]);
-        var designDataUrl = canvasPrev.toDataURL({format:"png",quality:1.0});
-        formData.append('file', designDataUrl); 
+        let form = $(this);
+        let actionUrl = form.attr('action');
+        let formData = new FormData(form[0]);
+        let width = canvasPrev.backgroundImage.viewBoxWidth;
+        let height = canvasPrev.backgroundImage.viewBoxHeight;
+        let pageFormat = getPageFormatByDimensions(width,height)           
+        let fn = $("#downloadFileName").val() || `Kake-prints${new Date().getTime()}`;
+        let pdfMeta = 
+        {
+            pdfSettings: {
+                orientation: (width > height) ? 'l' : 'p',
+                unit: 'pt',
+                format: pageFormat,
+                putOnlyUsedFonts: true
+            },
+//            dataUrl:
+        }
+        //formData.append('dataUrl', canvasPrev.toDataURL({format:"png",quality:1.0}));
+        var pdf=    new jsPDF(pdfMeta.pdfSettings);
+        width = pdf.internal.pageSize.getWidth();
+        height = pdf.internal.pageSize.getHeight();
+        let dataUrl = canvasPrev.toDataURL({format:"png",quality:1.0, multiplier:3});
+        pdf.addImage(dataUrl, 'jpeg', 0, 0,width,height,undefined,'FAST');
+        formData.append('dataUrl', pdf.output(`datauri`));
+        formData.append('pdfMeta', JSON.stringify(pdfMeta)); 
+        formData.append('filename', fn);
+        $loader.removeClass('hidden'); 
         $.ajax({
             type: "POST",
             url: actionUrl,
             data: formData, // serializes the form's elements.
             async: false,
             success: function (data) {
-                //toast('Thank you, Your request has been submitted, we will contact you soon.');
                 form.trigger('reset');
                 $('#rfq').modal('toggle');
                 $loader.addClass("hidden");
                 $("#rfq_confirm").modal();
+                backFromPreview();
             },error: function (request, status, error) {
                 toast('Server Error: Form could not be submitted.');
                 form.trigger('reset');
