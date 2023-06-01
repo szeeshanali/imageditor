@@ -230,19 +230,12 @@
 
           </ul>
         </div>
-        <div class=" bg-primary" id="quick-tool">
-          <ul class="nav nav-white-800 flex-column flex-md-row justify-content-center" role="tablist">
-            <!-- <li class="nav-item bd-r"><span  class=" nav-link lh-4 tx-center tx-bold tx-uppercase tx-11"  >      <input type="checkbox"  id="btnDisplayBorder" ><br><span>Border</span></span></li> -->
-            <li class="nav-item bd-r"><span  class=" nav-link lh-4 tx-center tx-bold tx-uppercase tx-11"  >      <input type="checkbox"  id="btnDisplayGrid" ><br><span>Grid</span></span></li>
-            <li class="nav-item bd-r"><span class=" nav-link lh-4 tx-center tx-bold tx-uppercase tx-11" ><input type="checkbox"  id="btnDisplayRuler" ><br><span>Ruler</span></span></li>
-            <li class="nav-item bd-r"><a id="btnToolbarLarger" class=" nav-link lh-4 tx-center tx-bold tx-uppercase tx-11"  data-toggle="tab" href="#" role="tab"><i class="ion-android-add-circle tx-22"></i> <br>Larger</a></li>
-            <li class="nav-item bd-r"><a id="btnToolbarSmaller"  class=" nav-link lh-4 tx-center tx-bold tx-uppercase tx-11" data-toggle="tab" href="#" role="tab"><i class="ion-android-remove-circle tx-22"></i><br>Smaller</a></li>
-            <li class="nav-item bd-r"><a id="btnToolbarRotate" class=" nav-link lh-4 tx-center tx-bold tx-uppercase tx-11" data-toggle="tab" href="#" role="tab"><i class="ion-android-refresh tx-22"></i><br>Rotate</a></li>
-            <li class="nav-item bd-r"><a id="btnToolbarFlip" class=" nav-link lh-4 tx-center tx-bold tx-uppercase tx-11" data-toggle="tab" href="#" role="tab"><i class="ion-arrow-swap tx-22"></i><br>Flip</a></li>
-            <li class="nav-item bd-r"><a  class=" nav-link lh-4 tx-center tx-bold tx-uppercase tx-11" id="undo" data-toggle="tab" href="#" role="tab"><i class="ion-reply tx-22"></i> <br>Undo</a></li>
-            <li class="nav-item"><a  class=" nav-link lh-4 tx-center tx-bold tx-uppercase tx-11" id="redo" data-toggle="tab" href="#" role="tab"><i class="ion-forward tx-22"></i><br>Redo</a></li>
-          </ul>
-        </div>
+        
+<!--toolbar-->
+<%- include('../../partials/toolbar'); %>
+
+
+
         <div  id="canvas-holder" >
             <div class="content tx-center" id="canvas-holder-inner" >
                 <canvas id="client-main-canvas"   ></canvas>
