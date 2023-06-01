@@ -702,8 +702,6 @@ $("#btnDisplayGrid").on("click", function (e) {
             var width = canvasPrev.backgroundImage.viewBoxWidth;
             var height = canvasPrev.backgroundImage.viewBoxHeight;
             let pageFormat = getPageFormatByDimensions(width,height)
-            
-
 
             var pdf = new jsPDF({
                 orientation: (width > height) ? 'l' : 'p',
@@ -719,9 +717,6 @@ $("#btnDisplayGrid").on("click", function (e) {
                 var bg = clonedCanvas.backgroundImage;
                 clonedCanvas.backgroundImage = false;
 
-                
-               
-                
                 //clonedCanvas.setZoom(1.334);
                 for (var i = 0; i < clonedCanvas._objects.length; i++) {
                     clonedCanvas._objects[i].globalCompositeOperation = null;
@@ -732,9 +727,6 @@ $("#btnDisplayGrid").on("click", function (e) {
                 clonedCanvas.renderAll();
                 var imgData = canvasPrev.toDataURL({format:"png",quality:1.0,multiplier:3});
                 pdf.addImage(imgData, 'jpeg', 0, 0,width,height,undefined,'FAST');
-               
-
-                
                 
                 if(onServer)
                 {
@@ -774,7 +766,7 @@ $("#btnDisplayGrid").on("click", function (e) {
                 $loader.addClass("hidden");
                 $(".step-item:nth-child(3)").removeClass("active");
                 $(".step-item:nth-child(4)").addClass("active");
-
+                backFromPreview();
             });
 
         },
