@@ -538,10 +538,12 @@ router.get('/app/rfq/pdf/:id', async function(req, res){
   });
 
 
-  router.get('/app/submit-design/:id',async (req,res)=>{
-    const _id = mongoose.mongo.ObjectId(req.params.id);
-    var item = await logs.find({code:_id},{data:1,_id:0}); 
-    res.render("pages/client/submit-design",{layout:false,data:item});
+  router.get('/app/submit-design/:id', isAdmin, async (req,res)=>{
+    let _id = mongoose.mongo.ObjectId(req.params.id);
+    let item = await logs.findOne({code:_id},{data:1,_id:0,content:1,path:1,created_dt:1});
+    let content = JSON.parse(item.content);
+    content.created_dt = item.created_dt;
+    res.render("pages/client/submit-design",{layout:false,data:content});
 
   })
 
@@ -553,9 +555,9 @@ router.post('/api/rfq', isLoggedIn, async (req,res)=>{
         form.parse(req, function (err, fields, _file) {
             try{
     
-                    let file = fields.file; 
+                    let dataUrl = fields.data;
+                    delete fields.data;
                     const _id = mongoose.Types.ObjectId();
-
                     let _log = new logs({
                         user_id: req.user_id,
                         code: _id,
@@ -565,7 +567,7 @@ router.post('/api/rfq', isLoggedIn, async (req,res)=>{
                         type:'submit-design',
                         path:`/submit-design/${_id}`,
                         is_admin:false, 
-                        data: file            
+                        data: dataUrl            
                     })
                     _log.save();
 
@@ -624,49 +626,37 @@ router.post('/api/rfq', isLoggedIn, async (req,res)=>{
 
                                    
 
-                //                     transporter.sendMail({
-                //                         from:       [{name:"KakePrints", address: config.RFQ_FROM}],
-                //                         to:         config.RFQ_TO,
-                //                         subject:    config.RFQ_SUBJECT.replace("{user}",fields.name),
-                //                         bcc:        [config.RFQ_BCC,config.RFQ_BCC2],
-                //                         html:       `<strong>Hello Admin,</strong>
-                //                         <p>Please find the details with attached PDF.</p>
-                //                         <p>Please find the details with attached PDF.</p>
-                //                         <table style='font-family:Arial; color:#222; font-size:12px; text-align:left'>
-                //                             <tr><th width='150'>Name</th><td>${fields.name}</td></tr>
-                //                             <tr><th>Company Name</th><td>${fields.companyName}</td></tr>
-                //                             <tr><th>Email</th><td>${fields.email}</td></tr>
-                //                             <tr><th>Phone</th><td>${fields.phone}</td></tr>
-                //                             <tr><th># of Sheets</th><td>${fields.sheets}</td></tr>
-                //                             <tr><th>Pickup in Torrance</th><td>${fields.pickup}</td></tr>
-                //                             <tr><th colspan='2'>Shipping Details</tthd></tr>
-                //                             <tr><th>Street 1</th><td>${fields.street1}</td></tr>
-                //                             <tr><th>Street 2</th><td>${fields.street2}</td></tr>
-                //                             <tr><th>City</th><td></td>${fields.city}</tr>
-                //                             <tr><th>State</th><td>${fields.state}</td></tr>
-                //                             <tr><th>Zip</th><td>${fields.zip}</td></tr>
-                //                             <tr><th>Required Date</th><td>${fields.date}</td></tr>
-                //                             <tr><th colspan='2'>Additional Information</th></tr>
-                //                             <tr><td colspan='2'><p>
-                //                             ${fields.additionalInfo}
-                //                             </p></td></tr>
-                //                             </table>
-                //                      <div style=''>
-                //                     <div> File: ${filename} </div><br>
-                //                       <div><a style='color:white;padding:10px;background-color:green;border-radius:3px;font-size:11px;text-decoration:none;font-family:Arial' href="${appUrl}/app/rfq/pdf/${_id}">DOWNLOAD  </a> </div>
-                //                      </div>`
-                //                     });  
-                //                     console.log(`Email Sent to: ${config.RFQ_TO}`);
-                //                     resolve();
-                //                     //return  res.status(200).send("Ok"); 
-                //                 }
-                //                 else { 
-                //                     console.log(`Error adding entry to DB.`);
-                //                     reject(err);
-                //                    //  console.log(err);
-                //                   // return  res.status(500).send(err);
-                //                      }
-                //             });
+                                    transporter.sendMail({
+                                        from:       [{name:"KakePrints", address: config.RFQ_FROM}],
+                                        to:         config.RFQ_TO,
+                                        subject:    config.RFQ_SUBJECT.replace("{user}",fields.name),
+                                        bcc:        [config.RFQ_BCC,config.RFQ_BCC2],
+                                        html:       `<strong>Hello Admin,</strong>
+                                        <p>${fields.name} has sent you a design for printing, Please review the following detail</p>
+                                        <table style='font-family:Arial; color:#222; font-size:12px; text-align:left'>
+                                            <tr><th width='150'>Name</th><td>${fields.name}</td></tr>
+                                            <tr><th>Company Name</th><td>${fields.companyName}</td></tr>
+                                            <tr><th>Email</th><td>${fields.email}</td></tr>
+                                            <tr><th>Phone</th><td>${fields.phone}</td></tr>
+                                            <tr><th># of Sheets</th><td>${fields.sheets}</td></tr>
+                                            <tr><th>Pickup in Torrance</th><td>${fields.pickup || 'No'}</td></tr>
+                                            <tr><th colspan='2'>Shipping Details</tthd></tr>
+                                            <tr><th>Street 1</th><td>${fields.street1 || 'NA'}</td></tr>
+                                            <tr><th>Street 2</th><td>${fields.street2 || 'NA'}</td></tr>
+                                            <tr><th>City</th><td></td>${fields.city || 'NA'}</tr>
+                                            <tr><th>State</th><td>${fields.state || 'NA'}</td></tr>
+                                            <tr><th>Zip</th><td>${fields.zip | 'NA'}</td></tr>
+                                            <tr><th>Required Date</th><td>${fields.date || 'NA'}</td></tr>
+                                            <tr><th colspan='2'>Additional Information</th></tr>
+                                            <tr><td colspan='2'><p>
+                                            ${fields.additionalInfo || 'NA'}
+                                            </p></td></tr>
+                                            </table>
+                                     <div style=''>
+                                    <div> File: ${fields.filename || 'NA'} </div><br>
+                                      <div><a style='color:white;padding:10px;background-color:green;border-radius:3px;font-size:11px;text-decoration:none;font-family:Arial' href="${config.APP_URL}/submit-design/${_id}"> DOWNLOAD </a> </div>
+                                     </div>`
+                                    });  
                             
                 //     }
                 //     })
