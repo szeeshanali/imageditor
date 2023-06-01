@@ -174,41 +174,6 @@ var Direction = {
 };
 
 
-fabric.util.addListener(document.body, 'keydown', function (options) {
-    
-
-    // if (options.repeat) {
-    //     return;
-    // }
-    let __canvas =  state.isPreviewCanvas?canvasPrev:canvas;
-    var key = options.which || options.keyCode; // key detection
-
-    if(!(key === 37 || key === 38 || key === 39 || key === 40 || key === 46  || key === 187 || key === 189) )
-    return; 
-
-    if(!__canvas.getActiveObject()) return;
-
-    options.stopPropagation();
-    options.preventDefault();
-
-    if (key === 37) { // handle Left key
-        moveSelected(Direction.LEFT);
-    } else if (key === 38) { // handle Up key
-        moveSelected(Direction.UP);
-    } else if (key === 39) { // handle Right key
-        moveSelected(Direction.RIGHT);
-    } else if (key === 40) { // handle Down key
-        moveSelected(Direction.DOWN);
-    } else if(key === 46){
-        __canvas.remove(__canvas.getActiveObject())
-        __canvas.renderAll();
-        addLayer();
-    } else if(key === 187){
-            $("#btnToolbarLarger").click();
-    } else if(key === 189){
-        $("#btnToolbarSmaller").click();
-    }
-});
 
 
 
@@ -224,7 +189,8 @@ async function parseClipboardData() {
         for (let item of items) {
             for (let type of item.types) {
               if (type.startsWith("image/")) {
-              
+                $("#menu-upload > a").click();
+                if(!isAckConfirmUpload()){ return; }
               
               item.getType(type).then((imageBlob) => {
                 let url = window.URL.createObjectURL(imageBlob);
@@ -1189,8 +1155,7 @@ $("#btnStartOverModel").on("click",function(e){
     $("#btnCancelSaveDesign").on("click", function () {
         $("#input-project-title").val("");
         $("#input-project-desc").val("");
-        $("#btnTemplate").click();
-       
+        $("#menu-upload > a").click();       
     })
     $("#btn-step-preview, #btn-menu-peview").on("click", function (e) {
         e.preventDefault();
@@ -1698,13 +1663,9 @@ $btnDownloadPDF.on("click", () => {
 });
 
 $btnUploadImage.on("click", () => {
-    const ack = $("#ackUploadImage").prop("checked");
-    if(!ack)
-    {
-        toast("Please confirm you have the rights to use these images.")
-        return; 
-    }
-    $btnUploadImageHidden.click();
+    if(isAckConfirmUpload()){
+        $btnUploadImageHidden.click();
+    }    
 })
 
 $btnUploadImageHidden.on("change", (e) => {

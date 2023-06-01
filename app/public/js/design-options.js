@@ -7,17 +7,39 @@ $("#clipartmenu .clipart").on("click", (e) => {
     $("#btnAddClipart").unbind().on("click",function(){
         const _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
         fabric.Image.fromURL(url, function (img) {            
-           var ratio = canvas.width/2;   
-           img.scaleToWidth(ratio);
-           //let canvasCenter = getCanvasCenter(img.getScaledWidth(),img.getScaledHeight())
-           img.set({ originX:"center",originY:"center" });                 
-           img.setCoords();
-           img.globalCompositeOperation = 'source-atop';
-            _canvas.add(img);
-            _canvas.centerObject(img); 
-            _canvas.setActiveObject(img);
-            _canvas.renderAll();
-            mainControls(true);
+        //    var ratio = canvas.width/2;   
+        //    img.scaleToWidth(ratio);
+        //    //let canvasCenter = getCanvasCenter(img.getScaledWidth(),img.getScaledHeight())
+        //    img.set({ originX:"center",originY:"center" });                 
+        //    img.setCoords();
+        //    img.globalCompositeOperation = 'source-atop';
+        //     _canvas.add(img);
+        //     _canvas.centerObject(img); 
+        //     _canvas.setActiveObject(img);
+        //     _canvas.renderAll();
+        //     mainControls(true);
+
+        measureImageDimensions(img,canvas);                    
+                     img.set({ 
+                         originX:"center", 
+                         originY:"center" })
+                         img.setCoords();
+                    img.globalCompositeOperation = 'source-atop';
+
+                    if (state.isPreviewCanvas) {
+                        _canvas.add(img);
+                        _canvas.renderAll();
+                    } else {
+                        
+                        _canvas.centerObject(img);
+                        _canvas.add(img);
+                        img.setCoords();
+                        _canvas.setActiveObject(img);
+
+                        _canvas.renderAll();
+                    } 
+                    mainControls(true);
+        
         });
     })
 });
