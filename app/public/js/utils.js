@@ -340,10 +340,30 @@ const processFiles = (files) => {
                         page.render({canvasContext: canvasEl.getContext('2d'), viewport: viewport}).then(function () {
                             var bg = canvasEl.toDataURL("image/png");
                             fabric.Image.fromURL(bg, function (img) {
-                                img.scaleToWidth(canvas.width);
-                                img.scaleToHeight(canvas.height);
-                                img.globalCompositeOperation = 'source-atop';
-                                canvas.add(img);
+                                // img.scaleToWidth(canvas.width);
+                                // img.scaleToHeight(canvas.height);
+                                // img.globalCompositeOperation = 'source-atop';
+                                // canvas.add(img);
+                                measureImageDimensions(img,canvas);                    
+                                img.set({ 
+                                    originX:"center", 
+                                    originY:"center" })
+                                    img.setCoords();
+                               img.globalCompositeOperation = 'source-atop';
+           
+                               if (state.isPreviewCanvas) {
+                                   canvasPrev.add(img);
+                                   canvasPrev.renderAll();
+                               } else {
+                                   
+                                   canvas.centerObject(img);
+                                   canvas.add(img);
+                                   img.setCoords();
+                                   canvas.setActiveObject(img);
+           
+                                   canvas.renderAll();
+                               } 
+                               mainControls(true);            
                             });
                             canvas.renderAll();
                         });
@@ -356,11 +376,7 @@ const processFiles = (files) => {
         } else {
             reader.onload = (e) => {
                 fabric.Image.fromURL(e.target.result, (img) => {
-                    // let ratio = canvas.width/1.5; 
-                    // img.scaleToWidth(ratio);           
-                    
                     measureImageDimensions(img,canvas);                    
-                    // let canvasCenter = getCanvasCenter(img.getScaledWidth(),img.getScaledHeight())
                      img.set({ 
                          originX:"center", 
                          originY:"center" })
@@ -422,33 +438,27 @@ window.addEventListener("paste", pasteImage);
 
 function pasteImage(event) { // get the raw clipboardData
     var cbData = event.clipboardData;
-
     for (var i = 0; i < cbData.items.length; i++) { // get the clipboard item
         var cbDataItem = cbData.items[i];
         var type = cbDataItem.type;
 
         // warning: most browsers don't support image data type
         if (type.indexOf("image") != -1) { // grab the imageData (as a blob)
+            $("#menu-upload > a").click();
+            if(!isAckConfirmUpload()){ return; }
+
             var imageData = cbDataItem.getAsFile();
             // format the imageData into a URL
             var imageURL = window.webkitURL.createObjectURL(imageData);
             fabric.Image.fromURL(imageURL, (img) => { // img.scaleToWidth(300);
-                //    if(img.height>canvas.height && img.height>img.width){
-                //     let ratio = canvas.height/1.5; 
-                //     img.scaleToHeight(ratio);    
-                //    }else{
-                //         let ratio = canvas.width/1.5; 
-                //         img.scaleToWidth(ratio);    
-                //    }
                     measureImageDimensions(img,canvas);
-                   // let canvasCenter = getCanvasCenter(img.getScaledWidth(),img.getScaledHeight())
                     img.set({originX: "center", originY:"center"})
                     img.setCoords();
-                img.globalCompositeOperation = "source-atop";
-                canvas.add(img);
-                canvas.centerObject(img);
-                canvas.setActiveObject(img);
-                canvas.renderAll();
+                    img.globalCompositeOperation = "source-atop";
+                    canvas.add(img);
+                    canvas.centerObject(img);
+                    canvas.setActiveObject(img);
+                    canvas.renderAll();
             })
             // We've got an imageURL, add code to use it as needed
             // the imageURL can be used as src for an Image object
@@ -471,5 +481,16 @@ function isFieldValid(fieldId){
     return true; 
 
 }
+
+function isAckConfirmUpload(){
+    const ack = $("#ackUploadImage").prop("checked");
+    if(!ack)
+    {
+        toast("Please confirm you have the rights to use these images.")
+        return; 
+    }
+    return true; 
+}
+
 
 cropInit();

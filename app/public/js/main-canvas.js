@@ -7,6 +7,7 @@ const    $btnToolbarLarger   =   $("#btnToolbarLarger");
 const    $btnToolbarSmaller  =   $("#btnToolbarSmaller");
 const    $btnToolbarRotate   =   $("#btnToolbarRotate");
 const    $btnToolbarFlip     =   $("#btnToolbarFlip");
+const    $btnToolbarDelete    =   $("#btnToolbarDelete");   
 const    $btnTextFormatAndAlignments = $("#workspace-right-panel .txt-ctrl .text-decoration");
 //# 1. Issue Fixed:  scaleToWidth not working with rotation.
 
@@ -59,6 +60,10 @@ $btnToolbarSmaller.on("click",function(e){
     canvas.renderAll();
     onToolbarClick(canvas,this);
 
+})
+$btnToolbarDelete.on("click",function(e){
+    let __canvas =  state.isPreviewCanvas?canvasPrev:canvas;
+    deleteItemFromCanvas(__canvas);
 })
 
 $btnToolbarRotate.on("click",function(e){
@@ -158,6 +163,7 @@ $("#collapse-layers").on("click", ".layer-item", function (e) {
         evt.stopPropagation();
         _canvas.remove(_canvas.getActiveObject()).renderAll();
         addLayer();
+
     })
 
 })
@@ -1062,8 +1068,8 @@ function saveCustomDesign(byAdmin) {
         } else if (value === 'underline') {
             if( o.type === 'curved-text')
             {
-
-                o.set({"textDecoration": "underline"})
+                //o.set({"textDecoration": "underline"})
+                $(this).removeClass('active');
                 toast('Underline is not supported for Circular Text.');
                 return}
             var isTrue = !o['underline'];
@@ -1086,3 +1092,43 @@ function saveCustomDesign(byAdmin) {
     }
 
 })
+
+fabric.util.addListener(document.body, 'keydown', function (options) {
+    
+
+    // if (options.repeat) {
+    //     return;
+    // }
+    let __canvas =  state.isPreviewCanvas?canvasPrev:canvas;
+    var key = options.which || options.keyCode; // key detection
+
+    if(!(key === 37 || key === 38 || key === 39 || key === 40 || key === 46  || key === 187 || key === 189) )
+    return; 
+
+    if(!__canvas.getActiveObject()) return;
+
+    options.stopPropagation();
+    options.preventDefault();
+
+    if (key === 37) { // handle Left key
+        moveSelected(Direction.LEFT);
+    } else if (key === 38) { // handle Up key
+        moveSelected(Direction.UP);
+    } else if (key === 39) { // handle Right key
+        moveSelected(Direction.RIGHT);
+    } else if (key === 40) { // handle Down key
+        moveSelected(Direction.DOWN);
+    } else if(key === 46){
+        deleteItemFromCanvas(__canvas);
+    } else if(key === 187){
+            $("#btnToolbarLarger").click();
+    } else if(key === 189){
+        $("#btnToolbarSmaller").click();
+    }
+});
+
+function deleteItemFromCanvas(canvas){
+    canvas.remove(canvas.getActiveObject())
+    canvas.renderAll();
+    addLayer();
+}
