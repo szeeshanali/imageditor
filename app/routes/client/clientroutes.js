@@ -221,7 +221,7 @@ router.get("/app/templates",  isLoggedIn, async (req, res) => {
 
 
 router.get("/app/main",  async (req, res) => {
-   const banners = await uploads.find({type:'banner', active:true, deleted:false, ref_code:{$ne:'home-page'}})
+   const banners = await uploads.find({type:'banner', active:true, deleted:false, ref_code:{$ne:'home-page'}},{link:1,path:1})
     res.render('pages/client/main',{layout:false, banners:banners});
 }); 
 
@@ -479,7 +479,12 @@ router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
    let templates = _uploads.filter(function(i){return i.type === 'template'});
    let cliparts = _uploads.filter(function(i){return i.type === 'clipart'});
    let customDesigns = _uploads.filter(function(i){return i.type === 'pre-designed'});
-   let banners = await uploads.find({type:'banner', active:true, deleted:false, ref_code:'home-page'});
+   let banners = await uploads.find({
+    type:'banner', 
+    active:true, 
+    deleted:false, 
+    ref_code:'home-page'
+},{path:1,link:1});
    let customText = await commonService.contentService.getContentAsync('custom-text');
    let fonts = await commonService.contentService.getContentAsync('fonts',false);
    let ca = [];

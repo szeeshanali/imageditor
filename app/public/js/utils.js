@@ -455,8 +455,8 @@ function pasteImage(event) { // get the raw clipboardData
                     img.set({originX: "center", originY:"center"})
                     img.setCoords();
                     img.globalCompositeOperation = "source-atop";
-                    canvas.add(img);
                     canvas.centerObject(img);
+                    canvas.add(img);
                     canvas.setActiveObject(img);
                     canvas.renderAll();
             })
