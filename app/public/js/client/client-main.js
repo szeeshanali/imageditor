@@ -177,56 +177,7 @@ var Direction = {
 
 
 
-async function parseClipboardData() {
-    if(!window.isSecureContext)
-    {
-        console.error();
-        toast("You are not running into secure origin - Please use CTRL+V to paste.");
-        return;
-    }
-    
-    const items = await navigator.clipboard.read().then((items)=>{
-        for (let item of items) {
-            for (let type of item.types) {
-              if (type.startsWith("image/")) {
-                $("#menu-upload > a").click();
-                if(!isAckConfirmUpload()){ return; }
-              
-              item.getType(type).then((imageBlob) => {
-                let url = window.URL.createObjectURL(imageBlob);
-                fabric.Image.fromURL(url, function (img) {                    
-                    if(img.height>canvas.height && img.height>img.width){
-                        let ratio = canvas.height/1.5; 
-                        img.scaleToHeight(ratio);    
-                       }else{
-                            let ratio = canvas.width/1.5; 
-                            img.scaleToWidth(ratio);    
-                       }
-                    img.set({ originX:"center", originY:"center" });
-                    img.setCoords();
-                    img.globalCompositeOperation = 'source-atop';
-                    canvas.add(img);
-                    canvas.centerObject(img);
-                    canvas.setActiveObject(img);
-                    canvas.renderAll();
-                })
-                  // const image = `<img src="${}" />`;
-                  // $container.innerHTML = image;
-                });
-                $('#pasteClipboard').css({'display':'none'});
-                return true;
-              }
-            }
-          }
-          $('#pasteClipboard').css({'display':'none'});
 
-    }).catch((err) => {
-      console.error(err);
-      $('#pasteClipboard').css({'display':'none'});
-    });
-   
-    
-  }
 
 fabric.CurvedText = fabric.util.createClass(fabric.Object, {
     type: 'curved-text',
@@ -590,7 +541,6 @@ function getSharedProjects() {
             .replace(/{{created_dt}}/ig, new Date(item.created_dt).toDateString())
             .replace(/{{sheetSize}}/ig, `${getInches(meta.sheetWidth,meta.sheetHeight)}"`)
             .replace(/{{logoSize}}/ig, `${getInches(meta.logoWidth,meta.logoHeight)}"`)
-            .replace(/{{pageFormat}}/ig, meta.pageFormat)
             .replace(/{{totalLogos}}/ig, meta.totalLogos);
         })
         $("#kp-designs-container").html(temp);
@@ -852,33 +802,6 @@ function menuPanelDisplay(itemToDisplay) {
 
     $(itemToDisplay).addClass("active");
 }
-
-function initContextMenu()
-    {
-        let timeout = false;
-        fabric.util.addListener(document.getElementsByClassName('upper-canvas')[0], 'contextmenu', function(e) {
-            e.preventDefault();
-          
-            var cnvsPos = $('#client-main-canvas').offset();
-            curX = e.clientX - cnvsPos.left+50;
-            curY = e.clientY - cnvsPos.top+80;
-            $('#pasteClipboard').css({'position':'absolute', 'top': curY, 'left': curX, 'display':'block'});
-          
-          /// hide contextmenu in 3 seconds.
-          if(!timeout)
-          {
-            timeout = true; 
-            setTimeout(function(){
-                timeout = false; 
-                $('#pasteClipboard').css({'display':'none'});
-            },5000); 
-          }
-        });
-
-        $("#workarea").on("click",function(){
-            $('#pasteClipboard').css({'display':'none'});
-        })
-    }
 
 
 
@@ -2000,34 +1923,7 @@ function ungroup(event) {
 
 
 
-function onChangeFontColor(picker, type) {
-    let selectedText = canvas.getActiveObject();
-    let checked = $("#inputStrokeText").prop("checked");
-    let strokeSize = parseInt($("#text-stroke-width").val());
-    let strokeColor = $("#strokecolor").val();
-  
 
-    if (type === 'font-color') {
-        let isTextSelection; 
-        if(selectedText.getSelectionStyles)
-        { isTextSelection  = selectedText.getSelectionStyles().length > 0; }
-        if(isTextSelection) {
-            selectedText.setSelectionStyles({"fill":picker.toRGBAString()}) 
-        }else{
-            selectedText.set('fill', picker.toRGBAString());
-        }
-        
-    } else if (type === 'stroke-color' && checked) {
-      
-    
-        selectedText.set('stroke',picker.toRGBAString()); ;
-        selectedText.strokeWidth= strokeSize;
-        selectedText.paintFirst= "stroke";
-        
-    }
-    
-    canvas.renderAll();
-}
 initUIEvents();
 initCanvasEvents();
 
