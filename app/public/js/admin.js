@@ -87,40 +87,6 @@ var $btnRedo = $("#btnRedo");
     $mainCtrl = $("#workspace-right-panel .main-ctrl");
 
     
-async function parseClipboardData() {
-    
-    const items = await navigator.clipboard.read().then((items)=>{
-        for (let item of items) {
-            for (let type of item.types) {
-              if (type.startsWith("image/")) {
-              
-              
-              item.getType(type).then((imageBlob) => {
-                let url = window.URL.createObjectURL(imageBlob);
-                fabric.Image.fromURL(url, function (img) {
-                    img.globalCompositeOperation = 'source-atop';
-
-                    canvas.add(img);
-                    canvas.renderAll();
-                })
-                  // const image = `<img src="${}" />`;
-                  // $container.innerHTML = image;
-                });
-                $('#pasteClipboard').css({'display':'none'});
-                return true;
-              }
-            }
-          }
-          $('#pasteClipboard').css({'display':'none'});
-
-    }).catch((err) => {
-      console.error(err);
-      $('#pasteClipboard').css({'display':'none'});
-    });
-   
-    
-  }
-
   fabric.CurvedText = fabric.util.createClass(fabric.Object, {
     type: 'curved-text',
     diameter: parseInt($("#curveTextCtrl").val()) || 250,
@@ -451,21 +417,6 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
         });
 
 
-    }
-    function rotateObject() {
-        $(`#rotate`).on("click", function (e) {
-            var selectedObj = canvas.getActiveObject();
-            if (! selectedObj) {
-                toast("Please select an object.");
-                return;
-            }
-            var curAngle = selectedObj.angle + 90;
-            selectedObj.rotate(curAngle);
-            if (curAngle > 270) {
-                selectedObj.angle = 0;
-            }
-            canvas.renderAll();
-        })
     }
 
 
@@ -821,34 +772,7 @@ function editProject(type) {
         });
 
     }
-    function onChangeFontColor(picker, type) {
-        let selectedText = canvas.getActiveObject();
-        let checked = $("#inputStrokeText").prop("checked");
-        let strokeSize = parseInt($("#text-stroke-width").val());
-        let strokeColor = $("#strokecolor").val();
-        //if(selectedText.type == "curved-text")
-        //{ return; }
-        if (type === 'font-color') {
-            let isTextSelection; 
-            if(selectedText.getSelectionStyles)
-            { isTextSelection  = selectedText.getSelectionStyles().length > 0; }
-            if(isTextSelection) {
-                selectedText.setSelectionStyles({"fill":picker.toRGBAString()}) 
-            }else{
-                selectedText.set('fill', picker.toRGBAString());
-            }
-            
-        } else if (type === 'stroke-color' && checked) {
-          
-        
-            selectedText.stroke = picker.toRGBAString();
-            selectedText.strokeWidth= strokeSize;
-            selectedText.paintFirst= "stroke";
-            
-        }
-        
-        canvas.renderAll();
-    }
+
 
     function deleteCustomProject(id){
         
@@ -1438,7 +1362,8 @@ $loader.removeClass("hidden");
         initUICustomProjects();
         initUIClipArts();
         initUIBanner();
-
+        initUIUndoRedo();
+        
         $("#btn-edit-user-project").on("click", function(e){
             let _id = $(this).attr("data-project-id");
             editAndCommitUserProject(_id);
@@ -3191,39 +3116,6 @@ if(!order || order < 1){
         $("#fontlist").text(item.fontFamily);
         
      }
-    async function parseClipboardData() {
-    
-        const items = await navigator.clipboard.read().then((items)=>{
-            for (let item of items) {
-                for (let type of item.types) {
-                  if (type.startsWith("image/")) {
-                  
-                  
-                  item.getType(type).then((imageBlob) => {
-                    let url = window.URL.createObjectURL(imageBlob);
-                    fabric.Image.fromURL(url, function (img) {
-                        img.globalCompositeOperation = 'source-atop';
-    
-                        canvas.add(img);
-                        canvas.renderAll();
-                    })
-                      // const image = `<img src="${}" />`;
-                      // $container.innerHTML = image;
-                    });
-                    $('#pasteClipboard').css({'display':'none'});
-                    return true;
-                  }
-                }
-              }
-              $('#pasteClipboard').css({'display':'none'});
-    
-        }).catch((err) => {
-          console.error(err);
-          $('#pasteClipboard').css({'display':'none'});
-        });
-       
-        
-      }
 
  
 
@@ -3296,34 +3188,7 @@ function updateCounts(counts){
     $("#countCustomProjects").text(counts.customProjects);
 }
 
-     
-function initContextMenu()
-{
-    let timeout = false;
-    fabric.util.addListener(document.getElementsByClassName('upper-canvas')[0], 'contextmenu', function(e) {
-        e.preventDefault();
-      
-        var cnvsPos = $('#admin-main-canvas').offset();
-        curX = e.clientX - cnvsPos.left+50;
-        curY = e.clientY - cnvsPos.top+80;
-        $('#pasteClipboard').css({'position':'absolute', 'top': curY, 'left': curX, 'display':'block'});
-      
-      /// hide contextmenu in 3 seconds.
-      if(!timeout)
-      {
-        timeout = true; 
-        setTimeout(function(){
-            timeout = false; 
-            $('#pasteClipboard').css({'display':'none'});
-        },5000); 
-      }
-    });
-
-    $("#workarea").on("click",function(){
-        $('#pasteClipboard').css({'display':'none'});
-    })
-}
-
+   
 function getUserDownloads(userId, userName)
 {
     $loader.removeClass("hidden");
