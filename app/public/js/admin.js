@@ -2616,28 +2616,7 @@ if(!order || order < 1){
 
     
 
-    function onObjectSelection(o) {
-        var _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
-        var t = _canvas.getActiveObject().get('type');
-        if (t == "i-text" || t == "curved-text") {
-    
-            textControls(true);
-            updateTextControls(o);
-            imageControls(false);
-    
-        } else {
-            textControls(false);
-            imageControls(true);
-        }
-    
-    
-        const id = o.selected[0].id;
-        var elem = $(`#${id}`)[0];
-        clearLayerSelection();
-        // showLayerControls(elem);
-        $(`#${id}`).addClass("selected-layer");
-    
-    }
+
     function initCanvasEvents() {
       
 
@@ -3021,73 +3000,25 @@ if(!order || order < 1){
             }
     }
     function updateTextControls(e){
-    
-        let item         = e.selected[0];
-        let isBold       = item.fontWeight?.toLowerCase() === "bold"; 
-        let isItalic     = item.fontStyle?.toLowerCase() === "italic"; 
-        let isUnderline  = item.underline;  
-        let isLeft       = item.textAlign === "left";
-        let isRight      = item.textAlign === "right";
-        let isCenter     = item.textAlign === "center";
-        let isCurvedText = item.type === 'curved-text';
+        var item = e.selected[0]; 
         $("#btnTextSize").val(item.fontSize);
-     
         if(item.charSpacing)
         { $("#text-letter-spacing").val(item.charSpacing);}
-     
-        $("#inputStrokeText").prop("checked",!!item.stroke); 
-     
-        $("#text-letter-spacing").val(item.charSpacing||10)
-        
-        if(isBold)
-        { $("#bold").parent().addClass("active"); }
-        else{ $("#bold").parent().removeClass("active"); }
-     
-        if(isItalic)
-        { $("#italic").parent().addClass("active"); }
-        else{ $("#italic").parent().removeClass("active"); }
-     
-        if(isUnderline)
-        { $("#underline").parent().addClass("active"); }
-        else{ $("#underline").parent().removeClass("active"); }
-     
-     
-     
-     
-        
-     
-     
-     
         if(item.strokeWidth)
         { 
          if($("#inputStrokeText").is(":checked"))
          {
              $("#text-stroke-width").val(item.strokeWidth); 
          }
-     }
+         
+      }
      
         if(item.lineHeight)
         { $("#text-line-height").val(item.lineHeight); }
         if(item.stroke)
         { document.querySelector('#strokecolor')?.jscolor.fromString(item.stroke); }
         document.querySelector('#fontColorBox').jscolor.fromString(item.fill);
-     
-     
-        if(isCurvedText)
-        { 
-         $("#inputCurvedText").prop("checked",true);
-         $("#inputFlipText").prop("checked",item.flipped);
-         $("#curveTextCtrl").val(item.diameter);
-         
-         
-     }
-        else 
-        { 
-         $("#inputCurvedText").prop("checked",false);
-         $("#inputFlipText").prop("checked",false);
-         $("#curveTextCtrl").val("1250");
-     }
-     
+        
         $("#fontlist").text(item.fontFamily);
         
      }

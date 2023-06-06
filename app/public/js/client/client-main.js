@@ -1336,48 +1336,8 @@ function onObjectSelectionCleared(o) {
 
 }
 
-function onObjectSelection(o) {
-    let _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
-    let _ = _canvas.getActiveObject()    
-    let t = _.get('type');
-    if (t == "i-text" || t == "curved-text") {   
-       // _.lockScalingX = _.lockScalingY = true;    
-       //_.hasControls = false;
-
-        textControls(true);
-        updateTextControls(o);
-        imageControls(false);
-
-    } else {
-        textControls(false);
-        updateImageControls(o);
-        imageControls(true);
-    }
 
 
-    const id = o.selected[0].id;
-    var elem = $(`#${id}`)[0];
-    clearLayerSelection();
-    // showLayerControls(elem);
-    $(`#${id}`).addClass("selected-layer");
-
-}
-function updateImageControls(e){
-
-    let item         = e.selected[0];
-    let isGrayscaleSelected = item.filters[0]?.mode === "average";
-    let brightnessValue = item.filters[5]?.brightness || 0.0;
-    let contrastValue = item.filters[6]?.contrast || 0.0;
-    
-    
-    $("#brightnessVal").text(`(${(brightnessValue  * 100).toFixed(0)}%)`);
-    $("#contrastVal").text(`(${(contrastValue * 100).toFixed(0)}%)`);
-    $("#contrast-value").val(contrastValue);
-    $("#brightness-value").val(brightnessValue);
-    $("#btnGrayscale").prop("checked",!!isGrayscaleSelected);
-    
-     
-}
 
 function updateTextControls(e){
     
@@ -1469,6 +1429,7 @@ function initCanvasEvents() {
 
     canvas.selectedLayerId = null;
     canvas.on("object:added", (o) => {
+
         // do not create new index of layer if object is cropped or curved-text; 
         // creating curved text or cropped image we remove previous object and insert new object 
         // at same position so no need to create new index and id. 
@@ -1476,8 +1437,14 @@ function initCanvasEvents() {
            {
             o.target.id = `obj${canvas._objects.length}`;
             o.target.index = canvas._objects.length - 1;
-         
         }
+
+        if((o.target.type === "curved-text"))
+           {
+            o.target.id = o.target.id;
+            o.target.index = o.index;
+        }
+
         onObjectAdded(o);
     })
 

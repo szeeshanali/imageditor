@@ -901,7 +901,8 @@ function loadProject(projectId, type)
                 
                 $("#user-comments-container").html(html);
                }
-               $("#menu-upload >a").click();
+               $("#menu-upload >a").click();               
+                
            });
        },
        error: function (xhr, ajaxOptions, thrownError) {
@@ -1264,10 +1265,10 @@ function initContextMenu()
                 top:obj.top
             });
             item.setCoords();
+            canvas.remove(obj);
             canvas.add(item);
             canvas.setActiveObject(item);
             canvas.renderAll();
-            canvas.remove(obj);
        
         } else {
             //$("#inputFlipText").prop('checked',false);
@@ -1354,4 +1355,47 @@ function initContextMenu()
     }
 
 
+    function updateImageControls(e){
+
+        let item         = e.selected[0];
+        let isGrayscaleSelected = item.filters[0]?.mode === "average";
+        let brightnessValue = item.filters[5]?.brightness || 0.0;
+        let contrastValue = item.filters[6]?.contrast || 0.0;
+        
+        
+        $("#brightnessVal").text(`(${(brightnessValue  * 100).toFixed(0)}%)`);
+        $("#contrastVal").text(`(${(contrastValue * 100).toFixed(0)}%)`);
+        $("#contrast-value").val(contrastValue);
+        $("#brightness-value").val(brightnessValue);
+        $("#btnGrayscale").prop("checked",!!isGrayscaleSelected);
+        
+         
+    }
     
+
+    function onObjectSelection(o) {
+        let _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
+        let _ = _canvas.getActiveObject()    
+        let t = _.get('type');
+        if (t == "i-text" || t == "curved-text") {   
+           // _.lockScalingX = _.lockScalingY = true;    
+           //_.hasControls = false;
+    
+            textControls(true);
+            updateTextControls(o);
+            imageControls(false);
+    
+        } else {
+            textControls(false);
+            updateImageControls(o);
+            imageControls(true);
+        }
+    
+    
+        const id = o.selected[0].id;
+        var elem = $(`#${id}`)[0];
+        clearLayerSelection();
+        // showLayerControls(elem);
+        $(`#${id}`).addClass("selected-layer");
+    
+    }
