@@ -450,7 +450,7 @@
 
             </div>
             <div class=" pd-y-15" >
-                <div id="carouselExampleControls" class="carousel slide bd bg-white" data-ride="carousel">
+                <div id="carouselExampleControls" class="carousel slide bd bg-white" data-interval="<%=(settings?.banner_delay || 1)*1000%>" data-ride="carousel">
 
                 <div class="carousel-inner">
 
@@ -458,7 +458,7 @@
                     <%for(var i=0;i<banners?.length;i++){ let banner = banners[i]; %>
                         <div class="carousel-item <%=i==0?'active':''%>">
                         <a href="<%=banner.link.indexOf('://') !== -1?banner.link:'https://'+banner.link%>" target="_blank">
-                            <img class="d-block w-100" src="<%=banner.path%>" >
+                            <img class="d-block w-100" src="<%=banner.path.replace('../app/public/','/')%>" >
                         </a>
                     </div>                           
                     <%}%>

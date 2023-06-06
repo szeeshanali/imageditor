@@ -1,0 +1,56 @@
+<div id="popup-fileupload-max" class="modal fade show">
+    <div class="modal-dialog modal-sm" role="document">
+      <div class="modal-content bd-0 tx-14">
+        <div class="modal-header pd-x-20">
+          <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Maximum File Upload Limit </h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body pd-20">
+          <p class="mg-b-5" id="popup-fileupload-max-body">
+            <input class="form-control" value="<%=settings.file_size_limit %>" id="input-fileupload-limit" min="1" max="10" oninput="this.value = (this.value<1 && !this.value==''?1:(this.value>10)?10:this.value)" placeholder="Enter File Upload Maximum Size" type="number">
+         
+            </p>
+            <p class="tx-12 mg-b-0">File Upload Size should not be less than 1 and greater than 10 MB.</p>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <div class="btn-group">
+  
+          <button type="button" id="btn-fileupload-limit"  data-dismiss="modal" class="tx-12 tx-uppercase tx-bold  btn btn-success pd-x-20">Save</button>
+          <button type="button" class="btn btn-warning pd-x-20 tx-12 tx-uppercase tx-bold " data-dismiss="modal">Close</button>
+        </div>
+  
+        </div>
+      </div>
+    </div><!-- modal-dialog -->
+  </div>
+  
+  <script>
+    $(document).ready(function(){
+        $("#btn-fileupload-limit").on("click",function(){
+        let $inputFileUploadLimit  = $("#input-fileupload-limit");
+        const url =  "/api/admin/settings/file-upload-limit";
+        $.ajax({
+                type: "PUT",
+                url: url,
+                data: {
+                    maxLimit:$inputFileUploadLimit.val()
+                }, 
+                async: false,
+                success: function (res) {
+                  $loader.addClass("hidden");
+                  toast("Updated Successfully!");
+                  setTimeout(function(){
+                    window.location.reload();
+                  },1000)
+                  
+
+                },error: function (request, status, error) {
+                  $loader.addClass("hidden");
+                  toast("Server Error");
+                },
+            });
+    })})
+    
+  </script>

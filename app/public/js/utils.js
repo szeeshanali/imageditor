@@ -264,7 +264,8 @@ function curveText(obj)
         stroke: $("#inputStrokeText").is(":checked")?$("#strokecolor").val():null,
         strokeWidth: $("#inputStrokeText").is(":checked")?parseInt($("#text-stroke-width").val()):0,
         id: obj.id,
-        index:obj.index
+        index:obj.index,
+        underline:obj.underline
     })
     return ct; 
 }

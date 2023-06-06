@@ -1062,11 +1062,7 @@ $("#btnStartOverModel").on("click",function(e){
     var layers = $("#layers");
 
    
-    $("#predefinedText").on("change",function(){
-        var selectedValue = $(this).val();
-        $("#textarea").val(selectedValue);
-        $(this).val("");
-    })
+
 
 
     $("#btn-step-design").on("click", function (e) {
@@ -1707,72 +1703,6 @@ function initCanvasTextEvents() {
         canvas.renderAll();
     });
     
-    $("#inputCurvedText").on("click", function (e) {
-        
-        var obj = canvas.getActiveObject();
-        if(!obj){
-            toast("Please select Text");
-            return;
-        }
-        if (e.target.checked) {
-  
-            var item = curveText(obj);
-            item.globalCompositeOperation = "source-atop";
-            //canvas.centerObject(item);
-            
-            item.set({
-                originX:obj.originX,
-                originY:obj.originY,
-                left:obj.left,
-                top:obj.top
-            });
-            item.setCoords();
-            canvas.add(item);
-            canvas.setActiveObject(item);
-            canvas.renderAll();
-            canvas.remove(obj);
-       
-        } else {
-            //$("#inputFlipText").prop('checked',false);
-            $("#curveTextCtrl").val(1250);
-            var obj = canvas.getActiveObject();
-            canvas.remove(obj);
-           // var c = getCanvasCenter(obj.width,obj.height);
-            var textInfo = {
-
-                left        :   obj.left,
-                top         :   obj.top,
-                fontFamily  :   obj.fontFamily,
-                fill        :   obj.fill,
-                fontSize    :   obj.fontSize,
-                flipped     :   $("#inputFlipText").prop("checked") || false,
-                stroke      :   obj.stroke,
-                strokeWidth :   obj.strokeWidth,
-                paintFirst  :   "stroke",
-                fontWeight  : obj.fontWeight,
-                fontStyle   : obj.fontStyle,
-                
-
-            };
-            
-            let item = new fabric.IText(obj.text, textInfo);
-            item.globalCompositeOperation = 'source-atop';
-            item.id = obj.id;
-            item.index = obj.index;
-            item.set({
-                originX:obj.originX,
-                originY:obj.originY,
-                left:obj.left,
-                top:obj.top
-            })
-            item.setCoords();
-            canvas.add(item);            
-            canvas.setActiveObject(item);
-            canvas.renderAll();
- 
-        }
-        addLayer();
-    })
     
 
     $btnTextSize.on("change", function () {
