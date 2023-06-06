@@ -1600,11 +1600,6 @@ $loader.removeClass("hidden");
             // $("#menu-clipart > a").click();
         })
 
-        $("#predefinedText").on("change",function(){
-            var selectedValue = $(this).val();
-            $("#textarea").val(selectedValue);
-        })
-        
         $("#templatepanel .template").on("click", (e) => {
             enabledTextMode = false;
             var id = e.currentTarget.id;
@@ -2927,74 +2922,6 @@ if(!order || order < 1){
             canvas.renderAll();
         });
         
-        $("#inputCurvedText").on("click", function (e) {
-            
-            var obj = canvas.getActiveObject();
-            if(!obj){
-                toast("Please select Text");
-                return;
-            }
-            if (e.target.checked) {
-              var flipped = $("#inputFlipText").prop("checked");
-              obj.flipped = flipped;
-              var item = new fabric.CurvedText(obj.text, {
-                type: 'curved-text',
-                diameter: parseInt($("#curveTextCtrl").val()) || 500,
-                left: 100,
-                top: 40,
-                fontFamily: obj.fontFamily,
-                fontSize: obj.fontSize,
-                kerning: 0,
-                flipped: flipped,
-                fill: obj.fill,
-                fontSize: obj.fontSize, // in px
-                fontWeight: obj.fontWeight,
-                fontStyle: obj.fontStyle,
-                cacheProperties: fabric.Object.prototype.cacheProperties.concat('diameter', 'kerning', 'flipped', 'fill', 'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'strokeStyle', 'strokeWidth','stroke'),
-                stroke: $("#inputStrokeText").is(":checked")?$("#strokecolor").val():null,
-                strokeWidth: $("#inputStrokeText").is(":checked")?parseInt($("#text-stroke-width").val()):0
-    
-                //strokeStyle: obj.strokeStyle,
-                //stroke:obj.stroke,
-                //strokeWidth: 2
-            });
-            canvas.add(item);
-            canvas.renderAll();
-            canvas.remove(obj)
-            canvas.setActiveObject(item);
-           
-            } else {
-                //$("#inputFlipText").prop('checked',false);
-                $("#curveTextCtrl").val(500);
-                var obj = canvas.getActiveObject();
-                
-                var textInfo = {
-    
-                    left        :   (canvas.width/2)-obj.width/2,
-                    top         :   canvas.height/2,
-                    fontFamily  :   obj.fontFamily,
-                    fill        :   obj.fill,
-                    fontSize    :   obj.fontSize,
-                    flipped     :   flipped,
-                    stroke      :   obj.stroke,
-                    strokeWidth :   obj.strokeWidth,
-                    paintFirst  :   "stroke",
-                    fontWeight  : obj.fontWeight,
-                    fontStyle   : obj.fontStyle,
-    
-                };
-                
-            
-                var item = new fabric.IText(obj.text, textInfo);
-                canvas.remove(obj);
-                item.globalCompositeOperation = 'source-atop';
-                canvas.add(item);            
-                canvas.setActiveObject(item);
-                canvas.renderAll();
-     
-            }
-            addLayer();
-        })
         
        
     
@@ -3094,25 +3021,73 @@ if(!order || order < 1){
             }
     }
     function updateTextControls(e){
-        var item = e.selected[0]; 
+    
+        let item         = e.selected[0];
+        let isBold       = item.fontWeight?.toLowerCase() === "bold"; 
+        let isItalic     = item.fontStyle?.toLowerCase() === "italic"; 
+        let isUnderline  = item.underline;  
+        let isLeft       = item.textAlign === "left";
+        let isRight      = item.textAlign === "right";
+        let isCenter     = item.textAlign === "center";
+        let isCurvedText = item.type === 'curved-text';
         $("#btnTextSize").val(item.fontSize);
+     
         if(item.charSpacing)
         { $("#text-letter-spacing").val(item.charSpacing);}
+     
+        $("#inputStrokeText").prop("checked",!!item.stroke); 
+     
+        $("#text-letter-spacing").val(item.charSpacing||10)
+        
+        if(isBold)
+        { $("#bold").parent().addClass("active"); }
+        else{ $("#bold").parent().removeClass("active"); }
+     
+        if(isItalic)
+        { $("#italic").parent().addClass("active"); }
+        else{ $("#italic").parent().removeClass("active"); }
+     
+        if(isUnderline)
+        { $("#underline").parent().addClass("active"); }
+        else{ $("#underline").parent().removeClass("active"); }
+     
+     
+     
+     
+        
+     
+     
+     
         if(item.strokeWidth)
         { 
          if($("#inputStrokeText").is(":checked"))
          {
              $("#text-stroke-width").val(item.strokeWidth); 
          }
-         
-      }
+     }
      
         if(item.lineHeight)
         { $("#text-line-height").val(item.lineHeight); }
         if(item.stroke)
         { document.querySelector('#strokecolor')?.jscolor.fromString(item.stroke); }
         document.querySelector('#fontColorBox').jscolor.fromString(item.fill);
-        
+     
+     
+        if(isCurvedText)
+        { 
+         $("#inputCurvedText").prop("checked",true);
+         $("#inputFlipText").prop("checked",item.flipped);
+         $("#curveTextCtrl").val(item.diameter);
+         
+         
+     }
+        else 
+        { 
+         $("#inputCurvedText").prop("checked",false);
+         $("#inputFlipText").prop("checked",false);
+         $("#curveTextCtrl").val("1250");
+     }
+     
         $("#fontlist").text(item.fontFamily);
         
      }

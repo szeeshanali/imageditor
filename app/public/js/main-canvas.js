@@ -1072,7 +1072,7 @@ function saveCustomDesign(byAdmin) {
             {
                 //o.set({"textDecoration": "underline"})
                 $(this).removeClass('active');
-                toast('Underline is not supported for Circular Text.');
+                toast('Underline is not supported for Curved Text.');
                 return}
             var isTrue = !o['underline'];
             if(!isTrue){
@@ -1234,6 +1234,86 @@ function initContextMenu()
         })
     }
 
+    $("#predefinedText").on("change",function(){
+        var selectedValue = $(this).val();
+        $("#textarea").val(selectedValue);
+        $(this).val("");
+    })
+
+    $("#inputCurvedText").on("click", function (e) {
+        
+        var obj = canvas.getActiveObject();
+        if(!obj){
+            toast("Please select Text");
+            return;
+        }
+
+        if (e.target.checked) {
+  
+            var item = curveText(obj);
+            item.globalCompositeOperation = "source-atop";
+            //canvas.centerObject(item);
+            if(obj.underline){
+                toast('Underline is not supported for Curved Text.');
+                $("#underline").removeClass("active");
+            }
+            item.set({
+                originX:obj.originX,
+                originY:obj.originY,
+                left:obj.left,
+                top:obj.top
+            });
+            item.setCoords();
+            canvas.add(item);
+            canvas.setActiveObject(item);
+            canvas.renderAll();
+            canvas.remove(obj);
+       
+        } else {
+            //$("#inputFlipText").prop('checked',false);
+            if(obj.underline){
+                $("#underline").addClass("active");
+            }
+            $("#curveTextCtrl").val(1250);
+            var obj = canvas.getActiveObject();
+            canvas.remove(obj);
+           // var c = getCanvasCenter(obj.width,obj.height);
+            var textInfo = {
+
+                left        :   obj.left,
+                top         :   obj.top,
+                fontFamily  :   obj.fontFamily,
+                fill        :   obj.fill,
+                fontSize    :   obj.fontSize,
+                flipped     :   $("#inputFlipText").prop("checked") || false,
+                stroke      :   obj.stroke,
+                strokeWidth :   obj.strokeWidth,
+                paintFirst  :   "stroke",
+                fontWeight  : obj.fontWeight,
+                fontStyle   : obj.fontStyle,
+                underline   : obj.underline
+
+            };
+            
+            let item = new fabric.IText(obj.text, textInfo);
+            item.globalCompositeOperation = 'source-atop';
+            item.id = obj.id;
+            item.index = obj.index;
+            item.set({
+                originX:obj.originX,
+                originY:obj.originY,
+                left:obj.left,
+                top:obj.top
+            })
+            item.setCoords();
+            canvas.add(item);            
+            canvas.setActiveObject(item);
+            canvas.renderAll();
+ 
+        }
+        addLayer();
+    })
+  
     function initUIUndoRedo(){
         $("#undo").on("click",function(){
             canvasUndo.undo();

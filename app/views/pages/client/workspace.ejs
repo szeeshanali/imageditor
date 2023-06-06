@@ -400,18 +400,17 @@
    <input type="hidden" id="fileupload_max_limit" value="<%= settings.file_size_limit || 5%>">
 <script>
     var FILE_SIZE_LIMIT = <%=settings?.file_size_limit%>;
-   
-    window.onload = function()
+    var BANNER_DELAY = <%=settings?.banner_delay%>;
+
+    $(document).ready(function()
    { 
-
-
+        $loader.removeClass("hidden")
         var code = '<%=code || "default" %>' ;
         var type = '<%=type%>';        
-        
         loadSVGTemplate(code);
         $('[data-toggle="popover"]').popover()
 
-   }
+   })
 
 
 </script>
