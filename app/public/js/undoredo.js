@@ -13,13 +13,14 @@ var canvasUndo = (function(canvas){
       };
       _canvasObject.on(
           'object:modified', function(){
+            
                 updateCanvasState();
           }
       );
     
     _canvasObject.on(
           'object:added', function(){
-                updateCanvasState();
+            updateCanvasState();
           }
       );
     
