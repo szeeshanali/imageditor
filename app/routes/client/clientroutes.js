@@ -222,7 +222,8 @@ router.get("/app/templates",  isLoggedIn, async (req, res) => {
 
 router.get("/app/main",  async (req, res) => {
    const banners = await uploads.find({type:'banner', active:true, deleted:false, ref_code:{$ne:'home-page'}},{link:1,path:1})
-    res.render('pages/client/main',{layout:false, banners:banners});
+   let settings = await app_settings.findOne();
+   res.render('pages/client/main',{layout:false, banners:banners, settings});
 }); 
 
 

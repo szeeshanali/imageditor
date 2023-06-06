@@ -178,9 +178,7 @@ router.get("/app/admin/settings", isAdmin, async (req,res)=>{
     title  : "Settings",
     id     : "__setting",
     user   : req.user, 
-    settings: {
-      file_size_limit: settings.file_size_limit
-    }
+    settings: settings
    } ;
 
   res.render("pages/admin/settings",res.locals.page);
@@ -1586,6 +1584,19 @@ router.put("/api/admin/settings/file-upload-limit",isAdmin, async (req,res)=>{
   try{
     let setting = await app_settings.findOne();
     setting.file_size_limit = maxLimit;
+    setting.save(); 
+    return ok(res,setting);
+  }catch(ex){
+    return error(res,ex);
+  }
+})
+
+router.put("/api/admin/settings/banner-delay",isAdmin, async (req,res)=>{
+  const {bannerDelay} = req.body;
+
+  try{
+    let setting = await app_settings.findOne();
+    setting.banner_delay = bannerDelay;
     setting.save(); 
     return ok(res,setting);
   }catch(ex){
