@@ -3097,15 +3097,27 @@ function updateCounts(counts){
    
 function getUserDownloads(userId, userName)
 {
+    let fromDt = $("#datepickerFrom").val(); 
+    let toDt = $("#datepickerTo").val();
+    let paramsDt = "";
+    if(fromDt && toDt){
+        paramsDt = `?from=${fromDt}&to=${toDt}`;
+    }else if(fromDt){
+        paramsDt = `?from=${fromDt}`;
+    }else if(toDt){
+        paramsDt = `?to=${toDt}`;
+    }
     $loader.removeClass("hidden");
   $.ajax({
                 type: "GET",
-                url: `/api/filter/user-downloads/${userId}`,
+                url: `/api/filter/user-downloads/${userId}${paramsDt}`,
                 success: function (res) {
                   $loader.addClass("hidden");
                   let d = [];
                   if(res.data)
-                  {  showDownloadHistory(userId,userName,res.data) }
+                  {  
+                    $("#lbl-download-dates").text(`Date: ${fromDt?" From: "+fromDt+" - ":""} ${toDt}`)
+                    showDownloadHistory(userId,userName,res.data) }
 
                 },error: function (request, status, error) {
                   $loader.addClass("hidden");
@@ -3159,9 +3171,9 @@ function showProjectHistory(userId, title, userProjects) {
 
         temp += tr.replace(
             "{td}",
-            `
-  <td><strong>${ item.title }</strong></td>
-  <td>${ new Date(item.created_dt).toLocaleString() }</td><td><a href='/app/admin/user-project/${item._id}'   >View</a></td>` ) });
+            `<td><strong>${ item.title }</strong></td>
+  <td>${ new Date(item.created_dt).toLocaleString() }</td>
+  <td><a href='/app/admin/user-project/${item._id}'   >View</a></td>` ) });
     table = table.replace("{tr}", temp);
     if (filteredUserProjects.length == 0) {
         table = "<p clsss='pd-y-20'>No Records Found.</p>"
@@ -3169,26 +3181,26 @@ function showProjectHistory(userId, title, userProjects) {
     $("#projectHistoryTitle").text(_title);
     $("#projectHistoryContent").html(table);
 }
-
+var filteredHistory =[]; 
+$("#btnFindDownloadHistory").on("click",function(){
+    alert(filteredHistory)
+})
 
 function showDownloadHistory(userId, title, filteredDownloads) {
     selectedHistory = {
           userId: userId,
           title: title
       }
-
       let _title = `${title}`;
-
-
       filteredHistory = filteredDownloads ? filteredDownloads : history.filter(function (f) {
           return f.user_id == userId
       });
-      let table = `<div class='table-responsive'>
+      let table = `<div class='table-responsive' style='max-height:400px;overflow-y:auto'>
       <table  class='table mg-b-0 tx-12 tx-bold tx-uppercase' >
           <thead>
-              <th>File Name</th>
-            
-              <th>Template</th>
+              <th>Download Name</th>
+              <th>Template Name</th>
+              <th>Part No.</th>
               <th>Download Date</th>
               </thead>
               <tbody>{tr}</tbody>
@@ -3200,17 +3212,16 @@ function showDownloadHistory(userId, title, filteredDownloads) {
           if (item.data) {
               d = JSON.parse(item.data);
           }
-
           temp += tr.replace(
               "{td}",
               `
     <td><strong>${ item.content }</strong></td>
-    
-    <td >${ d.title || 'N/A' }<br> <a  href='${d.link}'>${d.ref_code}</a></td><td>${ new Date(item.created_dt).toLocaleString() }</td>` ) });
+    <td >${ d.title || 'N/A' }</td><td><a  href='${d.link}'>${d.ref_code}</a></td><td>${ new Date(item.created_dt).toLocaleString() }</td>` ) });
       table = table.replace("{tr}", temp);
       if (filteredHistory.length == 0) {
           table = "<p clsss='pd-y-20'>No Records Found.</p>"
       }
+      $("#lbl-download-count").text(filteredHistory.length)
       $("#downloadHistoryTitle").text(_title);
       $("#downloadHistoryContent").html(table);
   }
