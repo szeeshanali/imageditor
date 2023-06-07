@@ -727,11 +727,8 @@ router.post('/api/filter/users',  isAdmin, async (req,res)=>{
     downloads = await logs.find(filter,{_id:1,user_id:1}) 
     let userIds = downloads.map(i=>i.user_id); 
     users = await appusers.find({_id:{$in:userIds}},{password:0}).sort({created_dt:-1});
-    
-    
-    
-    let projects = []; 
-   
+    let projects =await uploads.find( {uploaded_by:{$in:userIds}, type:'project'},{_id:1,uploaded_by:1});
+
     const out = {
       users : users, 
       projects: projects,
