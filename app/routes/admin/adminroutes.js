@@ -649,55 +649,96 @@ router.post('/api/filter/users',  isAdmin, async (req,res)=>{
     let filter = { deleted:false };
     
     if(startDate){
-      let _d = startDate.split('/')[0];
-      let _m = startDate.split('/')[1];
+      let _d = startDate.split('/')[1];
+      let _m = startDate.split('/')[0];
       let _y = startDate.split('/')[2]; 
       let _sd = new Date(_y,_m,_d);  
       let year =_sd.getFullYear();
-      let month =_sd.getMonth();
+      let month =_sd.getMonth()-1;
       let date =  _sd.getDate();
       filter.created_dt = { $gte: new Date(year ,month ,date)}
     }
     
     if(endDate){
-      let _d = endDate.split('/')[0];
-      let _m = endDate.split('/')[1];
+      let _d = endDate.split('/')[1];
+      let _m = endDate.split('/')[0];
       let _y = endDate.split('/')[2]; 
       let _ed = new Date(_y,_m,_d);
 
       let year =_ed.getFullYear();
-      let month =_ed.getMonth();
+      let month =_ed.getMonth()-1;
       let date =  _ed.getDate();
 
       if(!startDate)
-      {filter.created_dt= { $lte: new Date(year ,month ,date)} }else{
+      {
+        filter.created_dt= { $lte: new Date(year ,month ,date)} }
+        else{
         filter.created_dt.$lte = new Date(year, month, date,23,59,59);
       }
             
     }
 
+  //   if(name)
+  //   { 
+
+  //     filter.fname = {$regex:new RegExp(name, "i")}
+  //  }
+  //   if(email)
+  //   {filter.email = new RegExp(email, "i") }
+
+    // let users = await appusers.find({},{password:0}).sort({created_dt:-1});
+    // let userIds = users?.map(i=>i._id);    
+    // let projects =[];
+    // let downloads =[];
+    // if(userIds && userIds.length >0)
+    // {
+    //   projects =await uploads.find( {uploaded_by:{$in:userIds}, type:'project'},{_id:1,uploaded_by:1}); 
+    //   filter.user_id = {$in:userIds};
+    //   filter.type =  'download_pdf';
+    //   downloads = await logs.find(filter,{_id:1,user_id:1});      
+    // } 
+
+    // users.downloads = downloads;
+    // const out = {
+    //   users : users, 
+    //   projects: projects,
+    //   downloads: downloads
+    // }
+    let _userIds = [];
     if(name)
-    { filter.fname = {$regex:new RegExp(name, "i")} }
+    { 
+      _userIds = await appusers.find({
+        fname:{$regex:new RegExp(name, "i")}
+      },{_id:1})
+      filter.user_id = {$in:_userIds};
+   }
     if(email)
-    {filter.email = new RegExp(email, "i") }
-
-    let users = await appusers.find(filter,{password:0}).sort({created_dt:-1}); 
-    let userIds = users?.map(i=>i._id);
-    let projects =[];
-    let downloads =[];
-    if(userIds && userIds.length >0)
     {
-      projects =await uploads.find( {uploaded_by:{$in:userIds}, type:'project'},{_id:1,uploaded_by:1})
-      downloads = await logs.find({user_id:{$in:userIds}, type:'download_pdf'},{_id:1,user_id:1});      
-    } 
+      _userIds = await appusers.find({
+        email:{$regex:new RegExp(email, "i")}
+      },{_id:1})
+      filter.user_id = {$in:_userIds};    
+    }
 
-    users.downloads = downloads;
+
+
+
+    filter.type = "download_pdf";
+    downloads = await logs.find(filter,{_id:1,user_id:1}) 
+    let userIds = downloads.map(i=>i.user_id); 
+    users = await appusers.find({_id:{$in:userIds}},{password:0}).sort({created_dt:-1});
+    
+    
+    
+    let projects = []; 
+   
     const out = {
       users : users, 
       projects: projects,
       downloads: downloads
     }
-    
+   
+
     return ok(res,out)
   }catch(ex){
     return error(res,ex)
@@ -705,17 +746,55 @@ router.post('/api/filter/users',  isAdmin, async (req,res)=>{
   
 })
 
+
 router.get('/api/filter/user-downloads/:id',  isAdmin, async (req,res)=>{ 
   try{
 
     const id = req.params["id"];
-    let downloads = await logs.find({user_id:id,  type:"download_pdf"}); 
+    const endDate = req.query["to"];
+    const startDate = req.query["from"];
+    let filter = {
+      user_id:id, 
+      type:"download_pdf"
+    }
+
+    
+    if(startDate){
+      let _d = startDate.split('/')[1];
+      let _m = startDate.split('/')[0];
+      let _y = startDate.split('/')[2]; 
+      let _sd = new Date(_y,_m,_d);  
+      let year =_sd.getFullYear();
+      let month =_sd.getMonth()-1;
+      let date =  _sd.getDate();
+      filter.created_dt = { $gte: new Date(year ,month ,date)}
+    }
+    
+    if(endDate){
+      let _d = endDate.split('/')[1];
+      let _m = endDate.split('/')[0];
+      let _y = endDate.split('/')[2]; 
+      let _ed = new Date(_y,_m,_d);
+
+      let year =_ed.getFullYear();
+      let month =_ed.getMonth()-1;
+      let date =  _ed.getDate();
+
+      if(!startDate)
+      {filter.created_dt= { $lte: new Date(year ,month ,date)} }else{
+        filter.created_dt.$lte = new Date(year, month, date,23,59,59);
+      }
+    }
+
+
+
+    let downloads = await logs.find(filter); 
     return ok(res,downloads)
   }catch(ex){
     return error(res,ex)
   }
-  
 })
+
 router.get('/api/filter/user-projects/:id',  isAdmin, async (req,res)=>{ 
   try{
 
