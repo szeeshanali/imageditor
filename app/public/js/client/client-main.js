@@ -203,6 +203,7 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
         // if((typeof(text) === 'object')) {
         //     this.self = text;
         // }
+        
 
         this.text = text.text || text;
         if(text.text)
@@ -287,7 +288,9 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
             ctx = canvas.getContext('2d'),
             cw, // character-width
             x, // iterator
-            clockwise = -1; // draw clockwise for aligned right. Else Anticlockwise
+            clockwise = -1;
+            id = this.id;
+            index = this.index; // draw clockwise for aligned right. Else Anticlockwise
 
         if (flipped) {
             startAngle = 180;
@@ -422,7 +425,9 @@ fabric.CurvedText = fabric.util.createClass(fabric.Object, {
             'fontStyle',
             'strokeStyle',
             'strokeWidth',
-            'underline'
+            'underline',
+            'id',
+            'index',
         ].concat(propertiesToInclude));
     }
 });
@@ -763,14 +768,7 @@ function loadDesign(id) {
 function applyFilter(index, filter) {
 let __canvas =  state.isPreviewCanvas?canvasPrev:canvas;
     var obj = __canvas.getActiveObject();
-    obj.filters[index] = filter;
-    // if (!obj.filterIndex && obj.filterIndex != 0) {
-    //     obj.filters[index] = true && filter;
-    //     obj.filterIndex = index;
-    // } else {
-    //     obj.filters[index] = false && filter;
-    //     obj.filterIndex = null;
-    // }
+    obj.filters[index] = filter;    
     obj.applyFilters();
     __canvas.renderAll();
 }
@@ -1446,6 +1444,7 @@ function initCanvasEvents() {
         }
 
         onObjectAdded(o);
+
     })
 
     canvasPrev.on("object:added", (o) => {
@@ -1758,7 +1757,7 @@ function grayscaleObject() {
 
 function brightnessObject() {
     $("#brightnessVal").text(`(0%)`);
-    $('#brightness-value').on("click", function () {
+    $('#brightness-value').on("input", function () {
         applyFilter(5, new fabric.Image.filters.Brightness({
             brightness: parseFloat($('#brightness-value').val())
         }));
@@ -1778,7 +1777,7 @@ function brightnessObject() {
 function contrastObject() {
     $("#contrastVal").text(`(0%)`);
 
-    $('#contrast-value').on("click", function () {
+    $('#contrast-value').on("input", function () {
         applyFilter(6, new fabric.Image.filters.Contrast({
             contrast: parseFloat($('#contrast-value').val())
         }))
