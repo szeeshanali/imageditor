@@ -273,7 +273,7 @@ function curveText(obj)
 function textCurrentValues(textObject){
     let selectedFontFamily = $("#fontlist").attr('data-value');
     textObject.fontFamily = selectedFontFamily;
-    textObject.cache          = false
+    //textObject.cache          = false
     return  new fabric.IText(textObject.text, textObject);
 }
 
