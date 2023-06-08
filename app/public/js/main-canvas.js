@@ -121,29 +121,19 @@ $("#collapse-layers").on("click", ".layer-item", function (e) {
                 object.top = object.top + 10; 
                 if(t == "curved-text"){
                   object =   curveText(object);
+                  object.id      = _canvas._objects.length,
+                  object.index   = _canvas._objects.length-1
                 }else{
                     object = addText(object);
                 }
 
-
-                // object.set("top", object.top + 5);
-                // object.set("left", object.left + 5);
-                // object.set("id", _canvas._objects.length)
-                // object.set("index", _canvas._objects.length-1)
-               
             }else
             {
-                
-                // object.set("top", object.top + 5);
-                // object.set("left", object.left + 5);
-                // object.set("id", _canvas._objects.length);
-                // object.set("index", _canvas._objects.length-1);
                 object.set({
                     top     : object.top+5,
                     left    : object.left+5,
                     id      : _canvas._objects.length,
                     index   : _canvas._objects.length-1
-                    
                 })
                 object.set({
                     scaleX:activeObj.scaleX,
@@ -1252,6 +1242,8 @@ function initContextMenu()
         if (e.target.checked) {
   
             var item = curveText(obj);
+            item.id = obj.id;
+            item.index = obj.index;
             item.globalCompositeOperation = "source-atop";
             //canvas.centerObject(item);
             if(obj.underline){
