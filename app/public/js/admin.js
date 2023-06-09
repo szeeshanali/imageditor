@@ -87,245 +87,6 @@ var $btnRedo = $("#btnRedo");
     $mainCtrl = $("#workspace-right-panel .main-ctrl");
 
     
-  fabric.CurvedText = fabric.util.createClass(fabric.Object, {
-    type: 'curved-text',
-    diameter: parseInt($("#curveTextCtrl").val()) || 250,
-    kerning: 0,
-    flipped:    $("#inputFlipText").prop("checked") || false,
-    fill:       $("#fontColorBox").val() || '#000000',
-    fontFamily: $("#fontlist").attr("data-value") || 'Comic-Sans',
-    fontSize: parseInt($("#btnTextSize").val()), // in px
-    fontWeight: 'normal',
-    fontStyle: '', // "normal", "italic" or "oblique".
-    cacheProperties: fabric.Object.prototype.cacheProperties.concat('diameter', 'kerning', 'flipped', 'fill', 'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'strokeStyle', 'strokeWidth'),
-    //strokeStyle: null,
-    stroke: $("#inputStrokeText").is(":checked")?(parseInt($("#strokecolor").val())):null,
-    strokeWidth: $("#inputStrokeText").is(":checked")?(parseInt($("#text-stroke-width").val())):null,
-    paintFirst: "stroke",
-    text: '',
-
-    initialize: function (text, options) { // this = (typeof(text) ==='object')?text:this;
-        options || (options =
-            {});
-
-        // if((typeof(text) === 'object')) {
-        //     this.self = text;
-        // }
-
-        this.text = text.text || text;
-        if(text.text)
-        {
-            for(var i in text)
-            { this[i] = text[i]; }
-        }
-
-        this.callSuper('initialize', options);
-        this.set('lockUniScaling', true);
-
-        // Draw curved text here initially too, while we need to know the width and height.
-        var ___canvas = this.getCircularText();
-        this._trimCanvas(___canvas);
-        this.set('width', ___canvas.width);
-        this.set('height', ___canvas.height);
-    },
-
-    _getFontDeclaration: function () {
-        const fontWeight =  this.fontWeight;
-        const fontStyle =   this.fontStyle;
-        const fontSize =    this.fontSize;
-        const fontFamily =  this.fontFamily;
-        return [
-            // node-canvas needs "weight style", while browsers need "style weight"
-            (fabric.isLikelyNode ? fontWeight : fontStyle),
-            (fabric.isLikelyNode ? fontStyle : fontWeight),
-            fontSize + 'px',
-            (fabric.isLikelyNode ? ('"' + fontFamily + '"') : fontFamily)
-        ].join(' ');
-    },
-
-    _trimCanvas: function (canvas) {
-        var ctx = canvas.getContext('2d'),
-            w = canvas.width,
-            h = canvas.height,
-            pix = {
-                x: [],
-                y: []
-            },
-            n,
-            imageData = ctx.getImageData(0, 0, w, h),
-            fn = function (a, b) {
-                return a - b
-            };
-
-        for (var y = 0; y < h; y++) {
-            for (var x = 0; x < w; x++) {
-                if (imageData.data[(
-                        (y * w + x) * 4
-                    ) + 3] > 0) {
-                    pix.x.push(x);
-                    pix.y.push(y);
-                }
-            }
-        }
-        pix.x.sort(fn);
-        pix.y.sort(fn);
-        n = pix.x.length - 1;
-
-        w = pix.x[n] - pix.x[0];
-        h = pix.y[n] - pix.y[0];
-        var cut = ctx.getImageData(pix.x[0], pix.y[0], w, h);
-
-        canvas.width = w;
-        canvas.height = h;
-        ctx.putImageData(cut, 0, 0);
-    },
-
-    // Source: http://jsfiddle.net/rbdszxjv/
-    getCircularText: function () {
-        
-        var text = this.text,
-            diameter = this.diameter,
-            flipped = $("#inputFlipText").prop("checked") || this.flipped,
-            kerning = this.kerning,
-            fill = this.fill,
-            inwardFacing = true,
-            startAngle = 0,
-            canvas = fabric.util.createCanvasElement(),
-            ctx = canvas.getContext('2d'),
-            cw, // character-width
-            x, // iterator
-            clockwise = -1; // draw clockwise for aligned right. Else Anticlockwise
-
-        if (flipped) {
-            startAngle = 180;
-            inwardFacing = false;
-        }
-
-        startAngle *= Math.PI / 180;
-        // convert to radians
-
-        // Calc heigt of text in selected font:
-        var d = document.createElement('div');
-        d.style.fontFamily = this.fontFamily;
-        d.style.whiteSpace = 'nowrap';
-        d.style.fontSize = this.fontSize + 'px';
-        d.style.fontWeight = this.fontWeight;
-        d.style.fontStyle = this.fontStyle;
-        d.textContent = text;
-        document.body.appendChild(d);
-        var textHeight = d.offsetHeight;
-        document.body.removeChild(d);
-
-        canvas.width = canvas.height = diameter;
-        ctx.font = this._getFontDeclaration();
-
-        // Reverse letters for center inward.
-        if (inwardFacing) {
-            text = text.split('').reverse().join('')
-        };
-
-        // Setup letters and positioning
-        ctx.translate(diameter / 2, diameter / 2); // Move to center
-        startAngle += (Math.PI * ! inwardFacing); // Rotate 180 if outward
-        ctx.textBaseline = 'middle'; // Ensure we draw in exact center
-        ctx.textAlign = 'center';
-        // Ensure we draw in exact center
-
-        // rotate 50% of total angle for center alignment
-        for (x = 0; x < text.length; x++) {
-            cw = ctx.measureText(text[x]).width;
-            startAngle += ((cw + (x == text.length - 1 ? 0 : kerning)) / (diameter / 2 - textHeight)) / 2 * - clockwise;
-        }
-
-        // Phew... now rotate into final start position
-        ctx.rotate(startAngle);
-
-        // Now for the fun bit: draw, rotate, and repeat
-        for (x = 0; x < text.length; x++) {
-            cw = ctx.measureText(text[x]).width;
-            // half letter
-            // rotate half letter
-            ctx.rotate((cw / 2) / (diameter / 2 - textHeight) * clockwise);
-          
-            const strokeStyle = this.stroke;
-            const strokeWidth = this.strokeWidth;
-            if (strokeStyle && strokeWidth) {
-                ctx.strokeStyle = strokeStyle;
-                ctx.lineWidth = strokeWidth;
-                ctx.strokeWidth = strokeWidth;
-                ctx.stroke = strokeStyle;
-                //ctx.miterLimit = 2;
-                ctx.strokeText(text[x], 0, (inwardFacing ? 1 : -1) * (0 - diameter / 2 + textHeight / 2));
-            }
-
-            // Actual text
-            ctx.fillStyle = fill;
-            ctx.fillText(text[x], 0, (inwardFacing ? 1 : -1) * (0 - diameter / 2 + textHeight / 2));
-            ctx.rotate((cw / 2 + kerning) / (diameter / 2 - textHeight) * clockwise); // rotate half letter
-        }
-        return canvas;
-    },
-
-    _set: function (key, value) {
-        switch (key) {
-            case 'scaleX':
-                this.fontSize *= value;
-                this.diameter *= value;
-                this.width *= value;
-                this.scaleX = 1;
-                if (this.width < 1) {
-                    this.width = 1;
-                }
-                break;
-
-            case 'scaleY':
-                this.height *= value;
-                this.scaleY = 1;
-                if (this.height < 1) {
-                    this.height = 1;
-                }
-                break;
-
-            default:
-                this.callSuper('_set', key, value);
-                break;
-        }
-    },
-
-    _render: function (ctx) {
-        
-        var canvas = this.getCircularText();
-        this._trimCanvas(canvas);
-        this.set('width', canvas.width);
-        this.set('height', canvas.height);
-        const width = this.width;
-        const height = this.height;
-        ctx.drawImage(canvas, - width / 2, - height / 2, width, height);
-        this.setCoords();
-        //this.left = this.text.left || this.left;
-        //this.top = this.text.top || this.top;
-    },
-
-    toObject: function (propertiesToInclude) {
-        return this.callSuper('toObject', [
-            'text',
-            'diameter',
-            'kerning',
-            'flipped',
-            'fill',
-            'fontFamily',
-            'fontSize',
-            'fontWeight',
-            'fontStyle',
-            'strokeStyle',
-            'strokeWidth'
-        ].concat(propertiesToInclude));
-    }
-});
-
-fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
-    return fabric.Object._fromObject('CurvedText', object, callback, forceAsync, 'curved-text');
-};
 
 
     var selectedDesign = {};
@@ -364,33 +125,21 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
         'resize'
     ];
     function applyFilter(index, filter) {
-
-        var obj = canvas.getActiveObject();
-        if (! obj) 
-            return;
-        
-
-        if (! obj.filterIndex && obj.filterIndex != 0) {
-            obj.filters[index] = true && filter;
-            obj.filterIndex = index;
-        } else {
-            obj.filters[index] = false && filter;
-            obj.filterIndex = null;
-        } obj.applyFilters();
-        canvas.renderAll();
-    }
-
-    function applyFilterValue(index, prop, value) {
-        var obj = canvas.getActiveObject();
-        if (! obj) 
-            return;
-        
-        if (obj.filters[index]) {
-            obj.filters[index][prop] = value;
+        let __canvas =  state.isPreviewCanvas?canvasPrev:canvas;
+            var obj = __canvas.getActiveObject();
+            obj.filters[index] = filter;    
             obj.applyFilters();
-            canvas.renderAll();
+            __canvas.renderAll();
         }
-    }
+        
+        function applyFilterValue(index, prop, value) {
+            var obj = canvas.getActiveObject();
+            if (obj.filters[index]) {
+                obj.filters[index][prop] = value;
+                obj.applyFilters();
+                canvas.renderAll();
+            }
+        }
 
     function flipXYObject() {
 
@@ -431,32 +180,32 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
 
     function brightnessObject() {
         $("#brightnessVal").text(`(0%)`);
-        $('#brightness-value').on("click", function () {
+        $('#brightness-value').on("input", function () {
             applyFilter(5, new fabric.Image.filters.Brightness({
                 brightness: parseFloat($('#brightness-value').val())
             }));
         })
-
+    
         $('#brightness-value').on("input", function () {
             var val = this.value;
             $("#brightnessVal").text(`(${
                 parseInt(val * 100)
             }%)`);
+    
             applyFilterValue(5, 'brightness', parseFloat(val));
         });
     }
-
     function contrastObject() {
         $("#contrastVal").text(`(0%)`);
-
-        $('#contrast-value').on("click", function () {
+    
+        $('#contrast-value').on("input", function () {
             applyFilter(6, new fabric.Image.filters.Contrast({
                 contrast: parseFloat($('#contrast-value').val())
             }))
         })
-
+    
         $('#contrast-value').on("input", function () {
-
+    
             var val = this.value;
             $("#contrastVal").text(`(${
                 parseInt(val * 100)
@@ -464,6 +213,7 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
             applyFilterValue(6, 'contrast', parseFloat(val));
         });
     }
+    
 
     function initImageEvents() {}
 
@@ -3116,7 +2866,7 @@ function getUserDownloads(userId, userName)
                   let d = [];
                   if(res.data)
                   {  
-                    $("#lbl-download-dates").text(`Date: ${fromDt?" From: "+fromDt+" - ":""} ${toDt}`)
+                    $("#lbl-download-dates").text(`Date: ${fromDt?" From "+fromDt+" - ":""} ${toDt}`)
                     showDownloadHistory(userId,userName,res.data) }
 
                 },error: function (request, status, error) {
