@@ -156,6 +156,10 @@
                 async: false,
                 success: function (res) {
                   $loader.addClass("hidden");
+                  if (isSessionExpired(res)) {
+                    return;
+                  }
+                
                   let d = [];
                   if(res.data)
                   { 
