@@ -24,7 +24,8 @@ $btnToolbarLarger.on("click",function(e){
     obj.angle = 0;     
     
     if(obj.type === 'i-text' || obj.type === 'curved-text')
-    { obj.fontSize =  parseInt(obj.fontSize)+2; }
+    {  obj.set("fontSize", parseInt(obj.fontSize)+2);
+    }
     else{ 
         obj.scaleToWidth(w);
         obj.scaleToHeight(h);
@@ -50,7 +51,9 @@ $btnToolbarSmaller.on("click",function(e){
     let originalAngle = obj.angle;
     obj.angle = 0;
     if(obj.type === 'i-text' || obj.type === 'curved-text')
-    {obj.fontSize = parseInt(obj.fontSize)-2;
+    {
+        obj.set("fontSize", parseInt(obj.fontSize)-2);
+        
     }else{
         obj.scaleToWidth(w); 
         obj.scaleToHeight(h); 
@@ -1195,9 +1198,11 @@ function editAndCommitUserProject(projectId) {
             comments    : comments
         },
         success: function (res) {
+            $loader.removeClass("hidden");
             toast("Project Changes has been Saved.");
         },
         error: function (res) {
+            $loader.removeClass("hidden");
             if (res.status === 401) {
                 toast(`${
                     res.statusText

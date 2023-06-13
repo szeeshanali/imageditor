@@ -2966,7 +2966,7 @@ function showDownloadHistory(userId, title, filteredDownloads) {
               "{td}",
               `
     <td><strong>${ item.content }</strong></td>
-    <td >${ d.title || 'N/A' }</td><td><a  href='${d.link}'>${d.ref_code}</a></td><td>${ new Date(item.created_dt).toLocaleString() }</td>` ) });
+    <td >${ d.title || 'N/A' }</td><td>${d.link}</td><td>${ new Date(item.created_dt).toLocaleString() }</td>` ) });
       table = table.replace("{tr}", temp);
       if (filteredHistory.length == 0) {
           table = "<p clsss='pd-y-20'>No Records Found.</p>"
