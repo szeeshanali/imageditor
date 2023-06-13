@@ -754,7 +754,6 @@ $("#btnLibraryModal").on("click",function(e){
         $("#btnConfirmBoxModalClose").text("No, Return to Design");
         $("#btnModelContinue").unbind().on("click",function(e){
             e.preventDefault();
-            
             saveDesign();
         })
         
@@ -1049,10 +1048,11 @@ $loader.removeClass("hidden");
                 return;
             }
             toast("Your Project has been Saved.");
+            $loader.removeClass("")
             // $("#input-project-title").val("");
             // $("#input-project-desc").val("");
             // $loader.addClass("hidden");
-            window.location.reload();
+            //window.location.reload();
         },
         error: function (res) {
             $loader.addClass("hidden");

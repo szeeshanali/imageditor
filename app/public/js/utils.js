@@ -161,16 +161,16 @@ function getPageFormatByDimensions(widthPx, heightPx)
     let wi = widthPx/dpi; 
     let hi = heightPx/dpi;
     if(wi === 8.5 && hi===11)
-        return "letter";
+        return "Letter";
     if(wi === 11 && hi===17)
-        return "tabloid";
+        return "Tabloid";
     if(wi === 17 && hi===11)
-        return "ledger";         
+        return "Ledger";         
     if(wi === 8.5 && hi===14)
-        return "legal";
+        return "Legal";
     
         console.error(`page format is not handled for this dimensions. ${wi}x${hi}`);
-    return "letter";
+    return "Letter";
 }
 
 
