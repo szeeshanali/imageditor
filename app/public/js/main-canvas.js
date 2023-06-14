@@ -1077,14 +1077,14 @@ function addLayer(o) {
 function loadProject(projectId, type)
 {
    $loader.removeClass("hidden");
-   if(type==="pre-designed")
-   {
-    $("#btn-edit-project").addClass("hidden");
-    $("#btnSaveModel").removeClass("hidden");
-   }else{
-    $("#btn-edit-project").removeClass("hidden");
-    $("#btnSaveModel").addClass("hidden");
-   }
+//    if(type==="pre-designed")
+//    {
+//     $("#btn-edit-project").addClass("hidden");
+//     $("#btnSaveModel").removeClass("hidden");
+//    }else{
+//     $("#btn-edit-project").removeClass("hidden");
+//     $("#btnSaveModel").addClass("hidden");
+//    }
 
 
    $.ajax({

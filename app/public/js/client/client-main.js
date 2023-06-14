@@ -237,7 +237,7 @@ function getUserProjects() {
         for (var i = 0; i < projects.length; i++) {
             var p = projects[i];
             var desc = p.title.lenght>50?p.title.substring(0, p.title.length):p.title;
-            temp += projectHtml.replace(/{{code}}/ig, p._id)
+            temp += projectHtml.replace(/{{code}}/ig, p.code)
             .replace(/{{src}}/ig, p.path)
             .replace(/{{title}}/ig, p.title)
             .replace(/{{created_dt}}/ig, new Date(p.created_dt).toDateString())
@@ -247,6 +247,7 @@ function getUserProjects() {
         $loader.addClass("hidden");
 
         $(".btn-edit-project").unbind().on("click",function(e){
+            
             const  _id = $(this).attr("id");
             if (canvas.getObjects().length == 0) {
                 loadProject(`${_id}`,false);                
@@ -284,7 +285,7 @@ function getSharedProjects() {
         projects?.forEach(item=>{
             let meta = JSON.parse(item.meta);
             temp += designHtml
-            .replace(/{{code}}/ig, item._id)
+            .replace(/{{code}}/ig, item.code)
             .replace(/{{base64}}/ig, item.path)
             .replace(/{{title}}/ig, item.title)
             .replace(/{{created_dt}}/ig, new Date(item.created_dt).toDateString())
@@ -588,6 +589,7 @@ function initUIEvents() {
     })
 
     initUIUndoRedo();
+
     initImageSelectionUIControls();
     /// disable previous date in rfq calandar.
     $(function(){
@@ -746,19 +748,70 @@ $("#btnLibraryModal").on("click",function(e){
             toast("Your project is empty, Please create your design and save.");
             return;
         }
+
+        validateProject((err,res)=>{
+            if(!err){
+                saveDesign();
+            }
+        });
+
+
     
-        $("#confirmbox").modal("toggle");
-        $("#confirmBoxTitle").text("ARE YOU SURE?")
-        $("#confirmBoxBody").text("Are you sure you wish to save this project?");
-        $("#btnModelContinue").text("Save Project");
-        $("#btnConfirmBoxModalClose").text("No, Return to Design");
-        $("#btnModelContinue").unbind().on("click",function(e){
-            e.preventDefault();
-            saveDesign();
-        })
+        // $("#confirmbox").modal("toggle");
+        // $("#confirmBoxTitle").text("ARE YOU SURE?")
+        // $("#confirmBoxBody").text("Are you sure you wish to save this project?");
+        // $("#btnModelContinue").text("Save Project");
+        // $("#btnConfirmBoxModalClose").text("No, Return to Design");
+        // $("#btnModelContinue").unbind().on("click",function(e){
+        //     e.preventDefault();
+        //     saveDesign();
+        // })
         
        
 })
+
+function validateProject(onResult){
+    $.ajax({
+        type: "POST",
+        url: "/api/project/validate",
+        data: {
+            title: title,
+            name: $("#input-project-title").val(),
+            type: "project"
+        },
+        success: function (res) {
+            if (isSessionExpired(res)) {  return; } 
+            onResult(false,res);
+        },
+
+        error: function (res) {
+            onResult(true,res);
+            $loader.addClass("hidden");
+            if(res.status === 403)
+            {
+
+                $('.modal').modal('hide');
+                 $("#noticebox").modal();
+                 $("#noticeboxBody").text("You have reached your allowable limit of Saved Projects.  Please select My Saved Projects and delete any unwanted Projects, then you can return to save this project.");
+
+            }else if (res.status === 409) {
+                
+                confirmBox(
+                    "ARE YOU SURE?",
+                    "Filename already exists, Do you wish to replace?",
+                    "Replace",
+                    "Cancel",(e)=>{
+                        saveDesign();
+                    })
+                //$("#confirmbox").modal("toggle");
+                //toast(`${ res.responseJSON.message}`);
+            } 
+            else if (res.status != 200) {
+                toast(`${ res.responseJSON.message}`);
+            } else {}
+        }
+    })
+}
 
 $("#btn-edit-project").on("click",function(e){
     e.preventDefault();
@@ -766,7 +819,6 @@ $("#btn-edit-project").on("click",function(e){
         toast("Your project is empty, Please create your design and save.");
         return;
     }
-
     $("#confirmbox").modal("toggle");
     $("#confirmBoxTitle").text("ARE YOU SURE?")
     $("#confirmBoxBody").text("Are you sure you wish to save this project?");
@@ -774,9 +826,7 @@ $("#btn-edit-project").on("click",function(e){
     $("#btnConfirmBoxModalClose").text("No, Return to Design");
     $("#btnModelContinue").unbind().on("click",function(e){
         e.preventDefault();
-
-    })
-    
+    })    
    
 })
     
@@ -1048,7 +1098,7 @@ $loader.removeClass("hidden");
                 return;
             }
             toast("Your Project has been Saved.");
-            $loader.removeClass("")
+            $loader.addClass("hidden")
             // $("#input-project-title").val("");
             // $("#input-project-desc").val("");
             // $loader.addClass("hidden");
@@ -1059,11 +1109,15 @@ $loader.removeClass("hidden");
             if(res.status === 403)
             {
 
-                 $("#confirmbox").modal();
+                $('.modal').modal('hide');
                  $("#noticebox").modal();
                  $("#noticeboxBody").text("You have reached your allowable limit of Saved Projects.  Please select My Saved Projects and delete any unwanted Projects, then you can return to save this project.");
 
-            }else if (res.status != 200) {
+            }else if (res.status === 409) {
+                $("#confirmbox").modal("toggle");
+                //toast(`${ res.responseJSON.message}`);
+            } 
+            else if (res.status != 200) {
                 toast(`${ res.responseJSON.message}`);
             } else {}
         }
@@ -1598,7 +1652,21 @@ function initImageSelectionUIControls()
 // if (savedCanvas) {
 //     canvas.loadFromJSON(savedCanvas, canvas.renderAll.bind(canvas));
 // }
-
+function confirmBox(title, message, continueButtonText,closeButtonText, delegate ){
+    continueButtonText = continueButtonText || "Continue";
+    closeButtonText = closeButtonText || "closeButtonText";    
+    delegate = delegate || function() { alert("No Event Attached."); }
+    title = title || "ARE YOU SURE?"; 
+    $("#confirmbox").modal("toggle");
+    $("#confirmBoxTitle").text(title)
+    $("#confirmBoxBody").text(message);
+    $("#btnModelContinue").text(continueButtonText);
+    $("#btnConfirmBoxModalClose").text(closeButtonText);
+    $("#btnModelContinue").unbind().on("click",function(e){
+        e.preventDefault();
+        delegate(e);
+    })
+}
 
 
 var grid = 20;

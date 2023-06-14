@@ -91,7 +91,7 @@ router.get(ROUTE_USER_HOME,  async (req, res) => {
 router.get("/api/project/:id?", isLoggedIn,  async (req, res) => {
     var id = req.params.id; 
     try{
-        var data = await uploads.findOne({_id:id,deleted:false,active:true},
+        var data = await uploads.findOne({code:id,deleted:false,active:true},
             {
                 code    :1,
                 title   :1,
@@ -133,7 +133,8 @@ router.get("/api/custom-designs", isLoggedIn,  async (req, res) => {
             path:1,
             title:1,
             created_dt:1,
-            meta:1
+            meta:1,
+            code:1
         }); 
         
         if(data)
@@ -272,8 +273,7 @@ router.put('/api/client/edit-user-design/:id',isLoggedIn, async function(req, re
           return error(res)
         }
   
-        let {json,comments,base64} = req.body; 
-            
+        let {json,comments,base64} = req.body;             
         let _path = `../app/public/uploads/client/project/project-${project_id}.jpg`;    
         let _base64Alter = base64.replace(`data:${"image/png"};base64,`, "");
         await fs.writeFileSync(_path,_base64Alter,{ encoding: 'base64' }); 
@@ -310,7 +310,7 @@ router.get("/api/my-designs", isLoggedIn, async function(req,res){
             type:"project",
             active:true,
             deleted:false,
-        },{_id:1,title:1,created_dt:1,path:1,meta:1,desc:1});
+        },{_id:1,title:1,created_dt:1,path:1,meta:1,desc:1,code:1});
 
         d = d.map(i=>{
             i.path = i.path?.replace("../app/public","");
@@ -334,6 +334,47 @@ router.get("/api/my-designs", isLoggedIn, async function(req,res){
     }
 })
 
+router.post('/api/project/validate', isLoggedIn, async function(req, res) {
+    try{
+    
+        const totalProjects =  await uploads.find({ 
+            uploaded_by     :   req.user._id,  
+            deleted         :   false,
+            active          :   true,
+            type            :   'project'
+    
+        },{title:1}); 
+    
+        const count = totalProjects.length;
+        console.log(`total project count: ${count}`); 
+        console.log(totalProjects);    
+        if(count>=req.user.project_limit){
+            //return res.status(401).send({message:`You can not save more than ${req.user.project_limit} projects.`, error: `You can not save more than ${req.user.project_limit} projects.`});
+            return res.status(403).send({
+                status:403,
+                message:`You can not save more than ${req.user.project_limit} projects.`,
+                exception:null,
+                error:true,
+                valid:false
+            });
+        }        
+        let {name,title} = req.body;      
+        if(totalProjects.find(i=>i.title?.toLowerCase()?.trim() === name?.toLowerCase().trim()))
+        {
+            ///return res.status(400).send({message:`A project with the same name  (${title}) is already exists. `, error: `Project with the same name  (${title}) is already exists. `});
+            return res.status(409).send({
+                status:409,
+                message:`Filename already exists, Do you wish to replace?`,
+                exception:null,
+                error:true,
+                valid:false
+            });
+        }
+        return ok(res);
+    }catch(ex){
+        console.error(ex)
+        return error(res,ex.message);
+    }})    
 
 router.post('/app/client/save-design', isLoggedIn, async function(req, res) {
 try{
@@ -344,7 +385,7 @@ try{
         active          :   true,
         type            :   'project'
 
-    },{title:1}); 
+    },{title:1,code:1}); 
 
     const count = totalProjects.length;
     console.log(`total project count: ${count}`); 
@@ -360,18 +401,56 @@ try{
             valid:false
         });
     }        
-    let {comments, id, itemId, userDesignId, desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
-     
-    if(totalProjects.find(i=>i.title?.toLowerCase()?.trim() === title?.toLowerCase().trim()))
+    let {comments, id, itemId, userDesignId, desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body;      
+    var p = totalProjects.find(i=>i.title?.toLowerCase()?.trim() === title?.toLowerCase().trim())
+    if(p)
     {
         ///return res.status(400).send({message:`A project with the same name  (${title}) is already exists. `, error: `Project with the same name  (${title}) is already exists. `});
-        return res.status(400).send({
-            status:401,
-            message:`Project with the same name is already exists, please choose different name.`,
-            exception:null,
-            error:true,
-            valid:false
-        });
+        // return res.status(409).send({
+        //     status:409,
+        //     message:`Filename already exists, Do you wish to replace?`,
+        //     exception:null,
+        //     error:true,
+        //     valid:false
+        // });
+
+        try{
+      
+            const project_id = p.code;
+            if(!project_id){
+              return error(res)
+            }
+      
+             
+            let _path = `../app/public/uploads/client/project/project-${project_id}.jpg`;    
+            let _base64Alter = base64.replace(`data:${"image/png"};base64,`, "");
+            await fs.rmSync(_path, {force: true});
+            await fs.writeFileSync(_path,_base64Alter,{ encoding: 'base64' ,flag:"w"  }); 
+            
+            var project = await uploads.findOne({code: project_id});
+            project.json = json;
+            project.modified_dt = new Date();
+            if(!project.comments){
+              project.comments = [];
+            }
+            project.comments.push(
+              {
+                name        :   "You",
+                created_dt  :   new Date(),
+                comments    :   comments,
+                path : _path
+            });
+            
+            project.save();
+            return ok(res);
+        
+            }catch(ex) {
+                console.log(ex);
+              return error(res,ex);
+            }
+
+
+
     }
         
     
@@ -406,7 +485,7 @@ try{
     }
 
     
-    let _path = `../app/public/uploads/client/pre-designed/pre-designed-${_id}.jpg`;    
+    let _path = `../app/public/uploads/client/project/project-${_id}.jpg`;    
     let _base64Alter = base64.replace(`data:${"image/png"};base64,`, "");
     await fs.writeFileSync(_path,_base64Alter,{ encoding: 'base64' }); 
     uploadModel.path = _path;
