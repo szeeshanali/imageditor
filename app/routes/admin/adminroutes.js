@@ -1095,9 +1095,9 @@ router.post('/api/admin/save-design', isAdmin, async function(req, res) {
       if(totalProjects.find(i=>i.title?.toLowerCase()?.trim() === title?.toLowerCase().trim()))
       {
           ///return res.status(400).send({message:`A project with the same name  (${title}) is already exists. `, error: `Project with the same name  (${title}) is already exists. `});
-          return res.status(400).send({
-              status:401,
-              message:`Project with the same name is already exists, please choose different name.`,
+          return res.status(409).send({
+              status:409,
+              message:`Filename already exists, Do you wish to replace?`,
               exception:null,
               error:true,
               valid:false
