@@ -232,7 +232,7 @@ router.get("/app/main",  async (req, res) => {
 router.delete("/api/my-designs/:id", isLoggedIn,  async (req, res) => {
     try{
         var id = req.params["id"]; 
-        var data  =  await uploads.remove({_id:id, uploaded_by:req.user._id});
+        var data  =  await uploads.remove({code:id, uploaded_by:req.user._id});
         return ok(res, data);
     }catch(ex)
     {
