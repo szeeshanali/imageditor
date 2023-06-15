@@ -87,7 +87,6 @@ const designHtml = `<div class='pre-designed col-md-6 p-lg-1 align-self-normal'>
         <p class="mg-b-0 tx-12 tx-bold">Sheet Size: {{sheetSize}}</p>
         <p class="mg-b-0 tx-12 tx-bold">Logo Size: {{logoSize}}</p>
         <p class="mg-b-0 tx-12 tx-bold">Total Logos: {{totalLogos}}</p>
-        <p class="mg-b-0 tx-12 tx-bold tx-uppercase">Format: {{pageFormat}}</p>
         <a href="#" class="btn btn-sm btn-success tx-bold tx-12 tx-uppercase btn-edit-customdesign" id="{{code}}"  >Edit Project</a>
       </div>
     </div>
@@ -247,7 +246,7 @@ function getUserProjects() {
         $loader.addClass("hidden");
 
         $(".btn-edit-project").unbind().on("click",function(e){
-            
+            canvasUndo.dispose();
             const  _id = $(this).attr("id");
             if (canvas.getObjects().length == 0) {
                 loadProject(`${_id}`,false);                
@@ -300,6 +299,7 @@ function getSharedProjects() {
                 loadProject(`${_id}`,'pre-designed');                                
                 return;
             }else{
+                canvasUndo.dispose();
                 $("#shared-lib-modal").modal("hide");
                 $("#confirmbox").modal("toggle");
                 $("#confirmBoxTitle").text("ARE YOU SURE? ALL EDITS WILL BE LOST. ");                
