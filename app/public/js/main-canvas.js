@@ -1090,13 +1090,14 @@ function loadProject(projectId, type)
 //     $("#btnSaveModel").addClass("hidden");
 //    }
 
-
+    let admin = type?"admin/":"";
    $.ajax({
        type: "GET",
-       url: `/api/project/${projectId}`,
+       url: `/api/${admin}project/${projectId}`,
        success: function (res) {
            if (!res.data) {
-               window.location.reload();
+               toast("Error loading Project, Please reload the page."); 
+               $loader.addClass("hidden")
                return;
            }
 

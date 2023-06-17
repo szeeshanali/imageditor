@@ -284,7 +284,7 @@ function getSharedProjects() {
         projects?.forEach(item=>{
             let meta = JSON.parse(item.meta);
             temp += designHtml
-            .replace(/{{code}}/ig, item.code)
+            .replace(/{{code}}/ig, item._id)
             .replace(/{{base64}}/ig, item.path)
             .replace(/{{title}}/ig, item.title)
             .replace(/{{created_dt}}/ig, new Date(item.created_dt).toDateString())
@@ -296,7 +296,7 @@ function getSharedProjects() {
         $(".btn-edit-customdesign").unbind().on("click",function(e){
             const  _id = $(this).attr("id");
             if (canvas.getObjects().length == 0) {
-                loadProject(`${_id}`,'pre-designed');                                
+                loadProject(`${_id}`);                                
                 return;
             }else{
                 canvasUndo.dispose();
