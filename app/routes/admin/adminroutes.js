@@ -957,16 +957,14 @@ router.get('/app/admin/user-project/:id', isAdmin, async (req,res)=>{
   let template = {};
   let meta = {};
   
- let _uploads = await uploads.find({$or:[
-   {type:"template"}
-  ,{type:"clipart"}
-  ,{type:"pre-designed"}
+ let _uploads = await uploads.find(
+  {type:{$in:["template","clipart"]},
+  active:true,deleted:false},{json:0,base64:0,thumbBase64:0}).sort({order_no:1});
 
-],active:true,deleted:false},{json:0,base64:0,thumbBase64:0}).sort({order_no:1});
  let templates = _uploads.filter(function(i){return i.type === 'template'});
  let cliparts = _uploads.filter(function(i){return i.type === 'clipart'});
- let customDesigns = _uploads.filter(function(i){return i.type === 'pre-designed'});
- let banners = await uploads.find({type:'banner', active:true, deleted:false, ref_code:'home-page'});
+ //let customDesigns = await uploads.findOne({type:'pre-designed'});
+ let banners = await uploads.find({type:'banner', active:true, deleted:false, ref_code:'home-page',json:0,base64:0});
  let customText = await commonService.contentService.getContentAsync('custom-text');
  let fonts = await commonService.contentService.getContentAsync('fonts',false);
  let ca = [];
@@ -995,7 +993,7 @@ router.get('/app/admin/user-project/:id', isAdmin, async (req,res)=>{
       template:template,
       templateMeta:meta,
       templates: templates,
-      customDesigns: customDesigns,
+      customDesigns: [],
       cliparts:ca,
       categories:categories,
       type:type,
@@ -1457,7 +1455,6 @@ router.get("/api/admin/project/:id?", isAdmin,  async (req, res) => {
   try{
     if(!id)
     { return res.status(404).send("Design not Found.") }
-
     var data  = await uploads.findOne({_id:id},{_id:1,json:1,meta:1});
       res.status(200).send({data:data});
   }catch(ex) {

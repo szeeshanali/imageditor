@@ -295,7 +295,7 @@
  {
  
       var code = '<%=code || "default" %>' ;
-      loadProject(code);
+      loadProject(code,true);
       $("#hiddenDesignId").val(code);
       $('[data-toggle="popover"]').popover()
      $("#btn-edit-user-project").attr("data-project-id",code);
