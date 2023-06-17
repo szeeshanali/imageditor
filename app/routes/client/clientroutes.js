@@ -91,7 +91,7 @@ router.get(ROUTE_USER_HOME,  async (req, res) => {
 router.get("/api/project/:id?", isLoggedIn,  async (req, res) => {
     var id = req.params.id; 
     try{
-        var data = await uploads.findOne({code:id,deleted:false,active:true},
+        var data = await uploads.findOne({_id:id,deleted:false,active:true},
             {
                 code    :1,
                 title   :1,
@@ -105,6 +105,7 @@ router.get("/api/project/:id?", isLoggedIn,  async (req, res) => {
         return error(res,ex)
     }
 });
+
 
 router.get("/api/custom-design/:id?", isLoggedIn,  async (req, res) => {
     
