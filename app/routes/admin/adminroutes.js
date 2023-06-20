@@ -1455,7 +1455,7 @@ router.get("/api/admin/project/:id?", isAdmin,  async (req, res) => {
   try{
     if(!id)
     { return res.status(404).send("Design not Found.") }
-    var data  = await uploads.findOne({_id:id},{_id:1,json:1,meta:1});
+    var data  = await uploads.findOne({_id:id},{_id:1,json:1,meta:1,title:1,name:1,desc:1});
       res.status(200).send({data:data});
   }catch(ex) {
       console.error(`Error: api:/api/p/${id}, exception:${ex}`);
