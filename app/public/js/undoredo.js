@@ -10,17 +10,18 @@ var canvasUndo = (function(canvas){
           redoFinishedStatus      : 1,
           undoButton              : document.getElementById('undo'),
           redoButton              : document.getElementById('redo'),
+          skipundo                : false
       };
       _canvasObject.on(
-          'object:modified', function(){
-            
-                updateCanvasState();
+          'object:modified', function(e){
+            updateCanvasState();           
           }
       );
     
     _canvasObject.on(
-          'object:added', function(){
+          'object:added', function(e){
             updateCanvasState();
+            
           }
       );
     
@@ -39,6 +40,9 @@ var canvasUndo = (function(canvas){
   
       var updateCanvasState = function() {
       
+        if(_config.skipundo)
+        {return;}
+        
           if((_config.undoStatus == false && _config.redoStatus == false)){
               var jsonData        = _canvasObject.toDatalessJSON();
               var canvasAsJson        = JSON.stringify(jsonData);

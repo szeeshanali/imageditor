@@ -1140,6 +1140,7 @@ function loadProject(projectId, type)
 
             $('#my-proj-modal').modal('hide');
                $('#shared-lib-modal').modal('hide');
+
                $("#input-project-title").val(res.data.title);
                $("#input-project-desc").val(res.data.desc);
                $("#btn-edit-project").unbind().on("click",function(){
