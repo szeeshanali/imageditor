@@ -65,8 +65,10 @@ function cropInit(){
             originX:"center",
             originY:"center",
         }) ;
-        canvas.insertAt(image,originalImageIndex,false);
+        
         canvas.centerObject(image);
+        canvas.insertAt(image,originalImageIndex,false);        
+        image.setCoords();
         canvas.renderAll();
         //addLayer();
     };
