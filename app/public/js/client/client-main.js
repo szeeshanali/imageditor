@@ -236,7 +236,7 @@ function getUserProjects() {
         for (var i = 0; i < projects.length; i++) {
             var p = projects[i];
             var desc = p.title.lenght>50?p.title.substring(0, p.title.length):p.title;
-            temp += projectHtml.replace(/{{code}}/ig, p.code)
+            temp += projectHtml.replace(/{{code}}/ig, p._id)
             .replace(/{{src}}/ig, p.path)
             .replace(/{{title}}/ig, p.title)
             .replace(/{{created_dt}}/ig, new Date(p.created_dt).toDateString())
@@ -307,7 +307,7 @@ function getSharedProjects() {
                 $("#btnModelContinue").text("Yes, Open this Design")
                 $("#btnConfirmBoxModalClose").text("No, Return to Design")
                 $("#btnModelContinue").unbind().on("click",function(e){
-                    loadProject(`${_id}`,'pre-designed');                
+                    loadProject(`${_id}`);                
                 })
                 
             }
