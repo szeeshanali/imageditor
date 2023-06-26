@@ -60,7 +60,7 @@
 
                 <div class="btn-group pd-t-30" role="group" aria-label="Basic example">
                     <button type="button" id="btnFilterUsers" class="btn btn-primary pd-x-25 active tx-bold tx-uppercase tx-12">Search</button>
-                    <button type="button" id="btnFilterUserClear" class="btn btn-primary pd-x-25 tx-bold tx-uppercase tx-12">Clear</button>                
+                    <button type="button" id="btnFilterUserClear" class="btn btn-primary pd-x-25 tx-bold tx-uppercase tx-12">Clear</button>
                   </div>
                 </div>
 
@@ -70,9 +70,15 @@
             
           </div>
           <div class="card pd-20  mg-t-20">
-            <h6 class="card-body-title">Records (<span id="lblTotalRecords">0</span>)</h6>
+            <div class="row mg-b-15">
+                  <div class="col-lg-6"><h6 class="card-body-title">Records (<span id="lblTotalRecords">0</span>)</h6></div>
+                  <div class="col-lg-6 text-right"><button type="button" id="btnDeleteLogs" class="soft hand btn btn-danger pd-x-25 tx-bold tx-uppercase tx-12 ">Delete PDF Download Logs</button></div>
+            </div>
+            
+                            
 
             <table id="userDT" class="display tx-center" style="width:100%">
+            
               <thead>
                 <tr class="tx-uppercase tx-12 tx-center" >
                     <th >Name</th>
@@ -130,7 +136,8 @@
     $btnClearSearch = $("#btnFilterUserClear");
     $lblTotalRecords =$("#lblTotalRecords");
     $btnDatepickerFrom = $("#btnDatepickerFrom"); 
-    $btnDatepickerTo = $("#btnDatepickerTo"); 
+    $btnDatepickerTo = $("#btnDatepickerTo");
+    $btnDeleteLogs = $("#btnDeleteLogs"); 
     $inputName = $("#inputName"); 
     $inputEmail = $("#inputEmail");
 
@@ -139,7 +146,8 @@
       startDate : null,  
       endDate   : null,
       name      : null, 
-      email     : null
+      email     : null,
+      delete_logs    : false
     
     }; 
 
@@ -173,6 +181,15 @@
       $("#inputEmail").val("");
 
     })
+
+    $btnDeleteLogs.on("click",function(e){
+      if(confirm("All Filtered Pdf Download Logs will be permanently deleted, Are you sure?")){
+        filter.delete_logs = true; 
+      $btnSearch.click();  
+
+      }
+    })
+
     $btnSearch.on("click",function(e){
       if(
         !filter.startDate &&

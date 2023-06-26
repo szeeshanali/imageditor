@@ -554,18 +554,23 @@ router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
     let meta = {};
     
    let _uploads = await uploads.find({
-    type:{$in:["template","clipart","pre-designed"]}
+    type:{$in:["template","clipart","pre-designed","banner"]}
     ,active:true,deleted:false},{json:0,base64:0,thumbBase64:0}).sort({order_no:1});
 
    let templates = _uploads.filter(function(i){return i.type === 'template'});
    let cliparts = _uploads.filter(function(i){return i.type === 'clipart'});
    let customDesigns = _uploads.filter(function(i){return i.type === 'pre-designed'});
-   let banners = await uploads.find({
-    type:'banner', 
-    active:true, 
-    deleted:false, 
-    ref_code:'home-page'
-},{path:1,link:1});
+   let banners = _uploads.filter(function(i){return (i.type === 'banner' && i.ref_code === 'home-page')});
+   let myProjectCount = await uploads.count({type:"project",uploaded_by:req.user._id,active:true, deleted:false}); 
+   //    let banners = await uploads.find({
+//     type:'banner', 
+//     active:true, 
+//     deleted:false, 
+//     ref_code:'home-page'
+// },{path:1,link:1});
+
+
+
    let customText = await commonService.contentService.getContentAsync('custom-text');
    let fonts = await commonService.contentService.getContentAsync('fonts',false);
    let ca = [];
@@ -600,6 +605,7 @@ router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
         type:type,
         code:id,
         project_limit:req.user.project_limit,
+        projectCount: myProjectCount,
         customText:customText,
         fonts:fonts,
         banners:banners,

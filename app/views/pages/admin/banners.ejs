@@ -4,7 +4,8 @@
             <div class="list-group-item d-flex">            
               <a href="#" id="btnBrowseBanner" class="btn tx-bold btn-block tx-uppercase btn-primary pd-lg-x-20 mg-l-auto">Browse Image</a>
               <input id="hiddenUploadBannerFile" data-page-id="<%=locals.page.id%>" type="file" accept="image/*" multiple="multiple" hidden="hidden">
-            <input id="design-type" value="banner" hidden="hidden">
+              <input id="design-type" value="banner" hidden="hidden">
+              <input id="hiddenBannerId" value="banner" hidden="hidden">
     
             </div>
             
@@ -40,18 +41,24 @@
         </div>
      
         <div class="col-lg-3">
-          <div class="row" id="bannerThumbs">
+          <div class="row" id="bannerThumbs" style="max-height: 800px;overflow-y: auto;">
             <%banners?.forEach((item)=>{%>
               <div class="col-lg-6 pd-1">
                 <div class="card bd-0"  >
                   <div >
-                  <img class="card-img-top img-fluid"   src="<%=item.base64%>" alt="Image">
+                    <div style="position: absolute;right:0;top:0; width:50px"><i title="Disabled" class="<%=item.active?'hidden':''%> tx-danger tx-22 ion-eye-disabled"></i></div>
+                  <img class="card-img-top img-fluid"   src="<%=item.path?.replace('../app/public','')%>" alt="Image">
                 </div>
                   <div class="card-body bd bd-t-0">
                     <span class="tx-12"><%=item.ref_code??'main-page'%></span>
                     <h6 class="mg-b-3"><a href="" class="tx-dark"><%=item.title%></a></h6>
                     <span class="tx-12"><%=item.link%></span>
-                    <button type="button" id="<%=item.code%>" class="btn btn-sm btn-primary tx-12 tx-bold tx-uppercase delete">Delete</button>
+                    <div class="btn-group">
+
+
+                      <button type="button" id="<%=item._id%>" data-meta="<%=JSON.stringify({ref_code:item.ref_code,title:item.title,link:item.link, path:item.path,active:item.active})%>" class="btn btn-sm btn-success tx-12 tx-bold tx-uppercase edit">Edit</button>
+                      <button type="button" id="<%=item.code%>" class="btn btn-sm btn-warning tx-12 tx-bold tx-uppercase delete">Delete</button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -66,4 +73,9 @@
     $(".tab-content .tab-pane").each((i,e)=>
     { $(e).removeClass("active"); })    
    $("#clipartpanel").addClass("active");
+
+  
+   $(document).ready(function(){
+  canvasUndo.config.skipundo = true; 
+})
 </script>
