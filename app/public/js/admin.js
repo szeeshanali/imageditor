@@ -759,11 +759,14 @@ $loader.removeClass("hidden");
              reader.onload = (e) => {
 
                  fabric.Image.fromURL(e.target.result, (img) => {
-                             
+                    
+                    $("#inputBannerName").val("");
+                    $("#inputBannerUrl").val("");
+                    $("#hiddenBannerId").val("");
+        
+                    canvas.clear();
+
                      img.scaleToHeight(250);   
-                                     
-                     //let canvasCenter = getCanvasCenter(img.width,img.height)
-                     //img.set({left: canvasCenter.left, top: canvasCenter.top})
                      canvas.add(img);
                      canvas.centerObject(img);
                      canvas.renderAll();
