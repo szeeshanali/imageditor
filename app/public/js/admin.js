@@ -759,11 +759,14 @@ $loader.removeClass("hidden");
              reader.onload = (e) => {
 
                  fabric.Image.fromURL(e.target.result, (img) => {
-                             
+                    
+                    $("#inputBannerName").val("");
+                    $("#inputBannerUrl").val("");
+                    $("#hiddenBannerId").val("");
+        
+                    canvas.clear();
+
                      img.scaleToHeight(250);   
-                                     
-                     //let canvasCenter = getCanvasCenter(img.width,img.height)
-                     //img.set({left: canvasCenter.left, top: canvasCenter.top})
                      canvas.add(img);
                      canvas.centerObject(img);
                      canvas.renderAll();
@@ -781,9 +784,15 @@ $loader.removeClass("hidden");
             let bannerName       = $("#inputBannerName").val();
             let bannerUrl        = $("#inputBannerUrl").val();
             let bannerType       = $("#banner-type").val();
+            const bannerId       = $("#hiddenBannerId").val();
+            
+            if(bannerId && bannerId.length > 10){
+                if(!confirm("Are you sure you want to update banner changes?"))
+                {return;}
+            }
+            
             if(!isValidBanner(bannerName,bannerType))
             {return;}
-
             $loader.removeClass("hidden");
 
             const meta = {
@@ -793,13 +802,14 @@ $loader.removeClass("hidden");
                 width       :   selectedBanner.image.width,
                 height      :   selectedBanner.image.height,
                 fileType    :   selectedBanner.file.type,
-                file_ext    : `.${selectedBanner.file.name.split('.').pop()}`,
+                file_ext    : `.${selectedBanner.file.name?.split('.')?.pop()}`,
                 url         :  bannerUrl,
                 type        :  bannerType
             };
           
             const dataUrl         = selectedBanner.base64;       
             const designType      =  "banner";
+            debugger;
             const active          = $("#cbBannerActive").prop("checked");
             
 
@@ -818,7 +828,8 @@ $loader.removeClass("hidden");
                     type: designType,
                     ref_code: bannerType,
                     link:bannerUrl,
-                    by_admin: true
+                    by_admin: true, 
+                    itemId : $("#hiddenBannerId").val()
                 },
                 success: function (res) {
                     disposeBanner();
@@ -840,6 +851,42 @@ $loader.removeClass("hidden");
             let target = e.currentTarget; 
             let id = target.id; 
             deleteBanner(id);
+        })
+
+        
+        $("#bannerThumbs .edit").on("click",function(e){
+            const $target = $(this); 
+            const meta = $target.attr("data-meta");
+            const id =$target.attr("id");
+            const metaJson = JSON.parse(meta);
+            let {link,title,active,path, ref_code} = metaJson;
+            $("#inputBannerName").val(title);
+            $("#inputBannerUrl").val(link);
+            $("#banner-type").val(ref_code);
+            $("#cbActiveBanner").prop("checked",active);
+            path = path.replace("../app/public",'');
+            fabric.Image.fromURL(path, function (img, isError) {
+                if(isError){
+                    console.log(`Error loading image. Path:${path}`); 
+                    toast("Error loading image");
+                    return;
+                }
+
+
+               img.scaleToHeight(250);   
+               canvas.centerObject(img);
+               canvas.add(img);
+               canvas.renderAll();
+               selectedBanner={
+                  file:{},
+                  base64:img.toDataURL(),
+                  image:img
+              }
+
+                $("#hiddenBannerId").val(id);
+                         
+            });
+           // deleteBanner(id);
         })
 
       
@@ -2698,7 +2745,7 @@ if(!order || order < 1){
         $("#edit-user-container .email").val(user.email);
         $("#edit-user-container .company").val(user.company_name);
         $("#edit-user-container .project_lmt").val(user.project_limit);
-        $("#edit-user-container .created_dt").val(new Date(user.created_dt).toLocaleDateString("en-GB"));
+        $("#edit-user-container .created_dt").val(new Date(user.created_dt).toLocaleDateString("en-US"));
         $("#edit-user-container .is_admin").prop("checked", user.is_admin);
         $("#edit-user-container .is_active").prop("checked", user.active);
         $("#edit-user-container .watermark").prop("checked", user.watermark);
@@ -2946,8 +2993,8 @@ function showDownloadHistory(userId, title, filteredDownloads) {
       filteredHistory = filteredDownloads ? filteredDownloads : history.filter(function (f) {
           return f.user_id == userId
       });
-      let table = `<div class='table-responsive' style='max-height:400px;overflow-y:auto'>
-      <table  class='table mg-b-0 tx-12 tx-bold tx-uppercase' >
+      let table = `<div>
+      <table  id='history-table' class='table table-striped table mg-b-0 tx-12 tx-bold tx-uppercase' >
           <thead>
               <th>Download Name</th>
               <th>Template Name</th>
@@ -2975,4 +3022,6 @@ function showDownloadHistory(userId, title, filteredDownloads) {
       $("#lbl-download-count").text(filteredHistory.length)
       $("#downloadHistoryTitle").text(_title);
       $("#downloadHistoryContent").html(table);
+      $('#history-table').DataTable();
+
   }
