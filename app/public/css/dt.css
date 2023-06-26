@@ -930,6 +930,10 @@ color:#333;
   background-color: #eee;
 }
 
+#canvas-holder{
+  overflow:auto;
+  margin-top: 20px;
+}
 
 .canvas-container {
   margin: auto;

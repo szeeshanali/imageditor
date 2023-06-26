@@ -643,9 +643,10 @@ router.get('/app/admin/template-designer',  isAdmin, async (req,res)=>{
 })
 
 
-router.post('/api/filter/users',  isAdmin, async (req,res)=>{ 
+router.post('/api/filter/users', isAdmin, async (req,res)=>{ 
   try{
-    const {startDate, endDate, name, email} = req.body;
+    
+    const {startDate, endDate, name, email,delete_logs} = req.body;
     let filter = { deleted:false };
     
     if(startDate){
@@ -678,32 +679,6 @@ router.post('/api/filter/users',  isAdmin, async (req,res)=>{
             
     }
 
-  //   if(name)
-  //   { 
-
-  //     filter.fname = {$regex:new RegExp(name, "i")}
-  //  }
-  //   if(email)
-  //   {filter.email = new RegExp(email, "i") }
-
-    // let users = await appusers.find({},{password:0}).sort({created_dt:-1});
-    // let userIds = users?.map(i=>i._id);    
-    // let projects =[];
-    // let downloads =[];
-    // if(userIds && userIds.length >0)
-    // {
-    //   projects =await uploads.find( {uploaded_by:{$in:userIds}, type:'project'},{_id:1,uploaded_by:1}); 
-    //   filter.user_id = {$in:userIds};
-    //   filter.type =  'download_pdf';
-    //   downloads = await logs.find(filter,{_id:1,user_id:1});      
-    // } 
-
-    // users.downloads = downloads;
-    // const out = {
-    //   users : users, 
-    //   projects: projects,
-    //   downloads: downloads
-    // }
     let _userIds = [];
     if(name)
     { 
@@ -724,10 +699,18 @@ router.post('/api/filter/users',  isAdmin, async (req,res)=>{
 
 
     filter.type = "download_pdf";
-    downloads = await logs.find(filter,{_id:1,user_id:1}) 
-    let userIds = downloads.map(i=>i.user_id); 
+    let projects = [];
+    if(delete_logs === 'false'){
+      downloads = await logs.find(filter,{_id:1,user_id:1}) 
+    }else{
+      await logs.deleteMany(filter);
+      downloads = await logs.find(filter,{_id:1,user_id:1}) 
+    }
+    let userIds = [];
+    userIds = downloads.map(i=>i.user_id) || []; 
+    projects =await uploads.find( { type:'project'},{_id:1,uploaded_by:1});
+    userIds = userIds.concat(projects.map(i=>i.uploaded_by));
     users = await appusers.find({_id:{$in:userIds}},{password:0}).sort({created_dt:-1});
-    let projects =await uploads.find( {uploaded_by:{$in:userIds}, type:'project'},{_id:1,uploaded_by:1});
 
     const out = {
       users : users, 
@@ -742,6 +725,8 @@ router.post('/api/filter/users',  isAdmin, async (req,res)=>{
   }
   
 })
+
+
 
 
 router.get('/api/filter/user-downloads/:id',  isAdmin, async (req,res)=>{ 
@@ -1064,7 +1049,9 @@ router.get('/app/admin/manage/cliparts', isAdmin, async (req,res)=>{
 
 
 router.get('/app/admin/manage/banners', isAdmin, async (req,res)=>{
-  const banners = await commonService.uploadService.getUploads('banner',null,true)
+  const banners = await uploads.find({type:'banner',deleted:false},{json:0,base64:0})//await commonService.uploadService.getUploads('banner',null,true)
+  
+  
   res.locals.page = {
     id: "__banners",
     title: "Upload Banners",
@@ -1558,12 +1545,25 @@ async function uploadAsync(req,res)
   uploadModel.path = _path;
     if(itemId)
     {
-      await uploads.findOneAndUpdate({_id:itemId},{
-        title:title,
-        base64:base64,
-        json:json,
-        path:_path
-      });
+      if(type === "banner"){
+        await uploads.findOneAndUpdate({_id:itemId},{
+          title:title,
+          base64:base64,
+          path:_path,
+          ref_code:ref_code,
+          link:link,
+          active:active
+        });
+  
+      }else{
+        await uploads.findOneAndUpdate({_id:itemId},{
+          title:title,
+          base64:base64,
+          json:json,
+          path:_path
+        });
+  
+      }
       
     }else{
     

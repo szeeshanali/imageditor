@@ -503,7 +503,8 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
                 let aspectRatio = firstLogo.width/firstLogo.height;
                                 
                 const workspaceSize = $("#workarea").width() || 500;
-                let displayWidth = 500;//(workspaceSize-50)>800?800:workspaceSize-50;                 
+                
+                let displayWidth =(aspectRatio>1.2)?700:500;//(workspaceSize-50)>800?800:workspaceSize-50;                 
                 
                 let logoDisplayWidth = displayWidth; 
                 let logoDisplayHeight = displayWidth/aspectRatio;                 
