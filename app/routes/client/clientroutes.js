@@ -349,16 +349,7 @@ router.post('/api/project/validate', isLoggedIn, async function(req, res) {
         const count = totalProjects.length;
         console.log(`total project count: ${count}`); 
         console.log(totalProjects);    
-        if(count>=req.user.project_limit){
-            //return res.status(401).send({message:`You can not save more than ${req.user.project_limit} projects.`, error: `You can not save more than ${req.user.project_limit} projects.`});
-            return res.status(403).send({
-                status:403,
-                message:`You can not save more than ${req.user.project_limit} projects.`,
-                exception:null,
-                error:true,
-                valid:false
-            });
-        }        
+        
         let {name,title} = req.body;      
         if(totalProjects.find(i=>i.title?.toLowerCase()?.trim() === name?.toLowerCase().trim()))
         {
@@ -371,6 +362,17 @@ router.post('/api/project/validate', isLoggedIn, async function(req, res) {
                 valid:false
             });
         }
+
+        if(count>=req.user.project_limit){
+            //return res.status(401).send({message:`You can not save more than ${req.user.project_limit} projects.`, error: `You can not save more than ${req.user.project_limit} projects.`});
+            return res.status(403).send({
+                status:403,
+                message:`You can not save more than ${req.user.project_limit} projects.`,
+                exception:null,
+                error:true,
+                valid:false
+            });
+        }        
         return ok(res);
     }catch(ex){
         console.error(ex)
@@ -392,16 +394,7 @@ try{
     console.log(`total project count: ${count}`); 
     console.log(totalProjects);
 
-    if(count>=req.user.project_limit){
-        //return res.status(401).send({message:`You can not save more than ${req.user.project_limit} projects.`, error: `You can not save more than ${req.user.project_limit} projects.`});
-        return res.status(403).send({
-            status:403,
-            message:`You can not save more than ${req.user.project_limit} projects.`,
-            exception:null,
-            error:true,
-            valid:false
-        });
-    }        
+           
     let {comments, id, itemId, userDesignId, desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body;      
     var p = totalProjects.find(i=>i.title?.toLowerCase()?.trim() === title?.toLowerCase().trim())
     if(p)
@@ -453,7 +446,16 @@ try{
 
 
     }
-        
+    if(count>=req.user.project_limit){
+        //return res.status(401).send({message:`You can not save more than ${req.user.project_limit} projects.`, error: `You can not save more than ${req.user.project_limit} projects.`});
+        return res.status(403).send({
+            status:403,
+            message:`You can not save more than ${req.user.project_limit} projects.`,
+            exception:null,
+            error:true,
+            valid:false
+        });
+    } 
     
     let _id = mongoose.Types.ObjectId();
     let uploadModel = {
