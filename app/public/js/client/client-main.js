@@ -363,7 +363,7 @@ function deleteProject(id, self) {
 
     $.ajax({
         type: "DELETE",
-        url: `/api/my-designs/${id}`,
+        url: `/api//${id}`,
         success: function (res) {
             $loader.addClass("hidden");
             if(res.error)

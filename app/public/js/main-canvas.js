@@ -522,7 +522,7 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
               
                 canvas.setDimensions({width:logoDisplayWidth,height:logoDisplayHeight});
                 canvas.renderAll(); 
-
+debugger;
                 canvas.context = {
                     originalWidth   :   firstLogo.width,
                     originalHeight  :   firstLogo.height,
@@ -534,7 +534,8 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
                     sheetWidth      :   options.viewBoxWidth,
                     sheetHeight     :   options.viewBoxHeight,
                     totalLogos      :   objects.length,
-                    templateId      :   selectedTemplateId 
+                    //templateId      :   selectedTemplateId
+                    templateId      : canvas.templateId, 
                 }
 
                 const widthIn = getInch(firstLogo.width); 
