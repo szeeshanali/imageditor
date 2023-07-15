@@ -304,8 +304,8 @@ const commonService = (function() {
             else
             { fonts = await contents.find({type:type, active:true, deleted:false}); }
             fonts.push({
-                label : "Comic Sans",
-                content: "Comic-Sans",
+                label : "Arial",
+                content: "Arial",
                 disable: true
 
             })

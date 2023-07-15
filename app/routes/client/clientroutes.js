@@ -233,7 +233,7 @@ router.get("/app/main",  async (req, res) => {
 router.delete("/api/my-designs/:id", isLoggedIn,  async (req, res) => {
     try{
         var id = req.params["id"]; 
-        var data  =  await uploads.remove({code:id, uploaded_by:req.user._id});
+        var data  =  await uploads.remove({_id:id, uploaded_by:req.user._id});
         return ok(res, data);
     }catch(ex)
     {
@@ -560,7 +560,7 @@ router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
    let templates = _uploads.filter(function(i){return i.type === 'template'});
    let cliparts = _uploads.filter(function(i){return i.type === 'clipart'});
    let customDesigns = _uploads.filter(function(i){return i.type === 'pre-designed'});
-   let banners = _uploads.filter(function(i){return (i.type === 'banner' && i.ref_code === 'home-page')});
+   let banners = _uploads.filter(function(i){return (i.type === 'banner' && (i.ref_code === 'home-page' || i.ref_code === 'both'))});
    let myProjectCount = await uploads.count({type:"project",uploaded_by:req.user._id,active:true, deleted:false}); 
    //    let banners = await uploads.find({
 //     type:'banner', 
