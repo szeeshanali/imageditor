@@ -209,7 +209,7 @@ $("#btnDisplayGrid").on("click", function (e) {
     kerning: 0,
     //flipped:    $("#inputFlipText").prop("checked") || false,
     fill:       $("#fontColorBox").val() || '#000000',
-    fontFamily: $("#fontlist").attr("data-value") || 'Comin-Sans',
+    fontFamily: $("#fontlist").attr("data-value") || 'Sans-serif',
     fontSize: parseInt($("#btnTextSize").val()), // in px
     fontWeight: 'normal',
     fontStyle: '', // "normal", "italic" or "oblique".
@@ -522,7 +522,7 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
               
                 canvas.setDimensions({width:logoDisplayWidth,height:logoDisplayHeight});
                 canvas.renderAll(); 
-debugger;
+
                 canvas.context = {
                     originalWidth   :   firstLogo.width,
                     originalHeight  :   firstLogo.height,
@@ -853,10 +853,10 @@ debugger;
          }
 
          
-         var dataURL = clonedCanvas.toDataURL({format:"jpg", quality:1, multiplier: 3 });
+         var dataURL = clonedCanvas.toDataURL({format:"png", quality:1, multiplier: 3 });
          
          $("#canvas-holder").removeAttr("style");
-         $("#canvas-holder").css({"background-color":"#d8dce3", "padding":"20px","overflow-x":"auto"});
+         //$("#canvas-holder").css({"background-color":"#d8dce3", "padding":"20px","overflow-x":"auto"});
          fabric.Image.fromURL(dataURL, (img) => {
              state.isPreviewCanvas = true;
              canvasPrev.remove(... canvasPrev.getObjects());
@@ -887,7 +887,8 @@ debugger;
                
                  object.set("top", logo.top);
                  object.set("left", logo.left);  
-                 object.scaleToWidth(logo.getScaledWidth()+6);
+                 //object.scaleToWidth(logo.getScaledWidth()+6);
+                 object.scaleToWidth(logo.getScaledWidth());
                  object.globalCompositeOperation = "source-atop";
                  object.setCoords();
                  canvasPrev.add(object);
@@ -915,8 +916,10 @@ debugger;
      
  }
  function renderMainCanvasOnBackButton() {
-     var json = canvas.toJSON();
+     //var json = canvas.toDatalessJSON();
+     let json = canvas.toJSON();
      canvas.clear();
+     canvas.renderAll();   
      canvas.loadFromJSON(json, function () {
          canvas.renderAll();       
      }, function (o, object) {

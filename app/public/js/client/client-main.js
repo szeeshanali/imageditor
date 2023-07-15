@@ -363,7 +363,7 @@ function deleteProject(id, self) {
 
     $.ajax({
         type: "DELETE",
-        url: `/api//${id}`,
+        url: `/api/my-designs/${id}`,
         success: function (res) {
             $loader.addClass("hidden");
             if(res.error)
@@ -903,13 +903,14 @@ $("#btnStartOverModel").on("click",function(e){
 
     $("#font-list-container a").on("click", function (e) {
         let __canvas = state.isPreviewCanvas?canvasPrev:canvas;
-        let value = $(this).text() || "Comic-Sans";
+        let value = $(this).text() || "Arial";
         let dataValue = $(this).attr("data-value");
         $("#fontlist").text(value);
         $("#fontlist").attr('data-value',dataValue);
         $("#fontlist").attr('style',$(this).attr('style'));
         //$("#selected-font").html($(this).html())
         __canvas.getActiveObject().set("fontFamily",dataValue);
+        __canvas.getActiveObject().set("fontName",value);
         __canvas.requestRenderAll();
     })
     $("#text-letter-spacing, #text-letter-spacing-range").on("change", function () {
@@ -1203,7 +1204,11 @@ function updateTextControls(e){
     $("#curveTextCtrl").val("1250");
 }
 
-   $("#fontlist").text(item.fontFamily);
+$("#fontlist")
+.css({"font-family": item.fontFamily})
+.text(item.fontName)
+.attr("data-value",item.fontFamily);   
+
    
 }
 

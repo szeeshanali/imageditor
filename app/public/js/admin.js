@@ -809,7 +809,6 @@ $loader.removeClass("hidden");
           
             const dataUrl         = selectedBanner.base64;       
             const designType      =  "banner";
-            debugger;
             const active          = $("#cbBannerActive").prop("checked");
             
 
