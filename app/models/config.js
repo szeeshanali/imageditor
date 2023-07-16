@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
-var configSchema = new Schema({any: Schema.Types.Mixed});
-var config = mongoose.model('config', configSchema);
+
+const Schema  = new mongoose.Schema({},{ strict: false });
+
+const config   = mongoose.model('app_configs',Schema);
 module.exports  = config;
