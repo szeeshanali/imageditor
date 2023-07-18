@@ -183,10 +183,11 @@
     })
 
     $btnDeleteLogs.on("click",function(e){
-      if(confirm("All Filtered Pdf Download Logs will be permanently deleted, Are you sure?")){
+      let message = `All Filtered Pdf Download Logs will be permanently deleted, Are you sure?`;
+      filter.delete_logs = false; 
+      if(confirm(message)){
         filter.delete_logs = true; 
-      $btnSearch.click();  
-
+        $btnSearch.click();  
       }
     })
 
@@ -208,6 +209,7 @@
                 data: filter, 
                 async: false,
                 success: function (res) {
+                  filter.delete_logs = false; 
                   $loader.addClass("hidden");
                   let d = [];
                   if(res.data)
@@ -230,6 +232,7 @@
                     dt.rows.add(d).draw(false); }
                     $lblTotalRecords.text(d.length);
                 },error: function (request, status, error) {
+                  filter.delete_logs = false; 
                   $lblTotalRecords.text(0);
                   $loader.addClass("hidden");
                 },

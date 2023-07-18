@@ -672,7 +672,7 @@ router.post('/api/filter/users', isAdmin, async (req,res)=>{
 
       if(!startDate)
       {
-        filter.created_dt= { $lte: new Date(year ,month ,date)} }
+        filter.created_dt= { $lte: new Date(year ,month ,date,23,59,59)} }
         else{
         filter.created_dt.$lte = new Date(year, month, date,23,59,59);
       }
@@ -707,10 +707,13 @@ router.post('/api/filter/users', isAdmin, async (req,res)=>{
       downloads = await logs.find(filter,{_id:1,user_id:1}) 
     }
     let userIds = [];
-    userIds = downloads.map(i=>i.user_id) || []; 
-    projects =await uploads.find( { type:'project'},{_id:1,uploaded_by:1});
-    userIds = userIds.concat(projects.map(i=>i.uploaded_by));
-    users = await appusers.find({_id:{$in:userIds}},{password:0}).sort({created_dt:-1});
+    userIds     = downloads.map(i=>i.user_id) || []; 
+    projects    = await uploads.find( { type:'project'},{_id:1,uploaded_by:1});
+    userIds     = userIds.concat(projects.map(i=>i.uploaded_by));
+    if(filter.user_id){
+      userIds = filter.user_id.$in.map(i=>i._id);
+    }
+    users       = await appusers.find({_id:{$in:userIds}},{password:0}).sort({created_dt:-1});
 
     const out = {
       users : users, 
