@@ -16,22 +16,16 @@ const PATH_USER_PROFILE             = 'pages/client/profile';
 const ROUTE_USER_HOME               = '/app'
 const ROUTE_USER_PROFILE            = '/app/profile';
 const cached_layout_data            = {}; 
-const config                        = process.env; 
+//const config                        = process.env; 
 const logs = require("../../models/logs"); 
+const appConfig = require("../../models/config"); 
 router.use( async (req, res, next) => {
     req.app.set('layout', 'pages/client/layout');
     next();
 });
 
 
-const transporter = nodemailer.createTransport({
-    host: config.SMTP_HOST,
-    port: config.SMTP_PORT,
-    auth: {
-        user: config.SMTP_USR,
-        pass: config.SMTP_PASS
-    }
-});
+
 
 router.get(ROUTE_USER_PROFILE, isLoggedIn, (req,res)=>{    
     res.render(PATH_USER_PROFILE,{
@@ -643,7 +637,9 @@ router.get('/app/rfq/pdf/:id', async function(req, res){
 
 router.post('/api/rfq', isLoggedIn, async (req,res)=>{
     const  {companyName, name, phone, sheets, email, additionalInfo, file, date} = req.body;
-
+    const rfqSettings = await appConfig.findOne({type:'QUOTE'}); 
+    const smtpSettings = await appConfig.findOne({type:'SMTP'}); 
+    const appSettings = await appConfig.findOne({type:'APP'}); 
     var form = new formidable.IncomingForm();
     var formfields = await new Promise(function (resolve, reject) {
         form.parse(req, function (err, fields, _file) {
@@ -719,12 +715,20 @@ router.post('/api/rfq', isLoggedIn, async (req,res)=>{
                 //                     let appUrl = `${req.protocol}://${req.hostname}:${req.socket.localPort}`;
 
                                    
-
+                                   
+                                    const transporter = nodemailer.createTransport({
+                                        host: smtpSettings.SMTP_HOST,
+                                        port: smtpSettings.SMTP_PORT,
+                                        auth: {
+                                            user: smtpSettings.SMTP_USR,
+                                            pass: smtpSettings.SMTP_PASS
+                                        }
+                                    });
                                     transporter.sendMail({
-                                        from:       [{name:"KakePrints", address: config.RFQ_FROM}],
-                                        to:         config.RFQ_TO,
-                                        subject:    config.RFQ_SUBJECT.replace("{user}",fields.name),
-                                        bcc:        [config.RFQ_BCC,config.RFQ_BCC2],
+                                        from:       [{name:"KakePrints", address: rfqSettings.RFQ_FROM}],
+                                        to:         rfqSettings.RFQ_TO,
+                                        subject:    rfqSettings.RFQ_SUBJECT.replace("{user}",fields.name),
+                                        bcc:        rfqSettings.RFQ_BCC?.split(','),
                                         html:       `<strong>Hello Admin,</strong>
                                         <p>${fields.name} has sent you a design for printing, Please review the following detail</p>
                                         <table style='font-family:Arial; color:#222; font-size:12px; text-align:left'>
@@ -748,7 +752,7 @@ router.post('/api/rfq', isLoggedIn, async (req,res)=>{
                                             </table>
                                      <div style=''>
                                     <div> File: ${fields.filename || 'NA'} </div><br>
-                                      <div><a style='color:white;padding:10px;background-color:green;border-radius:3px;font-size:11px;text-decoration:none;font-family:Arial' href="${config.APP_URL}/submit-design/${_id}"> DOWNLOAD </a> </div>
+                                      <div><a style='color:white;padding:10px;background-color:green;border-radius:3px;font-size:11px;text-decoration:none;font-family:Arial' href="${appSettings.APP_URL}/submit-design/${_id}"> DOWNLOAD </a> </div>
                                      </div>`
                                     });  
                             
