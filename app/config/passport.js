@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const User = require("../models/appuser");
 const mysql = require('mysql');
 const logs = require("../models/logs"); 
+const _config = require("../models/config"); 
 const { PasswordHash, CRYPT_BLOWFISH, CRYPT_EXT_DES } = require('../public/js/password-hash');
 // Prod
 // const mysqlSettings = {
@@ -13,7 +14,7 @@ const { PasswordHash, CRYPT_BLOWFISH, CRYPT_EXT_DES } = require('../public/js/pa
 
 // }
 
-const config = process.env;
+//const config = process.env;
 
 
 module.exports = function(passport) {
@@ -21,6 +22,14 @@ module.exports = function(passport) {
 
     passport.use(
         new LocalStrategy( {usernameField : 'email', passReqToCallback: true}, async (req, email, password, done)=> {
+          const dbType = process.env.ENVIRONMENT === 'local'?'local-mysql-db':'mysql-db'; 
+          var dbInfo  = await _config.findOne({type:dbType});
+          if(!dbInfo){
+            let msg = `login-failed : MySQL DB Settings is missing, please check type in '${dbType}' in config collection.`;
+            log(req, msg);
+             return done(null, false, { message : "CONNECTION ERROR"}); 
+           }
+
           headers = req.headers;
                  const agreeterms = req.body.agreeterms; 
 
@@ -49,10 +58,10 @@ module.exports = function(passport) {
 
                  var con = mysql.createPool({
                        
-                       host     : config.MYSQL_HOST,
-                       user     : config.MYSQL_USR,
-                       password : config.MYSQL_PASS,
-                       database : config.MYSQL_DB
+                       host     : dbInfo.MYSQL_HOST,
+                       user     : dbInfo.MYSQL_USR,
+                       password : dbInfo.MYSQL_PASS,
+                       database : dbInfo.MYSQL_DB
 
                  });
                  
