@@ -766,7 +766,7 @@ router.get('/api/filter/user-downloads/:id',  isAdmin, async (req,res)=>{
       let date =  _ed.getDate();
 
       if(!startDate)
-      {filter.created_dt= { $lte: new Date(year ,month ,date)} }else{
+      {filter.created_dt= { $lte: new Date(year ,month ,date,23,59,59)} }else{
         filter.created_dt.$lte = new Date(year, month, date,23,59,59);
       }
     }
