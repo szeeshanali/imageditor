@@ -8,7 +8,7 @@
             <div class="row svg-templates text-center">
               <%kpDesigns?.forEach((item)=>{%>
                 <div class="col-md-4" style="max-width: auto !important;">
-                  <div id="<%=item._id %>" data-meta="<%=unescape(item.meta)%>"
+                  <div id="<%=item._id %>" data-title="<%=item.title %>" data-meta="<%=unescape(item.meta)%>"
                     class="custom-project template-small d-flex justify-content-center align-items-center h-100 flex-column">
                     <img src="<%=item.path?.replace('../app/public','') %>" class="mb-2">
                     <div class="tx-12 tx-bold pd-y-5 lh-1">

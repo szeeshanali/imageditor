@@ -44,7 +44,7 @@
     const $btnTextSize = $("#btnTextSize");
     const $loader = $("#loader");
     var layerHtml = `<div class="media d-block d-flex layer-item object-options" data-index='{index}' id='{id}'  >
-    <div class="d-block mg-sm-r-10 img"> <img src="{src}" class="wd-30" alt="Image" ></div>
+    <div class="d-block mg-sm-r-10 img"> <img src="{src}" class="layer-img" alt="Image" ></div>
     <div class="d-sm-flex layer-label tx-bold">Layer {index}</div>
     <div class="d-sm-flex layers-controls" style="display:none !important">
     <i class='ion-ios-copy-outline duplicate main-tool-button'   title='duplicate' ></i>
@@ -554,10 +554,12 @@ $loader.removeClass("hidden");
         $(".custom-project").on("click",function(){
             const $elem = $(this);
             const meta = $elem.attr("data-meta");
+            const title = $elem.attr("data-title");
             const metaJSON = JSON.parse(meta);
             let html = $("#customDesignDetailsTemplate").html();
+           
             html = 
-            html.replace("{design-name}",metaJSON.title)
+            html.replace("{design-name}",title)
             .replace("{sheet-size}", getInches(metaJSON.sheetWidth,metaJSON.sheetHeight) + " inches")
             .replace("{total-logos}",metaJSON.totalLogos)
             .replace("{logo-size}",getInches(metaJSON.logoWidth,metaJSON.logoHeight)+ " inches")
