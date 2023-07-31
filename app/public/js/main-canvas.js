@@ -489,6 +489,10 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
             var meta = {};
             if (data.meta) {
                 meta = JSON.parse(data.meta);
+                meta.title = data.title;
+                meta.ref_code = data.ref_code; 
+                meta.link = data.link; 
+                meta.file_name = data.file_name; 
             }
     
             canvas.clear();
@@ -534,6 +538,10 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
                     sheetWidth      :   options.viewBoxWidth,
                     sheetHeight     :   options.viewBoxHeight,
                     totalLogos      :   objects.length,
+                    templateTitle   :   data.title,
+                    templateRef_code : data.ref_code, 
+                    templateLink    : data.link, 
+                    templateFile_name : data.file_name, 
                     //templateId      :   selectedTemplateId
                     templateId      : canvas.templateId, 
                 }
@@ -628,7 +636,11 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
                            let firstLogo = objects[0];
                             let viewBoxHeight= options.viewBoxHeight;
                             let viewBoxWidth = options.viewBoxWidth;
-                            canvasPrev.setBackgroundImage(obj, canvasPrev.renderAll.bind(canvasPrev));           
+                            canvasPrev.setBackgroundImage(obj, canvasPrev.renderAll.bind(canvasPrev));       
+                            canvasPrev.backgroundImage.set({
+                                left:0,
+                                top:0,
+                            })    
                             canvasPrev.setDimensions({width:viewBoxWidth,height:viewBoxHeight})
                             canvasPrev.renderAll.bind(canvas); 
                             canvasPrev.meta = {
@@ -848,20 +860,17 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
          clonedCanvas.backgroundImage = false;
 
          for (var i = 0; i < clonedCanvas._objects.length; i++) {
+           
              clonedCanvas._objects[i].globalCompositeOperation = null;
              clonedCanvas.renderAll.bind(clonedCanvas)
          }
-
          
          var dataURL = clonedCanvas.toDataURL({format:"png", quality:1, multiplier: 3 });
          
          $("#canvas-holder").removeAttr("style");
-         //$("#canvas-holder").css({"background-color":"#d8dce3", "padding":"20px","overflow-x":"auto"});
          fabric.Image.fromURL(dataURL, (img) => {
              state.isPreviewCanvas = true;
              canvasPrev.remove(... canvasPrev.getObjects());
-             //img.scaleToWidth(canvas.context.originalWidth);
-            //let missingPoints = canvas.context.originalWidth - img.getScaledWidth();
              if(logos && logos.length>0)
              {
                 let logoWidth = logos[0].width; 
@@ -878,7 +887,7 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
                      object.set("left", left);                    
                      object.globalCompositeOperation = "source-atop";
                      object.setCoords();
-                     canvasPrev.add(object)
+                     canvasPrev.add(object);
                  }
              }else{
  
@@ -916,15 +925,25 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
      
  }
  function renderMainCanvasOnBackButton() {
-     //var json = canvas.toDatalessJSON();
-     let json = canvas.toJSON();
-     canvas.clear();
-     canvas.renderAll();   
-     canvas.loadFromJSON(json, function () {
-         canvas.renderAll();       
-     }, function (o, object) {
-         addLayer(o);
-     })
+    /** commented on 30/07/2023.
+    //  let json = canvas.toJSON();
+    //  canvas.clear();
+    //  canvas.renderAll();   
+    //  canvas.loadFromJSON(json, function () {
+    //  canvas.renderAll();       
+    //  }, function (o, object) {
+    //      addLayer(o);
+    //  })
+    */
+    
+    ///  regenerating layers while back from
+    /// preview to main canvas. 
+    
+    $layers.html("");
+    for(let i=0;i<canvas._objects.length;i++){
+        let o = canvas._objects[i]; 
+        addLayer(o);
+    }
  
  }
 
@@ -1050,7 +1069,7 @@ function addLayer(o) {
         var obj = _canvas._objects[i];      
         let src;
         if (obj.text) {
-            src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAABHNJREFUeJzt3LurHGUcx+FvcqKiJohGBBGjRPHyB4imE0u72Akix1bsBAsriyiKokQ7CQoKaiGKCpGAjSI2golXhIR4v3USbzExicViiCHndy55d95zdp4H3iYLM7+d3c+emd0hCQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABJsq73AFOyMckVmd3ntxp9n+T33kNQ25hkV5IjSU5Yg64jSZ5NcuGirxJdrEuyJ/3fKGNfu+Mv96p0W/q/OazJurV+qdaO9b0HaOiW3gNw0rbeA7QyS4Fc0HsATjqv9wCtzFIg0JxAoCAQKGzoPcAqcSDJd0mON9zmukx+rLy+4TbP5MskP2by7VEr65NcmeTahtuksx1Z/teRLyW5YcpzbUtycAWzLbb2J7lpyrPfmOSVFcz20JTnYgWWE8ixJHcPONvWTG7DaBXHoSRbBpz/nkyO2egCGes1yANJXhhwfweTvNhwe88n+bbh9payvwcH3N+qMcZAvkqys8N+9zbc1r6G21qqJzNslKvCGAPZmeSfDvs90nBbRxtuazn7fKbDfrsaWyCHkjzXe4g1bFeSP3oPMaSxBbIryW+9h1jDfs3IPmDGFMjxjPAUYQqeTtvfXFa1MQXyepKvew8xAw4keav3EEMZUyBP9R5ghozmWI4lkA+TfNB7iBnybvp81Ty4WQrkcPHY4xnRefMATiR5onj8z6EGmbZZCuSjBf79nSSvDjnISLyc5L0FHlvotaCjczK5s/XUe4L2Jtncc6hTzKfdvVh3DTv6gi5L8mn+P9tnSeZ6DsXCrkvyfia3kzya1fVf0Mxn9gJJkk2ZnMJ+k8lfFLfIsyLzmc1AZtosXYNAcwKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIBAoCgYJAoCAQKAgECgKBgkCgIBAoCAQKAoGCQKAgECgIZDhzDbfldRuIAz2crQ23dXXDbUF3c0n2JznRaH0eH27MkPvTLo7/1n2DPgOYkvkkx9I+kKNJ7hzuaUA7m5LckWR32odx+nozyfYkGwd5ZrBCV2Vy2rMnyd+Zfhinr8NJ3k5yb5ItU36usKi5JNuSPJLkkwwfxGLr4yQ7ktwcF/QM6KIkjyX5Jf0jWOr6OcnDmZz6wdRck+Rg+r/hV7r2Z3IqCM2dm+SL9H+Tn+3al2RD42MD2Z7+b+5W6/bGx2ZmuXhbukt6D9DQ5t4DMHsuzeRit/en/9muH5Jc3PjYQJLJRfobmfyK3fuNvtx1NMlrcaPjsqzrPcAadX6Sy7N2TlGPJ/kpyV+9BwEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM7kX8fwvIWqet/rAAAAAElFTkSuQmCC';
+            src = '/images/txt.png';
         }else{
             src = obj.getSrc();
         }

@@ -40,7 +40,7 @@ var rulerSettings = {
 }
 
 var layerHtml = `<div class="media d-block d-flex layer-item object-options" data-index='{index}' id='{id}'  >
-    <div class="d-block mg-sm-r-10 img"> <img src="{src}" class="wd-30" alt="Image" ></div>
+    <div class="d-block mg-sm-r-10 img"> <img src="{src}" class="layer-img" alt="Image" ></div>
     <div class="d-sm-flex layer-label tx-bold">Layer {index}</div>
     <div class="d-sm-flex layers-controls" style="display:none !important">
     <i class='ion-ios-copy-outline duplicate main-tool-button'   title='duplicate' ></i>
@@ -52,46 +52,49 @@ var layerHtml = `<div class="media d-block d-flex layer-item object-options" dat
 
 
 const projectHtml = `
-<div class="col-lg-3">
-              <div class="card ">
-                <div class="card-body bg-white">
-                
-                <h5 class="mg-0 tx-14 tx-bold tx-dark ">{{title}}</h5>
-                <div class="tx-12 mg-b-10">{{created_dt}}</div>  
-                  <div class="card-text bd pd-15 mg-b-10" style='height:150px;overflow:hidden'>
-                    <img src="{{src}}" class="img-fluid" alt="Image">
+<div class="col-lg-3 pd-0 ">
+             
+                <div>
+                  <div class="card-text pd-5 mg-b-15 bd bd-white" style='height:150px;overflow:hidden;background-color:#eee; '>
+                    <img src="{{src}}" class="img-fluid" alt="Image" style="width:100%;height:100%;object-fit:contain">
                   </div>
-                  <p class="tx-12 card-subtitle">{{desc}}</p>
-                  <div class="btn-group" role="group" aria-label="Basic example">
+                  <h5 class="mg-0 tx-16 text-primary">{{title}}</h5>
+                  <p class="tx-12 text-primary  mg-b-5">{{desc}}</p>
+
+                  <div class="tx-12">{{template_title}}</div>  
+                  <div class="tx-12">{{total_logos}} logo(s) {{sheet_size}} {{page_format}} Sheet. </div>  
+                  <div class="tx-12">{{created_dt}}</div>  
+
+                  <div class="btn-group pd-t-10" role="group" >
                 <button type="button" id="{{code}}"  class="hand soft btn btn-success tx-12 tx-bold tx-uppercase btn-edit-project">Edit</button>
                 <button type="button" onclick="deleteProject('{{code}}',this)" class="hand soft btn btn-warning tx-12  tx-bold tx-uppercase ">Delete</button>
               </div>
 
 
-                </div>
+              
               </div>
             </div>`
 
 
 
-const designHtml = `<div class='pre-designed col-md-6 p-lg-1 align-self-normal'>
-<div class="card" style='border: 1px solid rgba(0, 0, 0, 0.125);'>
-  <div class="row no-gutters align-items-center" style="background-color:#fff">
-    <div class="col-md-5 text-center">
-    <img src="{{base64}}" class="card-img-fluid" alt="Image">
+const designHtml = `<div class="row row-sm mg-t-15 mg-sm-t-20">
+<div class="col-md-12">
+  <div class="list-group widget-list-group bd-b">
+    <div class="list-group-item d-flex">
+      <div class="media d-block d-sm-flex">
+        <div class="wd-100">
+          <img src="{{base64}}" class="wd-40 pd-r-10" alt="Image" style="width:100%;height:100%;object-fit:contain">
+        </div><!-- d-flex -->
+        <div class="media-body mg-t-10 mg-sm-t-0">
+          <h6 class="mg-b-5 tx-16"><a href="#" id='{{code}}' class="text-primary hover-primary underline">{{title}}</a></h6>
+          <div>{{totalLogos}} Logo(s) {{sheetSize}}, {{pageFormat}} Sheet.</div>
+          <p class="mg-b-0 tx-12 text-inverse ">{{desc}}</p>
+    <p class="mg-b-0 tx-12">{{created_dt}}</p>
+    </div><!-- media-body -->
+      </div><!-- media -->
+      <a href="#" class="btn btn-success pd-lg-x-20 mg-l-auto" onclick="loadProject('{{code}}')" >View</a>
     </div>
-    <div class="col-md-7">
-      <div class="card-body" style="background-color:#fff">
-      <h6 class="mg-b-5 tx-14 "><a href="#" class="tx-inverse hover-primary tx-bold"  id='{{code}}' >{{title}}</a></h6>
-        <p class="mg-b-0 tx-12 tx-bold">{{created_dt}}</p>
-        <p class="mg-b-0 tx-12 tx-bold">Sheet Size: {{sheetSize}}</p>
-        <p class="mg-b-0 tx-12 tx-bold">Logo Size: {{logoSize}}</p>
-        <p class="mg-b-0 tx-12 tx-bold">Total Logos: {{totalLogos}}</p>
-        <a href="#" class="btn btn-sm btn-success tx-bold tx-12 tx-uppercase btn-edit-customdesign" id="{{code}}"  >Edit Project</a>
-      </div>
-    </div>
-  </div>
-</div>
+  
 </div>`;
 // const designHtml = `<div class='pre-designed col-md-3 p-lg-1 align-self-normal'>
 // <div class="list-group-item pd-0">
@@ -234,17 +237,23 @@ function getUserProjects() {
         var temp = "";
         $("#my-proj-container").html("<strong>You haven't saved any project yet!</strong>");
         for (var i = 0; i < projects.length; i++) {
-            var p = projects[i];
-            var desc = p.title.lenght>50?p.title.substring(0, p.title.length):p.title;
+            let p = projects[i];
+            let meta = JSON.parse(p.meta); 
+            let desc = p.title.lenght>50?p.title.substring(0, p.title.length):p.title;
             temp += projectHtml.replace(/{{code}}/ig, p._id)
             .replace(/{{src}}/ig, p.path)
             .replace(/{{title}}/ig, p.title)
-            .replace(/{{created_dt}}/ig, new Date(p.created_dt).toDateString())
-            .replace(/{{desc}}/ig, p.desc);
+            .replace(/{{created_dt}}/ig, new Date(p.created_dt).toLocaleString("en-US"))
+            .replace(/{{desc}}/ig, p.desc)
+            .replace(/{{template_title}}/ig, meta.templateTitle || "")
+            .replace(/{{total_logos}}/ig, meta.totalLogos || "")
+            .replace(/{{sheet_size}}/ig, getInches(meta.sheetWidth,meta.sheetHeight) + "'',"  || "")
+            .replace(/{{page_format}}/ig, getPageFormatByDimensions(meta.width,meta.height)   || "")
+            
+            ;
             $("#my-proj-container").html(temp);
         }
         $loader.addClass("hidden");
-
         $(".btn-edit-project").unbind().on("click",function(e){
             canvasUndo.dispose();
             const  _id = $(this).attr("id");
@@ -285,11 +294,13 @@ function getSharedProjects() {
             let meta = JSON.parse(item.meta);
             temp += designHtml
             .replace(/{{code}}/ig, item._id)
+            .replace(/{{desc}}/ig, item.desc || "")
             .replace(/{{base64}}/ig, item.path)
             .replace(/{{title}}/ig, item.title)
-            .replace(/{{created_dt}}/ig, new Date(item.created_dt).toDateString())
+            .replace(/{{created_dt}}/ig, new Date(item.created_dt).toLocaleDateString("en-US"))
             .replace(/{{sheetSize}}/ig, `${getInches(meta.sheetWidth,meta.sheetHeight)}"`)
             .replace(/{{logoSize}}/ig, `${getInches(meta.logoWidth,meta.logoHeight)}"`)
+            .replace(/{{pageFormat}}/ig, `${getPageFormatByDimensions(meta.width,meta.height)}`)
             .replace(/{{totalLogos}}/ig, meta.totalLogos);
         })
         $("#kp-designs-container").html(temp);

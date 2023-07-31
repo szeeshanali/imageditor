@@ -129,7 +129,8 @@ router.get("/api/custom-designs", isLoggedIn,  async (req, res) => {
             title:1,
             created_dt:1,
             meta:1,
-            code:1
+            code:1,
+            desc:1
         }); 
         
         if(data)

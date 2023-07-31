@@ -44,10 +44,15 @@ module.exports = function(passport) {
                   var user = await User.findOne({email : email, is_admin:true, deleted:false});
                   const _hasher = new PasswordHash(8, true);  
                   storedHash = user?.password;
-                 if(user && (_hasher.CheckPassword(password, storedHash) || password === user.password))
-                 {
-                  return done(null,user); } 
-                 }
+                 
+                  if(user && (_hasher.CheckPassword(password, storedHash) || password === user.password))
+                 { return done(null,user); }else{
+                    log(req, 'login-failed - Admin - Incorrect username or password');
+                    console.error("Incorrect username or password");
+                    return done(null, false, { message : 'Incorrect username or password'});
+                 } 
+                
+               }
 
 
                   if(agreeterms != 'on')
