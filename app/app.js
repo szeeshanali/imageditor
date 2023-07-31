@@ -109,10 +109,11 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`)
 })
 
+
 process.on('uncaughtException', function (err) {
   console.error(err.stack);
   console.log("Node NOT Exiting...");
- // res.send("")
+  //res.render("Server Error")
 });
 // app.use(function(err, req, res, next){
 //   console.log("Hello Error");
