@@ -637,10 +637,7 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
                             let viewBoxHeight= options.viewBoxHeight;
                             let viewBoxWidth = options.viewBoxWidth;
                             canvasPrev.setBackgroundImage(obj, canvasPrev.renderAll.bind(canvasPrev));       
-                            canvasPrev.backgroundImage.set({
-                                left:0,
-                                top:0,
-                            })    
+                           
                             canvasPrev.setDimensions({width:viewBoxWidth,height:viewBoxHeight})
                             canvasPrev.renderAll.bind(canvas); 
                             canvasPrev.meta = {
