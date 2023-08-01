@@ -52,7 +52,7 @@ var layerHtml = `<div class="media d-block d-flex layer-item object-options" dat
 
 
 const projectHtml = `
-<div class="col-lg-3 pd-0 ">
+<div class="col-lg-3 pd-10 ">
              
                 <div>
                   <div class="card-text pd-5 mg-b-15 bd bd-white" style='height:150px;overflow:hidden;background-color:#eee; '>
@@ -243,7 +243,7 @@ function getUserProjects() {
             temp += projectHtml.replace(/{{code}}/ig, p._id)
             .replace(/{{src}}/ig, p.path)
             .replace(/{{title}}/ig, p.title)
-            .replace(/{{created_dt}}/ig, new Date(p.created_dt).toLocaleString("en-US"))
+            .replace(/{{created_dt}}/ig, new Date(p.created_dt).toLocaleDateString("en-US"))
             .replace(/{{desc}}/ig, p.desc)
             .replace(/{{template_title}}/ig, meta.templateTitle || "")
             .replace(/{{total_logos}}/ig, meta.totalLogos || "")
