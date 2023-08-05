@@ -465,7 +465,8 @@ try{
       meta            :   meta,
       by_admin        :   false,
       type            :   'project',
-      uploaded_by     :   req.user._id
+      uploaded_by     :   req.user._id,
+      created_dt      :   new Date()
     };
     if(comments){
         uploadModel.comments=[];
