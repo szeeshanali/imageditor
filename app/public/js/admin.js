@@ -6,6 +6,7 @@
     //     strokeWidth: 10,
     //     logoDisplaySize:500
     // }
+    fabric.Object.NUM_FRACTION_DIGITS = 12;
     var canvas = new fabric.Canvas("admin-main-canvas", {preserveObjectStacking: true})
     var canvasPrev = new fabric.Canvas("admin-main-canvas-logo", {preserveObjectStacking: true});
     

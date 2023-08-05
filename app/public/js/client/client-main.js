@@ -1,6 +1,7 @@
 
 
 
+fabric.Object.NUM_FRACTION_DIGITS = 12;
 var canvas      = new fabric.Canvas("client-main-canvas",       {
     preserveObjectStacking: true,
     selectionDashArray: [13, 16],
@@ -1289,6 +1290,7 @@ function onCanvasModified(o) {
 function onObjectAdded(o) {
     // $pageTitle.addClass("hidden");
     // $("#maintools > .image-tools").removeClass("hidden");
+  
 
     addLayer(o);
 }
