@@ -666,8 +666,8 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
                             originalStrokeMiterLimit  : object.strokeMiterLimit,
                         });
                         object.set({ 
-                            strokeWidth:0,
-                            strokeMiterLimit:0
+                           strokeWidth:0,
+                           strokeMiterLimit:0
                         });
 
                                       
@@ -1144,7 +1144,8 @@ function loadProject(projectId, type)
            loadSVGTemplate(meta.templateId,(data)=>{
             $loader.addClass("hidden");               
             canvas.designId = projectId;
-            canvas.loadFromJSON(res.data.json,canvas.renderAll.bind(canvas));                               
+            canvas.loadFromJSON(res.data.json);
+            canvas.renderAll();                               
 
             setTimeout(function(){
                 canvas.loadFromJSON(res.data.json,canvas.renderAll.bind(canvas));   
