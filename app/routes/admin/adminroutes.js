@@ -1105,7 +1105,8 @@ router.post('/api/admin/save-design', isAdmin, async function(req, res) {
         meta            :   meta,
         by_admin        :   true,
         type            :   type,
-        uploaded_by     :   req.user._id      
+        uploaded_by     :   req.user._id,
+        created_dt      :   new Date()      
       };
     
       let _path = `../app/public/uploads/admin/${type}/${type}-${_id}.jpg`;    
@@ -1475,6 +1476,7 @@ router.post('/app/admin/template', async function(req, res) {
     by_admin        :   true,
     type            :   type,
     ref_code        :   ref_code,
+    created_dt      :   new Date()
     
     
   };
@@ -1534,7 +1536,9 @@ async function uploadAsync(req,res)
     default         :   req.body.default,
     by_admin        :   true,
     type            :   type,
-    ref_code        :   ref_code
+    ref_code        :   ref_code,
+    created_dt      :   new Date(),
+    modified_dt     :   new Date()
 
   };
 
