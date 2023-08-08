@@ -262,12 +262,13 @@ function curveText(obj)
         fontSize: obj.fontSize, // in px
         fontWeight: obj.fontWeight,
         fontStyle: obj.fontStyle,
-        cacheProperties: fabric.Object.prototype.cacheProperties.concat('diameter', 'kerning', 'flipped', 'fill', 'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'strokeStyle', 'strokeWidth','stroke'),
+        cacheProperties: fabric.Object.prototype.cacheProperties.concat('diameter', 'kerning', 'flipped', 'fill', 'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'strokeStyle', 'strokeWidth','stroke','textAlign'),
         stroke: $("#inputStrokeText").is(":checked")?$("#strokecolor").val():null,
         strokeWidth: $("#inputStrokeText").is(":checked")?parseInt($("#text-stroke-width").val()):0,
         id: obj.id,
         index:obj.index,
-        underline:obj.underline
+        underline:obj.underline,
+        textAlign:obj.textAlign
     })
     return ct; 
 }
@@ -454,8 +455,14 @@ function pasteImage(event) { // get the raw clipboardData
 
             var imageData = cbDataItem.getAsFile();
             // format the imageData into a URL
-            var imageURL = window.webkitURL.createObjectURL(imageData);
-            fabric.Image.fromURL(imageURL, (img) => { // img.scaleToWidth(300);
+            //var imageURL = window.webkitURL.createObjectURL(imageData);
+
+            var reader = new FileReader();
+            reader.readAsDataURL(imageData);
+            reader.onload = function () {
+                
+                
+                fabric.Image.fromURL(reader.result, (img) => { // img.scaleToWidth(300);
                     measureImageDimensions(img,canvas);
                     img.set({originX: "center", originY:"center"})
                     img.setCoords();
@@ -465,6 +472,15 @@ function pasteImage(event) { // get the raw clipboardData
                     canvas.setActiveObject(img);
                     canvas.renderAll();
             })
+
+                console.log(reader.result);
+            };
+            reader.onerror = function (error) {
+                console.log('Error: ', error);
+            };
+
+
+            
             // We've got an imageURL, add code to use it as needed
             // the imageURL can be used as src for an Image object
         }

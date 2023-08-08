@@ -213,7 +213,7 @@ $("#btnDisplayGrid").on("click", function (e) {
     fontSize: parseInt($("#btnTextSize").val()), // in px
     fontWeight: 'normal',
     fontStyle: '', // "normal", "italic" or "oblique".
-    cacheProperties: fabric.Object.prototype.cacheProperties.concat('diameter', 'kerning', 'flipped', 'fill', 'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'strokeStyle', 'strokeWidth'),
+    cacheProperties: fabric.Object.prototype.cacheProperties.concat('diameter', 'kerning', 'flipped', 'fill', 'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'strokeStyle', 'strokeWidth','textAlign'),
     //strokeStyle: null,
     stroke: $("#inputStrokeText").is(":checked")?(parseInt($("#strokecolor").val())):null,
     strokeWidth: $("#inputStrokeText").is(":checked")?(parseInt($("#text-stroke-width").val())):null,
@@ -1146,19 +1146,17 @@ function loadProject(projectId, type)
             canvas.designId = projectId;
             canvas.loadFromJSON(res.data.json);
             canvas.renderAll();                               
-
-            setTimeout(function(){
-                canvas.loadFromJSON(res.data.json,canvas.renderAll.bind(canvas));   
-                canvas._objects.forEach(o=>{
-                    if(o.type === "i-text"){
-                        o._forceClearCache = true;
-                        canvas.renderAll();
+            // setTimeout(function(){
+            //     canvas.loadFromJSON(res.data.json);   
+            //     canvas._objects.forEach(o=>{
+            //         if(o.type === "i-text"){
+            //             //o._forceClearCache = true;
+            //             canvas.requestRenderAll();
                         
-                    }
-                })  
-            },1000)
-
-            canvas.renderAll();
+            //         }
+            //     })  
+            //     canvas.renderAll();
+            // },1000)
 
             $('#my-proj-modal').modal('hide');
                $('#shared-lib-modal').modal('hide');
@@ -1376,8 +1374,18 @@ function saveCustomDesign(byAdmin) {
 
 })
 
+/**key events
+ * LEFT,RIGHT,UP,DOWN
+ */
+var Direction = {
+    LEFT: 0,
+    UP: 1,
+    RIGHT: 2,
+    DOWN: 3
+};
+
 fabric.util.addListener(document.body, 'keydown', function (options) {
-    
+ 
 
     // if (options.repeat) {
     //     return;
@@ -1561,6 +1569,7 @@ function initContextMenu()
             var obj = canvas.getActiveObject();
             canvas.remove(obj);
            // var c = getCanvasCenter(obj.width,obj.height);
+           debugger;
             var textInfo = {
 
                 left        :   obj.left,
@@ -1574,7 +1583,8 @@ function initContextMenu()
                 paintFirst  :   "stroke",
                 fontWeight  : obj.fontWeight,
                 fontStyle   : obj.fontStyle,
-                underline   : obj.underline
+                underline   : obj.underline,
+                textAlign   : obj.textAlign
 
             };
             
