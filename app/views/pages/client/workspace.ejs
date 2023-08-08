@@ -1,15 +1,12 @@
 <style>
-  <%fonts?.forEach((item)=>{%>
-  @font-face{
-    font-family:"<%=item.content.replace('.ttf','')%>";
-    src:url("/fonts/<%=item.content%>");
-    font-weight:normal;
-    font-style:normal;
-    
-}                     
-<%})%>
+  <%fonts?.forEach((item)=>{%> @font-face{ font-family:"<%=item.content.replace('.ttf','')%>";
+    src:url("/fonts/<%=item.content%>");font-weight:normal;font-style:normal}
+ <%})%>
+</style>
+
+<%fonts?.forEach((item)=>{%><link rel="preload" href="/fonts/<%=item.content%>" as="font" type="font/woff" crossorigin><%})%>
    
-   </style>
+
 <div class="row mg-r-0">
     <!--Workspace Left Panel-->
 <div class="col-lg-3 pd-l-0 pd-r-0">
@@ -367,7 +364,8 @@
             <span aria-hidden="true">×</span>
           </button>
         </div>
-        <div id="kp-designs-container"></div>  
+        <div id="kp-designs-container" style="max-height: 500px;
+        overflow-y: scroll;"></div>  
       </div>
      </div>
                         <!-- modal-dialog -->
