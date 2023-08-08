@@ -24,6 +24,13 @@ var canvasUndo = (function(canvas){
             
           }
       );
+
+      _canvasObject.on(
+        'object:removed', function(e){
+          updateCanvasState();
+          
+        }
+    );
     
     var addObject = function(){
        var rect = new fabric.Rect({
