@@ -181,9 +181,18 @@ router.get('/api/svg-templates/:id/:t?', isLoggedIn,  async (req,res)=>{
         }else{
             result = await uploads.findOne({
                 type:'template', by_admin:true, active:true, code:itemid });  
+
+
         }
         
     }
+
+    if(!result){
+       return  res.status(204).send({
+            "message":`${itemid} resource has been deleted.`
+        });
+    }
+
     res.send(result);
     
 })
