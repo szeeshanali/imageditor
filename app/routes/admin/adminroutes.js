@@ -925,7 +925,7 @@ router.get('/app/admin/templates', isAdmin, async (req,res)=>{
     title: "Edit Template",
     user : req.user,
   }
-  var templates = await uploads.find({type:'template', by_admin:true , }).sort({order_no:1}); 
+  var templates = await uploads.find({type:'template', by_admin:true , deleted:false }).sort({order_no:1}); 
   res.render("pages/admin/templates",{
     user      : req.user,
     templates : templates
@@ -1374,7 +1374,8 @@ router.delete('/api/admin/template/:id', isAdmin, async (req,res)=>{
     return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."});
   }  
   try{
-    await uploads.findOneAndDelete({type:'template', by_admin:true, code:id }); 
+    //await uploads.findOneAndDelete({type:'template', by_admin:true, code:id });
+    await uploads.findOneAndUpdate({type:'template', by_admin:true, code:id },{deleted:true}); 
     let items = await uploads.find({type:"template",deleted:false}).sort({order_no:1}); 
     if(items && items.length>0){
       
