@@ -346,7 +346,7 @@ router.post('/api/project/validate', isLoggedIn, async function(req, res) {
             uploaded_by     :   req.user._id,  
             deleted         :   false,
             active          :   true,
-            type            :   'project'
+            type            :   {$in:['project','pre-designed']}
     
         },{title:1}); 
     
