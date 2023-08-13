@@ -1,6 +1,16 @@
 // main canvas. 
 // zeeshan01@gmail.com
 var selectedTemplateId = 'default';
+var layerHtml = `<div class="media d-block d-flex layer-item object-options" data-index='{index}' id='{id}'  >
+    <div class="d-block mg-sm-r-10 img"> <img src="{src}" class="layer-img" alt="Image" ></div>
+    <div class="d-sm-flex layer-label tx-bold">{text}</div>
+    <div class="d-sm-flex layers-controls" style="display:none !important">
+    <i class='ion-ios-copy-outline duplicate main-tool-button'   title='duplicate' ></i>
+    <i class='ion-ios-upload-outline bring-fwd' title="move up" id="bring-fwd" ></i>
+    <i class='ion-ios-download-outline bring-back' title="move down" id="bring-back" ></i>
+    <i class='ion-ios-trash-outline delete main-tool-button' title='delete' ></i>
+    </div>
+   </div>`;
 
 //#toolbar
 const    $btnToolbarLarger   =   $("#btnToolbarLarger"); 
@@ -658,6 +668,10 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
                             })
                         });
 
+                        if(onComplete){
+                            onComplete(data)
+                        };
+
               },function (item, object) {
     
                         object.set({
@@ -673,9 +687,7 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
                                       
             })
 
-            if(onComplete){
-                onComplete(data)
-            };
+
 
             });
            
@@ -1065,13 +1077,19 @@ function addLayer(o) {
     for (var i = _canvas._objects.length - 1; i >= 0; i--) {
         var obj = _canvas._objects[i];      
         let src;
+        let layerText = `Layer ${i+1} - Image`;
         if (obj.text) {
             src = '/images/txt.png';
+            layerText = `Layer ${i+1} - ${obj.text?.length>15?obj.text.substr(0,12)+"...":obj.text}`;
         }else{
             src = obj.getSrc();
         }
         src = state.isPreviewCanvas?"/images/layerimg.png":src;
-        layers += temp.replace(/{id}/ig, obj.id).replace("{src}", src).replace("{_id}", obj.id).replace(/{index}/ig, i + 1);
+        layers += temp.replace(/{id}/ig, obj.id)
+        .replace("{src}", src)
+        .replace("{_id}", obj.id)
+        .replace(/{index}/ig, i + 1)
+        .replace(/{text}/ig, layerText);
     }
     if (layers != "") {
         $layers.html(layers);
@@ -1144,10 +1162,12 @@ function loadProject(projectId, type)
            loadSVGTemplate(meta.templateId,(data)=>{
             $loader.addClass("hidden");               
             canvas.designId = projectId;
-            canvas.loadFromJSON(res.data.json);
+            canvas.loadFromJSON(res.data.json,canvas.renderAll.bind(canvas));
             canvas.renderAll();                               
             // setTimeout(function(){
-            //     canvas.loadFromJSON(res.data.json);   
+            //     canvas.loadFromJSON(res.data.json,canvas.renderAll.bind(canvas));
+            // canvas.renderAll();                               
+               
             //     canvas._objects.forEach(o=>{
             //         if(o.type === "i-text"){
             //             //o._forceClearCache = true;
@@ -1155,8 +1175,7 @@ function loadProject(projectId, type)
                         
             //         }
             //     })  
-            //     canvas.renderAll();
-            // },1000)
+            // },3000)
 
             $('#my-proj-modal').modal('hide');
                $('#shared-lib-modal').modal('hide');
@@ -1691,4 +1710,5 @@ function initContextMenu()
         $(`#${id}`).addClass("selected-layer");
     
     }
+    
     

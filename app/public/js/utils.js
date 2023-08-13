@@ -512,6 +512,21 @@ function isAckConfirmUpload(){
     }
     return true; 
 }
+function confirmBox(title, message, continueButtonText,closeButtonText, delegate ){
+    continueButtonText = continueButtonText || "Continue";
+    closeButtonText = closeButtonText || "closeButtonText";    
+    delegate = delegate || function() { alert("No Event Attached."); }
+    title = title || "ARE YOU SURE?"; 
+    $("#confirmbox").modal("toggle");
+    $("#confirmBoxTitle").text(title)
+    $("#confirmBoxBody").text(message);
+    $("#btnModelContinue").text(continueButtonText);
+    $("#btnConfirmBoxModalClose").text(closeButtonText);
+    $("#btnModelContinue").unbind().on("click",function(e){
+        e.preventDefault();
+        delegate(e);
+    })
+}
 
 
 cropInit();

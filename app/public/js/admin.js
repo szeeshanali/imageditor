@@ -44,16 +44,7 @@
     const $btnSavePreDesign = $("#btnSavePreDesign");
     const $btnTextSize = $("#btnTextSize");
     const $loader = $("#loader");
-    var layerHtml = `<div class="media d-block d-flex layer-item object-options" data-index='{index}' id='{id}'  >
-    <div class="d-block mg-sm-r-10 img"> <img src="{src}" class="layer-img" alt="Image" ></div>
-    <div class="d-sm-flex layer-label tx-bold">Layer {index}</div>
-    <div class="d-sm-flex layers-controls" style="display:none !important">
-    <i class='ion-ios-copy-outline duplicate main-tool-button'   title='duplicate' ></i>
-    <i class='ion-ios-upload-outline bring-fwd' title="move up" id="bring-fwd" ></i>
-    <i class='ion-ios-download-outline bring-back' title="move down" id="bring-back" ></i>
-    <i class='ion-ios-trash-outline delete main-tool-button' title='delete' ></i>
-    </div>
-   </div>`;
+    
     // Template Upload:
 
 
@@ -287,8 +278,9 @@ var $btnRedo = $("#btnRedo");
     $(itemToHighlight).addClass("bg-menu-highlight");
 }
 
-function saveDesign(type) {
+function saveDesign(type, update) {
 
+    update = update || false;
         /**
    * . Check is Canvas is not Preview Canvas. 
    * . Check if canvas has atleast one item. 
@@ -337,7 +329,8 @@ function saveDesign(type) {
                 active      : true,
                 json        : JSON.stringify(canvas.toJSON()),
                 templateId  : canvas.templateId, 
-                type        : type
+                type        : type,
+                replace     : update 
             },
             success: function (res) {
                 toast("Your Project has been Saved.");
@@ -345,15 +338,24 @@ function saveDesign(type) {
             },
             error: function (res) {
                 if (res.status === 401) {
-                    toast(`${
-                        res.statusText
-                    }:${
-                        res.responseJSON.message
-                    }`);
-                } else {}
+                    toast(`${ res.statusText }:${res.responseJSON.message}`);
+                } else if (res.status === 409) {
+                    confirmBox(
+                        "ARE YOU SURE?",
+                        "Filename already exists, Do you wish to replace?",
+                        "Replace",
+                        "Cancel",(e)=>{
+                            saveDesign('pre-designed',true);
+                        })
+                }else{}
+
+
+                
             }
         })
     }
+
+    
 
 function editProject(type) {
 
@@ -412,11 +414,7 @@ function editProject(type) {
             },
             error: function (res) {
                 if (res.status === 401) {
-                    toast(`${
-                        res.statusText
-                    }:${
-                        res.responseJSON.message
-                    }`);
+                    toast(`${res.statusText}:${res.responseJSON.message}`);
                 } else {}
             }
         })
