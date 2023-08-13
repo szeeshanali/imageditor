@@ -1067,20 +1067,23 @@ router.get('/app/admin/manage/banners', isAdmin, async (req,res)=>{
 
 //****Save Design */
 
-router.post('/api/admin/save-design', isAdmin, async function(req, res) {
+router.post('/api/admin/project/validate', isAdmin, async function(req, res) {
   try{
-    
-
+  
       const totalProjects =  await uploads.find({ 
           uploaded_by     :   req.user._id,  
           deleted         :   false,
           active          :   true,
-          type            :   'pre-designed'  
+          type            :   {$in:['project','pre-designed']}
+  
       },{title:1}); 
   
-      let {id, itemId, userDesignId, desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
-       
-      if(totalProjects.find(i=>i.title?.toLowerCase()?.trim() === title?.toLowerCase().trim()))
+      const count = totalProjects.length;
+      console.log(`total project count: ${count}`); 
+      console.log(totalProjects);    
+      
+      let {name,title} = req.body;      
+      if(totalProjects.find(i=>i.title?.toLowerCase()?.trim() === name?.toLowerCase().trim()))
       {
           ///return res.status(400).send({message:`A project with the same name  (${title}) is already exists. `, error: `Project with the same name  (${title}) is already exists. `});
           return res.status(409).send({
@@ -1091,7 +1094,130 @@ router.post('/api/admin/save-design', isAdmin, async function(req, res) {
               valid:false
           });
       }
+        
+      return ok(res);
+  }catch(ex){
+      console.error(ex)
+      return error(res,ex.message);
+  }})    
+
+
+// router.post('/api/admin/save-design', isAdmin, async function(req, res) {
+//   try{
+    
+
+//       const totalProjects =  await uploads.find({ 
+//           uploaded_by     :   req.user._id,  
+//           deleted         :   false,
+//           active          :   true,
+//           type            :   'pre-designed'  
+//       },{title:1}); 
+  
+//       let {id, itemId, userDesignId, desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
+       
+//       if(totalProjects.find(i=>i.title?.toLowerCase()?.trim() === title?.toLowerCase().trim()))
+//       {
+//           ///return res.status(400).send({message:`A project with the same name  (${title}) is already exists. `, error: `Project with the same name  (${title}) is already exists. `});
+//           return res.status(409).send({
+//               status:409,
+//               message:`Filename already exists, Do you wish to replace?`,
+//               exception:null,
+//               error:true,
+//               valid:false
+//           });
+//       }
           
+//       let _id = mongoose.Types.ObjectId();
+//       let uploadModel = {
+//         title           :   title,
+//         name            :   title,
+//         desc            :   desc,
+//         code            :   _id,
+//         active          :   true,
+//         json            :   json,
+//         base64          :   base64,
+//         path            :   null,
+//         meta            :   meta,
+//         by_admin        :   true,
+//         type            :   type,
+//         uploaded_by     :   req.user._id,
+//         created_dt      :   new Date()      
+//       };
+    
+//       let _path = `../app/public/uploads/admin/${type}/${type}-${_id}.jpg`;    
+//       let _base64Alter = base64.replace(`data:${"image/png"};base64,`, "");
+//       await fs.writeFileSync(_path,_base64Alter,{ encoding: 'base64' }); 
+//       uploadModel.path = _path;
+//       var upload = new uploads(uploadModel);
+//       await upload.save();
+//       res.status(200).send({message:`Success`, error: null});
+  
+//       }catch(ex) {
+//           res.status(500).send({message:`Something went wrong!`, error: ex.message});
+//       }
+//    })
+
+
+router.post('/api/admin/save-design', isLoggedIn, async function(req, res) {
+  try{
+  
+      const totalProjects =  await uploads.find({ 
+          uploaded_by     :   req.user._id,  
+          deleted         :   false,
+          active          :   true,
+          type            :   'pre-designed'
+  
+      },{title:1,code:1}); 
+  
+      const count = totalProjects.length;
+      console.log(`total project count: ${count}`); 
+      console.log(totalProjects);
+  
+             
+      let {comments, id, itemId, userDesignId, desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body;      
+      var p = totalProjects.find(i=>i.title?.toLowerCase()?.trim() === title?.toLowerCase().trim())
+      if(p)
+      {
+          try{
+        
+              const project_id = p.code;
+              if(!project_id){
+                return error(res)
+              }
+        
+
+              let _path = `../app/public/uploads/admin/${type}/${type}-${project_id}.jpg`;    
+              let _base64Alter = base64.replace(`data:${"image/png"};base64,`, "");
+              await fs.rmSync(_path, {force: true});
+              await fs.writeFileSync(_path,_base64Alter,{ encoding: 'base64' ,flag:"w"  }); 
+              
+              var project = await uploads.findOne({code: project_id});
+              project.json = json;
+              project.modified_dt = new Date();
+              if(!project.comments){
+                project.comments = [];
+              }
+              project.comments.push(
+                {
+                  name        :   "You",
+                  created_dt  :   new Date(),
+                  comments    :   comments,
+                  path : _path
+              });
+              
+              project.save();
+              return ok(res);
+          
+              }catch(ex) {
+                  console.log(ex);
+                return error(res,ex);
+              }
+  
+  
+  
+      }
+
+      
       let _id = mongoose.Types.ObjectId();
       let uploadModel = {
         title           :   title,
@@ -1104,14 +1230,28 @@ router.post('/api/admin/save-design', isAdmin, async function(req, res) {
         path            :   null,
         meta            :   meta,
         by_admin        :   true,
-        type            :   type,
+        type            :   'pre-designed',
         uploaded_by     :   req.user._id,
-        created_dt      :   new Date()      
+        created_dt      :   new Date()
       };
-    
+      if(comments){
+          uploadModel.comments=[];
+          comments.name = req.user.fname;
+          comments.email = req.user.email;
+          comments.created_dt = new Date();
+          uploadModel.comments.push({
+  
+              name        :   req.user.fname,
+              email       :   req.user.email,
+              created_dt  :   new Date(),
+              comments    :   comments
+  
+          })
+      }
+
       let _path = `../app/public/uploads/admin/${type}/${type}-${_id}.jpg`;    
       let _base64Alter = base64.replace(`data:${"image/png"};base64,`, "");
-      await fs.writeFileSync(_path,_base64Alter,{ encoding: 'base64' }); 
+      await fs.writeFileSync(_path,_base64Alter,{ encoding: 'base64' ,flag:"w"  });       
       uploadModel.path = _path;
       var upload = new uploads(uploadModel);
       await upload.save();
