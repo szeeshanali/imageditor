@@ -6,7 +6,7 @@ const commonService         = require("../services/common");
 
 require("../config/passport")(passport);
 const appusers              = require("../../app/models/appuser")
-
+const app_settings          = require('../../app/models/settings');
 const PATH_ADMIN_LOGIN      = 'pages/admin/login';
 const PATH_LOGIN            = 'pages/client/login';
 const PATH_REGISTER         = 'pages/client/register';
@@ -101,11 +101,13 @@ router.get(ROUTE_USER_REGISTER,   (req, res) => {
 
     });
 
-router.get(ROUTE_LOGIN, (req, res) => {
+router.get(ROUTE_LOGIN, isTemporarilyDown, async (req, res) => {
     res.render(PATH_LOGIN, {layout: false});
-  //  console.log( req );
 });
-
+router.get("/app/503", (req, res) => {
+  res.render("pages/client/503", {layout: false});
+//  console.log( req );
+});
 router.get("/app/home", (req, res) => {
     res.render("pages/client/main", {layout: false});
   //  console.log( req );
