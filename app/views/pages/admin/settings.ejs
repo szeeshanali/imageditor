@@ -13,7 +13,7 @@
         <div class="row">
             <div class="col-lg-3">
                 
-                <div data-toggle="modal" data-target="#popup-fileupload-max" class="hand card bd pd-20">
+                <div data-toggle="modal" data-target="#popup-fileupload-max" class="hand card bd pd-20 ht-150">
                     <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-5">File Upload Limit</h6>
                     <h1><strong><%=settings.file_size_limit %></strong><span class="tx-normal">mb</span></h1>
                     <p class="tx-12 mg-b-0">Maximum file Upload Size is 10mb.</p>
@@ -21,16 +21,30 @@
             </div>
             <div class="col-lg-3">
                 
-              <div data-toggle="modal" data-target="#popup-banner-delay" class="hand card bd pd-20">
+              <div data-toggle="modal" data-target="#popup-banner-delay" class="hand card bd pd-20 ht-150">
                   <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-5">Banner Delay</h6>
                   <h1><strong><%=settings.banner_delay||0 %></strong><span class="tx-normal">sec</span></h1>
                   <p class="tx-12 mg-b-0">Banner Delay in Seconds</p>
               </div>
           </div>
+          <div class="col-lg-3 ">
+
+            <div data-toggle="modal" class="hand card bd pd-20 ht-150">
+              <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-5">Shutdown</h6>
+              <label class="switch">
+                <input type="checkbox" id="cbShutdown" >
+                <span class="shutdown-slider round"></span>
+                <span class="absolute-no">NO</span>
+              </label>
+              <p class="tx-12 mg-b-0 " id="lblShutdownText">User application is available for all users.</p>
+
+            </div>
+        </div>
         </div>
     </div>
   </div>
 
   <%- include('../../partials/admin/popups/popup-file-upload-limit'); %>
   <%- include('../../partials/admin/popups/popup-banner-delay'); %>
+  <%- include('../../partials/admin/popups/popup-shutdown-app'); %>
   
