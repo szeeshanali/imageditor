@@ -7,9 +7,8 @@ const commonService                 = require('../../services/common');
 const formidable                    = require('formidable');
 const { default: mongoose, mongo }  = require('mongoose');
 const appusers                      = require('../../models/appuser');
-const app_settings                      = require('../../models/settings');
 const nodemailer                    = require('nodemailer');
-
+const app_settings                      = require('../../models/settings');
 const PATH_TEMPLATES                = 'pages/client/templates';
 const PATH_WORKSPACE                = 'pages/client/workspace';
 const PATH_USER_PROFILE             = 'pages/client/profile';
@@ -225,11 +224,10 @@ router.get("/app/templates",  isLoggedIn, async (req, res) => {
     res.render(PATH_TEMPLATES,res.locals.page);
 }); 
 
-
-router.get("/app/main",  async (req, res) => {
-   const banners = await uploads.find({type:'banner', active:true, deleted:false, ref_code:{$ne:'home-page'}},{link:1,path:1})
-   let settings = await app_settings.findOne();
-   res.render('pages/client/main',{layout:false, banners:banners, settings});
+router.get("/app/main", isTemporarilyDown,  async (req, res) => { 
+    const banners = await uploads.find({type:'banner', active:true, deleted:false, ref_code:{$ne:'home-page'}},{link:1,path:1})
+    let settings = await app_settings.findOne();
+    res.render('pages/client/main',{layout:false, banners:banners, settings});
 }); 
 
 
@@ -548,7 +546,7 @@ router.get("/api/client/download",  isLoggedIn, async (req, res) => {
     
 });
 
-router.get("/app/workspace/:type?/:id?",  isLoggedIn, async (req, res) => {
+router.get("/app/workspace/:type?/:id?",  [isTemporarilyDown,isLoggedIn], async (req, res) => {
     res.locals.page = {
         id: "__workspace",
         title: "Workspace",

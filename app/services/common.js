@@ -1,8 +1,9 @@
-const categoryModel = require("../models/categories");
-const uploads = require("../models/uploads"); 
-const appuserModel = require("../models/appuser"); 
-const contents = require("../models/contents"); 
-const logs = require("../models/logs"); 
+const categoryModel         = require("../models/categories");
+const uploads               = require("../models/uploads"); 
+const appuserModel          = require("../models/appuser"); 
+const contents              = require("../models/contents"); 
+const logs                  = require("../models/logs"); 
+const app_settings          = require('../models/settings');
 
 const { default: mongoose, mongo } = require('mongoose');
 
@@ -372,6 +373,16 @@ const commonService = (function() {
         _log.save();
     }
 
+    this.isTemporarilyDown = async (req,res,next)=>{
+        const isDown = await app_settings.findOne({"app_shutdown":true}); 
+        console.log(`Checking isTemporarilyDown: ${isDown}`);
+        if(isDown){
+            console.log("Website is Temporarily Down for Maintenance.");
+            return res.render("pages/client/503",{layout:false});
+        }
+        return next();
+    }
+
     return {
         categoryService: {
             getCategoriesAsync  :   this.getCategoriesAsync,
@@ -405,6 +416,7 @@ const commonService = (function() {
         logger:{
             log: this.addLogs
         },
+        isTemporarilyDown           : this.isTemporarilyDown, 
         clearCache: clearCache
     }
 })();

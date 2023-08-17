@@ -1,0 +1,55 @@
+<div id="popup-shutdown-app" class="modal fade show">
+    <div class="modal-dialog modal-sm" role="document">
+      <div class="modal-content bd-0 tx-14">
+        <div class="modal-header pd-x-20">
+          <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Banner Delay</h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body pd-20">
+          <p class="mg-b-5" id="popup-shutdown-app">
+            <input class="form-control" value="<%=settings.banner_delay %>" id="input-banner-delay" min="1" max="1000" oninput="this.value = (this.value<1 && !this.value==''?1:(this.value>1000)?1000:this.value)" placeholder="Enter Banner Delay in Second" type="number">
+            </p>
+            <p class="tx-12 mg-b-0">Banner Delay should not less than 1 second.</p>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <div class="btn-group">
+  
+          <button type="button" id="btn-shutdown-app"  data-dismiss="modal" class="tx-12 tx-uppercase tx-bold  btn btn-success pd-x-20">Save</button>
+          <button type="button" class="btn btn-warning pd-x-20 tx-12 tx-uppercase tx-bold " data-dismiss="modal">Close</button>
+        </div>
+  
+        </div>
+      </div>
+    </div><!-- modal-dialog -->
+  </div>
+  
+  <script>
+    $(document).ready(function(){
+        $("#btn-banner-delay").on("click",function(){
+        let $input  = $("#input-banner-delay");
+        const url =  "/api/admin/settings/banner-delay";
+        $.ajax({
+                type: "PUT",
+                url: url,
+                data: {
+                    bannerDelay:$input.val()
+                }, 
+                async: false,
+                success: function (res) {
+                  $loader.addClass("hidden");
+                  toast("Updated Successfully!");
+                  setTimeout(function(){
+                    window.location.reload();
+                  },1000)
+                  
+
+                },error: function (request, status, error) {
+                  $loader.addClass("hidden");
+                  toast("Server Error");
+                },
+            });
+    })})
+    
+  </script>

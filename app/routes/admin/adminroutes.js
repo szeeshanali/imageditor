@@ -537,11 +537,9 @@ router.get('/app/admin/workspace',(req,res)=>{
 
 router.get(ROUTE_ADMIN_DASHBOARD, isAdmin, async (req,res)=>{
 
-
-
-  let totalUsers = await appusers.count();
+  //let totalUsers = await appusers.count();
   let allusers = await appusers.find({deleted:false, active:true},{password:0,is_admin:0,deleted:0,date:0,lname:0});
-  let userIds =  allusers.map(function(i){return i._id});
+  //let userIds =  allusers.map(function(i){return i._id});
   let allDownloads = await logs.find({"type":"download_pdf"},{ user_id:1,created_dt:1, content:1, data:1  });
   
   let _uploads = await uploads.find({ "type":{$in:["project","pre-designed"]}, deleted:false},{ 
@@ -573,7 +571,7 @@ var date = today.getDate();
 report.todayUsers      = allusers.filter(todayFilter).length || 0;
 report.thisWeekUsers   = allusers.filter(thisWeekFilter).length || 0;
 report.thisMonthUsers  = allusers.filter(thisMonthFilter).length || 0;
-report.totalUsers      = allusers.length; 
+report.totalUsers      = allusers.length-1; 
 report.activeUsers      = allusers.filter(function(value){ return value.active == true}).length || 0;
 report.adminUsers     =   allusers.filter(function(value){ return value.is_admin == true}).length || 0;
 
@@ -706,8 +704,9 @@ router.post('/api/filter/users', isAdmin, async (req,res)=>{
       await logs.deleteMany(filter);
       downloads = await logs.find(filter,{_id:1,user_id:1}) 
     }
-    let userIds = [];
-    userIds     = downloads.map(i=>i.user_id) || []; 
+    let users = await appusers.find(filter,{password:0});
+    userIds     = users.map(i=>i._id); 
+    //userIds     = downloads.map(i=>i.user_id) || []; 
     projects    = await uploads.find( { type:'project'},{_id:1,uploaded_by:1});
     userIds     = userIds.concat(projects.map(i=>i.uploaded_by));
     if(filter.user_id){
@@ -1820,6 +1819,17 @@ router.put("/api/admin/settings/banner-delay",isAdmin, async (req,res)=>{
     setting.banner_delay = bannerDelay;
     setting.save(); 
     return ok(res,setting);
+  }catch(ex){
+    return error(res,ex);
+  }
+})
+
+router.put("/api/shutdown",isAdmin, async (req,res)=>{
+  const {state} = req.body;
+
+  try{
+    await app_settings.updateOne({app_shutdown:{$exists:true}},{app_shutdown:state});
+    return ok(res,{state:state});
   }catch(ex){
     return error(res,ex);
   }

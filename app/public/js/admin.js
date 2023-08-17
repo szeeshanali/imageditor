@@ -3025,3 +3025,31 @@ function showDownloadHistory(userId, title, filteredDownloads) {
       $('#history-table').DataTable();
 
   }
+
+$("#cbShutdown").on("click", onCbShutdownApplication);  
+
+function onCbShutdownApplication(e) {
+const evt = $(this).prop("checked");
+               
+ 
+                $.ajax({
+                    url: '/api/shutdown',
+                    type: 'PUT',
+                    data:{state:evt},
+                    success: function(result) {
+                        let txt =  evt?`User application is currently deactivated for all users.`
+                        :`User application is available for all users.`;
+                        toast(txt);
+                        if(result.data.state === 'true'){
+                            txt = `<span class='tx-danger tx-bold'>${txt}</span>`;
+                        }
+
+                        $("#lblShutdownText").html(txt);    
+                       
+                    },
+                    error: function(request,msg,error) {
+                        toast("Something went wrong!");
+                    }
+                });         
+}
+
