@@ -99,6 +99,9 @@ router.get('/app/faq',async (req,res)=>{
 
 })
 
+router.get('/',(req,res)=>{
+    res.redirect("/app/main");
+})
 router.get('*',(req,res)=>{
     res.render("pages/admin/404.ejs",{layout:false})
 })
