@@ -219,7 +219,7 @@ $("#btnDisplayGrid").on("click", function (e) {
     kerning: 0,
     //flipped:    $("#inputFlipText").prop("checked") || false,
     fill:       $("#fontColorBox").val() || '#000000',
-    fontFamily: $("#fontlist").attr("data-value") || 'Sans-serif',
+    fontFamily: $("#fontlist").attr("data-value") || 'Arial',
     fontSize: parseInt($("#btnTextSize").val()), // in px
     fontWeight: 'normal',
     fontStyle: '', // "normal", "italic" or "oblique".
