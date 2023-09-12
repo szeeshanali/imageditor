@@ -705,7 +705,8 @@ router.post('/api/filter/users', isAdmin, async (req,res)=>{
       await logs.deleteMany(filter);
       downloads = await logs.find(filter,{_id:1,user_id:1}) 
     }
-    let users = await appusers.find(filter,{password:0});
+    
+    let users = await appusers.find({_id:filter.user_id},{password:0});
     userIds     = users.map(i=>i._id); 
     //userIds     = downloads.map(i=>i.user_id) || []; 
     projects    = await uploads.find( { type:'project'},{_id:1,uploaded_by:1});
