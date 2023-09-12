@@ -538,7 +538,7 @@ router.get('/app/admin/workspace',(req,res)=>{
 router.get(ROUTE_ADMIN_DASHBOARD, isAdmin, async (req,res)=>{
 
   //let totalUsers = await appusers.count();
-  let allusers = await appusers.find({deleted:false, active:true},{password:0,is_admin:0,deleted:0,date:0,lname:0});
+  let allusers = await appusers.find({},{password:0,is_admin:0,deleted:0,date:0,lname:0});
   //let userIds =  allusers.map(function(i){return i._id});
   let allDownloads = await logs.find({"type":"download_pdf"},{ user_id:1,created_dt:1, content:1, data:1  });
   
@@ -571,7 +571,7 @@ var date = today.getDate();
 report.todayUsers      = allusers.filter(todayFilter).length || 0;
 report.thisWeekUsers   = allusers.filter(thisWeekFilter).length || 0;
 report.thisMonthUsers  = allusers.filter(thisMonthFilter).length || 0;
-report.totalUsers      = allusers.length-1; 
+report.totalUsers      = allusers.length; 
 report.activeUsers      = allusers.filter(function(value){ return value.active == true}).length || 0;
 report.adminUsers     =   allusers.filter(function(value){ return value.is_admin == true}).length || 0;
 
@@ -673,7 +673,7 @@ router.post('/api/filter/users', isAdmin, async (req,res)=>{
         filter.created_dt = { $lte: new Date(year ,month ,date,23,59,59)} }
         else{
           filter.created_dt.$lte = new Date(year, month, date,23,59,59);
-        }            
+       }            
     }
 
     let _userIds = [];
