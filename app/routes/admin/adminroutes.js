@@ -673,7 +673,7 @@ router.post('/api/filter/users', isAdmin, async (req,res)=>{
         filter.created_dt= { $lte: new Date(year ,month ,date,23,59,59)} }
       else{
       //  filter.created_dt.$lte = new Date(year, month, date,23,59,59);
-      filter.created_dt.$gte= new Date(year ,month ,date);
+      filter.created_dt.$gte= new Date(_sd.getFullYear() ,_sd.getMonth()-1 ,_sd.getDate());
     }
             
     }
