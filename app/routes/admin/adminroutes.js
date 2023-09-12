@@ -670,12 +670,10 @@ router.post('/api/filter/users', isAdmin, async (req,res)=>{
 
       if(!startDate)
       {
-        filter.created_dt= { $lte: new Date(year ,month ,date,23,59,59)} }
-      else{
-      //  filter.created_dt.$lte = new Date(year, month, date,23,59,59);
-      filter.created_dt.$gte= new Date(_sd.getFullYear() ,_sd.getMonth()-1 ,_sd.getDate());
-    }
-            
+        filter.created_dt = { $lte: new Date(year ,month ,date,23,59,59)} }
+        else{
+          filter.created_dt.$lte = new Date(year, month, date,23,59,59);
+        }            
     }
 
     let _userIds = [];
@@ -705,8 +703,8 @@ router.post('/api/filter/users', isAdmin, async (req,res)=>{
       await logs.deleteMany(filter);
       downloads = await logs.find(filter,{_id:1,user_id:1}) 
     }
-    
-    let users = await appusers.find({_id:filter.user_id},{password:0});
+
+    let users = await appusers.find({},{password:0});
     userIds     = users.map(i=>i._id); 
     //userIds     = downloads.map(i=>i.user_id) || []; 
     projects    = await uploads.find( { type:'project'},{_id:1,uploaded_by:1});
