@@ -186,7 +186,7 @@ router.get("/app/admin/settings", isAdmin, async (req,res)=>{
 
 
 router.get("/app/admin/terms", isAdmin, async (req,res)=>{
-  var content =  await contents.findOne({type:'terms', active:true, deleted:false});
+  var content =  await contents.findOne({type:'terms', active:true, deleted:false}) || {};
   var exp = /^<([a-z]+)([^<]+)*(?:>(.*)<\/\1>|\s+\/>)$/;
   
   res.locals.page = {
