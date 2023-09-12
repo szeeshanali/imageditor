@@ -648,8 +648,8 @@ router.post('/api/filter/users', isAdmin, async (req,res)=>{
     let filter = { deleted:false };
     
     if(startDate){
-      let _d = startDate.split('/')[1];
       let _m = startDate.split('/')[0];
+      let _d = startDate.split('/')[1];
       let _y = startDate.split('/')[2]; 
       let _sd = new Date(_y,_m,_d);  
       let year =_sd.getFullYear();
@@ -671,9 +671,10 @@ router.post('/api/filter/users', isAdmin, async (req,res)=>{
       if(!startDate)
       {
         filter.created_dt= { $lte: new Date(year ,month ,date,23,59,59)} }
-        else{
-        filter.created_dt.$lte = new Date(year, month, date,23,59,59);
-      }
+      else{
+      //  filter.created_dt.$lte = new Date(year, month, date,23,59,59);
+      filter.created_dt.$gte= new Date(year ,month ,date);
+    }
             
     }
 
