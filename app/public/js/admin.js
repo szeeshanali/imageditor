@@ -1748,7 +1748,7 @@ if(!order || order < 1){
                 return;
             }
             let filename = files[0].name; 
-            if(filename.indexOf(".ttf") === -1)
+            if(filename.toLowerCase().indexOf(".ttf") === -1)
             {
                 toast("Please browse a (.ttf) font file");
                 return;

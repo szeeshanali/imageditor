@@ -636,15 +636,15 @@ function initUIEvents() {
  
      })
 
-    $("#formRFQ").submit(function(e) {
+    $("#formRFQ").on("click",function(e) {
 
         e.preventDefault();         
         let form = $(this);
-        let actionUrl = form.attr('action');
-        let formData = new FormData(form[0]);
+        //let actionUrl = form.attr('action');
+        let formData = new FormData($("#_formRFQ")[0]);
         let width = canvasPrev.backgroundImage.viewBoxWidth;
         let height = canvasPrev.backgroundImage.viewBoxHeight;
-        let pageFormat = getPageFormatByDimensions(width,height)           
+        let pageFormat = getPageFormatByDimensions(width,height);           
         let fn = $("#downloadFileName").val() || `Kake-prints${new Date().getTime()}`;
         let pdfMeta = 
         {
@@ -668,7 +668,7 @@ function initUIEvents() {
         $loader.removeClass('hidden'); 
         $.ajax({
             type: "POST",
-            url: actionUrl,
+            url: "/api/rfq",
             data: formData, // serializes the form's elements.
             async: false,
             success: function (data) {
@@ -688,34 +688,7 @@ function initUIEvents() {
             processData: false,
            
         });
-        // generatePDFfromPreview(true,(pdfBase64)=>{
-
-        //     formData.append('file', pdfBase64);
-        //     $loader.removeClass("hidden");
-        //     $.ajax({
-        //         type: "POST",
-        //         url: actionUrl,
-        //         data: formData, // serializes the form's elements.
-        //         async: false,
-        //         success: function (data) {
-        //             //toast('Thank you, Your request has been submitted, we will contact you soon.');
-        //             form.trigger('reset');
-        //             $('#rfq').modal('toggle');
-        //             $loader.addClass("hidden");
-        //             $("#rfq_confirm").modal();
-        //         },error: function (request, status, error) {
-        //             toast('Server Error: Form could not be submitted.');
-        //             form.trigger('reset');
-        //             $('#rfq').modal('toggle');
-        //             $loader.addClass("hidden");
-        //         },
-        //         cache: false,
-        //         contentType: false,
-        //         processData: false,
-               
-        //     });
         
-        // });
   
     });
     $("#menu-save-design").on("click",function(e){
@@ -1143,70 +1116,104 @@ function updateTextControls(e){
    let isRight      = item.textAlign === "right";
    let isCenter     = item.textAlign === "center";
    let isCurvedText = item.type === 'curved-text';
+   
+   let $elemRightAlign = $("#btn-right-align");
+   let $elemLeftAlign = $("#btn-left-align");
+   let $elemCenterAlign = $("#btn-center-align"); 
+   
+   let $elemBold = $("#bold");
+   let $elemItalic = $("#italic");
+   let $elemUnderline = $("#underline"); 
+
+   
    $("#btnTextSize").val(item.fontSize);
 
-   if(item.charSpacing)
-   { $("#text-letter-spacing").val(item.charSpacing);}
+   if(item.charSpacing){ 
+       $("#text-letter-spacing").val(item.charSpacing);
+    }
 
    $("#inputStrokeText").prop("checked",!!item.stroke); 
-
    $("#text-letter-spacing").val(item.charSpacing||10)
    
-   if(isBold)
-   { $("#bold").parent().addClass("active"); }
-   else{ $("#bold").parent().removeClass("active"); }
+//    if(isBold)
+//    { $("#bold").parent().addClass("active"); }
+//    else{ $("#bold").parent().removeClass("active"); }
 
-   if(isItalic)
-   { $("#italic").parent().addClass("active"); }
-   else{ $("#italic").parent().removeClass("active"); }
+//    if(isItalic)
+//    { $("#italic").parent().addClass("active"); }
+//    else{ $("#italic").parent().removeClass("active"); }
 
-   if(isUnderline)
-   { $("#underline").parent().addClass("active"); }
-   else{ $("#underline").parent().removeClass("active"); }
-
-
+//    if(isUnderline)
+//    { $("#underline").parent().addClass("active"); }
+//    else{ $("#underline").parent().removeClass("active"); }
 
 
-   
+    elemActiveInActive($elemRightAlign  ,isRight); 
+    elemActiveInActive($elemLeftAlign   ,isLeft);
+    elemActiveInActive($elemCenterAlign ,isCenter); 
+    elemActiveInActive($elemBold        ,isBold); 
+    elemActiveInActive($elemItalic      ,isItalic);
+    elemActiveInActive($elemUnderline   ,isUnderline); 
+    
 
+//     if(isBold){ 
+//         $("#bold").addClass("active"); 
+//     }else{ 
+//         $("#bold").removeClass("active"); 
+//     }
 
+//    if(isItalic){ 
+//        $("#italic").addClass("active"); 
+//     }else{ 
+//         $("#italic").removeClass("active"); 
+//     }
 
-   if(item.strokeWidth)
-   { 
-    if($("#inputStrokeText").is(":checked"))
-    {
-        $("#text-stroke-width").val(item.strokeWidth); 
+//     if(isUnderline){ 
+//         $("#underline").addClass("active"); 
+//     }else{ 
+//        $("#underline").removeClass("active"); 
+//     }
+
+   if(item.strokeWidth){ 
+        if($("#inputStrokeText").is(":checked")){ 
+            $("#text-stroke-width").val(item.strokeWidth); 
+        }
+   }
+
+   if(item.lineHeight){ 
+       $("#text-line-height").val(item.lineHeight); 
     }
-}
-
-   if(item.lineHeight)
-   { $("#text-line-height").val(item.lineHeight); }
-   if(item.stroke)
-   { document.querySelector('#strokecolor')?.jscolor.fromString(item.stroke); }
-   document.querySelector('#fontColorBox').jscolor.fromString(item.fill);
-
-
-   if(isCurvedText)
-   { 
-    $("#inputCurvedText").prop("checked",true);
-    $("#inputFlipText").prop("checked",item.flipped);
-    $("#curveTextCtrl").val(item.diameter);
-    
-    
-}
-   else 
-   { 
-    $("#inputCurvedText").prop("checked",false);
-    $("#inputFlipText").prop("checked",false);
-    $("#curveTextCtrl").val("1250");
-}
-
-$("#fontlist")
-.css({"font-family": item.fontFamily})
-.text(item.fontName)
-.attr("data-value",item.fontFamily);   
-
    
+   if(item.stroke){ 
+       document.querySelector('#strokecolor')?.jscolor.fromString(item.stroke); 
+    }
+    
+    document.querySelector('#fontColorBox').jscolor.fromString(item.fill);
+
+    if(isCurvedText){ 
+    
+        $("#inputCurvedText").prop("checked",true);
+        $("#inputFlipText").prop("checked",item.flipped);
+        $("#curveTextCtrl").val(item.diameter);
+    
+    }else{ 
+        $("#inputCurvedText").prop("checked",false);
+        $("#inputFlipText").prop("checked",false);
+        $("#curveTextCtrl").val("1250");
+    }
+
+    $("#fontlist")
+    .css({"font-family": item.fontFamily})
+    .text(item.fontFamily.replace("-"," "))
+    .attr("data-value",item.fontFamily);   
+
+}
+
+
+function elemActiveInActive(elem,state){
+    const active = 'active';
+    state?elem.addClass(active):elem.removeClass(active);
+    return state; 
 }
 
 function initCanvasEvents() {

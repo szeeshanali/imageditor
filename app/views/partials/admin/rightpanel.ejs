@@ -177,7 +177,7 @@
                             </button>
                             <div class="dropdown-menu"  aria-labelledby="fontlist">
                                 <%fonts?.forEach((item)=>{%>
-                                    <a class="dropdown-item" href="#" style="font-family: <%=item.content.replace('.ttf','')%>" data-value="<%=item.content.replace('.ttf','')%>" ><%=item.label%></a>
+                                    <a class="dropdown-item" href="#" style="font-family: <%=item.content.replace('.ttf','').replace('.TTF','')%>" data-value="<%=item.content.replace('.ttf','').replace('.TTF','')%>" ><%=item.label%></a>
                                 <%})%>
                               
                             </div>

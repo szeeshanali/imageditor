@@ -635,7 +635,7 @@ router.get('/app/rfq/pdf/:id', async function(req, res){
   });
 
 
-  router.get('/app/submit-design/:id', isAdmin, async (req,res)=>{
+  router.get('/app/submit-design/:id', async (req,res)=>{
     let _id = mongoose.mongo.ObjectId(req.params.id);
     let item = await logs.findOne({code:_id},{data:1,_id:0,content:1,path:1,created_dt:1});
     let content = JSON.parse(item.content);
@@ -733,46 +733,59 @@ router.post('/api/rfq', isLoggedIn, async (req,res)=>{
                                             pass: smtpSettings.SMTP_PASS
                                         }
                                     });
-                                    transporter.sendMail({
-                                        from:       [{name:"KakePrints", address: rfqSettings.RFQ_FROM}],
-                                        to:         rfqSettings.RFQ_TO,
-                                        subject:    rfqSettings.RFQ_SUBJECT.replace("{user}",fields.name),
-                                        bcc:        rfqSettings.RFQ_BCC?.split(','),
-                                        html:       `<strong>Hello Admin,</strong>
-                                        <p>${fields.name} has sent you a design for printing, Please review the following detail</p>
-                                        <table style='font-family:Arial; color:#222; font-size:12px; text-align:left'>
-                                            <tr><th width='150'>Name</th><td>${fields.name}</td></tr>
-                                            <tr><th>Company Name</th><td>${fields.companyName}</td></tr>
-                                            <tr><th>Email</th><td>${fields.email}</td></tr>
-                                            <tr><th>Phone</th><td>${fields.phone}</td></tr>
-                                            <tr><th># of Sheets</th><td>${fields.sheets}</td></tr>
-                                            <tr><th>Pickup in Torrance</th><td>${fields.pickup || 'No'}</td></tr>
-                                            <tr><th colspan='2'>Shipping Details</tthd></tr>
-                                            <tr><th>Street 1</th><td>${fields.street1 || 'NA'}</td></tr>
-                                            <tr><th>Street 2</th><td>${fields.street2 || 'NA'}</td></tr>
-                                            <tr><th>City</th><td></td>${fields.city || 'NA'}</tr>
-                                            <tr><th>State</th><td>${fields.state || 'NA'}</td></tr>
-                                            <tr><th>Zip</th><td>${fields.zip | 'NA'}</td></tr>
-                                            <tr><th>Required Date</th><td>${fields.date || 'NA'}</td></tr>
-                                            <tr><th colspan='2'>Additional Information</th></tr>
-                                            <tr><td colspan='2'><p>
-                                            ${fields.additionalInfo || 'NA'}
-                                            </p></td></tr>
-                                            </table>
-                                     <div style=''>
-                                    <div> File: ${fields.filename || 'NA'} </div><br>
-                                      <div><a style='color:white;padding:10px;background-color:green;border-radius:3px;font-size:11px;text-decoration:none;font-family:Arial' href="${appSettings.APP_URL}/submit-design/${_id}"> DOWNLOAD </a> </div>
-                                     </div>`
-                                    });  
-                            
-                //     }
-                //     })
-    
-            return ok(res,{});
-                
-               }catch(ex){
+                                    console.log(__dirname);
+                                    fs.readFile("../app/public/email-template.html", "utf8", (error, htmlContent)=> {
+                                        if (error) {
+                                          throw error;
+                                        }
+                                        let template = htmlContent;
+                                        for(let item in fields){
+
+                                            let fieldValue = fields[item] || "N/A";
+                                            if(item === 'pickup'){
+                                                fieldValue = fieldValue === 'on'?'Yes':'No';
+                                            }
+                                            template = template.replace(`{{${item}}}`,fieldValue)
+                                        } 
+
+                                        template = template
+                                        .replace(`{{recipient}}`,req.user.email)
+                                        .replace(`{{download_link}}`,`${appSettings.APP_URL}/submit-design/${_id}`)
+                                        .replace(/{{user}}/ig,fields.name); 
+                                        console.log(template);
+                                        let filename = `${fields["filename"] || "attachment"}.pdf`;
+                                        // sending email to kakeprint. 
+                                        transporter.sendMail({
+                                            from:       [{name:"KakePrints", address: rfqSettings.RFQ_FROM}],
+                                            to:         "zeeshan01@gmail.com",
+                                            subject:    rfqSettings.RFQ_SUBJECT.replace("{user}",fields.name),
+                                            bcc:        rfqSettings.RFQ_BCC?.split(','),
+                                            html:       template,
+                                            attachments:{
+                                                 filename: filename,
+                                                 path: fields["dataUrl"]
+                                            }
+                                        });  
+
+                                        /// sending a copy to user email.
+                                        transporter.sendMail({
+                                            from:       [{name:"KakePrints", address: rfqSettings.RFQ_FROM}],
+                                            to:         req.user.email,
+                                            subject:    "Kakeprints - A PDF copy of your design sent to you.",
+                                            html:       template,
+                                            attachments:{
+                                                filename:filename,
+                                                path: fields["dataUrl"]
+                                           }
+                                        });  
+                                
+                                      
+                                      });
+                return ok(res,{});
+
+            }catch(ex){
                 return error(res,ex);
-               }
+            }
    
         })
     });

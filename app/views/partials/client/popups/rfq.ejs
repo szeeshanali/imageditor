@@ -7,7 +7,7 @@
           <button type="button" class="close" data-dismiss="modal">×</button>
         </div>
         <div class="modal-body" style="overflow-y: auto; max-height: calc(100vh - 200px);">
-        <form method="post" id="formRFQ" enctype="multipart/form-data" action="/api/rfq" data-parsley-validate>
+        <form method="post" id="_formRFQ" data-parsley-validate>
             <div class="modal-content bd-0 tx-14">
              
                 <div class="modal-body pd-0">
@@ -142,7 +142,7 @@ The faster we can finalize your order, the faster we can begin printing and that
                               </div><!-- row -->
                   
                               <div class="form-layout-footer">
-                                <button type="submit" class="btn tx-bold tx-uppercase  btn-success mg-r-5">Submit</button>
+                                <button type="button" id="formRFQ" class="btn tx-bold tx-uppercase  btn-success mg-r-5">Submit</button>
                                 <button type="button" class="btn btn-warning tx-bold tx-uppercase" data-dismiss="modal" onclick="$('#formRFQ').trigger('reset')">Cancel</button>
                               </div><!-- form-layout-footer -->
                             </div><!-- form-layout -->

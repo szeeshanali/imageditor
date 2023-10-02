@@ -1,6 +1,6 @@
 
 <style>
-  <%fonts?.forEach((item)=>{%> @font-face{ font-family:"<%=item.content.replace('.ttf','')%>";
+  <%fonts?.forEach((item)=>{%> @font-face{ font-family:"<%=item.content.replace('.ttf','').replace('.TTF','')%>";
     src:url("/fonts/<%=item.content%>");font-weight:normal;font-style:normal}
  <%})%>
 </style>

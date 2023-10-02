@@ -1385,6 +1385,7 @@ function saveCustomDesign(byAdmin) {
             })
             }
         } else if (value === "left" || value === "right" || value === "center") {
+            //$(this).parent().addClass('active');
             $(this).parent().addClass('active');
             o.set({"textAlign": value})
         }

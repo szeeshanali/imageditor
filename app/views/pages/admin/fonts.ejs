@@ -2,7 +2,7 @@
 <style>
   <%fonts?.forEach((item)=>{%>
   @font-face{
-    font-family:"<%=item.content.replace('.ttf','')%>";
+    font-family:"<%=item.content.replace('.ttf','').replace('.TTF','')%>";
     src:url("/fonts/<%=item.content%>");
     font-weight:normal;
     font-style:normal;
@@ -67,7 +67,7 @@
                 <button style="border-radius: 50%; padding: 0 8px;" class="btn btn-sm btn-primary btnDelFont pull-right type="button" id="<%=fonts[i]._id%>"><i class="icon ion-ios-trash-outline tx-18"></i></button>
                 <%}%>
              
-            <p class="tx-16" style="color:black;font-family:<%=fonts[i].content.replace('.ttf','')%>">The quick brown fox jumps over the lazy dog</p>
+            <p class="tx-16" style="color:black;font-family:<%=fonts[i].content.replace('.ttf','').replace('.TTF','')%>">The quick brown fox jumps over the lazy dog</p>
             <span class="pull-right">
               
             
