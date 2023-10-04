@@ -625,23 +625,44 @@ function initUIEvents() {
 
     $("#cbRfqShip").on("click", function (e) {
       
+        let $elem =$("#rfqShippingInfo");  
+        let requiredAddressFields = ['zip','street1','street2','city','state']; 
         if(e.target.checked)
         {
-            $("#rfqShippingInfo").addClass('hidden');
+            $.each(requiredAddressFields,(index,elem)=>{
+                $(`#${elem}`).prop("required",true);
+            })
+            $elem.removeClass('hidden');
         }else{
-            $("#rfqShippingInfo").removeClass('hidden');
-           
+            $.each(requiredAddressFields,(index,elem)=>{
+                $(`#${elem}`).removeAttr("required");
+            })
+            $elem.addClass('hidden');
+
         }
          
  
      })
 
     $("#formRFQ").on("click",function(e) {
-
         e.preventDefault();         
+        let isFormValid = true;
+        $("#_formRFQ input").each((index,elem)=>{
+            if(!elem.checkValidity()){
+                console.log(`From is invalid : Field:${elem.name}`); 
+                elem.reportValidity();
+                isFormValid = false; 
+                return; 
+            }
+        
+        })
+        if(!isFormValid) return; 
+
+       
         let form = $(this);
+        let formElem = $("#_formRFQ")[0];
         //let actionUrl = form.attr('action');
-        let formData = new FormData($("#_formRFQ")[0]);
+        let formData = new FormData(formElem);
         let width = canvasPrev.backgroundImage.viewBoxWidth;
         let height = canvasPrev.backgroundImage.viewBoxHeight;
         let pageFormat = getPageFormatByDimensions(width,height);           
@@ -669,6 +690,8 @@ function initUIEvents() {
         $.ajax({
             type: "POST",
             url: "/api/rfq",
+            cache: false,
+            enctype: 'multipart/form-data',
             data: formData, // serializes the form's elements.
             async: false,
             success: function (data) {
@@ -677,13 +700,13 @@ function initUIEvents() {
                 $loader.addClass("hidden");
                 $("#rfq_confirm").modal();
                 backFromPreview();
+                formElem.reset();
             },error: function (request, status, error) {
                 toast('Server Error: Form could not be submitted.');
                 form.trigger('reset');
                 $('#rfq').modal('toggle');
                 $loader.addClass("hidden");
             },
-            cache: false,
             contentType: false,
             processData: false,
            
