@@ -626,7 +626,7 @@ function initUIEvents() {
     $("#cbRfqShip").on("click", function (e) {
       
         let $elem =$("#rfqShippingInfo");  
-        let requiredAddressFields = ['zip','street1','street2','city','state']; 
+        let requiredAddressFields = ['_zip','_street1','_street2','_city','_state']; 
         if(e.target.checked)
         {
             $.each(requiredAddressFields,(index,elem)=>{

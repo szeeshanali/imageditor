@@ -7,7 +7,7 @@
           <button type="button" class="close" data-dismiss="modal">×</button>
         </div>
         <div class="modal-body" style="overflow-y: auto; max-height: calc(100vh - 200px);">
-        <form id="_formRFQ" >
+        <form id="_formRFQ" onsubmit="return" >
             <div class="modal-content bd-0 tx-14">
              
                 <div class="modal-body pd-0">
@@ -72,27 +72,27 @@
                                     <div class="row mg-0 hidden"  id="rfqShippingInfo" >
                                         <div class="col-lg-6">
                                             <div class="form-group">
-                                              <input class="form-control" id="street1" type="text" name="street1"  placeholder="Street 1">
+                                              <input class="form-control" id="_street1" type="text" name="street1"  placeholder="Street 1">
                                             </div>
                                           </div><!-- col-4 -->
                                           <div class="col-lg-6">
                                             <div class="form-group">
-                                              <input class="form-control" id="street2" type="text" name="street2"  placeholder="Street 2">
+                                              <input class="form-control" id="_street2" type="text" name="street2"  placeholder="Street 2">
                                             </div>
                                           </div><!-- col-4 -->
                                           <div class="col-lg-3">
                                             <div class="form-group">
-                                              <input class="form-control" id="city" type="text" name="city"  placeholder="City">
+                                              <input class="form-control" id="_city" type="text" name="city"  placeholder="City">
                                             </div>
                                           </div><!-- col-4 -->
                                           <div class="col-lg-3">
                                             <div class="form-group mg-b-10-force">
-                                              <input class="form-control" id="state" type="text" name="state"  placeholder="State">
+                                              <input class="form-control" id="_state" type="text" name="state"  placeholder="State">
                                             </div>
                                           </div><!-- col-8 -->
                                           <div class="col-lg-3">
                                             <div class="form-group mg-b-10-force">
-                                              <input class="form-control" id="zip" type="number" name="zip"  placeholder="Zip">
+                                              <input class="form-control" id="_zip" type="number" name="zip"  placeholder="Zip">
                                             </div>
                                           </div>
                                          
