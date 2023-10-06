@@ -60,7 +60,7 @@
                                 </div><!-- col-4 -->
                                 <div class="col-lg-4">
                                   <div class="form-group mg-b-10-force">
-                                    <input class="form-control" type="number"   title="Please enter valid phone number" id="customerPhone" name="phone" value="<%=user.phone%>" required  placeholder="Phone Number">
+                                    <input class="form-control" type="number" tabindex="1"   title="Please enter valid phone number" id="customerPhone" name="phone" value="<%=user.phone%>" required  placeholder="Phone Number">
                                   </div>
                                 </div><!-- col-8 -->
                               <!-- col-4 -->
@@ -69,30 +69,30 @@
                                         <input type="checkbox" name="pickup" id="cbRfqShip" ><span>Pick up in Torrance.</span>
                                       </label>
                                   </div><!-- col-4 -->
-                                    <div class="row mg-0 hidden"  id="rfqShippingInfo" >
+                                    <div class="row mg-0"  id="rfqShippingInfo" >
                                         <div class="col-lg-6">
                                             <div class="form-group">
-                                              <input class="form-control" id="_street1" type="text" name="street1"  placeholder="Street 1">
+                                              <input class="form-control" tabindex="2" required id="_street1" type="text" name="street1"  placeholder="Street 1">
                                             </div>
                                           </div><!-- col-4 -->
                                           <div class="col-lg-6">
                                             <div class="form-group">
-                                              <input class="form-control" id="_street2" type="text" name="street2"  placeholder="Street 2">
+                                              <input class="form-control" tabindex="3" required id="_street2" type="text" name="street2"  placeholder="Street 2">
                                             </div>
                                           </div><!-- col-4 -->
                                           <div class="col-lg-3">
                                             <div class="form-group">
-                                              <input class="form-control" id="_city" type="text" name="city"  placeholder="City">
+                                              <input class="form-control" tabindex="4" required id="_city" type="text" name="city"  placeholder="City">
                                             </div>
                                           </div><!-- col-4 -->
                                           <div class="col-lg-3">
                                             <div class="form-group mg-b-10-force">
-                                              <input class="form-control" id="_state" type="text" name="state"  placeholder="State">
+                                              <input class="form-control" tabindex="5" required id="_state" type="text" name="state"  placeholder="State">
                                             </div>
                                           </div><!-- col-8 -->
                                           <div class="col-lg-3">
                                             <div class="form-group mg-b-10-force">
-                                              <input class="form-control" id="_zip" type="number" name="zip"  placeholder="Zip">
+                                              <input class="form-control" tabindex="6" required id="_zip" type="number" name="zip"  placeholder="Zip">
                                             </div>
                                           </div>
                                          
@@ -103,17 +103,17 @@
                                       <label>
                                         Select the date you need these prints IN HAND (Rush charges may apply, and expedited shipping may be required).”
                                       </label>
-                                      <input type="date"  id="rfqRequiredByDt" name="date" class="wd-200 form-control" min="<%= new Date() %>" placeholder="Required By">
+                                      <input type="date" required id="rfqRequiredByDt" tabindex="7" name="date" class="wd-200 form-control" min="<%= new Date() %>" placeholder="Required By">
                                     </div>
                                     <div class="col-lg-4">
                                       <label>
                                         Total Sheets Required (NOT Total Logos!)
                                       </label>
-                                      <input class="form-control" min="1" required placeholder="" oninput="this.value < 1?this.value=1:this.value" max="1000" type="number" name="sheets" >
+                                      <input class="form-control" min="1" tabindex="8" required placeholder="" oninput="this.value < 1?this.value=1:this.value" max="1000" type="number" name="sheets" >
                                     </div>
                                   <div class="col-lg-12">
                                     <div class="form-group mg-b-10-force">
-                                        <textarea rows="3" class="form-control" placeholder="Additional Information" name="additionalInfo" spellcheck="false"></textarea>
+                                        <textarea rows="3" tabindex="9" class="form-control" placeholder="Additional Information" name="additionalInfo" spellcheck="false"></textarea>
 
                                     </div>
                                 </div>

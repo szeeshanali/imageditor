@@ -624,22 +624,22 @@ function initUIEvents() {
 
 
     $("#cbRfqShip").on("click", function (e) {
-      
-        let $elem =$("#rfqShippingInfo");  
-        let requiredAddressFields = ['_zip','_street1','_street2','_city','_state']; 
-        if(e.target.checked)
-        {
+
+         let $elem =$("#rfqShippingInfo");  
+         let requiredAddressFields = ['_zip','_street1','_street2','_city','_state']; 
+
+         if(e.target.checked)
+         {
+            $.each(requiredAddressFields,(index,elem)=>{
+                $(`#${elem}`).removeAttr("required");
+            })
+            $elem.addClass('hidden');            
+         }else{
             $.each(requiredAddressFields,(index,elem)=>{
                 $(`#${elem}`).prop("required",true);
             })
             $elem.removeClass('hidden');
-        }else{
-            $.each(requiredAddressFields,(index,elem)=>{
-                $(`#${elem}`).removeAttr("required");
-            })
-            $elem.addClass('hidden');
-
-        }
+         }
          
  
      })
@@ -700,12 +700,21 @@ function initUIEvents() {
                 $loader.addClass("hidden");
                 $("#rfq_confirm").modal();
                 backFromPreview();
+                $("#downloadFileName").val("");
+                let pickup = $("#cbRfqShip").prop("checked");
+                if(pickup){ $("#cbRfqShip").click();}
                 formElem.reset();
+
+
             },error: function (request, status, error) {
                 toast('Server Error: Form could not be submitted.');
                 form.trigger('reset');
                 $('#rfq').modal('toggle');
                 $loader.addClass("hidden");
+                $("#downloadFileName").val("");
+                let pickup = $("#cbRfqShip").prop("checked");
+                if(pickup){ $("#cbRfqShip").click();}
+                formElem.reset();
             },
             contentType: false,
             processData: false,

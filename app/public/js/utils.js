@@ -295,10 +295,20 @@ function addText(text)
 function measureImageDimensions(img,canvas)
 {
     const factor = 1.5;
+    // if(img.height<canvas.height && img.width<canvas.width){
+    //     //img.scaleToHeight(ratio);    
+    //     return; 
+    // }
+
+
     if(img.height>canvas.height && img.height>img.width){
         let ratio = canvas.height/factor; 
         img.scaleToHeight(ratio);    
        }else{
+
+        
+
+
             let ratio = canvas.width/factor; 
             img.scaleToWidth(ratio);    
        }
@@ -338,7 +348,7 @@ const processFiles = (files) => {
                     // getting first page only.
                     pdf.getPage(1).then(function (page) {
                         // you can now use *page* here
-                        var viewport = page.getViewport(1.0);
+                        var viewport = page.getViewport(10);
                         var canvasEl = document.createElement("canvas")
                         canvasEl.height = viewport.height;
                         canvasEl.width = viewport.width;
