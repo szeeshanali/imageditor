@@ -1,0 +1,107 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>KakePrints</title>
+    <!--MAIN CSS -->
+    <link rel="stylesheet" href="/css/bootstrap-grid.css">
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/dt.css">
+
+</head>
+
+<body>
+    <div class="container-fluid p-0">
+        <div class="row m-0" style="height: 100vh;">
+            <div class="col-md-10 background">
+                <div class="row">
+                    <div class="col-md">
+                        <h1 class="typo text-white display-2 m-md-3 rotate">Welcome</h1>
+                    </div>
+                    <div class="col-md">
+                        <img class="pic1 w-35" src="/images/img1.png" alt="">
+                    </div>
+                    <div class="col-md">
+                        <img class="pic2 w-35" src="/images/img2.png" alt="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md">
+
+                    </div>
+                    <div class="col-md">
+                        <img class="pic3 w-35" src="/images/img3.png" alt="">
+                    </div>
+                    <div class="col-md">
+                        <img class="pic4 w-35" src="/images/img3.png" alt="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md text-center">
+                        <h1 class="typo text-white display-2 pos5">KakePrints</h1>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md">
+
+                    </div>
+                    <div class="col-md">
+                        <img class="pic6 w-35" src="/images/img5.png" alt="">
+                    </div>
+                    <div class="col-md">
+                        <img class="pic7 w-35" src="/images/img3.png" alt="">
+                    </div>
+                </div>
+                <div class="fixed-bottom w-20">
+                    <!-- <img src="/images/img4.png" alt=""> -->
+                    <div id="carouselExampleControls" class="carousel slide" data-interval="<%=(settings?.banner_delay || 1)*1000%>" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <%for(var i=0;i<banners?.length;i++){ let banner = banners[i]; %>
+                            <div class="carousel-item <%=i==0?'active':''%>">
+                                <img class="d-block w-100" src="<%=banner.path?.replace('../app/public/','/')%>" >
+                            </div>                           
+                            <%}%>
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselExampleControls" role="button"
+                            data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselExampleControls" role="button"
+                            data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 text-center text-white customLayout" style="background-color: #002596;">
+                <h1 class="mt-5 mb-5 typo">EASY AS</h1>
+                <img class="img-fluid" src="/images/1.png" alt="">
+                <img class="img-fluid" src="/images/2.png" alt="">
+                <img class="img-fluid" src="/images/3.png" alt="">
+                <button onclick="goto('/app/workspace')" class="customBtn" type="button">START HERE</button>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+        </script>
+        <script>
+            function goto(path)
+{
+    window.location.href=path;
+}
+        </script>
+</body>
+
+
+</html>
