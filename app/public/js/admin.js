@@ -2878,7 +2878,7 @@ function getUserSavedProjects(userId, userName)
 }
 
 function showProjectHistory(userId, title, userProjects) {
-    let _title = `${title}`;
+    let _title = `Project History (${title})`;
 
     let filteredUserProjects = userProjects.filter(function (f) {
         return f.uploaded_by == userId
@@ -2904,12 +2904,13 @@ function showProjectHistory(userId, title, userProjects) {
         temp += tr.replace(
             "{td}",
             `<td><strong>${ item.title }</strong></td>
-  <td>${ new Date(item.created_dt).toLocaleString() }</td>
+  <td>${ new Date(item.created_dt).toLocaleString("en-US") }</td>
   <td><a href='/app/admin/user-project/${item._id}'   >View</a></td>` ) });
     table = table.replace("{tr}", temp);
     if (filteredUserProjects.length == 0) {
         table = "<p clsss='pd-y-20'>No Records Found.</p>"
     }
+    
     $("#projectHistoryTitle").text(_title);
     $("#projectHistoryContent").html(table);
 }
@@ -2948,7 +2949,7 @@ function showDownloadHistory(userId, title, filteredDownloads) {
               "{td}",
               `
     <td><strong>${ item.content }</strong></td>
-    <td >${ d.title || 'N/A' }</td><td>${d.ref_code}</td><td>${ new Date(item.created_dt).toLocaleString() }</td>` ) });
+    <td >${ d.title || 'N/A' }</td><td>${d.ref_code}</td><td>${ new Date(item.created_dt).toLocaleString("en-US") }</td>` ) });
       table = table.replace("{tr}", temp);
       if (filteredHistory.length == 0) {
           table = "<p clsss='pd-y-20'>No Records Found.</p>"
