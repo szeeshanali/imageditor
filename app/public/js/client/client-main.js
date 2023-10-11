@@ -84,7 +84,7 @@ const designHtml = `<div class="row row-sm mg-t-15 mg-sm-t-20">
     <p class="mg-b-0 tx-12">{{created_dt}}</p>
     </div><!-- media-body -->
       </div><!-- media -->
-      <a href="#" class="btn btn-success pd-lg-x-20 mg-l-auto" onclick="loadProject('{{code}}')" >View</a>
+      <a href="#" class="btn btn-success pd-lg-x-20 mg-l-auto" data-design-id='{{code}}' onclick="loadKakePrintDesign('{{code}}')" >View</a>
     </div>
   
 </div>`;

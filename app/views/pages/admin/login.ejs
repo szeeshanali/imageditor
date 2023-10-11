@@ -37,7 +37,7 @@
             <button type="submit" class="btn btn-block">Sign In</button>
           </div><!-- col-7 -->
         </div><!-- row -->
-        <p class="tx-center  tx-12 mg-t-15">Copyright © <%=new Date().getFullYear();%> KakePrints.com</p>
+        <p class="tx-12 mg-t-15" style="text-align:right; padding-right:12%" >Copyright © KakePrints  <%=new Date().getFullYear();%> | <a href="#" class='tx-bold tx-underline' style="text-decoration: underline" id="privacy-window" > Privacy Policy.</a></p>
       </div><!-- signin-box -->
     </div><!-- am-signin-wrapper -->
 </form>
@@ -47,6 +47,10 @@
     <script src="../lib/perfect-scrollbar/js/perfect-scrollbar.jquery.js"></script>
 
     <script src="../js/amanda.js"></script>
-  
+  <script>
+    $("#privacy-window").on("click",function(e){
+        var win = window.open("/app/privacy-policy", "Privacy Policy", "toolbar=no, location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width="+(screen.width/2)+",height=500,top="+(screen.height-400)+",left="+(screen.width-200));
+    })
+  </script>
 
 </body></html>

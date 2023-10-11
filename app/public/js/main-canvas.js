@@ -1115,7 +1115,26 @@ function lazyUndoRedoStateDispose(){
         canvasUndo.dispose();
     },5000)
 }
+function loadKakePrintDesign(id){
 
+    canvasUndo.dispose();
+            const  _id = id;
+            if (canvas.getObjects().length == 0) {
+                loadProject(`${_id}`,false);                
+                return;
+            }else{
+                $("#shared-lib-modal").modal("hide");
+                $("#confirmbox").modal("toggle");
+                $("#confirmBoxTitle").text("ARE YOU SURE? ALL EDITS WILL BE LOST");
+                $("#confirmBoxBody").text("Are you sure you wish to open this design?  Your current design will be lost!");
+                $("#btnModelContinue").text("Yes, Open Saved Project");
+                $("#btnConfirmBoxModalClose").text("No, Return To Design");
+                $("#btnModelContinue").unbind().on("click",function(e){
+                    loadProject(`${_id}`,false);                
+                })
+            
+}
+}
 function loadProject(projectId, type)
 {
 

@@ -103,7 +103,7 @@ router.get('/app/privacy-policy',async (req,res)=>{
 })
 
 router.get('/',(req,res)=>{
-    res.redirect("/app/main");
+    res.redirect("/");
 })
 router.get('*',(req,res)=>{
     res.render("pages/admin/404.ejs",{layout:false})
