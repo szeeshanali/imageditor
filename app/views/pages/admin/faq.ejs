@@ -22,7 +22,7 @@
     height:"300px"
   });
   $(".am-pagetitle").attr("style","left:73px");
-  $('#summernote').summernote('editor.pasteHTML', '<%-content.content%>');
+  $('#summernote').summernote('editor.pasteHTML', unescape('<%-escape(content.content)%>'));
   $('#summernote').summernote('disable');
 
 });

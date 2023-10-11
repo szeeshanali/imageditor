@@ -26,7 +26,7 @@
     height:"300px"
   });
 
-  $('#summernote').summernote('editor.pasteHTML', '<%-content.content%>');
+  $('#summernote').summernote('editor.pasteHTML', unescape('<%-escape(content.content)%>'));
 
   $('#summernote').summernote('disable');
 
