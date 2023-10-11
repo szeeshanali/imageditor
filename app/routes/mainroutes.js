@@ -92,11 +92,14 @@ router.get('/app/terms',async (req,res)=>{
    res.send(content.content);
 })
 
-router.get('/app/faq',async (req,res)=>{
-    
+router.get('/app/faq',async (req,res)=>{    
     var content = await commonService.contentService.getContentAsync('faq') || {};
     res.send(content.content);
+})
 
+router.get('/app/privacy-policy',async (req,res)=>{    
+    var content = await commonService.contentService.getContentAsync('privacy-policy') || {};
+    res.send(content.content);
 })
 
 router.get('/',(req,res)=>{

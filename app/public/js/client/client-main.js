@@ -585,6 +585,9 @@ function initUIEvents() {
         var win = window.open("/app/faq", "FAQ", "toolbar=no, location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width="+(screen.width/2)+",height=500,top="+(screen.height-400)+",left="+(screen.width-200));
     })
 
+    
+  
+
     initUIUndoRedo();
 
     initImageSelectionUIControls();

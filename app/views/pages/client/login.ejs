@@ -40,12 +40,15 @@
             <label class="ckbox pd-b-10 pd-t-20">
               <a href="https://www.kopykake.com/password-reset/" class="tx-bold tx-underline">Forgot Password?</a>
             </label>
-           
+
             <!-- <div class="form-group mg-b-20"><a href="">Reset password</a></div> -->
           </div><!-- col-7 -->
+          
         </div><!-- row -->
-        <p class="tx-center  tx-12 mg-t-15">Copyright © <%=new Date().getFullYear();%>. KakePrints.com</p>
+        <p class="tx-12 mg-t-15" style="text-align:right; padding-right:12%" >Copyright © KakePrints  <%=new Date().getFullYear();%> | <a href="#" class='tx-bold tx-underline' style="text-decoration: underline" id="privacy-window" > Privacy Policy.</a></p>
       </div><!-- signin-box -->
+      
+
     </div><!-- am-signin-wrapper -->
 </form>
 <%- include('../../partials/client/popups/terms'); %>
@@ -63,7 +66,9 @@
         var win = window.open("/app/terms", "Terms and Conditions.", "toolbar=no, location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width="+(screen.width/2)+",height=500,top="+(screen.height-400)+",left="+(screen.width-200));
     })
 
-</script>
+  $("#privacy-window").on("click",function(e){
+        var win = window.open("/app/privacy-policy", "Privacy Policy", "toolbar=no, location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width="+(screen.width/2)+",height=500,top="+(screen.height-400)+",left="+(screen.width-200));
+    })
   </script>
 
 </body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>
