@@ -6,13 +6,13 @@
           <h6 class="modal-title modal-title tx-bold tx-inverse"> Send your design to Kopykake for a Printing Quote</h6>
           <button type="button" class="close" data-dismiss="modal">×</button>
         </div>
-        <div class="modal-body" style="overflow-y: auto; max-height: calc(100vh - 200px);">
+        <div class="modal-body" style="overflow-y: auto; max-height: calc(100vh - 80px);">
         <form id="_formRFQ" onsubmit="return" >
             <div class="modal-content bd-0 tx-14">
              
                 <div class="modal-body pd-0">
                     <div class="form-layout">
-                        <div class="card pd-20 pd-sm-40">
+                        <div class="card">
                           <ul class="list-group widget-list-group">
                             <li class="list-group-item rounded-top-0 pd-x-0 pd-y-5">
                               <p class="mg-b-0"><i class="fa fa-check tx-success mg-r-8"></i>
@@ -77,7 +77,7 @@
                                           </div><!-- col-4 -->
                                           <div class="col-lg-6">
                                             <div class="form-group">
-                                              <input class="form-control" tabindex="3" required id="_street2" type="text" name="street2"  placeholder="Street 2">
+                                              <input class="form-control" tabindex="3"  id="_street2" type="text" name="street2"  placeholder="Street 2">
                                             </div>
                                           </div><!-- col-4 -->
                                           <div class="col-lg-3">
@@ -103,7 +103,7 @@
                                       <label>
                                         Select the date you need these prints IN HAND (Rush charges may apply, and expedited shipping may be required).”
                                       </label>
-                                      <input type="date" required id="rfqRequiredByDt" tabindex="7" name="date" class="wd-200 form-control" min="<%= new Date() %>" placeholder="Required By">
+                                      <input type="date"  id="rfqRequiredByDt" tabindex="7" name="date" class="wd-200 form-control" min="<%= new Date() %>" placeholder="Required By">
                                     </div>
                                     <div class="col-lg-4">
                                       <label>
@@ -113,7 +113,7 @@
                                     </div>
                                   <div class="col-lg-12">
                                     <div class="form-group mg-b-10-force">
-                                        <textarea rows="3" tabindex="9" class="form-control" placeholder="Additional Information" name="additionalInfo" spellcheck="false"></textarea>
+                                        <textarea rows="3" tabindex="1" class="form-control" placeholder="Additional Information" name="additionalInfo" spellcheck="false"></textarea>
 
                                     </div>
                                 </div>

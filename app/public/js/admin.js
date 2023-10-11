@@ -1183,7 +1183,7 @@ $loader.removeClass("hidden");
     })
         
     $("#terms-window, #image-terms-window").on("click",function(e){
-        var win = window.open("/app/terms", "Terms and Conditions.", "toolbar=no, location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width="+(screen.width-200)+",height=500,top="+(screen.height-400)+",left="+(screen.width-200));
+        var win = window.open("/app/terms", "Terms and Conditions.", "toolbar=no, location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width="+(screen.width/2)+",height=500,top="+(screen.height-400)+",left="+(screen.width-200));
     })
 
         $("#edituser .is_admin").on("click",function(e){

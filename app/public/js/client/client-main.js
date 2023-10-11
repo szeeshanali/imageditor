@@ -578,11 +578,11 @@ function initUIEvents() {
 
 
     $("#terms-window, #image-terms-window").on("click",function(e){
-        var win = window.open("/app/terms", "Terms and Conditions.", "toolbar=no, location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width="+(screen.width-200)+",height=500,top="+(screen.height-400)+",left="+(screen.width-200));
+        var win = window.open("/app/terms", "Terms and Conditions.", "toolbar=no, location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width="+(screen.width/2)+",height=500,top="+(screen.height-400)+",left="+(screen.width-200));
     })
 
     $("#faq-window").on("click",function(e){
-        var win = window.open("/app/faq", "FAQ", "toolbar=no, location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width="+(screen.width-200)+",height=500,top="+(screen.height-400)+",left="+(screen.width-200));
+        var win = window.open("/app/faq", "FAQ", "toolbar=no, location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width="+(screen.width/2)+",height=500,top="+(screen.height-400)+",left="+(screen.width-200));
     })
 
     initUIUndoRedo();
@@ -626,7 +626,7 @@ function initUIEvents() {
     $("#cbRfqShip").on("click", function (e) {
 
          let $elem =$("#rfqShippingInfo");  
-         let requiredAddressFields = ['_zip','_street1','_street2','_city','_state']; 
+         let requiredAddressFields = ['_zip','_street1','_city','_state']; 
 
          if(e.target.checked)
          {
