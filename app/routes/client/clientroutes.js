@@ -739,6 +739,7 @@ router.post('/api/rfq', isLoggedIn, async (req,res)=>{
                                           throw error;
                                         }
                                         let template = htmlContent;
+                                        let userEmail = fields["email"] || req.user.email;
                                         for(let item in fields){
 
                                             let fieldValue = fields[item] || "N/A";
@@ -752,7 +753,7 @@ router.post('/api/rfq', isLoggedIn, async (req,res)=>{
 
                                         template = template
                                         .replace(`{{pickup}}`,'No')
-                                        .replace(`{{recipient}}`,req.user.email)
+                                        .replace(`{{recipient}}`, userEmail)
                                         .replace(`{{download_link}}`,`${appSettings.APP_URL}/submit-design/${_id}`)
                                         .replace(/{{user}}/ig,fields.name); 
                                         console.log(template);
@@ -763,7 +764,7 @@ router.post('/api/rfq', isLoggedIn, async (req,res)=>{
                                             to:         rfqSettings.RFQ_TO,
                                             subject:    rfqSettings.RFQ_SUBJECT.replace("{user}",fields.name),
                                             bcc:        rfqSettings.RFQ_BCC?.split(','),
-                                            cc:         req.user.email,    
+                                            cc:         userEmail,    
                                             html:       template,
                                             attachments:{
                                                  filename: filename,
