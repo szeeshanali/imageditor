@@ -1,20 +1,96 @@
-
-
 <html>
-    <body>
-        Hi, You have received a new design from <strong style="text-transform:uppercase">{{user}}</strong>.  Please find the attached PDF.<br/><br/>
-        <strong>Name            :</strong>  {{user}}<br/>
-        <strong>Email           :</strong>  {{email}}<br/>
-        <strong>Phone           :</strong>  {{phone}}<br/>
-        <strong>Pickup          :</strong>  {{pickup}}<br/>
-        <strong>Street          :</strong>  {{street1}}<br/>
-        <strong>Street 2        :</strong>  {{street2}}<br/>
-        <strong>City            :</strong>  {{city}}<br/>
-        <strong>State           :</strong>  {{state}}<br/>
-        <strong>Zip             :</strong>  {{zip}}<br/>
-        <strong>Date            :</strong>  {{date}}<br/>
-        <strong>Total Sheets    :</strong>  {{sheets}}<br/>
-        <strong>Additional Info :</strong>  {{additionalInfo}}<br/>
-       
-    </body>
+
+<head>
+    <style>
+        body {
+            font-family: sans-serif;
+            font-size: 14px
+        }
+        .styled-table {
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.9em;
+            font-family: sans-serif;
+            min-width: 400px;
+        }
+        .styled-table th,
+        .styled-table td {
+            padding: 6px 7px;
+        }
+        .styled-table td:first-child {
+            font-weight: bold;
+        }
+
+        .styled-table tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+        .styled-table tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+        .styled-table tbody tr:last-of-type {
+            border-bottom: 2px solid #009879;
+        }
+        .styled-table tbody tr.active-row {
+            font-weight: bold;
+            color: #009879;
+        }
+    </style>
+</head>
+
+<body>
+    <p>The attached PDF has been sent to Kopykake for a printing quote using the details below. Kopykake will respond
+        during business hours <strong>(M-F 8am-4pm)</strong> with your quote.</p>
+    <p> Please recall, orders are not processed for printing until they are confirmed with payment. </p>
+    <table class="styled-table">
+        <tr>
+            <td>Name</td>
+            <td>{{user}}</td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td>{{email}}</td>
+        </tr>
+        <tr>
+            <td>Phone</td>
+            <td>{{phone}}</td>
+        </tr>
+        <tr>
+            <td>Pickup</td>
+            <td>{{pickup}}</td>
+        </tr>
+        <tr>
+            <td>Street</td>
+            <td>{{street1}}</td>
+        </tr>
+        <tr>
+            <td>Street 2</td>
+            <td>{{street2}}</td>
+        </tr>
+        <tr>
+            <td>City</td>
+            <td>{{city}}</td>
+        </tr>
+        <tr>
+            <td>State</td>
+            <td>{{state}}</td>
+        </tr>
+        <tr>
+            <td>Zip</td>
+            <td>{{zip}}</td>
+        </tr>
+        <tr>
+            <td>Date</td>
+            <td>{{date}}</td>
+        </tr>
+        <tr>
+            <td>Total Sheets</td>
+            <td>{{sheets}}</td>
+        </tr>
+        <tr>
+            <td>Additional Info</td>
+            <td>{{additionalInfo}}</td>
+        </tr>
+    </table>
+</body>
+
 </html>

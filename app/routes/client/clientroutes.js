@@ -743,12 +743,15 @@ router.post('/api/rfq', isLoggedIn, async (req,res)=>{
 
                                             let fieldValue = fields[item] || "N/A";
                                             if(item === 'pickup'){
-                                                fieldValue = fieldValue === 'on'?'Yes':'No';
+                                                fieldValue = (fieldValue === 'on')?'Yes':'No';
                                             }
                                             template = template.replace(`{{${item}}}`,fieldValue)
                                         } 
 
+
+
                                         template = template
+                                        .replace(`{{pickup}}`,'No')
                                         .replace(`{{recipient}}`,req.user.email)
                                         .replace(`{{download_link}}`,`${appSettings.APP_URL}/submit-design/${_id}`)
                                         .replace(/{{user}}/ig,fields.name); 
@@ -757,9 +760,10 @@ router.post('/api/rfq', isLoggedIn, async (req,res)=>{
                                         // sending email to kakeprint. 
                                         transporter.sendMail({
                                             from:       [{name:"KakePrints", address: rfqSettings.RFQ_FROM}],
-                                            to:         "zeeshan01@gmail.com",
+                                            to:         rfqSettings.RFQ_TO,
                                             subject:    rfqSettings.RFQ_SUBJECT.replace("{user}",fields.name),
                                             bcc:        rfqSettings.RFQ_BCC?.split(','),
+                                            cc:         req.user.email,    
                                             html:       template,
                                             attachments:{
                                                  filename: filename,
@@ -768,16 +772,16 @@ router.post('/api/rfq', isLoggedIn, async (req,res)=>{
                                         });  
 
                                         /// sending a copy to user email.
-                                        transporter.sendMail({
-                                            from:       [{name:"KakePrints", address: rfqSettings.RFQ_FROM}],
-                                            to:         req.user.email,
-                                            subject:    "Kakeprints - A PDF copy of your design sent to you.",
-                                            html:       template,
-                                            attachments:{
-                                                filename:filename,
-                                                path: fields["dataUrl"]
-                                           }
-                                        });  
+                                        // transporter.sendMail({
+                                        //     from:       [{name:"KakePrints", address: rfqSettings.RFQ_FROM}],
+                                        //     to:         req.user.email,
+                                        //     subject:    "Kakeprints - A PDF copy of your design sent to you.",
+                                        //     html:       template,
+                                        //     attachments:{
+                                        //         filename:filename,
+                                        //         path: fields["dataUrl"]
+                                        //    }
+                                        // });  
                                 
                                       
                                       });
