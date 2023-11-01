@@ -13,10 +13,12 @@ const commonService = (function() {
     this.cached_templates = [];
     this.getCategoriesAsync = (all) =>
     { 
+        let categories = []; 
         if(all)
-        {  return categoryModel.find({deleted:false}); }
+        {  categories =  categoryModel.find({deleted:false}); }
         else 
-        {  return categoryModel.find({active:true,deleted:false}); }
+        {  categories = categoryModel.find({active:true,deleted:false}); }
+    return categories.sort({order:-1});
     },
     this.getCategoriesByFilterAsync = (filter) =>
     { 
@@ -33,12 +35,13 @@ const commonService = (function() {
             returnOriginal: false
         });
     },
-    this.addCategoryAsync = async (categoryName) =>
+    this.addCategoryAsync = async (categoryName, order) =>
     { 
         var category = new categoryModel();
         category.name = categoryName;
         category.active = true; 
         category.deleted = false; 
+        category.order = order;
 
         
         return category.save();

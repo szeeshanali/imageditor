@@ -43,50 +43,64 @@ var rulerSettings = {
 
 
 
-const projectHtml = `
-<div class="col-lg-3 pd-10 ">
-             
-                <div>
-                  <div class="card-text pd-5 mg-b-15 bd bd-white" style='height:150px;overflow:hidden;background-color:#eee; '>
-                    <img src="{{src}}" class="img-fluid" alt="Image" style="width:100%;height:100%;object-fit:contain">
-                  </div>
-                  <h5 class="mg-0 tx-16 text-primary">{{title}}</h5>
-                  <p class="tx-12 text-primary  mg-b-5">{{desc}}</p>
-
-                  <div class="tx-12">{{template_title}}</div>  
-                  <div class="tx-12">{{total_logos}} logo(s) {{sheet_size}} {{page_format}} Sheet. </div>  
-                  <div class="tx-12">{{created_dt}}</div>  
-
-                  <div class="btn-group pd-t-10" role="group" >
-                <button type="button" id="{{code}}"  class="hand soft btn btn-success tx-12 tx-bold tx-uppercase btn-edit-project">Edit</button>
-                <button type="button" onclick="deleteProject('{{code}}',this)" class="hand soft btn btn-warning tx-12  tx-bold tx-uppercase ">Delete</button>
-              </div>
-
-
-              
-              </div>
-            </div>`
-
-
-
-const designHtml = `<div class="row row-sm mg-t-15 mg-sm-t-20">
-<div class="col-md-12">
-  <div class="list-group widget-list-group bd-b">
-    <div class="list-group-item d-flex">
-      <div class="media d-block d-sm-flex">
-        <div class="wd-100">
-          <img src="{{base64}}" class="wd-40 pd-r-10" alt="Image" style="width:100%;height:100%;object-fit:contain">
-        </div><!-- d-flex -->
-        <div class="media-body mg-t-10 mg-sm-t-0">
-          <h6 class="mg-b-5 tx-16"><a href="#" id='{{code}}' class="text-primary hover-primary underline">{{title}}</a></h6>
-          <div>{{totalLogos}} Logo(s) {{sheetSize}}, {{pageFormat}} Sheet.</div>
-          <p class="mg-b-0 tx-12 text-inverse ">{{desc}}</p>
-    <p class="mg-b-0 tx-12">{{created_dt}}</p>
-    </div><!-- media-body -->
-      </div><!-- media -->
-      <a href="#" class="btn btn-success pd-lg-x-20 mg-l-auto" data-design-id='{{code}}' onclick="loadKakePrintDesign('{{code}}')" >View</a>
+const projectHtml = `<div class="col-md-4 pd-15 bg-white bd ">
+  <div class="">
+    <div class="">
+    <h6 class="mg-b-5 tx-14"><a href="#" id='{{code}}' class="tx-bold tx-uppercase text-primary hover-primary underline">{{title}}</a></h6>
+    <p class="mg-b-0  ht-40">{{desc}}</p>
+    <div class="d-block d-flex ">
+        <div class="wd-130 ht-130 tx-center">
+        <div class='ht-130 wd-130'>  
+            <img src="{{src}}" class="wd-40 pd-r-10" alt="Image" style="width:100%;height:100%;object-fit:contain">
+        </div>  
+        <div class="btn-group mg-t-20">
+        <a href="#" id="{{code}}"  class="hand soft btn btn-success tx-12 tx-bold tx-uppercase btn-edit-project" >Edit</a>
+        <a href="#" onclick="deleteProject('{{code}}',this)" class="hand soft btn btn-warning tx-12  tx-bold tx-uppercase" >Delete</a>
+        </div> 
+        </div>
+        <div class="mg-t-10 mg-sm-t-0">
+        <div><strong title='{{titletemplatename}}'>{{templatename}}</strong></div>
+        <div>Sheet Size: <strong>{{sheetSize}}</strong></div>
+        <div>Page Size: <strong>{{pageFormat}}</strong></div>
+        <div>Total Logo: <strong>{{totalLogos}}</strong></div>
+        <div>Logo Size: <strong>{{logoSize}}</strong></div>
+        <div>Part #: <strong>{{partno}}</strong></div>
+        <div class='tx-12 tx-italic'>Created Date: {{created_dt}}</div>
     </div>
-  
+    </div>      
+    </div>
+  </div>
+</div>`;
+
+
+
+const designHtml = `
+<div class="col-md-4 pd-15 bg-white bd">
+  <div class="">
+    <div class="">
+    <h6 class="mg-b-5 tx-14"><a href="#" id='{{code}}' class="tx-bold tx-uppercase text-primary hover-primary underline">{{title}}</a></h6>
+    <p class="mg-b-0  ht-40">{{desc}}</p>
+    <div class="media d-block d-flex ">
+        <div class="wd-130 ht-130 tx-center">
+        <div class='ht-130 wd-130'>  
+            <img src="{{base64}}" class="wd-40 pd-r-10" alt="Image" style="width:100%;height:100%;object-fit:contain">
+        </div>  
+        <div class="btn-group mg-t-20">
+        <a href="#" class="tx-14 tx-bold tx-uppercase tx-underline" data-design-id='{{code}}' onclick="loadKakePrintDesign('{{code}}')" >View Design</a>
+        </div>  
+        </div>
+        <div class="media-body mg-t-10 mg-sm-t-0">
+        <div><strong title='{{titletemplatename}}'>{{templatename}}</strong></div>
+        <div>Sheet Size: <strong>{{sheetSize}}</strong></div>
+        <div>Page Size: <strong>{{pageFormat}}</strong></div>
+        <div>Total Logo: <strong>{{totalLogos}}</strong></div>
+        <div>Logo Size: <strong>{{logoSize}}</strong></div>
+        <div>Part #: <strong>{{partno}}</strong></div>
+        <div class='tx-12 tx-italic'>Created Date: {{created_dt}}</div>
+    </div>
+    </div>      
+    </div>
+  </div>
 </div>`;
 // const designHtml = `<div class='pre-designed col-md-3 p-lg-1 align-self-normal'>
 // <div class="list-group-item pd-0">
@@ -223,18 +237,34 @@ function getUserProjects() {
         var temp = "";
         $("#my-proj-container").html("<strong>You haven't saved any project yet!</strong>");
         for (var i = 0; i < projects.length; i++) {
-            let p = projects[i];
-            let meta = JSON.parse(p.meta); 
-            let desc = p.title.lenght>50?p.title.substring(0, p.title.length):p.title;
-            temp += projectHtml.replace(/{{code}}/ig, p._id)
-            .replace(/{{src}}/ig, p.path)
-            .replace(/{{title}}/ig, p.title)
-            .replace(/{{created_dt}}/ig, new Date(p.created_dt).toLocaleDateString("en-US"))
-            .replace(/{{desc}}/ig, p.desc)
-            .replace(/{{template_title}}/ig, meta.templateTitle || "")
-            .replace(/{{total_logos}}/ig, meta.totalLogos || "")
-            .replace(/{{sheet_size}}/ig, getInches(meta.sheetWidth,meta.sheetHeight) + "'',"  || "")
-            .replace(/{{page_format}}/ig, getPageFormatByDimensions(meta.width,meta.height)   || "")
+            let item = projects[i];
+            let meta = JSON.parse(item.meta);
+            console.log(meta); 
+            //let desc = p.title.lenght>50?p.title.substring(0, p.title.length):p.title;
+            temp += projectHtml
+            .replace(/{{code}}/ig, item._id)
+            .replace(/{{desc}}/ig, (item.desc?.lenght>75)?item.desc.substring(0,70)+"...":item.desc || "")
+            .replace(/{{src}}/ig, item.path)
+            .replace(/{{title}}/ig, item.title)
+            .replace(/{{templatename}}/ig, (meta.templateTitle?.length>20)?meta.templateTitle.substring(0,17)+"...":meta.templateTitle)
+            .replace(/{{titletemplatename}}/ig, meta.templateTitle)
+
+            .replace(/{{created_dt}}/ig, new Date(item.created_dt).toLocaleDateString("en-US"))
+            .replace(/{{sheetSize}}/ig, `${getInches(meta.sheetWidth,meta.sheetHeight)}"`)
+            .replace(/{{logoSize}}/ig, `${getInches(meta.logoWidth,meta.logoHeight)}"`)
+            .replace(/{{pageFormat}}/ig, `${getPageFormatByDimensions(meta.width,meta.height)}`)
+            .replace(/{{totalLogos}}/ig, meta.totalLogos)
+            .replace(/{{partno}}/ig, meta.templateRef_code);
+            
+            //temp += projectHtml.replace(/{{code}}/ig, p._id)
+            // .replace(/{{src}}/ig, p.path)
+            // .replace(/{{title}}/ig, p.title)
+            // .replace(/{{created_dt}}/ig, new Date(p.created_dt).toLocaleDateString("en-US"))
+            // .replace(/{{desc}}/ig, p.desc)
+            // .replace(/{{template_title}}/ig, meta.templateTitle || "")
+            // .replace(/{{total_logos}}/ig, meta.totalLogos || "")
+            // .replace(/{{sheet_size}}/ig, getInches(meta.sheetWidth,meta.sheetHeight) + "'',"  || "")
+            // .replace(/{{page_format}}/ig, getPageFormatByDimensions(meta.width,meta.height)   || "")
             
             ;
             $("#my-proj-container").html(temp);
@@ -278,16 +308,21 @@ function getSharedProjects() {
 
         projects?.forEach(item=>{
             let meta = JSON.parse(item.meta);
+            console.log(meta);
             temp += designHtml
             .replace(/{{code}}/ig, item._id)
-            .replace(/{{desc}}/ig, item.desc || "")
+            .replace(/{{desc}}/ig, (item.desc?.lenght>75)?item.desc.substring(0,70)+"...":item.desc || "")
             .replace(/{{base64}}/ig, item.path)
             .replace(/{{title}}/ig, item.title)
+            .replace(/{{templatename}}/ig, (meta.templateTitle?.length>20)?meta.templateTitle.substring(0,17)+"...":meta.templateTitle)
+            .replace(/{{titletemplatename}}/ig, meta.templateTitle)
+
             .replace(/{{created_dt}}/ig, new Date(item.created_dt).toLocaleDateString("en-US"))
             .replace(/{{sheetSize}}/ig, `${getInches(meta.sheetWidth,meta.sheetHeight)}"`)
             .replace(/{{logoSize}}/ig, `${getInches(meta.logoWidth,meta.logoHeight)}"`)
             .replace(/{{pageFormat}}/ig, `${getPageFormatByDimensions(meta.width,meta.height)}`)
-            .replace(/{{totalLogos}}/ig, meta.totalLogos);
+            .replace(/{{totalLogos}}/ig, meta.totalLogos)
+            .replace(/{{partno}}/ig, meta.templateRef_code);
         })
         $("#kp-designs-container").html(temp);
         $(".btn-edit-customdesign").unbind().on("click",function(e){

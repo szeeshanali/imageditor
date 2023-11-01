@@ -1,19 +1,22 @@
 <div class="row">
-    <div class="col-lg-3 col-md-3 col-sm-3 pd-l-0">
+    <div class="col-lg-3 col-sm-12 pd-l-0">
       <div class="card">
         <%- include('../../partials/admin/dashboard-panel'); %>
       </div>
     </div>
-    <div class="col-lg-9 col-md-9 col-sm-9 pd-l-0">
-        <div class="card bd-b pd-10 tx-uppercase tx-bold tx-inverse">Add Clipart Category</div>
+    <div class="col-lg-6 col-sm-12 pd-x-0">
+        <div class="card bd-b pd-10 tx-uppercase mg-b-15 tx-bold tx-inverse">Add Clipart Category</div>
 
       <div class="card pd-20">
       
         <div class="row row-xs">
           <div class="wd-300">
-            <div>Category Name:</div>
+            <div class="tx-bold">Category Name</div>
             <input type="hidden" id="hiddenCategoryId">
             <input type="text" placeholder="Enter Category Name" id="inputCategoryName" class="form-control" maxlength="100" minlength="3" pattern=".{3,100}" title="Minimum 3 and maximum 100 characters." >
+            <label class="form-control-label pd-t-10 tx-bold">Order No</label>
+            <input type="number" value="<%=categories?.length+1%>"   class="hidden form-control input-sm wd-100" id="categoryDisplayOrder">
+            <span>Next # <%=categories?.length+1%></span>
           </div>
         </div><!-- row -->
         <div class="form-layout-footer pd-t-20" >
@@ -22,25 +25,32 @@
           <button class="btn btn-secondary tx-uppercase tx-bold " id="btnClearCategory">Clear</button>
         </div>
       </div>
+     
+    </div>
+    <div class="col-lg-3 col-sm-12">
       <div>
 
-        <div class="list-group widget-list-group mg-t-15" style="height: 400px; overflow-y:scroll" id="categoryContainer">
-            <div class="card bd-b pd-10 tx-uppercase tx-bold tx-inverse">Categories (<%=categories?.length%>)</div>
+        <div class="list-group widget-list-group "  id="categoryContainer">
+            <div class="card bd-b pd-10 tx-uppercase tx-bold tx-inverse mg-b-15">Categories (<%=categories?.length%>)</div>
 
           <%if(!categories || categories?.length == 0){%>
           <p class="pd-10">No Category Found</p>
           <%}%>
+          <div style="height:500px; overflow-y:scroll">
+
+        
           <%for(var i=0;i<categories?.length;i++){%>
-          <div class="list-group-item pd-y-10 rounded-top-0 bd-0 category" id="category-<%=categories[i]._id%>">
+          <div class="hand list-group-item pd-y-5 rounded-top-0 bd-0 category" id="category-<%=categories[i]._id%>">
             <div class="media">
          
               <div class="media-body" >
-                <span class="tx-inverse tx-14 tx-bold category-nm"><%=categories[i].name%></span>
-                <span class="pull-right"><button class="btn btn-secondary btnDelCategory  pd-0 pd-x-10" type="button" id="<%=categories[i]._id%>"><i class="icon ion-ios-trash-outline tx-14"></i></button></span>
+                <span class="lh-12 tx-inverse tx-16 category-nm" data-order="<%=categories[i].order%>"><%=categories[i].name%></span>
+                <span class="pull-right mg-0 "><a title="Delete" href="#" class="btnDelCategory" id="<%=categories[i]._id%>"><i class="icon ion-ios-trash tx-24 tx-bold"></i></a></span>
               </div><!-- media-body -->
             </div><!-- media -->
           </div><!-- list-group-item -->
           <%}%>
+        </div>
         </div>
       </div>
     </div>

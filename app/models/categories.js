@@ -5,7 +5,7 @@ const schema  = new mongoose.Schema({
     code           :    {   type    :   String },
     level          :    {   type    :   String },
     parent         :    {   type    :   String },
-    order          :    {   type    :   String },
+    order          :    {   type    :   Number },
     active         :    {   type    :   Boolean,   default : true },
     items          :    [{  type    :   mongoose.Types.ObjectId}], 
     deleted        :    {   type    :   Boolean,   default : false }

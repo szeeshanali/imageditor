@@ -15,7 +15,7 @@ const UserSchema  = new mongoose.Schema({
     active          :   {   type    :   Boolean,   default : true },
     deleted         :   {   type    :   Boolean,   default : false },
     watermark       :   {   type    :   Boolean,   default : false },
-    project_limit   :   {   type    :   Number,   default : 5 },
+    project_limit   :   {   type    :   Number,   default : 2 },
     download_count  :   {   type    :   Number,   default : 0 },
     created_dt      :   {   type    :   Date,   default : Date.now }});
 

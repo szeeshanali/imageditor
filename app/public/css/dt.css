@@ -581,7 +581,12 @@
 .bg-light-blue {
   background-color: #edecff;
 }
-
+.bg-light-gray {
+  background-color: lightgray;
+}
+.bg-light-gray-force {
+  background-color: lightgray !important;
+}
 .bg-light-blue {
   background-color: #edecff;
 }
@@ -1133,4 +1138,31 @@ background-color: #d8dce3;
   height:100%;
   object-fit: cover;
   background-color: #eee;
+}
+
+#categoryContainer .category:hover{
+  background-color: #f3f3f3
+}
+#customTextContainer .customTxt:hover{
+  background-color: #f3f3f3
+}
+
+#customTxtDisplayOrder{
+  font-weight: bold;
+  border-radius: 5px;
+  border: solid 2px #ccc;
+}
+#inputCustomText{
+  padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 3px;
+    border: solid 2px #ccc;
+}
+#inputCategoryName{
+  padding: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 3px;
+  border: solid 2px #ccc;
 }

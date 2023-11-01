@@ -488,22 +488,23 @@ router.post('/app/admin/workspace',(req,res)=>{
 })
 
 router.post('/api/admin/category', isAdmin , async (req,res)=>{
-  const  {name, id} = req.body;
+  const  {name, id, order} = req.body;
   try{
     
 
 
     let nameAlreadyExists = await commonService.categoryService.getCategoriesByFilterAsync({name:name});
-    if(nameAlreadyExists && nameAlreadyExists.length > 0)
-    { return res.status(409).send(`DUPLICATE: ${name}`) }
+    
 
     if(id && id.length === 24)
     { 
-      await categories.updateOne({_id:id},{name:name});
+      await categories.updateOne({_id:id},{name:name, order:order});
       return res.status(200).send(`UPDATED: ${name}`)  
     }
-     
-    await commonService.categoryService.addCategoryAsync(name);
+    
+    if(nameAlreadyExists && nameAlreadyExists.length > 0)
+    { return res.status(409).send(`DUPLICATE: ${name}`) }
+    await commonService.categoryService.addCategoryAsync(name, order);
     return res.status(200).send(`CREATED: ${name}`)  
 
   }catch(ex)

@@ -4314,6 +4314,11 @@ button.close {
     max-width: 800px;
   }
 }
+@media (min-width: 1200px) {
+  .modal-full {
+    max-width: 1100px;
+  }
+}
 .tooltip {
   position: absolute;
   z-index: 1070;

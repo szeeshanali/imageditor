@@ -810,7 +810,7 @@ $loader.removeClass("hidden");
           
             const dataUrl         = selectedBanner.base64;       
             const designType      =  "banner";
-            const active          = $("#cbBannerActive").prop("checked");
+            const active          = $("#cbActiveBanner").prop("checked");
             
 
             $loader.removeClass("hidden");
@@ -855,6 +855,7 @@ $loader.removeClass("hidden");
 
         
         $("#bannerThumbs .edit").on("click",function(e){
+            canvas.clear();
             const $target = $(this); 
             const meta = $target.attr("data-meta");
             const id =$target.attr("id");
@@ -922,7 +923,8 @@ $loader.removeClass("hidden");
             $loader.addClass("hidden");
             canvas.clear();
             $("#inputBannerName").val("");
-            $("#cbBannerActive").prop("checked",false);
+            //$("#cbActiveBanner").prop("checked",false);
+            $("#inputBannerUrl").val("");
             $("#hiddenUploadClipArtFile").val("");
             selectedBanner = null;
          }
@@ -1208,9 +1210,13 @@ $loader.removeClass("hidden");
           
             const id = e.currentTarget.id; 
             let categoryNm =  $(`#${id}`).find('.category-nm').text();
+            let order =  $(`#${id}`).find('.category-nm').attr('data-order');
             $("#inputCategoryName").val(categoryNm);
             $("#btnAddCategory").text("Update Category");
             $("#hiddenCategoryId").val(id.replace("category-",""));
+
+            $("#categoryDisplayOrder").removeClass("hidden");
+            $("#categoryDisplayOrder").val(order);
         })
 
 
@@ -1249,17 +1255,19 @@ $loader.removeClass("hidden");
            let categoryText =   $("#inputCategoryName").val();
            if(!categoryText || categoryText.length <3)
            {
-            alert("Category name must be greater than 2 characters");
+            alert("Category name must be greater than 2 characters.");
             return;
            }
            let categoryId   =   $("#hiddenCategoryId").val();
+           let categoryOrder =  $("#categoryDisplayOrder").val();
            $loader.removeClass("hidden");
            $.ajax({
             type: "POST",
             url: "/api/admin/category",
             data: {
                 name: categoryText,
-                id: categoryId
+                id: categoryId,
+                order: categoryOrder
             },
             success: function (res) {
                 
@@ -1526,9 +1534,6 @@ $loader.removeClass("hidden");
             const id = e.currentTarget.id; 
             let $elm =  $(`#${id}`).find('.custom-text');
             let txt =$elm.text(); 
-
-        
-        
            
             let order  = $elm.attr('data-order');
             $("#inputCustomText").val(txt);
@@ -1537,6 +1542,8 @@ $loader.removeClass("hidden");
             $("#customTxtDisplayOrder").removeClass("hidden");
             $("#customTxtDisplayOrder").val(order);
         })
+
+        
 
         $(".btn-custom-text").on("click",function(e){
             e.stopPropagation();
@@ -1577,7 +1584,7 @@ $loader.removeClass("hidden");
 
           if(!text || text === "" || text.length === 0)
           {
-            toast("Please enter text.");
+            toast("Please enter Text.");
             return; 
           }
 
