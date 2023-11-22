@@ -2943,11 +2943,13 @@ function showDownloadHistory(userId, title, filteredDownloads) {
               <th>Part No.</th>
               <th>Download Date</th>
               </thead>
-              <tbody>{tr}</tbody>
+              <tbody class='history-table-body'>{tr}</tbody>
         </table></div>`;
       let tr = `<tr>{td}</tr>`;
       let temp = "";
+ 
       filteredHistory ?. forEach(item => {
+          let dt = new Date(item.created_dt).toLocaleString("en-US");
           let d = {};
           if (item.data) {
               d = JSON.parse(item.data);
@@ -2956,7 +2958,9 @@ function showDownloadHistory(userId, title, filteredDownloads) {
               "{td}",
               `
     <td><strong>${ item.content }</strong></td>
-    <td >${ d.title || 'N/A' }</td><td>${d.ref_code}</td><td>${ new Date(item.created_dt).toLocaleString("en-US") }</td>` ) });
+    <td >${ d.title || 'N/A' }</td>
+    <td>${d.ref_code}</td>
+    <td data-sort='${new Date(item.created_dt).getTime()}'>${ dt }</td>` ) })
       table = table.replace("{tr}", temp);
       if (filteredHistory.length == 0) {
           table = "<p clsss='pd-y-20'>No Records Found.</p>"
