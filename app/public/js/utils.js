@@ -45,7 +45,10 @@ function cropInit(){
         image = new fabric.Image(cropped);
         image.scaleToWidth(rect.width);
         image.scaleToHeight(rect.height);
-        
+        var canvas = canvas; 
+        if(state.isPreviewCanvas){
+            canvas = canvasPrev;
+        }
         let originalImg = canvas.getActiveObject(); 
         let objId = originalImg.id; 
         let objIndex = originalImg.index; 
@@ -78,6 +81,10 @@ function cropInit(){
         cropRect=null; 
         cropCanvas.clear();
         cropCanvas.isCropped = false; 
+        var canvas = canvas;
+        if(state.isPreviewCanvas){
+            canvas = canvasPrev;
+        }
         let img = canvas.getActiveObject(); 
         if(!img)
         {toast("Please select image.");return;}
@@ -362,12 +369,15 @@ const processFiles = (files) => {
                                 measureImageDimensions(img,canvas);                    
                                 img.set({ 
                                     originX:"center", 
-                                    originY:"center" })
+                                    originY:"center" }),                                    
                                     img.setCoords();
                                img.globalCompositeOperation = 'source-atop';
            
                                if (state.isPreviewCanvas) {
+                                canvas.centerObject(img);
                                    canvasPrev.add(img);
+                                   img.setCoords();
+                                   canvas.setActiveObject(img);
                                    canvasPrev.renderAll();
                                } else {
                                    
@@ -399,8 +409,11 @@ const processFiles = (files) => {
                     img.globalCompositeOperation = 'source-atop';
 
                     if (state.isPreviewCanvas) {
+                        canvasPrev.centerObject(img);
                         canvasPrev.add(img);
+                        img.setCoords();
                         canvasPrev.renderAll();
+                        canvasPrev.setActiveObject(img);
                     } else {
                         
                         canvas.centerObject(img);
@@ -537,5 +550,11 @@ function confirmBox(title, message, continueButtonText,closeButtonText, delegate
     })
 }
 
+function getCurrentCanvas(){
+   return  state.isPreviewCanvas?canvasPrev:canvas;
+}
+function getScreenWidthInPx(){
+    return window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+}
 
 cropInit();

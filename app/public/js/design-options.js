@@ -25,19 +25,11 @@ $("#clipartmenu .clipart").on("click", (e) => {
                          originY:"center" })
                          img.setCoords();
                     img.globalCompositeOperation = 'source-atop';
-
-                    if (state.isPreviewCanvas) {
-                        _canvas.add(img);
-                        _canvas.renderAll();
-                    } else {
-                        
-                        _canvas.centerObject(img);
-                        _canvas.add(img);
-                        img.setCoords();
-                        _canvas.setActiveObject(img);
-
-                        _canvas.renderAll();
-                    } 
+                    _canvas.centerObject(img);
+                    _canvas.add(img);
+                    img.setCoords();
+                    _canvas.setActiveObject(img);
+                    _canvas.renderAll();
                     mainControls(true);
         
         });

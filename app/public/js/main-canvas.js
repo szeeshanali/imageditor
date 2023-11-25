@@ -648,6 +648,11 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
                             let viewBoxWidth = options.viewBoxWidth;
                             canvasPrev.setBackgroundImage(obj, canvasPrev.renderAll.bind(canvasPrev));       
                            
+                           if(displayWidth>=700 && getScreenWidthInPx() < 1500){
+                            canvas.setZoom(.78);
+                           }else{
+                            canvas.setZoom(1);
+                           }
                             canvasPrev.setDimensions({width:viewBoxWidth,height:viewBoxHeight})
                             canvasPrev.renderAll.bind(canvas); 
                             canvasPrev.meta = {

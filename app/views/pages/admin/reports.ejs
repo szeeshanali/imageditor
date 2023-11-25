@@ -36,7 +36,7 @@
 
   </div>
             <div class="row">
-              <div class="col-lg-4">
+              <div class="col-lg-3">
                 <label class="form-control-label">From Date: </label>
                     <div class="input-group">
 
@@ -46,7 +46,7 @@
                     </div>
                 
               </div>
-              <div class="col-lg-4 mg-t-20 mg-lg-t-0">
+              <div class="col-lg-3 mg-t-20 mg-lg-t-0">
                 <label class="form-control-label">To Date: </label>
                 <div class="input-group">
                    
@@ -54,11 +54,18 @@
                     <input type="text" class="form-control" placeholder="MM/DD/YYYY" id="datepickerTo">
                   </div>
               </div>
-             
+             <div class="col-lg-3 mg-t-20 mg-lg-t-0">
+                <label class="form-control-label">&nbsp;</label>
+                <div class="input-group ">
+                    <label class="form-control-label ckbox"> 
+                      <input type="checkbox" id="cbDisplayAllUsers"><span>Display All Users</span>
+                    </label>
+                </div>
+                </div>
+              
 
-              <div class="col-lg-4 mg-t-20 mg-lg-t-0">
-
-                <div class="btn-group pd-t-30" role="group" aria-label="Basic example">
+              <div class="col-lg-3 mg-t-20 mg-lg-t-0">
+                <div class="btn-group pd-t-30" role="group" >
                     <button type="button" id="btnFilterUsers" class="btn btn-primary pd-x-25 active tx-bold tx-uppercase tx-12">Search</button>
                     <button type="button" id="btnFilterUserClear" class="btn btn-primary pd-x-25 tx-bold tx-uppercase tx-12">Clear</button>
                   </div>
@@ -113,9 +120,10 @@
       <div class="modal-body pd-20">
         <p class="mg-b-5" id="confirmBoxBody"></p>
       </div>
+      
       <div class="modal-footer justify-content-center">
         <div class="btn-group">
-
+          
         <button type="button" id="btnModelContinue" data-dismiss="modal" class="tx-12 tx-uppercase tx-bold  btn btn-success pd-x-20">Continue</button>
         <button type="button" class="btn btn-warning pd-x-20 tx-12 tx-uppercase tx-bold " data-dismiss="modal">Close</button>
       </div>
@@ -142,14 +150,15 @@
     $btnDeleteLogs = $("#btnDeleteLogs"); 
     $inputName = $("#inputName"); 
     $inputEmail = $("#inputEmail");
-
+    $cbDisplayAllUsers = $("#cbDisplayAllUsers");
     let filter = {
 
       startDate : null,  
       endDate   : null,
       name      : null, 
       email     : null,
-      delete_logs    : false
+      delete_logs    : false,
+      displayAllUsers : false
     
     }; 
 
@@ -176,7 +185,9 @@
     })
 
 
+
     $btnClearSearch.on("click",function(e){
+   
       $('#datepickerFrom').datepicker('setDate', null);
       $('#datepickerTo').datepicker('setDate', null);
       $("#inputName").val("");
@@ -194,6 +205,7 @@
     })
 
     $btnSearch.on("click",function(e){
+      filter.displayAllUsers = $cbDisplayAllUsers.prop("checked");  
       if(
         !filter.startDate &&
         !filter.endDate &&

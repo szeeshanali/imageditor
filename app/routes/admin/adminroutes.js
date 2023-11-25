@@ -1,22 +1,20 @@
-const express               = require('express');
-const router                = express.Router();
-const fs                    = require('fs');
-const formidable                    = require('formidable');
-const categories            = require("../../models/categories.js");
-const uploads               = require("../../models/uploads.js");
-const contents               = require("../../models/contents.js");
-const categoryModel = require("../../models/categories");
-const commonService         = require("../../services/common");
-const appusers              = require("../../models/appuser");
-const app_settings              = require("../../models/settings");
-const logs              = require("../../models/logs");
-var request = require('request');
-
-const {isLoggedIn,isAdmin}  = require('../../config/auth')
+const express             = require('express');
+const router              = express.Router();
+const fs                  = require('fs');
+const sharp                  = require('sharp');
+const formidable          = require('formidable');
+const categories          = require("../../models/categories.js");
+const uploads             = require("../../models/uploads.js");
+const contents            = require("../../models/contents.js");
+const categoryModel       = require("../../models/categories");
+const commonService       = require("../../services/common");
+const appusers            = require("../../models/appuser");
+const app_settings        = require("../../models/settings");
+const logs                = require("../../models/logs");
+const {isLoggedIn,isAdmin} = require('../../config/auth')
 const passport = require('passport');
 const { default: mongoose, mongo } = require('mongoose');
-const { title } = require('process');
-const { response } = require('express');
+
 require("../../config/passport")(passport);
 const PATH_ADMIN_CATEGORY_ITEMS       = 'pages/admin/categoryitems';
 const PATH_ADMIN_HOME                 =  `pages/admin/main`;
@@ -493,15 +491,14 @@ router.post('/api/admin/category', isAdmin , async (req,res)=>{
     
 
 
-    let nameAlreadyExists = await commonService.categoryService.getCategoriesByFilterAsync({name:name});
-    
+    let nameAlreadyExists = await commonService.categoryService.getCategoriesByFilterAsync({name:name});    
 
     if(id && id.length === 24)
     { 
       await categories.updateOne({_id:id},{name:name, order:order});
       return res.status(200).send(`UPDATED: ${name}`)  
     }
-    
+
     if(nameAlreadyExists && nameAlreadyExists.length > 0)
     { return res.status(409).send(`DUPLICATE: ${name}`) }
     await commonService.categoryService.addCategoryAsync(name, order);
@@ -645,8 +642,9 @@ router.get('/app/admin/template-designer',  isAdmin, async (req,res)=>{
 router.post('/api/filter/users', isAdmin, async (req,res)=>{ 
   try{
     
-    const {startDate, endDate, name, email,delete_logs} = req.body;
+    const {startDate, endDate, name, email,delete_logs,displayAllUsers} = req.body;
     let filter = { deleted:false };
+     
     
     if(startDate){
       let _m = startDate.split('/')[0];
@@ -706,8 +704,11 @@ router.post('/api/filter/users', isAdmin, async (req,res)=>{
     }
 
     let users = await appusers.find({},{password:0});
-    userIds     = users.map(i=>i._id); 
-    //userIds     = downloads.map(i=>i.user_id) || []; 
+    let userIds     = users.map(i=>i._id); 
+     if(displayAllUsers == "false"){
+       userIds     = downloads.map(i=>i.user_id) || [];
+     }
+    // //userIds     = downloads.map(i=>i.user_id) || []; 
     projects    = await uploads.find( { type:'project'},{_id:1,uploaded_by:1});
     userIds     = userIds.concat(projects.map(i=>i.uploaded_by));
     if(filter.user_id){
@@ -1682,14 +1683,22 @@ async function uploadAsync(req,res)
     modified_dt     :   new Date()
 
   };
-
-  let _path = file_name?`../app/public/uploads/admin/${type}/${type}-${_id}.${file_name.split('.').pop()}`:'';  
+  const ext = file_name.split('.').pop();
+  let _path = file_name?`../app/public/uploads/admin/${type}/${type}-${_id}.${ext}`:'';  
   if(type === 'template')
   {mime_type = "image/png"}
 
   let _base64Alter = base64.replace(`data:${mime_type};base64,`, "");
+  let bufferObj = Buffer.from(_base64Alter, "base64");
+  
+  await sharp(bufferObj)
+  .resize(350, 350, {
+    fit: 'inside',
+  })
+  .toFile(_path.replace(ext),`-thumb.${ext}`, (err, info) => { console.log(err,info); });
 
   await fs.writeFileSync(_path,_base64Alter,{ encoding: 'base64' }); 
+
   uploadModel.path = _path;
     if(itemId)
     {

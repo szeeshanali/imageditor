@@ -1583,6 +1583,7 @@ function updateCurveText(valueObj)
 function flipXYObject() {
 
     $("#flipW").on("click", () => {
+        var canvas = getCurrentCanvas();
         var selectedObj = canvas.getActiveObject();
         if (! selectedObj) {
             toast("Please select an object.");
@@ -1594,6 +1595,7 @@ function flipXYObject() {
 
 
     $("#flipH").click(() => {
+        var canvas = getCurrentCanvas();
         var selectedObj = canvas.getActiveObject();
         if (! selectedObj) {
             toast("Please select an object.");
@@ -1609,6 +1611,7 @@ function flipXYObject() {
 function rotateObject() {
     var curAngle = 0;
     $(`#rotate`).on("click", function (e) {
+        var canvas = getCurrentCanvas();
         var selectedObj = canvas.getActiveObject();
         if (! selectedObj) {
             toast("Please select an object.");

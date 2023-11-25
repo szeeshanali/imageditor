@@ -1166,3 +1166,9 @@ background-color: #d8dce3;
   border-radius: 3px;
   border: solid 2px #ccc;
 }
+
+#history-table_wrapper{
+  max-height: 500px;
+  overflow: scroll;
+  display: block
+}
