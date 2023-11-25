@@ -75,7 +75,7 @@ app.use(session(
     resave: false,
     saveUninitialized: true,
       cookie: { 
-        maxAge: 24 * 60 * 60 * 1000
+        maxAge: 365 * 24 * 60 * 60 * 1000
      }
 
  })); 
