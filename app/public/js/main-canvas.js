@@ -164,7 +164,8 @@ $("#collapse-layers").on("click", ".layer-item", function (e) {
     });
     $(this).on("click", ".delete", function (evt) {
         evt.stopPropagation();
-        _canvas.remove(_canvas.getActiveObject()).renderAll();
+        _canvas.remove(_canvas.getActiveObject());
+        _canvas.renderAll();
         addLayer();
 
     })
@@ -522,7 +523,9 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
                 
                 let logoDisplayWidth = displayWidth; 
                 let logoDisplayHeight = displayWidth/aspectRatio;                 
-                
+                console.log("Main Logo displayWidth:", displayWidth);
+                           
+
                 
                 canvas.setBackgroundImage(firstLogo, canvas.renderAll.bind(canvas));
                 canvas.backgroundImage.set({
@@ -532,9 +535,18 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
 
                 firstLogo.scaleToWidth(logoDisplayWidth);
                 firstLogo.setCoords();
-
-              
                 canvas.setDimensions({width:logoDisplayWidth,height:logoDisplayHeight});
+              
+                // if(displayWidth>=700 && getScreenWidthInPx() < 1500){
+                  
+                //     canvas.setZoom(canvas.getZoom()/1.3);
+                //     firstLogo.setCoords();
+                //     canvas.renderAll();
+                //     console.log("Canvas Zoom ", canvas.getZoom());
+                //     $loader.addClass("hidden"); 
+                
+                // }
+                $loader.addClass("hidden"); 
                 canvas.renderAll(); 
 
                 canvas.context = {
@@ -638,9 +650,9 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
                     if(!isGridLinesEnabled){
                         $("#btnDisplayGrid").click();
                     }
-
+                    $loader.addClass("hidden"); 
                     $.get(`/api/svg-templates/${id}`, function (data) {
-                        $loader.addClass("hidden");
+                      
                         fabric.loadSVGFromURL(data.base64, function(objects, options) {         
                             var obj = fabric.util.groupSVGElements(objects, options);
                            let firstLogo = objects[0];
@@ -648,20 +660,13 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
                             let viewBoxWidth = options.viewBoxWidth;
                             canvasPrev.setBackgroundImage(obj, canvasPrev.renderAll.bind(canvasPrev));       
                            
-                           if(displayWidth>=700 && getScreenWidthInPx() < 1500){
-                            canvas.setZoom(.78);
-                           }else{
-                            canvas.setZoom(1);
-                           }
+                          
                             canvasPrev.setDimensions({width:viewBoxWidth,height:viewBoxHeight})
                             canvasPrev.renderAll.bind(canvas); 
-                            canvasPrev.meta = {
-                                title,
-                                _id,
-                                code,
-                                ref_code,
-                                link,
-                                created_dt} = data;    
+                            canvasPrev.meta = { title,_id,code,ref_code,link,created_dt } = data;
+                                
+                            
+                                
                           },function (item, object) {
                                 object.set({ 
                                     fill:"#fff",
@@ -754,6 +759,7 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
     . Hide Grid 
      */
      // 1.
+     
      if (canvas.getObjects().length == 0) {
          toast("Please create your design before preview.");
          return;
@@ -994,8 +1000,12 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
             }
             var width = canvasPrev.backgroundImage.viewBoxWidth;
             var height = canvasPrev.backgroundImage.viewBoxHeight;
-            let pageFormat = getPageFormatByDimensions(width,height)
+           
+           var meta = JSON.parse(canvasPrev.meta.meta);
+            
 
+            let pageFormat = meta.pageFormat;//getPageFormatByDimensions(width,height)
+            console.log("PDF page format: ",pageFormat);
             var pdf = new jsPDF({
                 orientation: (width > height) ? 'l' : 'p',
                 unit: 'pt',

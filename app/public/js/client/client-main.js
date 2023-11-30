@@ -1,7 +1,6 @@
 
-
-
 fabric.Object.NUM_FRACTION_DIGITS = 12;
+fabric.Object.prototype.objectCaching = false;
 var canvas      = new fabric.Canvas("client-main-canvas",       {
     preserveObjectStacking: true,
     selectionDashArray: [13, 16],
@@ -9,7 +8,7 @@ var canvas      = new fabric.Canvas("client-main-canvas",       {
          selectionBorderColor: "green",
 })
 var canvasPrev  = new fabric.Canvas("client-main-canvas-logo",  {preserveObjectStacking: true});
-
+//fabric.Object.prototype.objectCaching = false;
 //fabric.Object.prototype.transparentCorners = false;
 //fabric.Object.prototype.cornerStyle = 'circle';
 //fabric.Object.prototype.borderColor = '#494699';

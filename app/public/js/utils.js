@@ -45,16 +45,16 @@ function cropInit(){
         image = new fabric.Image(cropped);
         image.scaleToWidth(rect.width);
         image.scaleToHeight(rect.height);
-        var canvas = canvas; 
+        var _canvas = canvas; 
         if(state.isPreviewCanvas){
-            canvas = canvasPrev;
+            _canvas = canvasPrev;
         }
-        let originalImg = canvas.getActiveObject(); 
+        let originalImg = _canvas.getActiveObject(); 
         let objId = originalImg.id; 
         let objIndex = originalImg.index; 
-        let originalImageIndex = canvas.getObjects().indexOf(originalImg);
-        canvas.remove(originalImg);
-        canvas.renderAll(); 
+        let originalImageIndex = _canvas.getObjects().indexOf(originalImg);
+        _canvas.remove(originalImg);
+        _canvas.renderAll(); 
 
 
         //let canvasCenter = getCanvasCenter(image.getScaledWidth(),image.getScaledHeight())
@@ -69,10 +69,10 @@ function cropInit(){
             originY:"center",
         }) ;
         
-        canvas.centerObject(image);
-        canvas.insertAt(image,originalImageIndex,false);        
+        _canvas.centerObject(image);
+        _canvas.insertAt(image,originalImageIndex,false);        
         image.setCoords();
-        canvas.renderAll();
+        _canvas.renderAll();
         //addLayer();
     };
     
@@ -81,11 +81,11 @@ function cropInit(){
         cropRect=null; 
         cropCanvas.clear();
         cropCanvas.isCropped = false; 
-        var canvas = canvas;
+        var _canvas = canvas;
         if(state.isPreviewCanvas){
-            canvas = canvasPrev;
+            _canvas = canvasPrev;
         }
-        let img = canvas.getActiveObject(); 
+        let img = _canvas.getActiveObject(); 
         if(!img)
         {toast("Please select image.");return;}
         let _img =new fabric.Image(img.getElement());
@@ -178,7 +178,7 @@ function getPageFormatByDimensions(widthPx, heightPx)
     if(wi === 8.5 && hi===14)
         return "Legal";
     
-        console.error(`page format is not handled for this dimensions. ${wi}x${hi}`);
+    console.log(`page format is not handled for this dimensions. ${wi}x${hi}`);
     return "Letter";
 }
 
@@ -374,7 +374,7 @@ const processFiles = (files) => {
                                img.globalCompositeOperation = 'source-atop';
            
                                if (state.isPreviewCanvas) {
-                                canvas.centerObject(img);
+                                canvasPrev.centerObject(img);
                                    canvasPrev.add(img);
                                    img.setCoords();
                                    canvas.setActiveObject(img);
