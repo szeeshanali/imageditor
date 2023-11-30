@@ -94,7 +94,7 @@
 			{
 
 					
-					console.log("logoSize",logoSize);
+
 					var val = (logoWidth*hLabelValue);
 					newTickLabel = "<div class='tickLabel'>" + hLabelValue + "''</div>";
 					// if(logoWidth<2)
