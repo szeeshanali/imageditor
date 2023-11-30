@@ -702,7 +702,11 @@ function initUIEvents() {
         let formData = new FormData(formElem);
         let width = canvasPrev.backgroundImage.viewBoxWidth;
         let height = canvasPrev.backgroundImage.viewBoxHeight;
-        let pageFormat = getPageFormatByDimensions(width,height);           
+        //let pageFormat = getPageFormatByDimensions(width,height);           
+        
+        var meta = JSON.parse(canvasPrev.meta.meta);
+        let pageFormat = meta.pageFormat;
+        
         let fn = $("#downloadFileName").val() || `Kake-prints${new Date().getTime()}`;
         let pdfMeta = 
         {

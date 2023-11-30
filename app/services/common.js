@@ -388,7 +388,7 @@ const commonService = (function() {
 
     return {
         categoryService: {
-            getCategoriesAsync  :   this.getCategoriesAsync,
+                getCategoriesAsync  :   this.getCategoriesAsync,
             getCategoryAsync    :   this.getCategoryAsync,
             addCategoryItemAsync     :   this.addCategoryItemAsync,
             addCategoryAsync        : this.addCategoryAsync,

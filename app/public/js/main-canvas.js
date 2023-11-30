@@ -164,8 +164,7 @@ $("#collapse-layers").on("click", ".layer-item", function (e) {
     });
     $(this).on("click", ".delete", function (evt) {
         evt.stopPropagation();
-        _canvas.remove(_canvas.getActiveObject());
-        _canvas.renderAll();
+        _canvas.remove(_canvas.getActiveObject()).renderAll();
         addLayer();
 
     })
