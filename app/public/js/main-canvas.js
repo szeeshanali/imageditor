@@ -520,6 +520,12 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
                 
                 let displayWidth =(aspectRatio>1.2)?700:500;//(workspaceSize-50)>800?800:workspaceSize-50;                 
                 
+                if(displayWidth==700){
+                    $('#image-editor-container').attr('style','min-width: 1700px');
+                }else{
+                    $('#image-editor-container').removeAttr('style');
+                }
+
                 let logoDisplayWidth = displayWidth; 
                 let logoDisplayHeight = displayWidth/aspectRatio;                 
                 console.log("Main Logo displayWidth:", displayWidth);
@@ -1078,33 +1084,75 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
         }
     })
 }
+
+
+function renderLayers(_canvas, i, temp){
+            var obj = _canvas._objects[i];      
+            let src;
+            let layerText = `Layer ${i+1} - Image`;
+            if (obj.text) {
+                src = '/images/txt.png';
+                layerText = `Layer ${i+1} - ${obj.text?.length>15?obj.text.substr(0,12)+"...":obj.text}`;
+            }else{
+                src = obj.getSrc();
+            }
+            
+            src = state.isPreviewCanvas?"/images/layerimg.png":src;
+            // return temp.replace(/{id}/ig, obj.id)
+            // .replace("{src}", src)
+            // .replace("{_id}", obj.id)
+            // .replace(/{index}/ig, i + 1)
+            // .replace(/{text}/ig, layerText);
+
+            let objId = `obj${i+1}`;
+            obj.id = objId;
+            return temp.replace(/{id}/ig, objId)
+            .replace("{src}", src)
+            .replace("{_id}", objId)
+            .replace(/{index}/ig, i + 1)
+            .replace(/{text}/ig, layerText);
+
+ 
+}
 function addLayer(o) {
     $("#collapse-layers").addClass("show");
 
     var temp = layerHtml;
-    $layers.html();
+    $layers.html("");
     var layers = "";
     // var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
+
+
     var _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
-   
-   
-    for (var i = _canvas._objects.length - 1; i >= 0; i--) {
-        var obj = _canvas._objects[i];      
-        let src;
-        let layerText = `Layer ${i+1} - Image`;
-        if (obj.text) {
-            src = '/images/txt.png';
-            layerText = `Layer ${i+1} - ${obj.text?.length>15?obj.text.substr(0,12)+"...":obj.text}`;
-        }else{
-            src = obj.getSrc();
+    if(state.isPreviewCanvas){
+        for (var i =0;i<_canvas._objects.length;i++) {
+            layers += renderLayers(_canvas, i, temp);
+        }    
+    }else{
+        for (var i = _canvas._objects.length - 1; i >= 0; i--) {
+            layers += renderLayers(_canvas, i, temp);
         }
-        src = state.isPreviewCanvas?"/images/layerimg.png":src;
-        layers += temp.replace(/{id}/ig, obj.id)
-        .replace("{src}", src)
-        .replace("{_id}", obj.id)
-        .replace(/{index}/ig, i + 1)
-        .replace(/{text}/ig, layerText);
     }
+
+    // for (var i = _canvas._objects.length - 1; i >= 0; i--) {
+    // //for (var i =0; i<_canvas._objects.length;i++ ) { 
+    //     var obj = _canvas._objects[i];      
+    //     let src;
+    //     let layerText = `Layer ${i+1} - Image`;
+    //     if (obj.text) {
+    //         src = '/images/txt.png';
+    //         layerText = `Layer ${i+1} - ${obj.text?.length>15?obj.text.substr(0,12)+"...":obj.text}`;
+    //     }else{
+    //         src = obj.getSrc();
+    //     }
+        
+    //     src = state.isPreviewCanvas?"/images/layerimg.png":src;
+    //     layers += temp.replace(/{id}/ig, obj.id)
+    //     .replace("{src}", src)
+    //     .replace("{_id}", obj.id)
+    //     .replace(/{index}/ig, i + 1)
+    //     .replace(/{text}/ig, layerText);
+    // }
     if (layers != "") {
         $layers.html(layers);
         $("#ws-btn-save").removeClass('hidden');
@@ -1622,7 +1670,6 @@ function initContextMenu()
             var obj = canvas.getActiveObject();
             canvas.remove(obj);
            // var c = getCanvasCenter(obj.width,obj.height);
-           debugger;
             var textInfo = {
 
                 left        :   obj.left,
