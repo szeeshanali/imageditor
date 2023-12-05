@@ -1631,8 +1631,8 @@ function initContextMenu()
     })
 
     $("#inputCurvedText").on("click", function (e) {
-        
-        var obj = canvas.getActiveObject();
+        var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
+        var obj = _canvas.getActiveObject();
         if(!obj){
             toast("Please select Text");
             return;
@@ -1656,10 +1656,10 @@ function initContextMenu()
                 top:obj.top
             });
             item.setCoords();
-            canvas.remove(obj);
-            canvas.add(item);
-            canvas.setActiveObject(item);
-            canvas.renderAll();
+            _canvas.remove(obj);
+            _canvas.add(item);
+            _canvas.setActiveObject(item);
+            _canvas.renderAll();
        
         } else {
             //$("#inputFlipText").prop('checked',false);
@@ -1667,8 +1667,8 @@ function initContextMenu()
                 $("#underline").addClass("active");
             }
             $("#curveTextCtrl").val(1250);
-            var obj = canvas.getActiveObject();
-            canvas.remove(obj);
+            var obj = _canvas.getActiveObject();
+            _canvas.remove(obj);
            // var c = getCanvasCenter(obj.width,obj.height);
             var textInfo = {
 
@@ -1699,9 +1699,9 @@ function initContextMenu()
                 top:obj.top
             })
             item.setCoords();
-            canvas.add(item);            
-            canvas.setActiveObject(item);
-            canvas.renderAll();
+            _canvas.add(item);            
+            _canvas.setActiveObject(item);
+            _canvas.renderAll();
  
         }
         addLayer();
@@ -1718,7 +1718,8 @@ function initContextMenu()
     
 
     function onChangeFontColor(picker, type) {
-        let selectedText = canvas.getActiveObject();
+        var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
+        let selectedText = _canvas.getActiveObject();
         let checked = $("#inputStrokeText").prop("checked");
         let strokeSize = parseInt($("#text-stroke-width").val());
         let strokeColor = $("#strokecolor").val();
@@ -1743,7 +1744,7 @@ function initContextMenu()
             
         }
         
-        canvas.renderAll();
+        _canvas.renderAll();
     }
 
 

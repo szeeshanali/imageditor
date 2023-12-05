@@ -587,9 +587,14 @@ router.get("/app/workspace/:type?/:id?",  [isTemporarilyDown,isLoggedIn], async 
     if(items != null && items.length > 0)
     {
         items = items.map(i=>{
+            let ext = i.path.substr(i.path.lastIndexOf('.') + 1);
             i.path = i.path?.replace("../app/public","");
+            i.thumb = i.path?.replace("../app/public","")
+            .replace(`.${ext}`,`-thumb.${ext}`);
+             
             return i; 
         });
+
 
         ca.push({
            categoryName:category.name,

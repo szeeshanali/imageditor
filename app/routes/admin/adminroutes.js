@@ -1695,7 +1695,7 @@ async function uploadAsync(req,res)
   .resize(350, 350, {
     fit: 'inside',
   })
-  .toFile(_path.replace(ext),`-thumb.${ext}`, (err, info) => { console.log(err,info); });
+  .toFile(_path.replace(`.${ext}`,`-thumb.${ext}`), (err, info) => { console.log(err,info); });
 
   await fs.writeFileSync(_path,_base64Alter,{ encoding: 'base64' }); 
 

@@ -1078,11 +1078,12 @@ $("#btnStartOverModel").on("click",function(e){
 
 
 function setSelectedTextStyle(prop, value) {
-    var txt = canvas.getActiveObject();
+    var _canvas = state.isPreviewCanvas?canvaspre:canvas;
+    var txt = _canvas.getActiveObject();
 //  if(txt.type == 'curved-text')
 //  {return;}
     txt.set(prop, value);
-    canvas.renderAll();
+    _canvas.renderAll();
 
 }
 
@@ -1521,14 +1522,16 @@ function mainControls(show) {
 function initCanvasTextEvents() {
     
     $("#inputFlipText").on("click",function(){
-        var obj = canvas.getActiveObject(); 
+        var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
+        var obj = _canvas.getActiveObject(); 
         const flipped = $("#inputFlipText").is(':checked'); 
         obj.set("flipped",flipped);
-        canvas.renderAll();
+        _canvas.renderAll();
     })
     $("#inputStrokeText").on("click", function (e) {
+        var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
         var checked = $(this).prop('checked');
-        var obj = canvas.getActiveObject();
+        var obj = _canvas.getActiveObject();
         // if(obj.type == "curved-text")
         // { return; }
         var strokeWidth = parseInt($("#text-stroke-width").val());
@@ -1547,14 +1550,15 @@ function initCanvasTextEvents() {
             obj.set('strokeWidth',0)
             obj.set('stroke',null);
         }
-        canvas.renderAll();
+        _canvas.renderAll();
     });
     
     
 
     $btnTextSize.on("change", function () {
-        canvas.getActiveObject().set("fontSize", this.value);
-        canvas.renderAll();
+        var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
+        _canvas.getActiveObject().set("fontSize", this.value);
+        _canvas.renderAll();
     })
 
     $("#curveTextCtrl").on("input", function (e) {   
@@ -1572,12 +1576,12 @@ function initCanvasTextEvents() {
 }
 
 function updateCurveText(valueObj)
-{
-    var obj = canvas.getActiveObject();
+{ var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
+    var obj = _canvas.getActiveObject();
     if (obj) {
         obj.set(valueObj);
     }
-    canvas.renderAll();
+    _canvas.renderAll();
 }
 
 
@@ -1586,26 +1590,27 @@ function updateCurveText(valueObj)
 function flipXYObject() {
 
     $("#flipW").on("click", () => {
-        var canvas = getCurrentCanvas();
-        var selectedObj = canvas.getActiveObject();
+        var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
+       // var canvas = getCurrentCanvas();
+        var selectedObj = _canvas.getActiveObject();
         if (! selectedObj) {
             toast("Please select an object.");
             return;
         }
         selectedObj.set('flipX', ! selectedObj.flipX);
-        canvas.renderAll();
+        _canvas.renderAll();
     });
 
 
     $("#flipH").click(() => {
-        var canvas = getCurrentCanvas();
-        var selectedObj = canvas.getActiveObject();
+        var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
+        var selectedObj = _canvas.getActiveObject();
         if (! selectedObj) {
             toast("Please select an object.");
             return;
         }
         selectedObj.set('flipY', ! selectedObj.flipY);
-        canvas.renderAll();
+        _canvas.renderAll();
     });
 
 }
@@ -1614,8 +1619,8 @@ function flipXYObject() {
 function rotateObject() {
     var curAngle = 0;
     $(`#rotate`).on("click", function (e) {
-        var canvas = getCurrentCanvas();
-        var selectedObj = canvas.getActiveObject();
+        var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
+        var selectedObj = _canvas.getActiveObject();
         if (! selectedObj) {
             toast("Please select an object.");
             return;
@@ -1625,7 +1630,7 @@ function rotateObject() {
             curAngle = 0;
         }
         curAngle += 90;
-        canvas.renderAll();
+        _canvas.renderAll();
 
     })
 }

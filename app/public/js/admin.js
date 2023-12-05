@@ -1885,8 +1885,9 @@ if(!order || order < 1){
 
 
         function setSelectedTextStyle(prop, value) {
-            canvas.getActiveObject().set(prop, value);
-            canvas.renderAll();
+            var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
+            _canvas.getActiveObject().set(prop, value);
+            _canvas.renderAll();
 
         }
 
@@ -2612,14 +2613,16 @@ if(!order || order < 1){
     function initCanvasTextEvents() {
     
         $("#inputFlipText").on("click",function(){
-            var obj = canvas.getActiveObject(); 
+            var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
+            var obj = _canvas.getActiveObject(); 
             const flipped = $("#inputFlipText").is(':checked'); 
             obj.set("flipped",flipped);
-            canvas.renderAll();
+            _canvas.renderAll();
         })
         $("#inputStrokeText").on("click", function (e) {
+            var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
             var checked = $(this).prop('checked');
-            var obj = canvas.getActiveObject();
+            var obj = _canvas.getActiveObject();
             // if(obj.type == "curved-text")
             // { return; }
     
@@ -2637,15 +2640,16 @@ if(!order || order < 1){
             {
                 obj.set('strokeWidth',0)
             }
-            canvas.renderAll();
+            _canvas.renderAll();
         });
         
         
        
     
         $btnTextSize.on("change", function () {
-            canvas.getActiveObject().set("fontSize", this.value);
-            canvas.renderAll();
+            var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
+            _canvas.getActiveObject().set("fontSize", this.value);
+            _canvas.renderAll();
         })
     
         $("#curveTextCtrl").on("input", function (e) {   
@@ -2662,19 +2666,21 @@ if(!order || order < 1){
     
     function updateCurveText(valueObj)
     {
-        var obj = canvas.getActiveObject();
+        var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
+        var obj = _canvas.getActiveObject();
         if (obj) {
             obj.set(valueObj);
         }
-        canvas.renderAll();
+        _canvas.renderAll();
     }
     function updateCurveText(valueObj)
     {
-        var obj = canvas.getActiveObject();
+        var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
+        var obj = _canvas.getActiveObject();
         if (obj) {
             obj.set(valueObj);
         }
-        canvas.renderAll();
+        _canvas.renderAll();
     }
     var selectedUser = {};
   
