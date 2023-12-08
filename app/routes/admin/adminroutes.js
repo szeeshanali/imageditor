@@ -705,12 +705,13 @@ router.post('/api/filter/users', isAdmin, async (req,res)=>{
 
     let users = await appusers.find({},{password:0});
     let userIds     = users.map(i=>i._id); 
+    projects    = await uploads.find( { type:'project'},{_id:1,uploaded_by:1});
+    userIds     = userIds.concat(projects.map(i=>i.uploaded_by));
      if(displayAllUsers == "false"){
        userIds     = downloads.map(i=>i.user_id) || [];
      }
     // //userIds     = downloads.map(i=>i.user_id) || []; 
-    projects    = await uploads.find( { type:'project'},{_id:1,uploaded_by:1});
-    userIds     = userIds.concat(projects.map(i=>i.uploaded_by));
+
     if(filter.user_id){
       userIds = filter.user_id.$in.map(i=>i._id);
     }
