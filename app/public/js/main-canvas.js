@@ -518,14 +518,10 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
                                 
                 const workspaceSize = $("#workarea").width() || 500;
                 
-                let displayWidth =(aspectRatio>1.2)?700:500;//(workspaceSize-50)>800?800:workspaceSize-50;                 
+                let displayWidth =(aspectRatio>1.2 && getScreenWidthInPx() >= 1500)?700:500;//(workspaceSize-50)>800?800:workspaceSize-50;                 
                 
-                if(displayWidth==700){
-                    $('#image-editor-container').attr('style','min-width: 1700px');
-                }else{
-                    $('#image-editor-container').removeAttr('style');
-                }
 
+                
                 let logoDisplayWidth = displayWidth; 
                 let logoDisplayHeight = displayWidth/aspectRatio;                 
                 console.log("Main Logo displayWidth:", displayWidth);
@@ -669,7 +665,7 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
                             canvasPrev.setDimensions({width:viewBoxWidth,height:viewBoxHeight})
                             canvasPrev.renderAll.bind(canvas); 
                             canvasPrev.meta = { title,_id,code,ref_code,link,created_dt } = data;
-                                
+                               
                             
                                 
                           },function (item, object) {
@@ -798,6 +794,8 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
      $(".step-item:nth-child(4)").addClass("active");
  
      menuHighlighter("#menu-preview");
+
+
  }
  function backFromPreview() { 
      /**
@@ -940,10 +938,16 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
              $("#ws-btn-download").removeClass("hidden");
              $("#btnStartOverModel").addClass("hidden");
              $("#previewMsg").removeClass("hidden");
-           
+             
+
+             let buffer = 200;
+             let w1 = $("#canvas-holder").width()-30; 
+             let css =   {"max-width": `${w1}px`,"height":"auto","left":`${0}px`};
+             $("#client-main-canvas-logo").css(css);
+             $("#admin-main-canvas-logo").css(css);
+
+             
             
- 
-           
          });
      })
  
