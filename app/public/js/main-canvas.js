@@ -1273,7 +1273,7 @@ function loadProject(projectId, type)
                if(res.data.comments){
                 let html = "";
                 res.data.comments.forEach(item=>{
-                    html += `<div class='pd-y-5'><i class='ion-chatbubble-working pd-r-5'></i><strong>${item.name}</strong>: ${item.comments} </br><span class='tx-12'>${new Date(item.created_dt)?.toLocaleString("en-US")}</span></div>`;
+                    html += `<div class='pd-y-5'><i class='ion-chatbubble-working pd-r-5'></i><strong>${item.name}</strong>: ${item.comments} </br><span class='tx-12'>${getFormattedDate(new Date(item.created_dt))}</span></div>`;
                 })
 
                 if(!html)

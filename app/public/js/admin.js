@@ -2692,7 +2692,7 @@ if(!order || order < 1){
         $("#edit-user-container .email").val(user.email);
         $("#edit-user-container .company").val(user.company_name);
         $("#edit-user-container .project_lmt").val(user.project_limit);
-        $("#edit-user-container .created_dt").val(new Date(user.created_dt).toLocaleDateString("en-US"));
+        $("#edit-user-container .created_dt").val(getFormattedDate(new Date(user.created_dt)));
         $("#edit-user-container .is_admin").prop("checked", user.is_admin);
         $("#edit-user-container .is_active").prop("checked", user.active);
         $("#edit-user-container .watermark").prop("checked", user.watermark);
@@ -2917,7 +2917,7 @@ function showProjectHistory(userId, title, userProjects) {
         temp += tr.replace(
             "{td}",
             `<td><strong>${ item.title }</strong></td>
-  <td>${ new Date(item.created_dt).toLocaleString("en-US") }</td>
+  <td>${ getFormattedDate(new Date(item.created_dt)) }</td>
   <td><a href='/app/admin/user-project/${item._id}'   >View</a></td>` ) });
     table = table.replace("{tr}", temp);
     if (filteredUserProjects.length == 0) {
@@ -2955,7 +2955,8 @@ function showDownloadHistory(userId, title, filteredDownloads) {
       let temp = "";
  
       filteredHistory ?. forEach(item => {
-          let dt = new Date(item.created_dt).toLocaleString("en-US");
+        let dt = new Date(item.created_dt);
+        let formattedDate = getFormattedDate(dt);
           let d = {};
           if (item.data) {
               d = JSON.parse(item.data);
@@ -2966,7 +2967,7 @@ function showDownloadHistory(userId, title, filteredDownloads) {
     <td><strong>${ item.content }</strong></td>
     <td >${ d.title || 'N/A' }</td>
     <td>${d.ref_code}</td>
-    <td data-sort='${new Date(item.created_dt).getTime()}'>${ dt }</td>` ) })
+    <td data-sort='${new Date(item.created_dt).getTime()}'>${ formattedDate }</td>` ) })
       table = table.replace("{tr}", temp);
       if (filteredHistory.length == 0) {
           table = "<p clsss='pd-y-20'>No Records Found.</p>"

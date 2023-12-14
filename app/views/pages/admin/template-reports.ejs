@@ -169,7 +169,7 @@
                         i.title, 
                         i.ref_code,
                         i.count, 
-                        new Date(i.created_dt)?.toLocaleString("en-US")?.split(',')[0],                         
+                        getFormattedDate(new Date(i.created_dt))?.split(',')[0],                         
                         ]
                     })
                     dt.rows.add(d).draw(false); }
