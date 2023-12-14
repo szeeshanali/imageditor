@@ -316,7 +316,7 @@ function getSharedProjects() {
             .replace(/{{templatename}}/ig, (meta.templateTitle?.length>20)?meta.templateTitle.substring(0,17)+"...":meta.templateTitle)
             .replace(/{{titletemplatename}}/ig, meta.templateTitle)
 
-            .replace(/{{created_dt}}/ig, getFormattedDate(new Date(item.created_dt))
+            .replace(/{{created_dt}}/ig, getFormattedDate(new Date(item.created_dt)))
             .replace(/{{sheetSize}}/ig, `${getInches(meta.sheetWidth,meta.sheetHeight)}"`)
             .replace(/{{logoSize}}/ig, `${getInches(meta.logoWidth,meta.logoHeight)}"`)
             .replace(/{{pageFormat}}/ig, `${getPageFormatByDimensions(meta.width,meta.height)}`)
