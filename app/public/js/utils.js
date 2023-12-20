@@ -564,6 +564,7 @@ function getCurrentCanvas(){
    return  state.isPreviewCanvas?canvasPrev:canvas;
 }
 function getScreenWidthInPx(){
+  
     return window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 }
 
