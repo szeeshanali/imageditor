@@ -2955,7 +2955,7 @@ function showDownloadHistory(userId, title, filteredDownloads) {
       let temp = "";
  
       filteredHistory ?. forEach(item => {
-        let dt = new Date(item.created_dt.replace('Z',''));
+        let dt = new Date(item.created_dt);
         let formattedDate = getFormattedDate(dt);
           let d = {};
           if (item.data) {

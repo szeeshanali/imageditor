@@ -259,6 +259,7 @@ function getFormattedDate(dt){
     const minutes = dt.getMinutes().toString().padStart(2, '0');
     const seconds = dt.getSeconds().toString().padStart(2, '0');
     return `${month}/${day}/${year} ${hours}:${minutes}:${seconds}`;
+    
 }
 
 
