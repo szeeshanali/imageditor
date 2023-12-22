@@ -251,18 +251,14 @@ function getCanvasCenter(objectWidth,objectHeight){
 }
 
 function getFormattedDate(dt){
-   dt = new Date(dt.toLocaleString("en-US"));
+    
     const month = (dt.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
     const day = dt.getDate().toString().padStart(2, '0');
     const year = dt.getFullYear();
     const hours = dt.getHours().toString().padStart(2, '0');
     const minutes = dt.getMinutes().toString().padStart(2, '0');
     const seconds = dt.getSeconds().toString().padStart(2, '0');
-    const time = new Date().tolo
-   
     return `${month}/${day}/${year} ${hours}:${minutes}:${seconds}`;
-
-   
 }
 
 
