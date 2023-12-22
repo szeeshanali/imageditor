@@ -750,18 +750,18 @@ router.get('/api/filter/user-downloads/:id',  isAdmin, async (req,res)=>{
       let _d = startDate.split('/')[1];
       let _m = startDate.split('/')[0];
       let _y = startDate.split('/')[2]; 
-      let _sd = new Date(_y,_m,_d);  
+      let _sd =  new Date(new Date(_y,_m,_d).toLocaleString("en-US"));  
       let year =_sd.getFullYear();
       let month =_sd.getMonth()-1;
       let date =  _sd.getDate();
-      filter.created_dt = { $gt: new Date(year ,month ,date,00,00,00)}
+      filter.created_dt = { $gt: startDate}
     }
     
     if(endDate){
       let _d = endDate.split('/')[1];
       let _m = endDate.split('/')[0];
       let _y = endDate.split('/')[2]; 
-      let _ed = new Date(_y,_m,_d);
+      let _ed = new Date(new Date(_y,_m,_d).toLocaleString("en-US"));
 
       let year =_ed.getFullYear();
       let month =_ed.getMonth()-1;
