@@ -647,31 +647,34 @@ router.post('/api/filter/users', isAdmin, async (req,res)=>{
      
     
     if(startDate){
-      let _m = startDate.split('/')[0];
-      let _d = startDate.split('/')[1];
-      let _y = startDate.split('/')[2]; 
-      let _sd = new Date(_y,_m,_d);  
-      let year =_sd.getFullYear();
-      let month =_sd.getMonth()-1;
-      let date =  _sd.getDate();
-      filter.created_dt = { $gte: new Date(year ,month ,date)}
+      // let _m = startDate.split('/')[0];
+      // let _d = startDate.split('/')[1];
+      // let _y = startDate.split('/')[2]; 
+      // let _sd = new Date(_y,_m,_d);  
+      // let year =_sd.getFullYear();
+      // let month =_sd.getMonth()-1;
+      // let date =  _sd.getDate();
+      // filter.created_dt = { $gte: new Date(year ,month ,date)}
+      filter.created_dt = { $gte: startDate}
     }
     
     if(endDate){
-      let _d = endDate.split('/')[1];
-      let _m = endDate.split('/')[0];
-      let _y = endDate.split('/')[2]; 
-      let _ed = new Date(_y,_m,_d);
+      // let _d = endDate.split('/')[1];
+      // let _m = endDate.split('/')[0];
+      // let _y = endDate.split('/')[2]; 
+      // let _ed = new Date(_y,_m,_d);
 
-      let year =_ed.getFullYear();
-      let month =_ed.getMonth()-1;
-      let date =  _ed.getDate();
+      // let year =_ed.getFullYear();
+      // let month =_ed.getMonth()-1;
+      // let date =  _ed.getDate();
 
       if(!startDate)
       {
-        filter.created_dt = { $lte: new Date(year ,month ,date,23,59,59)} }
-        else{
-          filter.created_dt.$lte = new Date(year, month, date,23,59,59);
+        filter.created_dt = { $lte: endDate}
+        //filter.created_dt = { $lte: new Date(year ,month ,date,23,59,59)} }
+      }else{
+        filter.created_dt.$lte = endDate;
+          //filter.created_dt.$lte = new Date(year, month, date,23,59,59);
        }            
     }
 
@@ -747,30 +750,30 @@ router.get('/api/filter/user-downloads/:id',  isAdmin, async (req,res)=>{
 
     
     if(startDate){
-      let _d = startDate.split('/')[1];
-      let _m = startDate.split('/')[0]-1;
-      let _y = startDate.split('/')[2]; 
-      let _sd = new Date(_y,_m,_d,00,00,00).toLocaleString("en-US");  
+      // let _d = startDate.split('/')[1];
+      // let _m = startDate.split('/')[0]-1;
+      // let _y = startDate.split('/')[2]; 
+      // let _sd = new Date(_y,_m,_d,00,00,00).toLocaleString("en-US");  
       // let year =_sd.getFullYear();
       // let month =_sd.getMonth()-1;
       // let date =  _sd.getDate();
-      filter.created_dt = { $gt: _sd}
+      filter.created_dt = { $gt: startDate}
     }
     
     if(endDate){
-      let _d = endDate.split('/')[1];
-      let _m = endDate.split('/')[0]-1;
-      let _y = endDate.split('/')[2]; 
-      let _ed = new Date(_y,_m,_d,23,59,59).toLocaleString("en-US");
+      // let _d = endDate.split('/')[1];
+      // let _m = endDate.split('/')[0]-1;
+      // let _y = endDate.split('/')[2]; 
+      // let _ed = new Date(_y,_m,_d,23,59,59).toLocaleString("en-US");
 
       // let year =_ed.getFullYear();
       // let month =_ed.getMonth()-1;
       // let date =  _ed.getDate();
 
       if(!startDate)
-      {filter.created_dt= { $lte: new Date(year ,month ,date,23,59,59)} }
+      {filter.created_dt= { $lte: endDate} }
       else{
-        filter.created_dt.$lte = _ed;
+        filter.created_dt.$lte = endDate;
       }
     }
 
@@ -802,29 +805,35 @@ router.post('/api/filter/templates',  isAdmin, async (req,res)=>{
     let filter = { type:"download_pdf"};
     
     if(startDate){
-      let _d = startDate.split('/')[1];
-      let _m = startDate.split('/')[0];
-      let _y = startDate.split('/')[2]; 
-      let _sd = new Date(_y,_m,_d);  
-      let year =_sd.getFullYear();
-      let month =_sd.getMonth()-1;
-      let date =  _sd.getDate();
-      filter.created_dt = { $gte: new Date(year ,month ,date)}
+      // let _d = startDate.split('/')[1];
+      // let _m = startDate.split('/')[0];
+      // let _y = startDate.split('/')[2]; 
+      // let _sd = new Date(_y,_m,_d);  
+      // let year =_sd.getFullYear();
+      // let month =_sd.getMonth()-1;
+      // let date =  _sd.getDate();
+      // filter.created_dt = { $gte: new Date(year ,month ,date)}
+      filter.created_dt = { $gt: startDate}
     }
     
     if(endDate){
-      let _d = endDate.split('/')[1];
-      let _m = endDate.split('/')[0];
-      let _y = endDate.split('/')[2]; 
-      let _ed = new Date(_y,_m,_d);
+      // let _d = endDate.split('/')[1];
+      // let _m = endDate.split('/')[0];
+      // let _y = endDate.split('/')[2]; 
+      // let _ed = new Date(_y,_m,_d);
 
-      let year =_ed.getFullYear();
-      let month =_ed.getMonth()-1;
-      let date =  _ed.getDate();
+      // let year =_ed.getFullYear();
+      // let month =_ed.getMonth()-1;
+      // let date =  _ed.getDate();
 
       if(!startDate)
-      {filter.created_dt= { $lte: new Date(year ,month ,date)} }else{
-        filter.created_dt.$lte = new Date(year, month, date,23,59,59);
+      {
+        //filter.created_dt= { $lte: new Date(year ,month ,date)}
+        filter.created_dt= { $lte: endDate} 
+      
+      }else{
+        filter.created_dt.$lte = endDate;
+        //filter.created_dt.$lte = new Date(year, month, date,23,59,59);
       }
             
     }

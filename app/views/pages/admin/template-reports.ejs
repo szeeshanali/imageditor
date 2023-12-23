@@ -117,10 +117,20 @@
     })
 
     $inputDatepickerFrom.on("change",function(e){
-      filter.startDate = e.currentTarget.value; 
+      let fromDt = e.currentTarget.value;
+      let _d = fromDt.split('/')[1];
+      let _m = fromDt.split('/')[0]-1;
+      let _y = fromDt.split('/')[2]; 
+      filter.startDate = new Date(_y,_m,_d,00,00,00).toISOString();
+      //filter.startDate = e.currentTarget.value; 
     })
     $inputDatepickerTo.on("change",function(e){
-      filter.endDate = e.currentTarget.value; 
+      let endDt = e.currentTarget.value;
+      let _d = endDt.split('/')[1];
+      let _m = endDt.split('/')[0]-1;
+      let _y = endDt.split('/')[2]; 
+      filter.endDate = new Date(_y,_m,_d,23,59,59).toISOString();
+     // filter.endDate = e.currentTarget.value; 
     })
 
     $inputName.on("blur",function(e){

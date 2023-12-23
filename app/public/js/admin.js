@@ -2844,6 +2844,18 @@ function getUserDownloads(userId, userName)
 {
     let fromDt = $("#datepickerFrom").val(); 
     let toDt = $("#datepickerTo").val();
+
+      let _d = fromDt.split('/')[1];
+      let _m = fromDt.split('/')[0]-1;
+      let _y = fromDt.split('/')[2]; 
+      fromDt = new Date(_y,_m,_d,00,00,00).toISOString();
+      
+      
+      let t_d = toDt.split('/')[1];
+      let t_m = toDt.split('/')[0]-1;
+      let t_y = toDt.split('/')[2]; 
+      toDt = new Date(t_y,t_m,t_d,23,59,59).toISOString();
+
     let paramsDt = "";
     if(fromDt && toDt){
         paramsDt = `?from=${fromDt}&to=${toDt}`;
@@ -2861,7 +2873,7 @@ function getUserDownloads(userId, userName)
                   let d = [];
                   if(res.data)
                   {  
-                    $("#lbl-download-dates").text(`Date: ${fromDt?" From "+fromDt+" - ":""} ${toDt}`)
+                    $("#lbl-download-dates").text(`Date: ${fromDt?" From "+new Date(fromDt).toLocaleDateString()+" - ":""} ${new Date(toDt).toLocaleDateString()}`)
                     showDownloadHistory(userId,userName,res.data) }
 
                 },error: function (request, status, error) {
