@@ -2845,16 +2845,20 @@ function getUserDownloads(userId, userName)
     let fromDt = $("#datepickerFrom").val(); 
     let toDt = $("#datepickerTo").val();
 
+    if(fromDt && fromDt != ""){
       let _d = fromDt.split('/')[1];
       let _m = fromDt.split('/')[0]-1;
       let _y = fromDt.split('/')[2]; 
       fromDt = new Date(_y,_m,_d,00,00,00).toISOString();
+    }
       
-      
-      let t_d = toDt.split('/')[1];
-      let t_m = toDt.split('/')[0]-1;
-      let t_y = toDt.split('/')[2]; 
-      toDt = new Date(t_y,t_m,t_d,23,59,59).toISOString();
+    if(toDt && toDt != ""){
+        let t_d = toDt.split('/')[1];
+        let t_m = toDt.split('/')[0]-1;
+        let t_y = toDt.split('/')[2]; 
+        toDt = new Date(t_y,t_m,t_d,23,59,59).toISOString();
+    }
+    
 
     let paramsDt = "";
     if(fromDt && toDt){
