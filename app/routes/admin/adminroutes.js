@@ -976,8 +976,16 @@ router.get('/app/admin/user-project/:id', isAdmin, async (req,res)=>{
   if(items != null && items.length > 0)
   {
       items = items.map(i=>{
-          i.path = i.path?.replace("../app/public","");
-          return i; 
+         // i.path = i.path?.replace("../app/public","");
+
+         let ext = i.path.substr(i.path.lastIndexOf('.') + 1);
+         i.path = i.path?.replace("../app/public","");
+         i.thumb = i.path?.replace("../app/public","")
+         .replace(`.${ext}`,`-thumb.${ext}`);
+          
+         return i; 
+
+        ///  return i; 
       });
 
       ca.push({
@@ -1028,10 +1036,22 @@ router.get('/app/admin/manage/cliparts', isAdmin, async (req,res)=>{
   
   categories.forEach(category => {
    var items = cliparts?.filter(i=>i.category == category.id);
-   items = items.map(i=>{
+  //  items = items.map(i=>{
+  //   i.path = i.path?.replace("../app/public","");
+  //   return i;
+  //  })
+  items = items.map(i=>{
+    // i.path = i.path?.replace("../app/public","");
+
+    let ext = i.path.substr(i.path.lastIndexOf('.') + 1);
     i.path = i.path?.replace("../app/public","");
-    return i;
-   })
+    i.thumb = i.path?.replace("../app/public","")
+    .replace(`.${ext}`,`-thumb.${ext}`);
+     
+    return i; 
+
+   ///  return i; 
+ });
    if(items != null && items.length > 0)
    {
     categoriesWithItems.push({
@@ -1374,9 +1394,17 @@ var items = cliparts?.filter(i=>i.category == category.id);
 if(items != null && items.length > 0)
 {
   items = items.map(i=>{
+    // i.path = i.path?.replace("../app/public","");
+
+    let ext = i.path.substr(i.path.lastIndexOf('.') + 1);
     i.path = i.path?.replace("../app/public","");
+    i.thumb = i.path?.replace("../app/public","")
+    .replace(`.${ext}`,`-thumb.${ext}`);
+     
     return i; 
-});
+
+   ///  return i; 
+ });
     ca.push({
        categoryName:category.name,
        items: items
