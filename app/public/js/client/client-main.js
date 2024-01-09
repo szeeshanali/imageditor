@@ -42,7 +42,7 @@ var rulerSettings = {
 
 
 
-const projectHtml = `<div class="col-md-4 pd-15 bg-white bd ">
+const projectHtml = `<div class="col-xl-4 col-lg-12 pd-15 bg-white bd ">
   <div class="">
     <div class="">
     <h6 class="mg-b-5 tx-14"><a href="#" id='{{code}}' class="tx-bold tx-uppercase text-primary hover-primary underline">{{title}}</a></h6>
@@ -74,7 +74,7 @@ const projectHtml = `<div class="col-md-4 pd-15 bg-white bd ">
 
 
 const designHtml = `
-<div class="col-md-4 pd-15 bg-white bd">
+<div class="col-xl-4 col-lg-12 pd-15 bg-white bd">
   <div class="">
     <div class="">
     <h6 class="mg-b-5 tx-14"><a href="#" id='{{code}}' class="tx-bold tx-uppercase text-primary hover-primary underline">{{title}}</a></h6>
