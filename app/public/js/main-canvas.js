@@ -951,7 +951,7 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
 
              
             
-         });
+         },{crossOrigin: 'Anonymous'});
      })
  
      
