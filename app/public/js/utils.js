@@ -437,7 +437,7 @@ const processFiles = (files) => {
                     } 
                     mainControls(true);
 
-                },{crossOrigin: 'anonymous'})
+                },null,{crossOrigin: 'anonymous'})
             } 
             reader.readAsDataURL(file);
         }
