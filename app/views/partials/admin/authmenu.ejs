@@ -1,5 +1,7 @@
-<%if( user != null)  {%>
+<%if( user != null)  {%> 
+  
     <div class="am-header-right">
+            <%if(typeof designButtons != 'undefined' ){ %>
             <div>
                     <ul class="nav nav-white-800 flex-column flex-md-row justify-content-end" style="flex-wrap:nowrap" role="tablist">
                         <li class="nav-item ">
@@ -27,6 +29,7 @@
             
                     </ul>
                 </div>
+                <%}%>
         <div class="dropdown dropdown-profile">
             <a href="#" class="nav-link nav-link-profile" data-toggle="dropdown" aria-expanded="false">
     

@@ -1010,7 +1010,9 @@ router.get('/app/admin/user-project/:id', isAdmin, async (req,res)=>{
       customText:customText,
       fonts:fonts,
       banners:banners,
-      settings: settings
+      settings: settings,
+      topbarItems:true,
+      designButtons:true
   });
 });
 
@@ -1427,8 +1429,8 @@ res.render('pages/admin/custom-design',{
     fonts:fonts,
     customText:customText,
     banners:[],
-    settings:settings
-
+    settings:settings,
+    designButtons:true
 });
 
 })
