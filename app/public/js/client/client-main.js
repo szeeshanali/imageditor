@@ -4,18 +4,18 @@ fabric.Object.prototype.objectCaching = false;
 var canvas      = new fabric.Canvas("client-main-canvas",       {
     preserveObjectStacking: true,
     selectionDashArray: [13, 16],
-         selectionLineWidth: 5,
-         selectionBorderColor: "green",
+    selectionLineWidth: 5,
+    selectionBorderColor: "green",
 })
 var canvasPrev  = new fabric.Canvas("client-main-canvas-logo",  {preserveObjectStacking: true});
-//fabric.Object.prototype.objectCaching = false;
-//fabric.Object.prototype.transparentCorners = false;
-//fabric.Object.prototype.cornerStyle = 'circle';
-//fabric.Object.prototype.borderColor = '#494699';
-//fabric.Object.prototype.cornerColor = '#494699';
-//fabric.Object.prototype.cornerStrokeColor = '#000';
-//fabric.Object.prototype.cornerSize = 10;
-//fabric.Object.prototype.padding = 3;
+fabric.Object.prototype.objectCaching = false;
+fabric.Object.prototype.transparentCorners = false;
+fabric.Object.prototype.cornerStyle = 'circle';
+fabric.Object.prototype.borderColor = '#494699';
+fabric.Object.prototype.cornerColor = '#494699';
+fabric.Object.prototype.cornerStrokeColor = '#000';
+fabric.Object.prototype.cornerSize = 10;
+fabric.Object.prototype.padding = 3;
 
 const dpi = 72;
 // const defaults = {
@@ -42,7 +42,7 @@ var rulerSettings = {
 
 
 
-const projectHtml = `<div class="col-xl-4 col-lg-12 pd-15 bg-white bd ">
+const projectHtml = `<div class="col-xl-4 col-lg-12 pd-15 bg-white bd {{code}}">
   <div class="">
     <div class="">
     <h6 class="mg-b-5 tx-14"><a href="#" id='{{code}}' class="tx-bold tx-uppercase text-primary hover-primary underline">{{title}}</a></h6>
@@ -404,7 +404,7 @@ function deleteProject(id, self) {
             }else{
 
                 toast("Project has been successfully deleted.");
-                $(self).parent().parent().fadeOut();
+                $(`.${id}`).fadeOut();
 
             }
         },
@@ -766,7 +766,8 @@ function initUIEvents() {
     });
     $("#menu-save-design").on("click",function(e){
         e.preventDefault();
-        e.stopPropagation(); 
+        e.stopPropagation();
+        sidebarToggle(true); 
         return false;
     })
 /**
@@ -892,6 +893,8 @@ $("#btnStartOverModel").on("click",function(e){
         if (state.isPreviewCanvas) { backFromPreview(); }
         $(".step-item:nth-child(3)").removeClass("active");
         $(".step-item:nth-child(2)").addClass("active");
+        sidebarToggle(true);
+        
     });
     var layers = $("#layers");
 
@@ -1788,8 +1791,10 @@ window.canvasgrid.add( new fabric.Rect({
     height: measurementThickness
 }));
 
-    
-    
+   
+    $("#menu-upload").on("click",()=>{
+        sidebarToggle(true);
+    })
 // var r = $("#ruler3");
 // for(var i=0;i<=500;i++)
 // {

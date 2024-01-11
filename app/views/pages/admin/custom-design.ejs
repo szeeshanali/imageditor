@@ -10,140 +10,142 @@
 
 
 <div class="row mg-r-0">
-    <!--Workspace Left Panel-->
-<div class="col-lg-3 pd-l-0 pd-r-0">
-  
-  <div class="leftpanel" id="menu-panel" >
-    <div class="tab-content">
-        
-        <div  id="templatepanel" class="tab-pane active"   >
-         
-          <div class="pd-y-10 pd-l-10  sticky-header-left-panel">
-            <button type="button" class="btn  btn-block btn-success tx-bold tx-16 tx-uppercase" id="btn-step-design">
-              SELECT TEMPLATE
-<br><small >Then Click Here to begin <br/>creating your design</small></button>
-           </div>
-
-          <div style="overflow: auto; height: calc(100vh - 10px)">
-              <div class="row mg-0 sticky-body-left-panel">
-                <%for(var i=0; i<templates.length; i++){ %>
-                  <%- include('../../partials/template',{template:templates[i]}); %>
-                <%}%>
-              </div>
-          </div>
-        </div>            
-        <div id="uploadpanel" class="tab-pane"  >
-          <div class="mg-10">
-          <button type="button" class="btn-block bd-b mg-b-3 tx-16 tx-uppercase tx-bold btn btn-warning " id="btn-back-template" >
-            <i class="icon ion-ios-arrow-back tx-16"></i>
-            Back  <br><small >Choose Template</small>
-          </button>
-        </div>
+    <div class="sidebar-contact">
+        <div class="toggle"></div>
+        <div class="scroll">
+            <div class="leftpanel" id="menu-panel" >
+                <div class="tab-content">
+                    
+                    <div  id="templatepanel" class="tab-pane active"   >
+                     
+                      <div class="pd-y-10 pd-l-10  sticky-header-left-panel">
+                        <button type="button" class="btn  btn-block btn-success tx-bold tx-16 tx-uppercase" id="btn-step-design">
+                          SELECT TEMPLATE
+            <br><small >Then Click Here to begin <br/>creating your design</small></button>
+                       </div>
             
-            <%- include('../../partials/client/imgupload'); %>
-            <div class="mg-10">
-              <button type="button" class="btn-block btn bd-b btn-success tx-bold tx-16 tx-uppercase " id="btn-step-preview">
-                NEXT  <i class="icon ion-ios-arrow-forward tx-16"></i> <br><small >Preview Design</small>
-              </button>
-            </div>
-
-        </div>
-       
-        <div id="shared-library" class="tab-pane"  >
-
-          <%- include('../../partials/client/sharedlibrary'); %>
-        </div>                          
-        <div id="textmenu" class="tab-pane" >
-            <div class="pd-x-10 tx-12 pd-y-10 bd-b"><b class="tx-primary tx-14">Add Text</b> </div>
-
-        </div>
-        <div id="savedesign" class="tab-pane">
-          <div class="list-group widget-list-group bg-app-primary">
-            <div class="list-group-item d-flex">
-              <div class="media d-block d-sm-flex">
-                <div class="media-body">
-                  <h6 class="tx-18 tx-uppercase pd-t-10">Save to Shared Library</h6>
-                </div><!-- media-body -->
-              </div><!-- media -->
-            </div>
-          </div>
-
-          <div class="card pd-20 ">
-           
-            <div class="form-layout">
-              <div class="row ">
-                <div class="col-lg-12">
-                  <div class="form-group">
-                    <label class="form-control-label">Project Name: <span class="tx-danger">*</span></label>
-                    <input class="form-control" minlength="3"  maxlength="50" pattern=".{3,30}" title="Minimum 3 and maximum 30 characters." required type="text" id="input-project-title" name="firstname"  >
-                  </div>
+                      <div style="overflow: auto; height: calc(100vh - 10px)">
+                          <div class="row mg-0 sticky-body-left-panel">
+                            <%for(var i=0; i<templates.length; i++){ %>
+                              <%- include('../../partials/template',{template:templates[i]}); %>
+                            <%}%>
+                          </div>
+                      </div>
+                    </div>            
+                    <div id="uploadpanel" class="tab-pane"  >
+                      <div class="mg-10">
+                      <button type="button" class="btn-block bd-b mg-b-3 tx-16 tx-uppercase tx-bold btn btn-warning " id="btn-back-template" >
+                        <i class="icon ion-ios-arrow-back tx-16"></i>
+                        Back  <br><small >Choose Template</small>
+                      </button>
+                    </div>
+                        
+                        <%- include('../../partials/client/imgupload'); %>
+                        <div class="mg-10">
+                          <button type="button" class="btn-block btn bd-b btn-success tx-bold tx-16 tx-uppercase " id="btn-step-preview">
+                            NEXT  <i class="icon ion-ios-arrow-forward tx-16"></i> <br><small >Preview Design</small>
+                          </button>
+                        </div>
+            
+                    </div>
+                   
+                    <div id="shared-library" class="tab-pane"  >
+            
+                      <%- include('../../partials/client/sharedlibrary'); %>
+                    </div>                          
+                    <div id="textmenu" class="tab-pane" >
+                        <div class="pd-x-10 tx-12 pd-y-10 bd-b"><b class="tx-primary tx-14">Add Text</b> </div>
+            
+                    </div>
+                    <div id="savedesign" class="tab-pane">
+                      <div class="list-group widget-list-group bg-app-primary">
+                        <div class="list-group-item d-flex">
+                          <div class="media d-block d-sm-flex">
+                            <div class="media-body">
+                              <h6 class="tx-18 tx-uppercase pd-t-10">Save to Shared Library</h6>
+                            </div><!-- media-body -->
+                          </div><!-- media -->
+                        </div>
+                      </div>
+            
+                      <div class="card pd-20 ">
+                       
+                        <div class="form-layout">
+                          <div class="row ">
+                            <div class="col-lg-12">
+                              <div class="form-group">
+                                <label class="form-control-label">Project Name: <span class="tx-danger">*</span></label>
+                                <input class="form-control" minlength="3"  maxlength="50" pattern=".{3,30}" title="Minimum 3 and maximum 30 characters." required type="text" id="input-project-title" name="firstname"  >
+                              </div>
+                            </div>
+                            <div class="col-lg-12">
+                              <div class="form-group">
+                                <label class="form-control-label">Description: </label>
+                                <textarea rows="2" class="form-control" pattern=".{3,100}" title="Minimum 3 and maximum 100 characters." minlength="3"  maxlength="50"  id="input-project-desc" required  spellcheck="false"></textarea>
+                              </div>
+                            </div>
+            
+                          </div><!-- row -->
+              
+                          <div class="btn-group" >
+                            <button class="btn tx-12 btn-success  tx-bold tx-uppercase" data-type="pre-designed"  id="btnSaveModel">Save Project</button>
+                            <button class="btn tx-12 btn-warning tx-bold tx-uppercase" data-dismiss="modal" id="btnCancelSaveDesign">Cancel</button>
+                          </div><!-- form-layout-footer -->
+                        </div><!-- form-layout -->
+                      </div>
+                      
+                      
+            
+            
+                    </div>
+                    <div id="myprojects" class="tab-pane">
+                      <div class="list-group widget-list-group bg-app-primary">
+                        <div class="list-group-item d-flex">
+                          <div class="media d-block d-sm-flex">
+                            <div class="d-block d-sm-flex mg-sm-r-20">
+                              <i class="ion-flag tx-24 tx-white"></i>
+                            </div><!-- d-flex -->
+                            <div class="media-body mg-t-10 mg-sm-t-0">
+                              <h6 class="mg-b-5 tx-14">My Saved Projects</h6>
+                              <p class="mg-b-0 tx-12 tx-white-5">You can save up to <b>(<%=project_limit%>)</b> projects.</p>
+                            </div><!-- media-body -->
+                          </div><!-- media -->
+                        </div>
+                      </div>
+                      <div class="card ">
+                        <div class="pd-20" id="myProjectContainer"></div>
+                     </div> 
+                    </div>
+                    <div id="library" class="tab-pane">
+                      <div class="list-group widget-list-group bg-app-primary">
+                        <div class="list-group-item d-flex">
+                          <div class="media d-block d-sm-flex">
+                            <div class="d-block d-sm-flex mg-sm-r-20">
+                              <i class="ion-flag tx-24 tx-white"></i>
+                            </div><!-- d-flex -->
+                            <div class="media-body mg-t-10 mg-sm-t-0">
+                              <h6 class="mg-b-5 tx-14">Pre Designed</h6>
+                              <p class="mg-b-0 tx-12 tx-white-5">Use ready made design in your template.</p>
+            
+                            </div><!-- media-body -->
+                          </div><!-- media -->
+                        </div>
+                      </div>
+                      <div class="card">
+                        <div class="card ">
+                         <div class="mg-t-15 mg-sm-t-20" id="preDesignedContainer"></div>
+                      </div>  
+                      </div>
+                    </div>
+                    <!-- #settingMenu -->
                 </div>
-                <div class="col-lg-12">
-                  <div class="form-group">
-                    <label class="form-control-label">Description: </label>
-                    <textarea rows="2" class="form-control" pattern=".{3,100}" title="Minimum 3 and maximum 100 characters." minlength="3"  maxlength="50"  id="input-project-desc" required  spellcheck="false"></textarea>
-                  </div>
-                </div>
-
-              </div><!-- row -->
-  
-              <div class="btn-group" >
-                <button class="btn tx-12 btn-success  tx-bold tx-uppercase" data-type="pre-designed"  id="btnSaveModel">Save Project</button>
-                <button class="btn tx-12 btn-warning tx-bold tx-uppercase" data-dismiss="modal" id="btnCancelSaveDesign">Cancel</button>
-              </div><!-- form-layout-footer -->
-            </div><!-- form-layout -->
-          </div>
-          
-          
-
-
-        </div>
-        <div id="myprojects" class="tab-pane">
-          <div class="list-group widget-list-group bg-app-primary">
-            <div class="list-group-item d-flex">
-              <div class="media d-block d-sm-flex">
-                <div class="d-block d-sm-flex mg-sm-r-20">
-                  <i class="ion-flag tx-24 tx-white"></i>
-                </div><!-- d-flex -->
-                <div class="media-body mg-t-10 mg-sm-t-0">
-                  <h6 class="mg-b-5 tx-14">My Saved Projects</h6>
-                  <p class="mg-b-0 tx-12 tx-white-5">You can save up to <b>(<%=project_limit%>)</b> projects.</p>
-                </div><!-- media-body -->
-              </div><!-- media -->
             </div>
-          </div>
-          <div class="card ">
-            <div class="pd-20" id="myProjectContainer"></div>
-         </div> 
         </div>
-        <div id="library" class="tab-pane">
-          <div class="list-group widget-list-group bg-app-primary">
-            <div class="list-group-item d-flex">
-              <div class="media d-block d-sm-flex">
-                <div class="d-block d-sm-flex mg-sm-r-20">
-                  <i class="ion-flag tx-24 tx-white"></i>
-                </div><!-- d-flex -->
-                <div class="media-body mg-t-10 mg-sm-t-0">
-                  <h6 class="mg-b-5 tx-14">Pre Designed</h6>
-                  <p class="mg-b-0 tx-12 tx-white-5">Use ready made design in your template.</p>
+      </div>
+    <!--Workspace Left Panel-->
 
-                </div><!-- media-body -->
-              </div><!-- media -->
-            </div>
-          </div>
-          <div class="card">
-            <div class="card ">
-             <div class="mg-t-15 mg-sm-t-20" id="preDesignedContainer"></div>
-          </div>  
-          </div>
-        </div>
-        <!-- #settingMenu -->
-    </div>
-</div>
-
-</div>
 <!-- Workspace canvas-->
-<div class="col-lg-6">
+<div class="col-9">
  
   <div class="">
     <div class="alert alert-primary pd-y-20 hidden" role="alert" id="previewMsg">
@@ -168,7 +170,7 @@
     
 </div>
 <!--Workspace Right panel-->
-<div class="col-lg-3 pd-x-0" id="workspace-right-panel" >
+<div class="col-3 pd-x-0" id="workspace-right-panel" >
     <%- include('../../partials/client/popups/rfq.ejs',{user:user}); %>
 </div>
 </div>
@@ -233,6 +235,11 @@ $(document).ready(function(){
     $("#templatepanel").removeClass("active");
                 $("#uploadpanel").addClass("active"); 
   }
+
+  $('.sidebar-contact > .toggle').click(function(){
+    $('.sidebar-contact').toggleClass('active')
+    $('.toggle').toggleClass('active')
+  })
     //$('[data-toggle="popover"]').popover()
 })
 </script>

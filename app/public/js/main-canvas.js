@@ -521,7 +521,7 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
                 let displayWidth =(aspectRatio>1.2 && getScreenWidthInPx() >= 1500)?700:500;//(workspaceSize-50)>800?800:workspaceSize-50;                 
                 //alert(getScreenWidthInPx());
                 if(getScreenWidthInPx() <= 1200){
-                    displayWidth=380;
+                   // displayWidth=380;
                 }
 
                 
@@ -1768,7 +1768,7 @@ function initContextMenu()
         $("#contrast-value").val(contrastValue);
         $("#brightness-value").val(brightnessValue);
         $("#btnGrayscale").prop("checked",!!isGrayscaleSelected);
-        
+       
          
     }
     
@@ -1797,6 +1797,7 @@ function initContextMenu()
         clearLayerSelection();
         // showLayerControls(elem);
         $(`#${id}`).addClass("selected-layer");
+        sidebarToggle(false);
     
     }
     

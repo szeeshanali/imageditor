@@ -8558,7 +8558,7 @@ a.text-dark:focus, a.text-dark:hover {
     color: #494699;
     margin-top: 1px;
     border-bottom: solid 1px #ccc;
-    box-shadow: 2px 2px 4px #999;
+    box-shadow: 0px 0px 2px #999;
 }
 .accordion .card-header a.collapsed {
   /* background-color: #cbcae5; */
@@ -11897,7 +11897,8 @@ textarea.parsley-success:focus {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #494699;
+  /* background-color: #494699; */
+  background-color: #353672;
   padding: 0 15px 0 0;
   z-index: 1000;
 }
@@ -12265,7 +12266,8 @@ textarea.parsley-success:focus {
 
 /***** MAIN PANEL *****/
 .am-mainpanel {
-  margin-left: 115px;
+  margin-left:100px;
+  /* margin-left: 115px; */
   /* margin-top: 120px; */
   margin-top: 40px;
 
@@ -12274,7 +12276,8 @@ textarea.parsley-success:focus {
 @media (min-width: 992px) {
   .am-mainpanel {
     /* margin-left: 335px; */
-    margin-left: 115px;
+    /* margin-left: 115px; */
+    margin-left:100px;
   }
 }
 
@@ -12343,13 +12346,13 @@ textarea.parsley-success:focus {
   position: relative;
 }
 
-.am-pagebody {
-  /* padding: 0px 8px; */
+.am-pagebody .admin {
+  padding: 0px 8px; 
 
 }
 @media (min-width: 576px) {
-  .am-pagebody {
-    /* padding: 1px 22px; */
+  .am-pagebody .admin {
+     padding: 1px 22px; 
   }
 }
 .am-pagebody .hljs {

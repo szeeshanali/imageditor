@@ -570,6 +570,15 @@ function getScreenWidthInPx(){
     return window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 }
 
+function sidebarToggle(open){
+    if(!open){
+        $('.sidebar-contact').removeClass('active');
+        $('.sidebar-contact > .toggle').removeClass('active');
 
+        return; 
+    }
+    $('.sidebar-contact').removeClass('active').addClass('active');
+    $('.sidebar-contact > .toggle').removeClass('active').addClass('active');
+}
 
 cropInit();
