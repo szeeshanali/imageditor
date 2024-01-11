@@ -1127,9 +1127,9 @@
 }
 
 #quick-tool .nav-item {
-  /* box-shadow: 1px 1px 3px #6463b1; */
-  
-  text-shadow: 1px 1px 1px black;
+  box-shadow: 1px 1px 1px #6463b1;
+  min-width: 55px;
+  /* text-shadow: 1px 1px 1px black; */
 }
 #quick-tool .nav-item:hover {
   background-color: #47458b;

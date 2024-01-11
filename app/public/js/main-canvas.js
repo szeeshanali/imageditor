@@ -906,7 +906,8 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
 
                  for (let i = 0; i < logos.length; i++) {
                      let logo    = logos[i];
-                     let object  = fabric.util.object.clone(img);                 
+                     let object  = fabric.util.object.clone(img);      
+                     object.filters = [];           
                      let left    = logo.left + logo.group.left + (logo.group.width / 2);
                      let top     = logo.top + logo.group.top + (logo.group.height / 2);                    
                      object.set("top", top);
@@ -1131,16 +1132,18 @@ function addLayer(o) {
 
 
     var _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
-    if(state.isPreviewCanvas){
-        for (var i =0;i<_canvas._objects.length;i++) {
-            layers += renderLayers(_canvas, i, temp);
-        }    
-    }else{
-        for (var i = _canvas._objects.length - 1; i >= 0; i--) {
+    // if(state.isPreviewCanvas){
+    //     for (var i =0;i<_canvas._objects.length;i++) {
+    //         layers += renderLayers(_canvas, i, temp);
+    //     }    
+    // }else{
+    //     for (var i = _canvas._objects.length - 1; i >= 0; i--) {
+    //         layers += renderLayers(_canvas, i, temp);
+    //     }
+    // }
+     for (var i = _canvas._objects.length - 1; i >= 0; i--) {
             layers += renderLayers(_canvas, i, temp);
         }
-    }
-
     // for (var i = _canvas._objects.length - 1; i >= 0; i--) {
     // //for (var i =0; i<_canvas._objects.length;i++ ) { 
     //     var obj = _canvas._objects[i];      
@@ -1767,7 +1770,7 @@ function initContextMenu()
         $("#contrastVal").text(`(${(contrastValue * 100).toFixed(0)}%)`);
         $("#contrast-value").val(contrastValue);
         $("#brightness-value").val(brightnessValue);
-        $("#btnGrayscale").prop("checked",!!isGrayscaleSelected);
+        $("#btnGrayscale").prop("checked",isGrayscaleSelected);
        
          
     }
