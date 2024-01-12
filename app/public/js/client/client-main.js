@@ -15,7 +15,6 @@ fabric.Object.prototype.borderColor = '#494699';
 fabric.Object.prototype.cornerColor = '#494699';
 fabric.Object.prototype.cornerStrokeColor = '#000';
 fabric.Object.prototype.cornerSize = 10;
-//fabric.Object.prototype.padding = 3;
 
 const dpi = 72;
 // const defaults = {
