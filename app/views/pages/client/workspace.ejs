@@ -377,6 +377,8 @@
         var type = '<%=type%>';        
         loadSVGTemplate(code);
         $('[data-toggle="popover"]').popover()
+        $('.sidebar-contact').toggleClass('active');
+        $('.toggle').toggleClass('active');
 
   $('.sidebar-contact > .toggle').click(function(){
     $('.sidebar-contact').toggleClass('active')

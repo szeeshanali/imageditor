@@ -940,10 +940,10 @@
 
 #canvas-holder{
   /* margin-top: 20px; */
-  max-height: 700px;
+  max-height: 900px;
   overflow-y: auto;
   overflow-x: hidden;
-  width:750px;
+  width:850px;
   margin:15px auto;
 }
 
