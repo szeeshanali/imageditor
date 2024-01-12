@@ -941,8 +941,10 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
              
 
              let buffer = 200;
-             let w1 = $("#canvas-holder").width()-30; 
-             let css =   {"max-width": `${w1}px`,"height":"auto","left":`${0}px`};
+            // let w1 = $("#canvas-holder").width()-30; 
+            // let css =   {"max-width": `${w1}px`,"height":"auto","left":`${0}px`};
+             let h1 = $("#canvas-holder").height()-30; 
+             let css =   {"max-height": `${70}%`,"width":"auto","left":`${25}%`};
              $("#client-main-canvas-logo").css(css);
              $("#admin-main-canvas-logo").css(css);
 
