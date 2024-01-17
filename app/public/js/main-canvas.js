@@ -1492,18 +1492,21 @@ var Direction = {
     RIGHT: 2,
     DOWN: 3
 };
-
+/// Keyboard events, Plus | Minus 
 fabric.util.addListener(document.body, 'keydown', function (options) {
- 
 
-    // if (options.repeat) {
-    //     return;
-    // }
     let __canvas =  state.isPreviewCanvas?canvasPrev:canvas;
     var key = options.which || options.keyCode; // key detection
 
-    if(!(key === 37 || key === 38 || key === 39 || key === 40 || key === 46  || key === 187 || key === 189) )
-    return; 
+    if(!(  key === 37  /* LEFT  */ 
+        || key === 38  /* UP    */
+        || key === 39  /* RIGHT */
+        || key === 40  /* DOWN  */
+        || key === 46  /* DELETE*/
+        || key === 187 /* PLUS  */
+        || key === 189 /* MINUS */
+        || key === 107 /* LARGE  */
+        || key === 109)) /*MINUS*/ return; 
 
     if(!__canvas.getActiveObject()) return;
 
@@ -1520,9 +1523,9 @@ fabric.util.addListener(document.body, 'keydown', function (options) {
         moveSelected(Direction.DOWN);
     } else if(key === 46){
         deleteItemFromCanvas(__canvas);
-    } else if(key === 187){
+    } else if(key === 187 || key === 107){
             $("#btnToolbarLarger").click();
-    } else if(key === 189){
+    } else if(key === 189 || key === 109){
         $("#btnToolbarSmaller").click();
     }
 });
@@ -1798,7 +1801,7 @@ function initContextMenu()
         clearLayerSelection();
         // showLayerControls(elem);
         $(`#${id}`).addClass("selected-layer");
-        sidebarToggle(false);
+        //sidebarToggle(false);
     
     }
     

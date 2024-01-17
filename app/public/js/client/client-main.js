@@ -49,7 +49,7 @@ const projectHtml = `<div class="col-xl-4 col-lg-12 pd-15 bg-white bd {{code}}">
     <div class="d-block d-flex ">
         <div class="wd-130 ht-130 tx-center">
         <div class='ht-130 wd-130'>  
-            <img src="{{src}}" class="wd-40 pd-r-10" alt="Image" style="width:100%;height:100%;object-fit:contain">
+            <img src="{{src}}" class="pd-10" alt="Image" style="width:100%;height:100%;object-fit:contain;background-color:#eee">
         </div>  
         <div class="btn-group mg-t-20">
         <a href="#" id="{{code}}"  class="hand soft btn btn-success tx-12 tx-bold tx-uppercase btn-edit-project" >Edit</a>
@@ -892,7 +892,7 @@ $("#btnStartOverModel").on("click",function(e){
         if (state.isPreviewCanvas) { backFromPreview(); }
         $(".step-item:nth-child(3)").removeClass("active");
         $(".step-item:nth-child(2)").addClass("active");
-        sidebarToggle(true);
+        //sidebarToggle(true);
         
     });
     var layers = $("#layers");
@@ -1058,14 +1058,11 @@ $("#btnStartOverModel").on("click",function(e){
         const id = navItem.attr("id");
         menuHighlighter(navItem);
         menuPanelDisplay(navItem);
-        if (canvas._objects.length == 0) {
-            $("#template-info-panel").show();
-            // $("#layers").parent().hide();
-        } else {
-            $("#template-info-panel").hide();
-            // $("#layers").parent().show();
-
-        }
+        // if (canvas._objects.length == 0) {
+        //     $("#template-info-panel").show();
+        // } else {
+        //     $("#template-info-panel").hide();
+        // }
     })
 
 
@@ -1792,7 +1789,7 @@ window.canvasgrid.add( new fabric.Rect({
 
    
     $("#menu-upload").on("click",()=>{
-        sidebarToggle(true);
+        //sidebarToggle(true);
     })
 // var r = $("#ruler3");
 // for(var i=0;i<=500;i++)
