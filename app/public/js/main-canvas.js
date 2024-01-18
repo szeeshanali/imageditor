@@ -746,7 +746,15 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
 
     }
 
-    function previewDesign() { /*
+    function quickPreviewDesign(){
+        previewDesign(()=>{
+        $("#popup-preview-design").modal({backdrop: 'static', keyboard: false});
+        $("#img-preview").attr("src",canvasPrev.toDataURL());
+            $("#template-detail-preview").html($("#template-info-panel > div:first-child").html())
+        });
+    }
+
+    function previewDesign(onComplete) { /*
     . Check Design can be previewed. 
     . Hide create design heading and show preview design heading. 
     . Disable Save button. 
@@ -785,7 +793,7 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
      $("#admin-main-canvas-logo").parent().fadeIn();
      $("#client-main-canvas-logo").parent().fadeIn();
      // 6.
-     renderPreview();
+     renderPreview(onComplete);
      // 7.
  
      // 8.
@@ -853,7 +861,7 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
      $(".step-item:nth-child(3)").addClass("active");
  
  }
- function renderPreview() {
+ function renderPreview(onComplete) {
      $loader.removeClass("hidden");
      $("#ws-btn-preview").addClass("hidden");
      $("#ws-btn-back").removeClass("hidden");
@@ -928,6 +936,7 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
              }
  
              canvasPrev.requestRenderAll();
+             canvasPrev.renderAll();
              $("#create-design-heading").addClass("hidden");
              $("#preview-design-heading").removeClass("hidden");
              $("#ruler-ctrl").attr("style", "display:none !important");;
@@ -948,7 +957,9 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
              $("#client-main-canvas-logo").css(css);
              $("#admin-main-canvas-logo").css(css);
 
-             
+            if(onComplete){
+                onComplete();
+            }
              
          },null,{ crossOrigin: 'Anonymous'});
      })

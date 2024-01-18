@@ -914,7 +914,8 @@ $("#btnStartOverModel").on("click",function(e){
     })
     $("#btn-step-preview, #btn-menu-peview").on("click", function (e) {
         e.preventDefault();
-        previewDesign();
+        //previewDesign();
+        quickPreviewDesign();
     });
     $("#btn-step-download").on("click", function (e) {
         e.preventDefault();

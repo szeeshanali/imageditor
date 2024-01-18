@@ -3,9 +3,7 @@
     src:url("/fonts/<%=item.content%>");font-weight:normal;font-style:normal}
  <%})%>
 </style>
-
 <%fonts?.forEach((item)=>{%><link rel="preload" href="/fonts/<%=item.content%>" as="font" type="font/woff" crossorigin><%})%>
-   
 
 <div class="row mg-0">
     <!--Workspace Left Panel-->
@@ -180,7 +178,6 @@
       </ul> 
     </div>
   </div>
-
   <div class="alert alert-primary pd-y-20 hidden" role="alert" id="previewMsg">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">×</span>
@@ -194,10 +191,6 @@
         </div>
       </div><!-- d-flex -->
   </div>
-   
-
-    
-    
     <div class="table-responsive">
       <div class="workarea" id="workarea" >
        
@@ -224,12 +217,11 @@
     
 
 <!--Workspace Right panel-->
-<div class="col-3 pd-x-0" id="workspace-right-panel" >
-    <%- include('../../partials/client/popups/rfq.ejs',{user:user}); %>
-</div>
+
+<div class="col-3 pd-0"><%- include('../../partials/canvas-controls',{banners:banners}); %></div>
 </div>
 
-<%- include('../../partials/canvas-controls',{banners:banners}); %>
+
 
 
 
@@ -285,28 +277,7 @@
 
 
 
-<div id="downloadPDFModel" class="modal fade">
-  <div class="modal-dialog modal-md" role="document">
-    <div class="modal-content bd-0 tx-14">
-      <div class="modal-header pd-x-20">
-        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Finalize Your Design</h6>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body pd-20">
-        <input type="text" id="downloadFileName" class="form-control" placeholder="Enter File Name">
-        <span class="error hidden tx-12 tx-bold pd-y-5">Please Enter File Name</span>
-      </div>
-      <div class="modal-footer justify-content-center">
-        <button type="button" id="btnGenerateAndDownloadPDF"  class=" hand soft tx-bold btn-sm tx-12 tx-uppercase btn btn-success pd-x-20">
-          Download your design <br> as a ready to print PDF</button>
-        <button type="button" id="btnRFQ" class=" hand soft tx-bold btn btn-sm tx-12 tx-uppercase btn-primary pd-x-20">
-          Send your design to <br>Kopykake for a Printing Quote</button>
-      </div>
-    </div>
-  </div>
-</div>
+
 
 
 
@@ -314,6 +285,8 @@
 <%- include('../../partials/client/popups/popup-clipart'); %>
 <%- include('../../partials/client/popups/faq'); %>
 <%- include('../../partials/client/popups/terms'); %>
+<%- include('../../partials/popup-preview-design'); %>
+<%- include('../../partials/popup-download-pdf'); %>
 
 <div id="my-proj-modal" class="modal fade" aria-hidden="true" >
   <div class="modal-dialog modal-full wd-1000" role="document">
@@ -365,6 +338,11 @@
       </div>
     </div>
    </div>
+   </div>
+
+   <div class="col-3 pd-x-0" id="workspace-right-panel" >
+    <%- include('../../partials/client/popups/rfq.ejs',{user:user}); %>
+</div>
    <input type="hidden" id="fileupload_max_limit" value="<%= settings.file_size_limit || 5%>">
 <script>
     var FILE_SIZE_LIMIT = <%=settings?.file_size_limit%>;

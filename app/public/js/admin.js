@@ -1857,7 +1857,8 @@ if(!order || order < 1){
 
         $("#btn-step-preview, #btn-menu-peview").on("click", function (e) {
             e.preventDefault();
-            previewDesign();
+            //previewDesign();
+            quickPreviewDesign();
         });
 
         
