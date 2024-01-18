@@ -1207,7 +1207,7 @@ padding: 15px;
 -moz-osx-font-smoothing: grayscale;
 
 
-}0
+}
 
 #addclipart-collapseTwo{
   max-height: 400px;
@@ -1222,6 +1222,16 @@ padding: 15px;
   height:80px !important;
 
 }
+
+#popup-preview-design .preview-design {
+  min-width:90%
+}
+
+
+
+}
+#popup-preview-design .preview-design{
+  min-width: 70%
 }
 
 .sidebar-contact{
