@@ -281,10 +281,11 @@
 
  $.get('/app/faq',(res)=>{
   $("#faq-contanier").html(res);
-
+  $('.toggle.active').text("Collapse Menu");
    $('.sidebar-contact > .toggle').click(function(){
     $('.sidebar-contact').toggleClass('active')
-    $('.toggle').toggleClass('active')
+    $('.toggle').text("Expand Menu");
+    $('.toggle.active').text("Collapse Menu");
   })
 })
 </script>

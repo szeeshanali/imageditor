@@ -9,7 +9,7 @@
     <!--Workspace Left Panel-->
 
 <div class="sidebar-contact">
-  <div class="toggle"><div>See below</div></div>
+  <div class="toggle"></div>
   <div class="scroll">
     <div class="leftpanel" id="menu-panel" >
       <div class="tab-content">
@@ -218,7 +218,8 @@
 
 <!--Workspace Right panel-->
 
-<div class="col-3 pd-0"><%- include('../../partials/canvas-controls',{banners:banners}); %></div>
+<div class="col-3 pd-0" id="workspace-right-panel" >
+  <%- include('../../partials/canvas-controls',{banners:banners}); %></div>
 </div>
 
 
@@ -339,10 +340,8 @@
     </div>
    </div>
    </div>
-
-   <div class="col-3 pd-x-0" id="workspace-right-panel" >
-    <%- include('../../partials/client/popups/rfq.ejs',{user:user}); %>
-</div>
+   <%- include('../../partials/client/popups/rfq.ejs',{user:user}); %>
+  
    <input type="hidden" id="fileupload_max_limit" value="<%= settings.file_size_limit || 5%>">
 <script>
     var FILE_SIZE_LIMIT = <%=settings?.file_size_limit%>;
@@ -357,11 +356,14 @@
         $('[data-toggle="popover"]').popover()
         $('.sidebar-contact').toggleClass('active');
         $('.toggle').toggleClass('active');
-
-  $('.sidebar-contact > .toggle').click(function(){
-    $('.sidebar-contact').toggleClass('active')
-    $('.toggle').toggleClass('active')
-  })
+        $('.toggle').text("Collapse Menu");
+        
+        $('.sidebar-contact > .toggle').click(function(){
+          $('.sidebar-contact').toggleClass('active');
+          $('.toggle').toggleClass('active');
+          $('.toggle').text("Expand Menu");
+          $('.toggle.active').text("Collapse Menu");
+        })
    })
 
 

@@ -413,64 +413,6 @@ function deleteProject(id, self) {
         }
     })
 }
-// function loadProject(id) {
-//     $loader.removeClass("hidden");
-//     state.isPreviewCanvas = false;
-//     var group = [];
-//     $("#btnBack").trigger("click");
-//     $.get(`/api/project/${id}`, function (res) {
-//         $loader.addClass("hidden");
-//         const json = JSON.parse(res.data.json);
-//         if (! json) {
-//             return;
-//         }
-//         canvas.clear();
-//         /// loading design 
-//         canvas.loadFromJSON(json, function () {
-//             $("#menu-upload > a").click();
-            
-//         }, function (o, object) {
-//         })
-
-//         /// loading template 
-//         fabric.loadSVGFromURL(res.template.base64, function (objects, options) { // $canvasPrev.fadeOut();
-//             var loadedObjects = new fabric.Group(group);
-      
-//             var templateWidth = options.viewBoxWidth;
-//             var templateHeight = options.viewBoxHeight;
-
-//             let isLandspace = (templateWidth > templateHeight);
-//             canvasPrev.setDimensions({width: templateWidth, height: templateHeight});
-
-//             let __f = 0.9;
-//             if (isLandspace) {
-              
-//                 templateWidth = options.viewBoxHeight;
-//                 templateHeight = options.viewBoxWidth;
-//             }
-//             let __w = parseInt(templateWidth*__f); 
-//             let __h = parseInt(templateHeight*__f);
-//             $("#client-main-canvas-logo").css({"width":`${__w}px`,"height":`${__h}px`,"padding":"1px","left":"21px"});
-            
-//             canvasPrev.setBackgroundImage(loadedObjects, canvasPrev.renderAll.bind(canvasPrev));
-//             canvasPrev.renderAll();
-//             loadedObjects.center().setCoords();
-
-           
-
-
-//         }, function (item, object) {
-//             object.set({fill:"#fff"});
-//             object.set('id', item.getAttribute('id'));
-//             group.push(object);
-//         });
-
-//     }).fail(function (err) {
-//         $loader.addClass("hidden");
-//         toast("Something went wrong! Please contact admin.");
-//         console.log(err);
-//     })
-// }
 
 function loadDesign(id) {
     state.isPreviewCanvas = false;
@@ -892,7 +834,7 @@ $("#btnStartOverModel").on("click",function(e){
         if (state.isPreviewCanvas) { backFromPreview(); }
         $(".step-item:nth-child(3)").removeClass("active");
         $(".step-item:nth-child(2)").addClass("active");
-        //sidebarToggle(true);
+        sidebarToggle(true);
         
     });
     var layers = $("#layers");
@@ -1790,7 +1732,7 @@ window.canvasgrid.add( new fabric.Rect({
 
    
     $("#menu-upload").on("click",()=>{
-        //sidebarToggle(true);
+        sidebarToggle(true);
     })
 // var r = $("#ruler3");
 // for(var i=0;i<=500;i++)

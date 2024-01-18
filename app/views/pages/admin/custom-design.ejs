@@ -11,14 +11,14 @@
 
 <div class="row mg-r-0">
     <div class="sidebar-contact">
-        <div class="toggle"><div>See below</div></div>
+        <div class="toggle"></div>
         <div class="scroll">
             <div class="leftpanel" id="menu-panel" >
                 <div class="tab-content">
                     
                     <div  id="templatepanel" class="tab-pane active"   >
                      
-                      <div class="pd-y-10 pd-l-10  sticky-header-left-panel">
+                      <div class="pd-10">
                         <button type="button" class="btn-shadow btn  btn-block btn-success tx-bold tx-16 tx-uppercase" id="btn-step-design">
                           SELECT TEMPLATE
             <br><small >Then Click Here to begin <br/>creating your design</small></button>
@@ -145,7 +145,7 @@
     <!--Workspace Left Panel-->
 
 <!-- Workspace canvas-->
-<div class="col-9">
+<div class="col-9 pd-0">
  
   <div class="">
     <div class="alert alert-primary pd-y-20 hidden" role="alert" id="previewMsg">
@@ -236,12 +236,15 @@ $(document).ready(function(){
     $("#templatepanel").removeClass("active");
                 $("#uploadpanel").addClass("active"); 
   }
-
+  $('.toggle').text("Collapse Menu");
   $('.sidebar-contact > .toggle').click(function(){
     $('.sidebar-contact').toggleClass('active')
     $('.toggle').toggleClass('active')
+    $('.toggle').text("Expand Menu");
+    $('.toggle.active').text("Collapse Menu");
+  
   })
-    //$('[data-toggle="popover"]').popover()
+    
 })
 </script>
    

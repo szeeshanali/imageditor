@@ -574,11 +574,13 @@ function sidebarToggle(open){
     if(!open){
         $('.sidebar-contact').removeClass('active');
         $('.sidebar-contact > .toggle').removeClass('active');
-
         return; 
     }
     $('.sidebar-contact').removeClass('active').addClass('active');
     $('.sidebar-contact > .toggle').removeClass('active').addClass('active');
+
+    $('.toggle').text("Expand Menu");
+    $('.toggle.active').text("Collapse Menu");
 }
 
 cropInit();
