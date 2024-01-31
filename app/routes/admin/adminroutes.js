@@ -566,15 +566,17 @@ var today = new Date();
 var year = today.getFullYear();
 var month = today.getMonth();
 var date = today.getDate();
+
 report.todayUsers      = allusers.filter(todayFilter).length || 0;
 report.thisWeekUsers   = allusers.filter(thisWeekFilter).length || 0;
 report.thisMonthUsers  = allusers.filter(thisMonthFilter).length || 0;
 report.totalUsers      = allusers.length; 
+
 report.activeUsers      = allusers.filter(function(value){ return value.active == true}).length || 0;
 report.adminUsers     =   allusers.filter(function(value){ return value.is_admin == true}).length || 0;
 
 /// download filter 
-report.todayDownloads =   allDownloads.filter(todayFilter).length || 0;;
+report.todayDownloads =   allDownloads.filter(todayFilter).length || 0;
 report.thisWeekDownloads = allDownloads.filter(thisWeekFilter).length || 0;
 report.thisMonthDownloads =allDownloads.filter(thisMonthFilter).length || 0;
 report.totalDownloads      = allDownloads.length;
@@ -596,7 +598,7 @@ function thisWeekFilter(value)
 { return value.created_dt >= new Date(year, month, date-7); }
 
 function thisMonthFilter(value)
-{ return value.created_dt >= new Date(year, month, date-30); }
+{ return value.created_dt >= new Date(year, month, 1); }
 
   res.locals.page = {
    title  : "Dashboard",
