@@ -592,13 +592,13 @@ report.thisMonthProjects =allUserProjects.filter(thisMonthFilter).length || 0;
 
 
 function todayFilter(value)
-{ return value.created_dt >= new Date(year, month, date); }
+{ return value.created_dt >= new Date(year, month+1, date); }
 
 function thisWeekFilter(value)
-{ return value.created_dt >= new Date(year, month, date-7); }
+{ return value.created_dt >= new Date(year, month+1, date-7); }
 
 function thisMonthFilter(value)
-{ return value.created_dt >= new Date(year, month, 1); }
+{ return value.created_dt >= new Date(year, month+1, 1); }
 
   res.locals.page = {
    title  : "Dashboard",
