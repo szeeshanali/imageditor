@@ -15,21 +15,22 @@
                         <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">Users (<%=report.totalUsers%>)</h6>
                         <div class="d-flex mg-b-10">
                             <div class="bd-r pd-r-10">
+                                <div class="tx-center tx-30 tx-lato tx-inverse tx-bold"><%=report.todayUsers%></div>
                                 <label class="tx-12">Today</label>
-                                <p class="tx-lato tx-inverse tx-bold"><%=report.todayUsers%></p>
                             </div>
                             <div class="bd-r pd-x-10">
-                                <label class="tx-12">This Week</label>
-                                <p class="tx-lato tx-inverse tx-bold"><%=report.thisWeekUsers%></p>
+                                <div class="tx-center tx-30  tx-lato tx-inverse tx-bold"><%=report.thisWeekUsers%></div>
+                                <label class="tx-12">Last 7 Days</label>
+
                             </div>
                             <div class="pd-l-10">
-                                <label class="tx-12">This Month</label>
-                                <p class="tx-lato tx-inverse tx-bold"><%=report.thisMonthUsers%></p>
+                                <div class="tx-center tx-30  tx-lato tx-inverse tx-bold"><%=report.thisMonthUsers%></div>
+                                <label class="tx-12">Last 30 Days</label>
+
                             </div>
                         </div>
                         <!-- d-flex -->
 
-                        <p class="tx-12 mg-b-0">Active Users (<%=report.activeUsers%>)</p>
                     </div>
                     <!-- card -->
                 </div>
@@ -39,21 +40,23 @@
                         <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">PDF Downloads (<%=report.totalDownloads%>)</h6>
                         <div class="d-flex mg-b-10">
                             <div class="bd-r pd-r-10">
+                                <div class="tx-center tx-30  tx-lato tx-inverse tx-bold"><%=report.todayDownloads%></div>
                                 <label class="tx-12">Today</label>
-                                <p class="tx-lato tx-inverse tx-bold"><%=report.todayDownloads%></p>
+
                             </div>
                             <div class="bd-r pd-x-10">
-                                <label class="tx-12">This Week</label>
-                                <p class="tx-lato tx-inverse tx-bold"><%=report.thisWeekDownloads%></p>
+                                <div class=" tx-center tx-30  tx-lato tx-inverse tx-bold"><%=report.thisWeekDownloads%></div>
+                                <label class="tx-12">Last 7 Days</label>
+
                             </div>
                             <div class="pd-l-10">
-                                <label class="tx-12">This Month</label>
-                                <p class="tx-lato tx-inverse tx-bold"><%=report.thisMonthDownloads%></p>
+                                <div class="tx-center tx-30 tx-lato tx-inverse tx-bold"><%=report.thisMonthDownloads%></div>
+                                <label class="tx-12">Last 30 Days</label>
+
                             </div>
                         </div>
                         <!-- d-flex -->
 
-                        <p class="tx-12 mg-b-0">Total PDF Downloads (<%=report.totalDownloads%>)</p>
                     </div>
                     <!-- card -->
                 </div>
@@ -63,21 +66,23 @@
                         <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-15">User Projects (<%=report.totalProjects%>)</h6>
                         <div class="d-flex mg-b-10">
                             <div class="bd-r pd-r-10">
+                                <div class=" tx-center tx-lato tx-inverse tx-bold tx-30"><%=report.todayProjects%></div>
                                 <label class="tx-12">Today</label>
-                                <p class="tx-lato tx-inverse tx-bold"><%=report.todayProjects%></p>
+
                             </div>
                             <div class="bd-r pd-x-10">
-                                <label class="tx-12">This Week</label>
-                                <p class="tx-lato tx-inverse tx-bold"><%=report.thisWeekProjects%></p>
+                                <div class="tx-center tx-lato tx-inverse tx-bold tx-30"><%=report.thisWeekProjects%></div>
+                                <label class="tx-12">Last 7 Days</label>
+
                             </div>
                             <div class="pd-l-10">
-                                <label class="tx-12">This Month</label>
-                                <p class="tx-lato tx-inverse tx-bold"><%=report.thisMonthProjects%></p>
+                             
+                                <div class="tx-lato tx-inverse tx-bold tx-center tx-30"><%=report.thisMonthProjects%></div>
+                                <label class="tx-12">Last 30 Days</label>
                             </div>
                         </div>
                         <!-- d-flex -->
 
-                        <p class="tx-12 mg-b-0">Total User Projects (<%=report.totalProjects%>)</p>
                     </div>
                     <!-- card -->
                 </div>

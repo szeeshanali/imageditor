@@ -14,6 +14,8 @@ const logs                = require("../../models/logs");
 const {isLoggedIn,isAdmin} = require('../../config/auth')
 const passport = require('passport');
 const { default: mongoose, mongo } = require('mongoose');
+var moment = require('moment');
+
 
 require("../../config/passport")(passport);
 const PATH_ADMIN_CATEGORY_ITEMS       = 'pages/admin/categoryitems';
@@ -592,13 +594,13 @@ report.thisMonthProjects =allUserProjects.filter(thisMonthFilter).length || 0;
 
 
 function todayFilter(value)
-{ return value.created_dt >= new Date(year, month, date); }
+{ return value.created_dt >= moment().startOf('day'); }
 
 function thisWeekFilter(value)
-{ return value.created_dt >= new Date(year, month, date,00,00,00,00,000) && value.created_dt <= new Date(year, month, date+7,23,59,59,59,999)  }
+{ return value.created_dt >= moment().subtract(7, "days")  }
 
 function thisMonthFilter(value)
-{ return value.created_dt >= new Date(year, month, 0,23,59,59,59,999) }
+{ return value.created_dt >= moment().subtract(30, "days") }
 
   res.locals.page = {
    title  : "Dashboard",
