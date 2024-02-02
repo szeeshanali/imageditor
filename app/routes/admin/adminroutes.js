@@ -595,10 +595,10 @@ function todayFilter(value)
 { return value.created_dt >= new Date(year, month, date); }
 
 function thisWeekFilter(value)
-{ return value.created_dt >= new Date(year, month, date-7); }
+{ return value.created_dt >= new Date(year, month, date,00,00,00,00,000) && value.created_dt <= new Date(year, month, date+7,23,59,59,59,999)  }
 
 function thisMonthFilter(value)
-{ return value.created_dt >= new Date(year, month, 0) }
+{ return value.created_dt >= new Date(year, month, 0,23,59,59,59,999) }
 
   res.locals.page = {
    title  : "Dashboard",
