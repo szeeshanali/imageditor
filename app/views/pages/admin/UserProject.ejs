@@ -2,19 +2,15 @@
   <%fonts?.forEach((item)=>{%> @font-face{ font-family:"<%=item.content.replace('.ttf','').replace('.TTF','')%>";
     src:url("/fonts/<%=item.content%>");font-weight:normal;font-style:normal}
  <%})%>
-</style>
 
 <%fonts?.forEach((item)=>{%><link rel="preload" href="/fonts/<%=item.content%>" as="font" type="font/woff" crossorigin><%})%>
-   
 
+</style>
 
-
-
-   </style>
 <div class="row mg-r-0">
     <!--Workspace Left Panel-->
     <div class="sidebar-contact">
-        <div class="toggle"><div>See below</div></div>
+        <div class="toggle"></div>
         <div class="scroll">
             <div class="leftpanel" id="menu-panel" >
                 <div class="tab-content">
@@ -200,7 +196,6 @@
 <div class="col-3 pd-x-0" id="workspace-right-panel" >
     <%- include('../../partials/client/popups/rfq.ejs',{user:user}); %>
 </div>
-</div>
 
 <%- include('../../partials/canvas-controls'); %>
 
@@ -277,16 +272,24 @@
       $("#hiddenDesignId").val(code);
       $('[data-toggle="popover"]').popover()
      $("#btn-edit-user-project").attr("data-project-id",code);
+
+    $('.sidebar-contact').toggleClass('active');
+        $('.toggle').toggleClass('active');
+        $('.toggle').text("Collapse Menu");
+        
+        $('.sidebar-contact > .toggle').click(function(){
+          $('.sidebar-contact').toggleClass('active');
+          $('.toggle').toggleClass('active');
+          $('.toggle').text("Expand Menu");
+          $('.toggle.active').text("Collapse Menu");
+        })
  }
 
  $.get('/app/faq',(res)=>{
   $("#faq-contanier").html(res);
-  $('.toggle.active').text("Collapse Menu");
-   $('.sidebar-contact > .toggle').click(function(){
-    $('.sidebar-contact').toggleClass('active')
-    $('.toggle').text("Expand Menu");
-    $('.toggle.active').text("Collapse Menu");
-  })
+  
+
+   
 })
 </script>
 
