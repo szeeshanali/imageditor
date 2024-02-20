@@ -70,6 +70,7 @@
                                       </label>
                                   </div><!-- col-4 -->
                                     <div class="row mg-0"  id="rfqShippingInfo" >
+                                      <input type="hidden" name="partno" id="_partno" value=""
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                               <input class="form-control" tabindex="2" required id="_street1" type="text" name="street1"  placeholder="Street 1">
@@ -104,6 +105,7 @@
                                         Select the date you need these prints IN HAND (Rush charges may apply, and expedited shipping may be required).
                                       </label>
                                       <input type="date"  id="rfqRequiredByDt" tabindex="7" name="date" class="wd-200 form-control" min="<%= new Date() %>" placeholder="Required By">
+                                      <input type="hidden" name="rfqdate" id="_rfqdate">
                                     </div>
                                     <div class="col-lg-4">
                                       <label>

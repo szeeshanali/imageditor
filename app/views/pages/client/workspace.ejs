@@ -340,7 +340,7 @@
     </div>
    </div>
    </div>
-   <%- include('../../partials/client/popups/rfq.ejs',{user:user}); %>
+   <%- include('../../partials/client/popups/rfq.ejs',{user:user,meta:templateMeta}); %>
   
    <input type="hidden" id="fileupload_max_limit" value="<%= settings.file_size_limit || 5%>">
 <script>

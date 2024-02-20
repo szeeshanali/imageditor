@@ -751,6 +751,10 @@ router.post('/api/rfq', isLoggedIn, async (req,res)=>{
                                             if(item === 'pickup'){
                                                 fieldValue = (fieldValue === 'on')?'Yes':'No';
                                             }
+                                            if(item === 'date'){
+                                                let dt = fieldValue.split('-');
+                                                fieldValue = `${dt[1]}-${dt[2]}-${dt[0]}`;
+                                            }
                                             template = template.replace(`{{${item}}}`,fieldValue)
                                         } 
 

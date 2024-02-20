@@ -743,6 +743,9 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
                 data.code
             }`;
         })
+        /** rfq popup field */
+        $("#_partno").val(data.ref_code);
+
 
     }
 

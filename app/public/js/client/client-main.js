@@ -578,6 +578,7 @@ function initUIEvents() {
          day = '0' + day.toString();
         var maxDate = year + '-' + month + '-' + day;
         $('#rfqRequiredByDt').attr('min', maxDate);
+     
     });
 
     initContextMenu();
