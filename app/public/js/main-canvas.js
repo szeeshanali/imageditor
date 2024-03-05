@@ -1094,7 +1094,7 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
                 $loader.addClass("hidden");
                 $(".step-item:nth-child(3)").removeClass("active");
                 $(".step-item:nth-child(4)").addClass("active");
-                backFromPreview();
+                //backFromPreview();
             });
 
         },
