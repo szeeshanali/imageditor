@@ -1239,9 +1239,11 @@ padding: 15px;
   /* position:fixed; */
   /* top:50%; */
   top:300px;
-  left:-350px;
+  /* left:-350px; */
+  left:-300px;
   transform:translateY(-50%);
-  width:350px;
+  /* width:350px; */
+  width:300px;
   height:600px;
   /* padding:40px; */
   background:#fff;
@@ -1280,14 +1282,14 @@ padding: 15px;
 } */
 .toggle{
   position: absolute;
-    height: 40px;
-    width: 120px;
+    height: 48px;
+    width: 50px;
     text-align: center;
     cursor: pointer;
     background: #28a745;
     top: 0;
     /* font-weight: bold; */
-    right: -120px;
+    right: -50px;
     line-height: 40px;
     border-radius: 0px 10px 10px 0px;
     font-size: 12px;
@@ -1300,7 +1302,8 @@ padding: 15px;
 .toggle:before{
   content:'\f101';
   font-family: fontAwesome;
-  font-size: 14px;
+  /* font-size: 14px; */
+  font-size: 18px;
   color: #fff;
   margin-right: 3px;
   line-height: 2.7

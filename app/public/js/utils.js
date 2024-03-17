@@ -579,8 +579,8 @@ function sidebarToggle(open){
     $('.sidebar-contact').removeClass('active').addClass('active');
     $('.sidebar-contact > .toggle').removeClass('active').addClass('active');
 
-    $('.toggle').text("Expand Menu");
-    $('.toggle.active').text("Collapse Menu");
+    // $('.toggle').text("Expand Menu");
+    // $('.toggle.active').text("Collapse Menu");
 }
 
 cropInit();
