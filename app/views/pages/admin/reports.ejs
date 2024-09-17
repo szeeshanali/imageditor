@@ -138,7 +138,8 @@
 
     $(document).ready(function () {
     var dt = $('#userDT').DataTable({
-      order: [[5, 'desc']]
+      "order": [[5, 'desc']],
+      "iDisplayLength": 100,
     });
     $btnSearch = $("#btnFilterUsers"); 
     $inputDatepickerFrom = $("#datepickerFrom"); 
