@@ -2697,7 +2697,7 @@ if(!order || order < 1){
         $("#edit-user-container .email").val(user.email);
         $("#edit-user-container .company").val(user.company_name);
         $("#edit-user-container .project_lmt").val(user.project_limit);
-        $("#edit-user-container .created_dt").val(getFormattedDate(new Date(user.created_dt)));
+        $("#edit-user-container .created_dt").val(getFormattedDate(new Date(user.modified_dt)));
         $("#edit-user-container .is_admin").prop("checked", user.is_admin);
         $("#edit-user-container .is_active").prop("checked", user.active);
         $("#edit-user-container .watermark").prop("checked", user.watermark);
@@ -2845,11 +2845,15 @@ function updateCounts(counts){
 }
 
    
-function getUserDownloads(userId, userName)
+function getUserDownloads(userId, userName, type)
 {
+    let title = type=="download_pdf"?"Download":"Email";
     let fromDt = $("#datepickerFrom").val(); 
     let toDt = $("#datepickerTo").val();
 
+
+    $("#lbl-download-type").text(title)
+   
     if(fromDt && fromDt != ""){
       let _d = fromDt.split('/')[1];
       let _m = fromDt.split('/')[0]-1;
@@ -2873,17 +2877,19 @@ function getUserDownloads(userId, userName)
     }else if(toDt){
         paramsDt = `?to=${toDt}`;
     }
+ 
+
     $loader.removeClass("hidden");
   $.ajax({
                 type: "GET",
-                url: `/api/filter/user-downloads/${userId}${paramsDt}`,
+                url: `/api/filter/user-downloads/${userId}${paramsDt}&type=${type}`,
                 success: function (res) {
                   $loader.addClass("hidden");
                   let d = [];
                   if(res.data)
                   {  
                     $("#lbl-download-dates").text(`Date: ${fromDt?" From "+new Date(fromDt).toLocaleDateString()+" - ":""} ${new Date(toDt).toLocaleDateString()}`)
-                    showDownloadHistory(userId,userName,res.data) }
+                    showDownloadHistory(userId,userName,res.data, type) }
 
                 },error: function (request, status, error) {
                   $loader.addClass("hidden");
@@ -2953,7 +2959,7 @@ $("#btnFindDownloadHistory").on("click",function(){
     alert(filteredHistory)
 })
 
-function showDownloadHistory(userId, title, filteredDownloads) {
+function showDownloadHistory(userId, title, filteredDownloads,type) {
     selectedHistory = {
           userId: userId,
           title: title
@@ -2964,11 +2970,13 @@ function showDownloadHistory(userId, title, filteredDownloads) {
       });
       let table = `<div>
       <table  id='history-table' class='table table-striped table mg-b-0 tx-12 tx-bold tx-uppercase' >
-          <thead>
-              <th>Download Name</th>
-              <th>Template Name</th>
-              <th>Part No.</th>
-              <th>Download Date</th>
+          <thead >
+              <th style='vertical-align:top min-width:150px'>File Name</th>
+              <th style='vertical-align:top min-width:150px'>Template Name</th>
+              <th style='vertical-align:top min-width:150px'>Part No.</th>
+              <th style='vertical-align:top min-width:150px'>Created Date</th>
+              <th style='vertical-align:top min-width:150px'>Download PDF</th>
+              <th style='vertical-align:top min-width:150px'>Delete PDF</th>
               </thead>
               <tbody class='history-table-body'>{tr}</tbody>
         </table></div>`;
@@ -2976,19 +2984,23 @@ function showDownloadHistory(userId, title, filteredDownloads) {
       let temp = "";
  
       filteredHistory ?. forEach(item => {
-        let dt = new Date(item.created_dt);
+        if(!item){
+            return;
+        }
+
+        let dt = new Date(item.dt);
         let formattedDate = getFormattedDate(dt);
-          let d = {};
-          if (item.data) {
-              d = JSON.parse(item.data);
-          }
           temp += tr.replace(
               "{td}",
               `
-    <td><strong>${ item.content }</strong></td>
-    <td >${ d.title || 'N/A' }</td>
-    <td>${d.ref_code}</td>
-    <td data-sort='${new Date(item.created_dt).getTime()}'>${ formattedDate }</td>` ) })
+    <td class='wd-150'><strong><a href='#' class='underline'  >${ item.fn }</a></strong></td>
+    <td class='wd-150'>${ item.tn || 'N/A' }</td>
+    <td class='wd-150'>${item.pn}</td>
+    <td class='wd-150' data-sort='${new Date(item.dt).getTime()}'>${ formattedDate }</td>
+    <td class='tx-center wd-150'><i ${item.pdf?`onclick="downloadUserPdf('${item.id}','${item.fn}','${type}')" id='pdf-download-${item.id}'`:""}  class='${item.pdf?'hand lnk-pdf-download':'lnk-pdf-download-disabled'} soft  fa fa-file-pdf-o' style='font-size: 18px;font-weight: bold;'></i></td>
+    <td class='tx-center wd-150'><i ${item.pdf?`onclick="deleteUserPdf('${item.id}','${type}')" id='pdf-delete-${item.id}'`:""} class='${item.pdf?'hand lnk-pdf-delete':'lnk-pdf-delete-disabled'} soft  ion-trash-b' style='font-size: 18px;font-weight: bold;'></i></td>`
+    
+    ) })
       table = table.replace("{tr}", temp);
       if (filteredHistory.length == 0) {
           table = "<p clsss='pd-y-20'>No Records Found.</p>"
@@ -2997,10 +3009,61 @@ function showDownloadHistory(userId, title, filteredDownloads) {
       $("#downloadHistoryTitle").text(_title);
       $("#downloadHistoryContent").html(table);
       $('#history-table').DataTable();
+     
 
   }
 
 $("#cbShutdown").on("click", onCbShutdownApplication);  
+
+function deleteUserPdf(id,type){
+    toast("Deleting PDF...");
+    $.ajax({
+        type: "DELETE",
+        url: `/api/pdf/${id}/${type}`,
+        success: function (res) {
+          
+            setTimeout(function () {
+                var $e = $(`#pdf-download-${id}`);
+                var $e2 = $(`#pdf-delete-${id}`); 
+                $e2.removeClass("lnk-pdf-delete");
+                $e.removeClass("lnk-pdf-download");
+                $e.addClass("lnk-pdf-delete-disabled");
+                $e2.addClass("lnk-pdf-download-disabled");
+                toast("PDF has been deleted.");
+            }, 1000)
+        },
+        error: function (res) {
+            toast("Error while deleting.");
+        }
+    })
+}
+function downloadUserPdf(id,fn,type){
+    
+    fetch(`/api/pdf/${id}/${type}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/pdf',
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.blob(); // Convert the response to a Blob
+    })
+    .then(blob => {
+        const url = window.URL.createObjectURL(blob); // Create a URL for the Blob
+        const a = document.createElement('a'); // Create a link element
+        a.style.display = 'none';
+        a.href = url;
+        a.download = fn; // Specify the filename for download
+        document.body.appendChild(a); // Append to the body
+        a.click(); // Trigger the download
+        window.URL.revokeObjectURL(url); // Clean up the URL
+        a.remove(); // Remove the link element
+    })
+    .catch(error => console.error('Error downloading the PDF:', error));
+}
 
 function onCbShutdownApplication(e) {
 const evt = $(this).prop("checked");
