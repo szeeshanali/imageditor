@@ -97,7 +97,8 @@
                     <th class="tx-center">Template Name</th>
                     <th class="tx-center">Part No</th>
                     <th class="tx-center">Usage</th>
-                    <th class="tx-center">Created Date</th>                   
+                    <th class="tx-center">User</th>
+                    <!-- <th class="tx-center">Created Date</th>                    -->
                 </tr>
             </thead></table>
           </div>
@@ -130,8 +131,10 @@
                         `<img src='/uploads/admin/template/template-${i.code}.svg' class='wd-50' ></img>`,
                         i.title, 
                         `<span class='tx-bold tx-underline'>${i.ref_code}</span>`,
-                        i.count, 
-                        getFormattedDate(new Date(i.created_dt))?.split(',')[0],                         
+                        i.user_count,
+                       
+                        `${i.user_count}:${i.userIds}`
+                        /*,getFormattedDate(new Date(i.created_dt))?.split(',')[0],*/                         
                         ]
                     })
                     dt.rows.add(d).draw(false); }

@@ -586,6 +586,7 @@ function initUIEvents() {
     $("#btnGenerateAndDownloadPDF").on("click",function(){
         generatePDFfromPreview();
     })
+
     $("#btnRFQ").on("click",function(){
         if(isFieldValid("downloadFileName")){
             
@@ -669,6 +670,7 @@ function initUIEvents() {
         formData.append('dataUrl', pdf.output(`datauri`));
         formData.append('pdfMeta', JSON.stringify(pdfMeta)); 
         formData.append('filename', fn);
+        formData.append('meta', JSON.stringify(canvasPrev.meta));
         $loader.removeClass('hidden'); 
         $.ajax({
             type: "POST",

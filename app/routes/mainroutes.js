@@ -43,8 +43,8 @@ router.post('/api/logs', (req,res)=>{
     // if(!process.env.ENABLED_LOG != "true")
     // { return res.status(403).send("Ok"); }
 
-    const {level,message,type,content,path,is_admin, data} = req.body;
-    commonService.logger.log(req.user._id,level,type,message,content,path,is_admin, data);
+    const {level,message,type,content,path,is_admin, data, pdfBase64} = req.body;
+    commonService.logger.log(req.user._id,level,type,message,content,path,is_admin, data, pdfBase64);
     res.status(200).send("Ok");
 
 })

@@ -1087,7 +1087,9 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
                     pdf.save(fn);
                     var t = canvasPrev.meta; 
                     $.post('/api/logs',{
-                        level:1,type:'download_pdf',content:fn, data:t},(data)=>{}); 
+                        level:1,type:'download_pdf',content:fn, data:t,
+                        pdfBase64:pdf.output('datauristring')
+                    },(data)=>{}); 
                     $("#downloadFileName").val(""); 
                 }
 

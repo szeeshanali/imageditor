@@ -12,6 +12,7 @@ const appusers            = require("../../models/appuser");
 const app_settings        = require("../../models/settings");
 const logs                = require("../../models/logs");
 const {isLoggedIn,isAdmin} = require('../../config/auth')
+const path = require('path');
 const passport = require('passport');
 const { default: mongoose, mongo } = require('mongoose');
 var moment = require('moment');
@@ -648,37 +649,15 @@ router.post('/api/filter/users', isAdmin, async (req,res)=>{
     
     const {startDate, endDate, name, email,delete_logs,displayAllUsers} = req.body;
     let filter = { deleted:false };
-     
-    
     if(startDate){
-      // let _m = startDate.split('/')[0];
-      // let _d = startDate.split('/')[1];
-      // let _y = startDate.split('/')[2]; 
-      // let _sd = new Date(_y,_m,_d);  
-      // let year =_sd.getFullYear();
-      // let month =_sd.getMonth()-1;
-      // let date =  _sd.getDate();
-      // filter.created_dt = { $gte: new Date(year ,month ,date)}
       filter.created_dt = { $gte: startDate}
     }
-    
     if(endDate){
-      // let _d = endDate.split('/')[1];
-      // let _m = endDate.split('/')[0];
-      // let _y = endDate.split('/')[2]; 
-      // let _ed = new Date(_y,_m,_d);
-
-      // let year =_ed.getFullYear();
-      // let month =_ed.getMonth()-1;
-      // let date =  _ed.getDate();
-
       if(!startDate)
       {
         filter.created_dt = { $lte: endDate}
-        //filter.created_dt = { $lte: new Date(year ,month ,date,23,59,59)} }
       }else{
         filter.created_dt.$lte = endDate;
-          //filter.created_dt.$lte = new Date(year, month, date,23,59,59);
        }            
     }
 
@@ -698,17 +677,19 @@ router.post('/api/filter/users', isAdmin, async (req,res)=>{
       filter.user_id = {$in:_userIds};    
     }
 
-
-
-
-    filter.type = "download_pdf";
+    //filter.type = "download_pdf";
     let projects = [];
-    if(delete_logs === 'false'){
-      downloads = await logs.find(filter,{_id:1,user_id:1}) 
-    }else{
+    let emailed = 0;
+    filter.type={};
+    filter.type= ["download_pdf","submit-design"];
+    var emailAndDownloadLogs = await logs.find(filter,{_id:1,user_id:1,type:1}) 
+    if(delete_logs == 'true'){
       await logs.deleteMany(filter);
-      downloads = await logs.find(filter,{_id:1,user_id:1}) 
     }
+    
+    downloads = emailAndDownloadLogs.filter(function(e){return e.type === "download_pdf"});
+    emailed   = emailAndDownloadLogs.filter(function(e){return e.type === "submit-design"});
+
 
     let users = await appusers.find({},{password:0});
     let userIds     = users.map(i=>i._id); 
@@ -727,7 +708,8 @@ router.post('/api/filter/users', isAdmin, async (req,res)=>{
     const out = {
       users : users, 
       projects: projects,
-      downloads: downloads
+      downloads: downloads,
+      emailed:emailed
     }
    
 
@@ -747,33 +729,19 @@ router.get('/api/filter/user-downloads/:id',  isAdmin, async (req,res)=>{
     const id = req.params["id"];
     const endDate = req.query["to"];
     const startDate = req.query["from"];
+    const type = req.query["type"];
+    
     let filter = {
       user_id:id, 
-      type:"download_pdf"
+      type:type
     }
 
     
     if(startDate){
-      // let _d = startDate.split('/')[1];
-      // let _m = startDate.split('/')[0]-1;
-      // let _y = startDate.split('/')[2]; 
-      // let _sd = new Date(_y,_m,_d,00,00,00).toLocaleString("en-US");  
-      // let year =_sd.getFullYear();
-      // let month =_sd.getMonth()-1;
-      // let date =  _sd.getDate();
       filter.created_dt = { $gt: startDate}
     }
     
     if(endDate){
-      // let _d = endDate.split('/')[1];
-      // let _m = endDate.split('/')[0]-1;
-      // let _y = endDate.split('/')[2]; 
-      // let _ed = new Date(_y,_m,_d,23,59,59).toLocaleString("en-US");
-
-      // let year =_ed.getFullYear();
-      // let month =_ed.getMonth()-1;
-      // let date =  _ed.getDate();
-
       if(!startDate)
       {filter.created_dt= { $lte: endDate} }
       else{
@@ -781,9 +749,59 @@ router.get('/api/filter/user-downloads/:id',  isAdmin, async (req,res)=>{
       }
     }
 
-console.log(filter)
-
-    let downloads = await logs.find(filter); 
+    let downloads = [];
+    let hasPdf =  [];
+    if(type == "download_pdf"){
+      downloads = await logs.find(filter,{pdfBase64:0});
+      var xfilter = filter;
+      xfilter.pdfBase64 = {$exists:true,$ne:null};
+      hasPdf = await logs.find(xfilter,{_id:1});
+    }else if(type == "submit-design"){
+      var xfilter = filter;
+      xfilter.data = {$exists:true,$ne:null};
+      downloads = await logs.find(filter,{pdfBase64:0});
+    }
+    let data = {};
+    let c = {};
+    downloads.forEach((e,i)=>{
+        try {
+          data = JSON.parse(e.data);
+          if(type === "submit-design"){
+          c = JSON.parse(e.content);
+          
+          downloads[i]= {
+            id: e._id,
+            fn: `${c.filename}.pdf`,
+            tn: data.title,
+            pn: data.ref_code,
+            pdf: (c.dataUrl != null && c.dataUrl.length > 0),
+            dt: e.created_dt
+          };
+         
+        }else{
+          downloads[i]= {
+            id: e._id,
+            fn: `${e.content}`,
+            tn: data.title,
+            pn: data.ref_code,
+            pdf: hasPdf.findIndex(x=>x._id.toString() === e._id.toString()) != -1,
+            dt: e.created_dt
+          };
+        }
+        } catch (error) {
+          downloads[i]={
+             id: e._id,
+             fn: "error content",
+             tn: "N/A",
+             pn: "N/A",
+             pdf: false,
+             dt: e.created_dt
+          };
+          return;
+        }
+      })
+   
+    
     return ok(res,downloads)
   }catch(ex){
     return error(res,ex)
@@ -901,7 +919,7 @@ router.get('/api/filter/top-templates',  isAdmin, async (req,res)=>{
         if(log.data)
         {
           let json = JSON.parse(log.data)
-          let templateFound = out.find(o=>o.templateId === json._id); 
+          let templateFound = out.find(o=>o.user_id == log.user_id.toString() && o.templateId == json._id); 
           if(!templateFound)
           {
             out.push({
@@ -911,10 +929,16 @@ router.get('/api/filter/top-templates',  isAdmin, async (req,res)=>{
               created_dt  : json.created_dt,
               link        : json.link,
               templateId  : json._id,
-              code        : json.code
+              code        : json.code, 
+              user_id     : log.user_id.toString(),
+              user_count  : 1,
+              userIds     : "",
             })
           }else{
-            out.find(o=>o.templateId === json._id).count +=1; 
+           // out.find(o=>o.templateId === json._id).count +=1; 
+           var f = out.find(o=>o.user_id ==log.user_id.toString());
+           f.user_count +=1;
+           f.userIds += log.user_id.toString() 
           }
         }
       })
@@ -1891,7 +1915,63 @@ router.put("/api/shutdown",isAdmin, async (req,res)=>{
 })
 //** Settings Routes */
 
+router.get("/api/pdf/:id/:type", isAdmin, async (req,res)=>{
+  const id = req.params["id"];
 
+  const type = req.params["type"];
+  var t = null; 
+  var pdfBase64 = "";
+  if(type==="download_pdf"){
+    t = await logs.find({_id:id},{pdfBase64:1}).exec();
+    pdfBase64 = t[0].pdfBase64;
+  }else{
+    t = await logs.find({_id:id},{content:1}).exec();
+    pdfBase64 = JSON.parse(t[0].content).dataUrl;
+  }
+  
+  if(!pdfBase64){
+    return res.status(204).send('No Content');
+  }
+  const base64Data = pdfBase64.replace(/^data:application\/pdf;base64,/, '');
+  const pdfBuffer = Buffer.from(base64Data, 'base64');
+
+  // Set the headers to indicate a file download
+  res.set({
+    'Content-Type': 'application/pdf',
+    'Content-Disposition': `attachment; filename="downloaded_file.pdf"`,
+    'Content-Length': pdfBuffer.length
+  });
+  // Send the buffer as a response
+  res.send(pdfBuffer);
+
+})
+
+router.delete("/api/pdf/:id/:type", isAdmin, async (req,res)=>{
+try {
+  const id = req.params["id"];
+  const type = req.params["type"];
+  if(type=="download_pdf"){
+    await logs.findOneAndUpdate({_id:id},{pdfBase64:null});
+  }else{
+    let log = await logs.findById(id);
+    let content =  JSON.parse(log.content);
+    content.dataUrl = null;  
+    log.content = JSON.stringify(content);
+    await log.save(); 
+    await logs.findOneAndUpdate({_id:id},{pdfBase64:null});
+  }
+
+  console.log(`user pdf has been deleted against : ${id}`);
+  return res.status(200).send({"status":200,"message":`Deleted successfully, Id:${id}`});
+} catch (error) {
+  console.error(`error deleting user pdf against : ${id}`);
+  return res.status(400).send({"status":400,"message":"Can't Deleted. Id is missing."});
+}
+ 
+  
+  
+
+})
 function error(res,ex)
 {
     console.log(ex.message);

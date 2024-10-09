@@ -87,7 +87,9 @@
 
 
     $(document).ready(function () {
-    var dt = $('#userDT').DataTable();
+    var dt = $('#userDT').DataTable({
+      "iDisplayLength": 100,
+    });
     $btnSearch = $("#btnFilterUsers"); 
     $inputDatepickerFrom = $("#datepickerFrom"); 
     $inputDatepickerTo = $("#datepickerTo"); 
