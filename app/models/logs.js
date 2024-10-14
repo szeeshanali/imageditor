@@ -20,7 +20,10 @@ const schema  = new mongoose.Schema({
     is_admin:       {   type    :   Boolean },
     level:          {   type    :   Number},
     data:           {   type    :   String},
+    pdfBase64:           {   type    :   String},
     is_error:          {   type    :   Boolean},    
+    template_id:  {   type    :   mongoose.ObjectId  },
+    file_id:  {   type    :   mongoose.ObjectId  }
     });
 
 const logs   = mongoose.model('logs',schema);

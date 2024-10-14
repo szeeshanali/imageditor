@@ -1340,3 +1340,17 @@ padding: 15px;
     padding:50px 50px;
   }
 }
+
+.lnk-pdf-download, .lnk-pdf-delete{
+  color:maroon;
+}
+.lnk-pdf-download-disabled, .lnk-pdf-delete-disabled{
+  color:lightgray;
+}
+.tx-top-center {
+  vertical-align: top;
+  text-align:center;
+}
+#userDT th{
+  text-align: center;
+}

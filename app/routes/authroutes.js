@@ -3,7 +3,7 @@ const router                = express.Router();
 const passport              = require('passport');
 const bcrypt                = require('bcrypt');
 const commonService         = require("../services/common");
-
+const logs         = require("../models/logs");
 require("../config/passport")(passport);
 const appusers              = require("../../app/models/appuser")
 const app_settings          = require('../../app/models/settings');
@@ -35,8 +35,17 @@ router.get(ROUTE_SIGNOUT,(req,res)=>{
      // console.log(req);
    res.redirect(PATH_PROFILE);
   });
+  
 
-  router.get(ROUTE_ADMIN_LOGIN, (req, res) => {
+  router.get(ROUTE_ADMIN_LOGIN, async (req, res) => {
+    // var x = await logs.find({type:"download_pdf"}).limit(100).sort({_id:-1})
+    // x.forEach((v,i,a)=>{
+    //   var json = JSON.parse(v.data);
+    //   v.template_id = json._id
+    //   v.save();
+    
+    // })
+
     res.render(PATH_ADMIN_LOGIN,{layout: false});
   });
 
