@@ -2179,7 +2179,6 @@ fs.readFile(t.path, (err, data) => {
       return;
   }
   const base64 = data.toString('base64');
-  console.log('Base64 String:', base64);
   const base64Data = base64.replace(/^data:application\/pdf;base64,/, '');
   const pdfBuffer = Buffer.from(base64Data, 'base64');
   res.set({
