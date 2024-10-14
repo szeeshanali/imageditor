@@ -67,16 +67,7 @@
                                 <div class=" tx-center tx-lato tx-inverse tx-bold tx-30"><%=report.totalProjects%></div>
 
                             </div>
-                            <!-- <div class="bd-r pd-x-10">
-                                <div class="tx-center tx-lato tx-inverse tx-bold tx-30"><%=report.thisWeekProjects%></div>
-                                <label class="tx-12">Last 7 Days</label>
-
-                            </div>
-                            <div class="pd-l-10">
-                             
-                                <div class="tx-lato tx-inverse tx-bold tx-center tx-30"><%=report.thisMonthProjects%></div>
-                                <label class="tx-12">Last 30 Days</label>
-                            </div> -->
+                            
                         </div>
                         <!-- d-flex -->
 
@@ -88,16 +79,19 @@
         </div>
 
         <div class="card pd-20  mg-t-20">
-            <h6 class="card-body-title">Top 10 Templates</h6>
+            <h6 class="card-body-title">Customer Report (Last 24 Hours)</h6>
 
             <table id="userDT" class="display tx-center" style="width:100%">
               <thead>
                 <tr>
-                    <th>Template</th>
-                    <th class="tx-center">Template Name</th>
-                    <th class="tx-center">Part No</th>
-                    <th class="tx-center">Usage</th>
+                    
                     <th class="tx-center">User</th>
+                    <th class="tx-center">Email</th>
+                    <th class="tx-center">Template</th>
+                    <th class="tx-center">Part No</th>
+                    <th class="tx-center">Page Size</th>
+                    <th class="tx-center">Page Format</th>
+                    <th class="tx-center">Template Usage</th>
                     <!-- <th class="tx-center">Created Date</th>                    -->
                 </tr>
             </thead></table>
@@ -128,13 +122,14 @@
                   { 
                     d = res.data.map(i=>{
                       return [
-                        `<img src='/uploads/admin/template/template-${i.code}.svg' class='wd-50' ></img>`,
-                        i.title, 
-                        `<span class='tx-bold tx-underline'>${i.ref_code}</span>`,
-                        i.user_count,
+                        i.user_nm,
+                        i.email,
+                        i.template_nm, 
+                        i.part_no, 
+                        i.page_size,
+                        i.page_format,
+                        i.count,
                        
-                        `${i.user_count}:${i.userIds}`
-                        /*,getFormattedDate(new Date(i.created_dt))?.split(',')[0],*/                         
                         ]
                     })
                     dt.rows.add(d).draw(false); }

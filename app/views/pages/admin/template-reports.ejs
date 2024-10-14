@@ -1,200 +1,220 @@
-
 <div class="row">
-    <div class="col-lg-3 pd-0">
-        <div class="card">
-            <%- include('../../partials/admin/report-panel'); %>
+  <div class="col-lg-3 pd-0">
+    <div class="card">
+      <%- include('../../partials/admin/report-panel'); %>
+    </div>
+
+  </div>
+  <div class="col-lg-9 ">
+    <div class="card bd-b pd-10 tx-uppercase tx-bold tx-inverse">Template Usage Report</div>
+
+    <div class="card pd-20  mg-t-20">
+      <h6 class="card-body-title">Filter Templates</h6>
+      <div class="row mg-b-10">
+        <div class="col-lg-4 mg-t-20 mg-lg-t-0">
+          <label class="form-control-label">Template Name: <span class="tx-danger"></span></label>
+          <div class="input-group">
+
+
+            <input type="text" class="form-control " placeholder="Enter Name" id="inputName">
+          </div>
+        </div>
+        <div class="col-lg-4 mg-t-20 mg-lg-t-0">
+          <label class="form-control-label">Template Part No: <span class="tx-danger"></span></label>
+          <div class="input-group">
+
+
+
+            <input type="text" class="form-control " placeholder="Enter Part No" id="inputPartNo">
+          </div>
+        </div>
+        <div class="col-lg-4 mg-t-20 mg-lg-t-0"></div>
+      </div>
+      <div class="row">
+        <div class="col-lg-4">
+          <label class="form-control-label">From Date:</label>
+          <div class="input-group">
+
+
+            <span class="input-group-addon"><i class="icon ion-calendar tx-16 lh-0 op-6" id="btnDatepickerFrom"></i></span>
+            <input type="text" class="form-control " placeholder="MM/DD/YYYY" id="datepickerFrom">
+          </div>
+
+        </div>
+        <div class="col-lg-4 mg-t-20 mg-lg-t-0">
+          <label class="form-control-label">To Date: </label>
+          <div class="input-group">
+
+            <span class="input-group-addon"><i class="icon ion-calendar tx-16 lh-0 op-6" id="btnDatepickerTo"></i></span>
+            <input type="text" class="form-control" placeholder="MM/DD/YYYY" id="datepickerTo">
+          </div>
         </div>
 
-    </div>
-    <div class="col-lg-9 ">
-        <div class="card bd-b pd-10 tx-uppercase tx-bold tx-inverse">Template Usage Report</div>
 
-        <div class="card pd-20  mg-t-20">
-            <h6 class="card-body-title">Filter Templates</h6>
-  <div class="row mg-b-10">
-    <div class="col-lg-4 mg-t-20 mg-lg-t-0">
-      <label class="form-control-label">Template Name: <span class="tx-danger"></span></label>
-                    <div class="input-group">
+        <div class="col-lg-4 mg-t-20 mg-lg-t-0">
 
-                      
-                      <input type="text" class="form-control " placeholder="Enter Name" id="inputName">
-                    </div>
-    </div>
-    <div class="col-lg-4 mg-t-20 mg-lg-t-0">
-      <label class="form-control-label">Template Part No: <span class="tx-danger"></span></label>
-                    <div class="input-group">
-
-                      
-
-                      <input type="text" class="form-control " placeholder="Enter Part No" id="inputPartNo">
-                    </div>
-    </div>
-    <div class="col-lg-4 mg-t-20 mg-lg-t-0"></div>
-  </div>
-            <div class="row">
-              <div class="col-lg-4">
-                <label class="form-control-label">From Date:</label>
-                    <div class="input-group">
-
-                      
-                      <span class="input-group-addon"><i class="icon ion-calendar tx-16 lh-0 op-6" id="btnDatepickerFrom"></i></span>
-                      <input type="text" class="form-control " placeholder="MM/DD/YYYY" id="datepickerFrom">
-                    </div>
-                
-              </div>
-              <div class="col-lg-4 mg-t-20 mg-lg-t-0">
-                <label class="form-control-label">To Date: </label>
-                <div class="input-group">
-                   
-                    <span class="input-group-addon"><i class="icon ion-calendar tx-16 lh-0 op-6" id="btnDatepickerTo"></i></span>
-                    <input type="text" class="form-control" placeholder="MM/DD/YYYY" id="datepickerTo">
-                  </div>
-              </div>
-             
-
-              <div class="col-lg-4 mg-t-20 mg-lg-t-0">
-
-                <div class="btn-group pd-t-30" role="group" aria-label="Basic example">
-                    <button type="button" id="btnFilterUsers" class="btn btn-primary pd-x-25 active tx-bold tx-uppercase tx-12">Search</button>
-                    <button type="button" id="btnFilterUserClear" class="btn btn-primary pd-x-25 tx-bold tx-uppercase tx-12">Clear</button>                
-                  </div>
-                </div>
-
-             
-            </div><!-- row -->
-  
-            
+          <div class="btn-group pd-t-30" role="group" aria-label="Basic example">
+            <button type="button" id="btnFilterUsers" class="btn btn-primary pd-x-25 active tx-bold tx-uppercase tx-12">Search</button>
+            <button type="button" id="btnFilterUserClear" class="btn btn-primary pd-x-25 tx-bold tx-uppercase tx-12">Clear</button>
           </div>
-          <div class="card pd-20  mg-t-20">
-            <h6 class="card-body-title">Records (<span id="lblTotalRecords">0</span>)</h6>
+        </div>
 
-            <table id="userDT" class="display tx-center" style="width:100%">
-              <thead>
-                <tr>
-                    <th>Template</th>
+
+      </div><!-- row -->
+
+
+    </div>
+    <div class="card pd-20  mg-t-20">
+      <h6 class="card-body-title">Records (<span id="lblTotalRecords">0</span>)</h6>
+
+      <table id="userDT" class="display tx-center" style="width:100%">
+        <thead>
+          <tr>
+            <th class="tx-center">Template</th>
+            <th class="tx-center">Part No</th>
+            <th class="tx-center">Page Size</th>
+            <th class="tx-center">Page Format</th>
+            <th class="tx-center">Template Usage</th>
+
+            <!-- <th>Template</th>
                     <th class="tx-center">Template Name</th>
                     <th class="tx-center">Part No</th>
                     <th class="tx-center">Usage</th>
-                    <th class="tx-center">Template Created Date</th>                   
-                </tr>
-            </thead></table>
-          </div>
+                    <th class="tx-center">Users</th> -->
+            <!--<th class="tx-center">Template Created Date</th>-->
+          </tr>
+        </thead>
+      </table>
     </div>
+  </div>
+  <%- include('../../partials/admin/popups/popup-template-usage'); %>
 
 </div>
-<script type="text/javascript"> 
-(function(){
+<script type="text/javascript">
+  (function () {
 
 
     $(document).ready(function () {
-    var dt = $('#userDT').DataTable({
-      "iDisplayLength": 100,
-    });
-    $btnSearch = $("#btnFilterUsers"); 
-    $inputDatepickerFrom = $("#datepickerFrom"); 
-    $inputDatepickerTo = $("#datepickerTo"); 
-    $btnClearSearch = $("#btnFilterUserClear");
-    $lblTotalRecords =$("#lblTotalRecords");
-    $btnDatepickerFrom = $("#btnDatepickerFrom"); 
-    $btnDatepickerTo = $("#btnDatepickerTo"); 
+      var dt = $('#userDT').DataTable({
+        "iDisplayLength": 100,
+      });
+      $btnSearch = $("#btnFilterUsers");
+      $inputDatepickerFrom = $("#datepickerFrom");
+      $inputDatepickerTo = $("#datepickerTo");
+      $btnClearSearch = $("#btnFilterUserClear");
+      $lblTotalRecords = $("#lblTotalRecords");
+      $btnDatepickerFrom = $("#btnDatepickerFrom");
+      $btnDatepickerTo = $("#btnDatepickerTo");
 
-    $inputName = $("#inputName"); 
-    $inputPartNo = $("#inputPartNo");
+      $inputName = $("#inputName");
+      $inputPartNo = $("#inputPartNo");
 
-    let filter = {
+      let filter = {
 
-      startDate : null,  
-      endDate   : null,
-      name      : null, 
-      partNo     : null
-    
-    }; 
+        startDate: null,
+        endDate: null,
+        name: null,
+        partNo: null
 
-    $btnDatepickerFrom.on("click",function(e){
-      $('#datepickerFrom').datepicker('show');
-      
-    })
-    $btnDatepickerTo.on("click",function(e){
-      $('#datepickerTo').datepicker('show');
-    })
+      };
 
-    $inputDatepickerFrom.on("change",function(e){
-      let fromDt = e.currentTarget.value;
-      let _d = fromDt.split('/')[1];
-      let _m = fromDt.split('/')[0]-1;
-      let _y = fromDt.split('/')[2]; 
-      filter.startDate = new Date(_y,_m,_d,00,00,00).toISOString();
-      //filter.startDate = e.currentTarget.value; 
-    })
-    $inputDatepickerTo.on("change",function(e){
-      let endDt = e.currentTarget.value;
-      let _d = endDt.split('/')[1];
-      let _m = endDt.split('/')[0]-1;
-      let _y = endDt.split('/')[2]; 
-      filter.endDate = new Date(_y,_m,_d,23,59,59).toISOString();
-     // filter.endDate = e.currentTarget.value; 
-    })
+      $btnDatepickerFrom.on("click", function (e) {
+        $('#datepickerFrom').datepicker('show');
 
-    $inputName.on("blur",function(e){
-      filter.name = e.currentTarget.value; 
-    })
-    $inputPartNo.on("blur",function(e){
-      filter.partNo = e.currentTarget.value; 
-    })
+      })
+      $btnDatepickerTo.on("click", function (e) {
+        $('#datepickerTo').datepicker('show');
+      })
+
+      $inputDatepickerFrom.on("change", function (e) {
+        let fromDt = e.currentTarget.value;
+        let _d = fromDt.split('/')[1];
+        let _m = fromDt.split('/')[0] - 1;
+        let _y = fromDt.split('/')[2];
+        filter.startDate = new Date(_y, _m, _d, 00, 00, 00).toISOString();
+        //filter.startDate = e.currentTarget.value; 
+      })
+      $inputDatepickerTo.on("change", function (e) {
+        let endDt = e.currentTarget.value;
+        let _d = endDt.split('/')[1];
+        let _m = endDt.split('/')[0] - 1;
+        let _y = endDt.split('/')[2];
+        filter.endDate = new Date(_y, _m, _d, 23, 59, 59).toISOString();
+        // filter.endDate = e.currentTarget.value; 
+      })
+
+      $inputName.on("blur", function (e) {
+        filter.name = e.currentTarget.value;
+      })
+      $inputPartNo.on("blur", function (e) {
+        filter.partNo = e.currentTarget.value;
+      })
 
 
-    $btnClearSearch.on("click",function(e){
-      $('#datepickerFrom').datepicker('setDate', null);
-      $('#datepickerTo').datepicker('setDate', null);
-      $("#inputName").val("");
-      $("#inputPartNo").val("");
+      $btnClearSearch.on("click", function (e) {
+        $('#datepickerFrom').datepicker('setDate', null);
+        $('#datepickerTo').datepicker('setDate', null);
+        $("#inputName").val("");
+        $("#inputPartNo").val("");
 
-    })
-    $btnSearch.on("click",function(e){
-      if(
-        !filter.startDate &&
-        !filter.endDate &&
-        !filter.name &&
-        !filter.partNo 
-         ){ 
+      })
+      $btnSearch.on("click", function (e) {
+        if (
+          !filter.startDate &&
+          !filter.endDate &&
+          !filter.name &&
+          !filter.partNo
+        ) {
           toast("Please enter any one search value")
-          return;}
+          return;
+        }
         dt.clear().draw();
-          $loader.removeClass("hidden");
-      $.ajax({
-                type: "POST",
-                url: "/api/filter/templates",
-                data: filter, 
-                async: false,
-                success: function (res) {
-                  $loader.addClass("hidden");
-                  if (isSessionExpired(res)) {
-                    return;
-                  }
-                
-                  let d = [];
-                  if(res.data)
-                  { 
-                    d = res.data.map(i=>{
-                      return [
-                        `<img src='/uploads/admin/template/template-${i.code}.svg' class='wd-50' ></img>`,
-                        i.title, 
-                        i.ref_code,
-                        i.count, 
-                        getFormattedDate(new Date(i.created_dt))?.split(',')[0],                         
-                        ]
-                    })
-                    dt.rows.add(d).draw(false); }
-                    $lblTotalRecords.text(d.length);
-                },error: function (request, status, error) {
-                  $lblTotalRecords.text(0);
-                  $loader.addClass("hidden");
-                },
-               
-            });
-    })
+        $loader.removeClass("hidden");
+        $.ajax({
+          type: "POST",
+          url: "/api/filter/templates",
+          data: filter,
+          async: false,
+          success: function (res) {
+            $loader.addClass("hidden");
+            if (isSessionExpired(res)) {
+              return;
+            }
 
-});
+            let d = [];
+            if (res.data) {
+              d = res.data.map(i => {
+                return [
+                  i.template_nm,
+                  i.part_no,
+                  i.page_size,
+                  i.page_format,
+                  `<a href='#' data-target='#popup-template-usage'  data-toggle='modal' onclick="show_template_usage('${i.template_id}')" class='tx-underline hand tx-bold' >${i.count}</a>`
+                    
 
-})($);
+                  // `<img src='/uploads/admin/template/template-${i.code}.svg' class='wd-50' ></img>`,
+                  // i.title, 
+                  // i.ref_code,
+                  // `<a href='#' class='tx-underline link' >${i.count}</a>` ,
+                  // i.users,
+                  // /*,getFormattedDate(new Date(i.created_dt))?.split(',')[0],*/                         
+                ]
+              })
+              dt.rows.add(d).draw(false);
+            }
+            $lblTotalRecords.text(d.length);
+         
+
+          }, error: function (request, status, error) {
+            $lblTotalRecords.text(0);
+            $loader.addClass("hidden");
+          },
+
+        });
+      })
+
+    });
+
+  })($);
+ 
 </script>

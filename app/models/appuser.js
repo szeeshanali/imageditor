@@ -10,14 +10,15 @@ const UserSchema  = new mongoose.Schema({
     address         :   {   type    :   String,  required   : false },
     is_admin        :   {   type    :   Boolean, default    : false },
     modified_by     :   {   type    :   Boolean, default    : false },
-    modified_dt     :   {   type    :   Date,     default    : Date.now },
+    modified_dt     :   {   type    :   Date      },
     date            :   {   type    :   Date,     default : Date.now },
     active          :   {   type    :   Boolean,   default : true },
     deleted         :   {   type    :   Boolean,   default : false },
     watermark       :   {   type    :   Boolean,   default : false },
     project_limit   :   {   type    :   Number,   default : 2 },
     download_count  :   {   type    :   Number,   default : 0 },
-    created_dt      :   {   type    :   Date,   default : Date.now }});
+    registered_dt   :   {   type    :   Date    },
+    created_dt      :   {   type    :   Date    }});
 
 const appusers   = mongoose.model('appusers',UserSchema);
 module.exports  = appusers;

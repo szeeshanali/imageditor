@@ -22,7 +22,8 @@ const schema  = new mongoose.Schema({
     data:           {   type    :   String},
     pdfBase64:           {   type    :   String},
     is_error:          {   type    :   Boolean},    
-    hasPDF:          {   type    :   Boolean},    
+    template_id:  {   type    :   mongoose.ObjectId  },
+    file_id:  {   type    :   mongoose.ObjectId  }
     });
 
 const logs   = mongoose.model('logs',schema);

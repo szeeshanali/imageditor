@@ -1347,3 +1347,10 @@ padding: 15px;
 .lnk-pdf-download-disabled, .lnk-pdf-delete-disabled{
   color:lightgray;
 }
+.tx-top-center {
+  vertical-align: top;
+  text-align:center;
+}
+#userDT th{
+  text-align: center;
+}

@@ -991,7 +991,7 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
     }
  
  }
-
+// download pdf 
  function generatePDFfromPreview(onServer, callback) {
     var fn = $("#downloadFileName").val();
     if(!isFieldValid("downloadFileName")){
@@ -1073,10 +1073,7 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
                             }else{
                                 l += 120;
                             }
-                           
                             pdf.addImage(watermark, 'PNG', l, t, 100, 100);
-                            
-                            
                         }
                        
                     }
@@ -1087,7 +1084,11 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
                     pdf.save(fn);
                     var t = canvasPrev.meta; 
                     $.post('/api/logs',{
-                        level:1,type:'download_pdf',content:fn, data:t,
+                        level:1,
+                        type:'download_pdf',
+                        content:fn,
+                        data:t,
+                        template_id:t._id,
                         pdfBase64:pdf.output('datauristring')
                     },(data)=>{}); 
                     $("#downloadFileName").val(""); 

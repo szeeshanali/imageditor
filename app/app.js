@@ -18,13 +18,11 @@ const clientroutes = require("../app/routes/client/clientroutes");
 const authroutes = require("../app/routes/authroutes");
 const mainroutes = require("../app/routes/mainroutes");
 const passport = require('passport');
-const logs = require("../app/models/logs");
 const appConfig = require("../app/models/config");
 const compression = require('compression');
-
-const path = require("path");
-const cron = require('node-cron');
+const jobs = require("../app/jobs");
 const {
+
   PORT,
   SESSION_SECRET,
   MONGO_CONN
@@ -107,48 +105,6 @@ app.listen(5001, () => {
 process.on('uncaughtException', function (err) {
   console.error(err.stack);
   console.log("Node NOT Exiting...");
-  //res.render("Server Error")
 });
 
-/** Job Scheduler */
-
-// every five minus
-cron.schedule('*/5 * * * *', async () => {
-  try {
-    
- 
-  const age = 0;
-  const dt = new Date(Date.now() - age * 24 * 60 * 60 * 1000);
-  const result = await logs.updateMany(
-    {
-      type: { $in: ["download_pdf"] }, "created_dt": { $lt: dt }
-    }, { pdfBase64: null });
-
-    console.log(`--> ${result.modifiedCount } download pdfs has been deleted after 7 days as per scheduled. ${dt}`);
-
-    let emailLogs = await logs.find({type:"submit-design", "created_dt": { $lt: dt }}); 
-    emailLogs.forEach((v,i,a)=>{
-      try {
-        let log = v ; 
-        if(!log.content){return;}
-        let jsonContent = JSON.parse(log.content);
-        if(jsonContent.dataUrl){
-          jsonContent.dataUrl = ""; 
-          log.content = JSON.stringify(jsonContent);
-          log.save()
-        } 
-      } catch (error) {
-       
-      }
-     
-    }); 
-
-  console.log(`-->  email pdfs has been deleted after 7 days as per scheduled. ${dt}`);
-} catch (error) {
- console.error(`--> Error in scheduler while deleting pdfs: ${error}`);   
-}
-
-});
-
-
-
+jobs.job_cleanup_pdfs();

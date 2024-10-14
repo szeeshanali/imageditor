@@ -628,7 +628,7 @@ router.get('/app/submit-design/:id', async (req, res) => {
     res.render("pages/client/submit-design", { layout: false, data: content });
 
 })
-
+// send email
 router.post('/api/rfq', isLoggedIn, async (req, res) => {
     const { companyName, name, phone, sheets, email, additionalInfo, file, date } = req.body;
     const rfqSettings = await appConfig.findOne({ type: 'QUOTE' });
@@ -636,11 +636,32 @@ router.post('/api/rfq', isLoggedIn, async (req, res) => {
     const appSettings = await appConfig.findOne({ type: 'APP' });
     var form = new formidable.IncomingForm();
     var formfields = await new Promise(function (resolve, reject) {
-        form.parse(req, function (err, fields, _file) {
+        form.parse(req, async function (err, fields, _file) {
             try {
+               let dataUrl = fields.dataUrl; 
+                const fileId = new mongoose.Types.ObjectId();
+                var tid = mongoose.Types.ObjectId(fields.template_id);
+                const now = new Date();
+                const current_dt = now.toISOString().split('T')[0]; // YYYY-MM-DD
+                const dir = `./public/uploads/client/pdfs/${current_dt}/emails`;
+                const filePath = `${dir}/${fileId}-${fields.filename}.pdf`;
+                    try {
+
+                        await fs.mkdir(`${dir}`, { recursive: true }, async (e) => {
+                            let _base64Alter = dataUrl.replace(/^data:application\/pdf;base64,/, '');
+                            await fs.writeFileSync(filePath, _base64Alter, { encoding: 'base64' });
+                        });
+
+                    } catch (error) {
+                        console.error(`Could not save Pdf file : Exception: ${error}`);
+                    }
+                
+
 
                 //let dataUrl = canvasPrev.meta;
+                //var meta = JSON.parse(fields.meta);
                 delete fields.data;
+                delete fields.dataUrl;
                 const _id = mongoose.Types.ObjectId();
                 let _log = new logs({
                     user_id: req.user._id,
@@ -648,14 +669,14 @@ router.post('/api/rfq', isLoggedIn, async (req, res) => {
                     level: 1,
                     message: 'submit-design',
                     content: JSON.stringify(fields),
-                    type: 'submit-design',
-                    path: `/submit-design/${_id}`,
+                    type: "submit-design",
+                    path: filePath,
                     is_admin: false,
-                    data: fields.meta
+                    // data: fields.meta,
+                    file_id:fileId,
+                    template_id: tid
                 })
                 _log.save();
-
-
                 const transporter = nodemailer.createTransport({
                     host: smtpSettings.SMTP_HOST,
                     port: smtpSettings.SMTP_PORT,
@@ -701,7 +722,7 @@ router.post('/api/rfq', isLoggedIn, async (req, res) => {
                         html: template,
                         attachments: {
                             filename: filename,
-                            path: fields["dataUrl"]
+                            path: dataUrl
                         }
                     });
                     console.log("email sent!");

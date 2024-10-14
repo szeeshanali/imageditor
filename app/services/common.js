@@ -362,7 +362,7 @@ const commonService = (function() {
         this.cached_categoryItems = [];
     }
 
-    this.addLogs = (user_id,level,type,message,content,path,is_admin, data, pdfBase64)=>{
+    this.addLogs = (user_id,level,type,message,content,path,is_admin, data, pdfBase64, template_id, file_id)=>{
         let _log = new logs({
             user_id: user_id,
             level:level,
@@ -372,7 +372,9 @@ const commonService = (function() {
             path:path,
             is_admin:is_admin, 
             data: JSON.stringify(data),
-            pdfBase64:pdfBase64            
+            template_id:template_id,
+            file_id:file_id
+            //pdfBase64:pdfBase64            
         })
         _log.save();
     }

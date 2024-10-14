@@ -5,7 +5,7 @@ const uploads               = require("../models/uploads");
 const categories            = require("../models/categories");
 const commonService = require('../services/common');
 const path = require('path');
-
+const fs = require('fs');
 router.get('/api/category/:id', async (req,res)=>{
     const categoryId = req.params["id"]; 
     if(!categoryId)
@@ -37,14 +37,31 @@ router.get('/api/templates', async (req,res)=>{
     var items = await uploads.find({type:'template',uploaded_by:"admin",active:true}).sort({order_no:1});    
     if(!items)
     {console.log(`category items not found against ${itemid}`)}
-    res.send(items);
+    // res.send(items);
 })
-router.post('/api/logs', (req,res)=>{
-    // if(!process.env.ENABLED_LOG != "true")
-    // { return res.status(403).send("Ok"); }
+router.post('/api/logs', async (req,res)=>{
+   
+    const {level,message,type,content,path,is_admin, data, pdfBase64, template_id} = req.body;
+    const fileId = new mongoose.Types.ObjectId();
+    var tid = mongoose.Types.ObjectId(template_id);
+    const now = new Date();
+    const current_dt = now.toISOString().split('T')[0]; // YYYY-MM-DD
+    const dir = `./public/uploads/client/pdfs/${current_dt}/downloads`;
+    const filePath = `${dir}/${fileId}-${content}`;
 
-    const {level,message,type,content,path,is_admin, data, pdfBase64} = req.body;
-    commonService.logger.log(req.user._id,level,type,message,content,path,is_admin, data, pdfBase64);
+    if(type === "download_pdf"){
+        try {
+         
+            await fs.mkdir(`${dir}`, { recursive: true }, async (e)=>{
+                let _base64Alter = pdfBase64.replace(/^data:application\/pdf;base64,/, '');
+                await fs.writeFileSync(filePath,_base64Alter,{ encoding: 'base64' }); 
+            });
+
+        } catch (error) {
+            console.error(`Could not save Pdf file : Exception: ${error}`); 
+        }
+    }
+    commonService.logger.log(req.user._id,level,type,message,content,filePath,is_admin, data,null, tid,fileId);
     res.status(200).send("Ok");
 
 })

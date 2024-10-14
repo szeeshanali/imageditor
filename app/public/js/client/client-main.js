@@ -589,7 +589,6 @@ function initUIEvents() {
 
     $("#btnRFQ").on("click",function(){
         if(isFieldValid("downloadFileName")){
-            
             $("#downloadPDFModel").modal("toggle");
             $("#rfq").modal("toggle");
         }
@@ -637,16 +636,11 @@ function initUIEvents() {
         
         })
         if(!isFormValid) return; 
-
-       
         let form = $(this);
         let formElem = $("#_formRFQ")[0];
-        //let actionUrl = form.attr('action');
         let formData = new FormData(formElem);
         let width = canvasPrev.backgroundImage.viewBoxWidth;
         let height = canvasPrev.backgroundImage.viewBoxHeight;
-        //let pageFormat = getPageFormatByDimensions(width,height);           
-        
         var meta = JSON.parse(canvasPrev.meta.meta);
         let pageFormat = meta.pageFormat;
         
@@ -659,18 +653,17 @@ function initUIEvents() {
                 format: pageFormat,
                 putOnlyUsedFonts: true
             },
-//            dataUrl:
         }
-        //formData.append('dataUrl', canvasPrev.toDataURL({format:"png",quality:1.0}));
         var pdf=    new jsPDF(pdfMeta.pdfSettings);
         width = pdf.internal.pageSize.getWidth();
         height = pdf.internal.pageSize.getHeight();
         let dataUrl = canvasPrev.toDataURL({format:"png",quality:1.0, multiplier:3});
         pdf.addImage(dataUrl, 'jpeg', 0, 0,width,height,undefined,'FAST');
-        formData.append('dataUrl', pdf.output(`datauri`));
+        formData.append('dataUrl',  pdf.output(`datauri`));
         formData.append('pdfMeta', JSON.stringify(pdfMeta)); 
         formData.append('filename', fn);
-        formData.append('meta', JSON.stringify(canvasPrev.meta));
+        //formData.append('meta', JSON.stringify(canvasPrev.meta));
+        formData.append('template_id', canvasPrev.meta._id);
         $loader.removeClass('hidden'); 
         $.ajax({
             type: "POST",
