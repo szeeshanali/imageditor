@@ -3043,11 +3043,13 @@ $("#cbShutdown").on("click", onCbShutdownApplication);
 
 function deleteUserPdf(id, type) {
     toast("Deleting PDF...");
+    if(!confirm(`Do you want to remove this PDF?`))
+    {return;}
+    
     $.ajax({
         type: "DELETE",
         url: `/api/pdf/${id}/${type}`,
         success: function (res) {
-
             setTimeout(function () {
                 var $e = $(`#pdf-download-${id}`);
                 var $e2 = $(`#pdf-delete-${id}`);
