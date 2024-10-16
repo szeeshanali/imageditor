@@ -252,6 +252,9 @@ $("#btnDisplayGrid").on("click", function (e) {
 
         // Draw curved text here initially too, while we need to know the width and height.
         var ___canvas = this.getCircularText();
+        if(!___canvas){
+            return;
+        }
         this._trimCanvas(___canvas);
         this.set('width', ___canvas.width);
         this.set('height', ___canvas.height);
@@ -272,7 +275,9 @@ $("#btnDisplayGrid").on("click", function (e) {
     },
 
     _trimCanvas: function (canvas) {
-        var ctx = canvas.getContext('2d'),
+        if(!canvas){ return; }
+
+        var ctx = canvas.getContext('2d',{ willReadFrequently: true }),
             w = canvas.width,
             h = canvas.height,
             pix = {
@@ -310,16 +315,22 @@ $("#btnDisplayGrid").on("click", function (e) {
 
     // Source: http://jsfiddle.net/rbdszxjv/
     getCircularText: function () {
-        
+        console.log(`getCircularText ${this.id}`)
+        const $curvElem = $("#inputCurvedText");
+        const $flipElem = $("#inputFlipText"); 
+        const flipId = $flipElem.attr("data-id");
+        const flipable = (flipId == this.id);
+
+
         var text = this.text,
             diameter = this.diameter,
-            flipped = $("#inputFlipText").prop("checked") || this.flipped,
+            flipped = (flipable && $flipElem.prop("checked")) || this.flipped,
             kerning = this.kerning,
             fill = this.fill,
             inwardFacing = true,
             startAngle = 0,
             canvas = fabric.util.createCanvasElement(),
-            ctx = canvas.getContext('2d'),
+            ctx = canvas.getContext('2d',{ willReadFrequently: true }),
             cw, // character-width
             x, // iterator
             clockwise = -1;
@@ -487,9 +498,7 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
             }
 
             $(`#${data.code} > .card`).addClass('selected-template');
-
             fabric.loadSVGFromURL(data.base64, function(objects, options) {      
-
                 const svgBase64 = data.base64;
                 if (! svgBase64) {
                 toast("Error loading Template.");       
@@ -1688,6 +1697,8 @@ function initContextMenu()
             _canvas.add(item);
             _canvas.setActiveObject(item);
             _canvas.renderAll();
+
+            $("#inputFlipText").attr("data-id",item.id);
        
         } else {
             //$("#inputFlipText").prop('checked',false);
@@ -1798,6 +1809,7 @@ function initContextMenu()
         let _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
         let _ = _canvas.getActiveObject()    
         let t = _.get('type');
+        
         if (t == "i-text" || t == "curved-text") {   
            // _.lockScalingX = _.lockScalingY = true;    
            //_.hasControls = false;

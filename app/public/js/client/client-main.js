@@ -1146,19 +1146,6 @@ function updateTextControls(e){
 
    $("#inputStrokeText").prop("checked",!!item.stroke); 
    $("#text-letter-spacing").val(item.charSpacing||10)
-   
-//    if(isBold)
-//    { $("#bold").parent().addClass("active"); }
-//    else{ $("#bold").parent().removeClass("active"); }
-
-//    if(isItalic)
-//    { $("#italic").parent().addClass("active"); }
-//    else{ $("#italic").parent().removeClass("active"); }
-
-//    if(isUnderline)
-//    { $("#underline").parent().addClass("active"); }
-//    else{ $("#underline").parent().removeClass("active"); }
-
 
     elemActiveInActive($elemRightAlign  ,isRight); 
     elemActiveInActive($elemLeftAlign   ,isLeft);
@@ -1167,24 +1154,6 @@ function updateTextControls(e){
     elemActiveInActive($elemItalic      ,isItalic);
     elemActiveInActive($elemUnderline   ,isUnderline); 
     
-
-//     if(isBold){ 
-//         $("#bold").addClass("active"); 
-//     }else{ 
-//         $("#bold").removeClass("active"); 
-//     }
-
-//    if(isItalic){ 
-//        $("#italic").addClass("active"); 
-//     }else{ 
-//         $("#italic").removeClass("active"); 
-//     }
-
-//     if(isUnderline){ 
-//         $("#underline").addClass("active"); 
-//     }else{ 
-//        $("#underline").removeClass("active"); 
-//     }
 
    if(item.strokeWidth){ 
         if($("#inputStrokeText").is(":checked")){ 
@@ -1203,14 +1172,25 @@ function updateTextControls(e){
     document.querySelector('#fontColorBox').jscolor.fromString(item.fill);
 
     if(isCurvedText){ 
-    
-        $("#inputCurvedText").prop("checked",true);
-        $("#inputFlipText").prop("checked",item.flipped);
+        const $flipElem =$("#inputFlipText");
+        const flipable = ($flipElem.attr("data-id") == item.id); 
+        $("#inputFlipText").attr("data-id",item.id)
+        $("#inputCurvedText").attr("data-id",item.id)
+        //$("#inputCurvedText").val(true);
+        document.getElementById("inputCurvedText").checked = true;
+        document.getElementById("inputFlipText").checked = (flipable && item.flipped);
+        //$("#inputFlipText").val(item.flipped);
         $("#curveTextCtrl").val(item.diameter);
+
+        // $("#inputCurvedText").prop("checked",true);
+        // $("#inputFlipText").prop("checked",item.flipped);
+         //$("#curveTextCtrl").val(item.diameter);
     
     }else{ 
-        $("#inputCurvedText").prop("checked",false);
-        $("#inputFlipText").prop("checked",false);
+        document.getElementById("inputCurvedText").checked = false;
+        document.getElementById("inputFlipText").checked = false;
+       // $("#inputCurvedText").prop("checked",false);
+       // $("#inputFlipText").prop("checked",false);
         $("#curveTextCtrl").val("1250");
     }
 
@@ -1459,9 +1439,16 @@ function mainControls(show) {
 }
 function initCanvasTextEvents() {
     
-    $("#inputFlipText").on("click",function(){
+    $("#inputFlipText").on("click",function(e){
         var _canvas = state.isPreviewCanvas?canvasPrev:canvas;
         var obj = _canvas.getActiveObject(); 
+        
+        if(obj.type != "curved-text"){
+            toast("Please select a curved text");
+            event.preventDefault();
+            return;
+        }
+        
         const flipped = $("#inputFlipText").is(':checked'); 
         obj.set("flipped",flipped);
         _canvas.renderAll();

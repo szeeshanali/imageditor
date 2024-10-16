@@ -330,7 +330,7 @@ ruler.prototype.rulerConstructor =  function(_canvas, options, rulDimension)
 {
 
     var canvas = _canvas,
-        context = canvas.getContext('2d'),
+        context = canvas.getContext('2d',{ willReadFrequently: true }),
         rulThickness = 0,
         rulLength = 0,
         rulScale = 1,

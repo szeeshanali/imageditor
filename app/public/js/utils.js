@@ -266,8 +266,10 @@ function getFormattedDate(dt){
 
 function curveText(obj)
 {
-    var flipped = $("#inputFlipText").prop("checked");
-    obj.flipped = flipped;
+    const $flipElem = $("#inputFlipText");
+    const flipped = $flipElem.prop("checked");
+    const flipable = (obj.id == $flipElem.attr('data-id'));
+    obj.flipped = flipable && (flipped || obj.flipped);
     var ct = new fabric.CurvedText(obj.text, {
         type: 'curved-text',
         diameter: parseInt($("#curveTextCtrl").val()) || 500,
@@ -276,7 +278,7 @@ function curveText(obj)
         fontFamily: obj.fontFamily,
         fontSize: obj.fontSize,
         kerning: 0,
-        flipped: flipped,
+        flipped: obj.flipped,
         fill: obj.fill,
         fontSize: obj.fontSize, // in px
         fontWeight: obj.fontWeight,
@@ -371,7 +373,7 @@ const processFiles = (files) => {
                         var canvasEl = document.createElement("canvas")
                         canvasEl.height = viewport.height;
                         canvasEl.width = viewport.width;
-                        page.render({canvasContext: canvasEl.getContext('2d'), viewport: viewport}).then(function () {
+                        page.render({canvasContext: canvasEl.getContext('2d',{ willReadFrequently: true }), viewport: viewport}).then(function () {
                             var bg = canvasEl.toDataURL("image/png");
                             fabric.Image.fromURL(bg, function (img) {
                                 // img.scaleToWidth(canvas.width);

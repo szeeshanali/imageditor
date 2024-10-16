@@ -76,7 +76,7 @@ const getRealBBox = async (obj) => {
       tempCanv.style.position = 'absolute';
       tempCanv.style.top = '-100%';
       tempCanv.style.visibility = 'hidden';
-      ctx = tempCanv.getContext('2d');
+      ctx = tempCanv.getContext('2d',{ willReadFrequently: true });
       document.body.appendChild(tempCanv);
     }
 

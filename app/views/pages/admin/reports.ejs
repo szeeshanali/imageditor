@@ -241,8 +241,9 @@
                   { 
                     d = res.data.map(i=>{
                       let projects = [];
-                      let download_ct = i.dct;
-                      let email_ct = i.ect;
+                      const download_ct = i.dct;
+                      const email_ct = i.ect;
+                      const proj_ct = i.pct;
                       //let projects = (res.data.projects.filter(p=>p.uploaded_by == i._id)?.length || 0); 
                       //let downloads = (res.data.downloads.filter(d=>d.user_id == i._id)?.length || 0); 
                       //let emailed = (res.data.emailed.filter(d=>d.user_id == i._id)?.length || 0); 
@@ -252,7 +253,7 @@
                         (i.act==true)?"<i title='Enabled' class='tx-20 text-success ion-checkmark-circled' ></i>":"<i title='Enabled' class='tx-20 text-danger ion-close-circled' ></i>", 
                         // new Date(i.created_dt)?.toLocaleString("en-US")?.split(',')[0],                         
                         i.plmt,
-                         projects == 0?projects:`<a href='#' onclick='getUserSavedProjects("${i.uid}","${i.unm}")' data-target='#popupProjectHistory' data-toggle='modal' class='tx-bold tx-underline'>${i.pct}</a>`,
+                        proj_ct == 0?proj_ct:`<a href='#' onclick='getUserSavedProjects("${i.uid}","${i.unm}")' data-target='#popupProjectHistory' data-toggle='modal' class='tx-bold tx-underline'>${proj_ct}</a>`,
                          download_ct == 0?download_ct:`<a href='#' data-target='#popupDownloadHistory' onclick='getUserDownloads("${i.uid}","${i.unm}","download_pdf")' data-toggle='modal' class='tx-bold tx-underline'>${download_ct}</a>`,
                          email_ct == 0?email_ct:`<a href='#' data-target='#popupDownloadHistory' onclick='getUserDownloads("${i.uid}","${i.unm}","submit-design")' data-toggle='modal' class='tx-bold tx-underline'>${email_ct}</a>`,
                         (i.wmk==true)?"<i title='Enabled' class='tx-20 text-success ion-checkmark-circled' ></i>":"<i title='Enabled' class='tx-20 text-danger ion-close-circled' ></i>", 

@@ -2600,8 +2600,9 @@ function initCanvasTextEvents() {
     $("#inputFlipText").on("click", function () {
         var _canvas = state.isPreviewCanvas ? canvasPrev : canvas;
         var obj = _canvas.getActiveObject();
-        const flipped = $("#inputFlipText").is(':checked');
-        obj.set("flipped", flipped);
+      
+        const is_flipped = $("#inputFlipText").is(':checked');
+        obj.set("flipped", is_flipped);
         _canvas.renderAll();
     })
     $("#inputStrokeText").on("click", function (e) {
@@ -2676,7 +2677,7 @@ function editCustomer(user) {
     $("#edit-user-container .created_dt").val(getFormattedDate(new Date(user.dt)));
     $("#edit-user-container .is_admin").prop("checked", user.adm);
     $("#edit-user-container .is_active").prop("checked", user.act);
-    $("#edit-user-container .watermark").prop("checked", user.wmk);
+    $("#edit-user-container .watermark").prop("checked", user.wm);
 }
 function deleteCustomer(id) {
     if (confirm("Do you want to delete this user?")) {

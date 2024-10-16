@@ -150,10 +150,10 @@ router.get('/api/svg-templates/:id/:t?', isLoggedIn, async (req, res) => {
     const itemid = req.params["id"];
     var result = null;
     if (itemid == "default") {
-        result = await uploads.findOne({ type: 'template', by_admin: true, active: true, default: true }, { json: 0 });
+        result = await uploads.findOne({ type: 'template', active: true, default: true }, { json: 0 });
         if (result == null) {
             result = await uploads.findOne({
-                type: 'template', by_admin: true, active: true
+                type: 'template', active: true
             }, { json: 0 }).sort({ order_no: 1 });
         }
     } else {

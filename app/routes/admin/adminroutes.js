@@ -698,9 +698,9 @@ router.post('/api/filter/users', isAdmin, async (req, res) => {
     let xuser = undefined;
     users.forEach(e=>{
       const userId = e._id.toString();
-      let dcount  = downloads.filter(i=>i == userId).length;  
-      let ecount = emailed.filter(i=>i == userId).length;
-      let pcount = projects.filter(i=>i.uploaded_by.toString() == userId) | 0; 
+      const dcount  = downloads.filter(i=>i == userId).length | 0;  
+      const ecount = emailed.filter(i=>i == userId).length | 0;
+      const pcount = projects.filter(i=>i.uploaded_by.toString() == userId).length | 0; 
       out.push({
         unm:`${e.fname}`,
         eml:e.email,
