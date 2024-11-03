@@ -107,4 +107,8 @@ process.on('uncaughtException', function (err) {
   console.log("Node NOT Exiting...");
 });
 
-jobs.job_cleanup_pdfs();
+/** setInterval helps to get the latest changes from the database */
+setInterval(function(){
+  
+  jobs.job_cleanup_pdfs();
+},1000*60)

@@ -11,7 +11,7 @@
     <div class="card pd-20  mg-t-20">
       <h6 class="card-body-title">Filter Templates</h6>
       <div class="row mg-b-10">
-        <div class="col-lg-4 mg-t-20 mg-lg-t-0">
+        <!--<div class="col-lg-4 mg-t-20 mg-lg-t-0">
           <label class="form-control-label">Template Name: <span class="tx-danger"></span></label>
           <div class="input-group">
 
@@ -27,7 +27,7 @@
 
             <input type="text" class="form-control " placeholder="Enter Part No" id="inputPartNo">
           </div>
-        </div>
+        </div>-->
         <div class="col-lg-4 mg-t-20 mg-lg-t-0"></div>
       </div>
       <div class="row">
@@ -189,15 +189,7 @@
                   i.part_no,
                   i.page_size,
                   i.page_format,
-                  `<a href='#' data-target='#popup-template-usage'  data-toggle='modal' onclick="show_template_usage('${i.template_id}')" class='tx-underline hand tx-bold' >${i.count}</a>`
-                    
-
-                  // `<img src='/uploads/admin/template/template-${i.code}.svg' class='wd-50' ></img>`,
-                  // i.title, 
-                  // i.ref_code,
-                  // `<a href='#' class='tx-underline link' >${i.count}</a>` ,
-                  // i.users,
-                  // /*,getFormattedDate(new Date(i.created_dt))?.split(',')[0],*/                         
+                  `<a href='#' data-target='#popup-template-usage'  data-toggle='modal' onclick="show_template_usage('${i.template_id}','${filter.startDate||''}','${filter.endDate||''}','${filter.name||''}','${filter.partNo||''}')" class='tx-underline hand tx-bold' >${i.count}</a>`
                 ]
               })
               dt.rows.add(d).draw(false);

@@ -660,64 +660,64 @@ router.post('/api/filter/users', isAdmin, async (req, res) => {
 
     //filter.type = "download_pdf";
     filter.type = {};
-    filter.type = {$in:["download_pdf", "submit-design"]};
-   
+    filter.type = { $in: ["download_pdf", "submit-design"] };
+
     var emailAndDownloadLogs = await logs.find(filter, { _id: 1, user_id: 1, type: 1 })
     if (delete_logs == 'true') {
       await logs.deleteMany(filter);
     }
     const filterString = JSON.stringify(filter);
 
-    const downloads = emailAndDownloadLogs.filter(e=> e.type === "download_pdf" && e.user_id != undefined )
-              .map(i=>i.user_id);
+    const downloads = emailAndDownloadLogs.filter(e => e.type === "download_pdf" && e.user_id != undefined)
+      .map(i => i.user_id);
     console.log(`${downloads.length} downloads found in log against ${filterString}`);
-    const emailed = emailAndDownloadLogs.filter(e=> e.type === "submit-design" && e.user_id != undefined )
-    .map(i=>i.user_id);
+    const emailed = emailAndDownloadLogs.filter(e => e.type === "submit-design" && e.user_id != undefined)
+      .map(i => i.user_id);
     console.log(`${emailed.length} emails found in log against ${filterString}`);
-    const userIds = emailAndDownloadLogs.map(i=>(i.user_id?i.user_id.toString():undefined)).filter((value) => value !== undefined);
+    const userIds = emailAndDownloadLogs.map(i => (i.user_id ? i.user_id.toString() : undefined)).filter((value) => value !== undefined);
     console.log(`${userIds.length} userIds found in log against ${filterString}`);
     const userSet = new Set(userIds);
     const uniqueUsersIds = [...userSet];
-    
+
 
     console.log(`${uniqueUsersIds.length} unique userIds found in log against ${filterString}`);
-    const users = await appusers.find({_id:{$in:uniqueUsersIds}});
+    const users = await appusers.find({ _id: { $in: uniqueUsersIds } });
     console.log(`${users.length} users found.`);
-    const projects = await uploads.find({uploaded_by:{$in:uniqueUsersIds}, type: 'project', active:true, deleted:false }, { _id: 1, uploaded_by: 1 });
+    const projects = await uploads.find({ uploaded_by: { $in: uniqueUsersIds }, type: 'project', active: true, deleted: false }, { _id: 1, uploaded_by: 1 });
     //userIds = userIds.concat(projects.map(i => i.uploaded_by));
 
     if (displayAllUsers == "false") {
       //userIds = downloads.map(i => i.user_id) || [];
     }
-    
+
     // if (filter.user_id) {
     //   userIds = filter.user_id.$in.map(i => i._id);
     // }
     // users = await appusers.find({ _id: { $in: userIds } }, { password: 0 }).sort({ created_dt: -1 });
-    let out =[];
+    let out = [];
     let xuser = undefined;
-    users.forEach(e=>{
+    users.forEach(e => {
       const userId = e._id.toString();
-      const dcount  = downloads.filter(i=>i == userId).length | 0;  
-      const ecount = emailed.filter(i=>i == userId).length | 0;
-      const pcount = projects.filter(i=>i.uploaded_by.toString() == userId).length | 0; 
+      const dcount = downloads.filter(i => i == userId).length | 0;
+      const ecount = emailed.filter(i => i == userId).length | 0;
+      const pcount = projects.filter(i => i.uploaded_by.toString() == userId).length | 0;
       out.push({
-        unm:`${e.fname}`,
-        eml:e.email,
-        act:e.active,
-        plmt:e.project_limit,
-        pct:pcount,
-        dct:dcount,
-        ect:ecount,
-        wm:e.watermark,
-        edt:1,
+        unm: `${e.fname}`,
+        eml: e.email,
+        act: e.active,
+        plmt: e.project_limit,
+        pct: pcount,
+        dct: dcount,
+        ect: ecount,
+        wm: e.watermark,
+        edt: 1,
         uid: e._id,
-        typ:e.type,
-        dt:e.created_dt,
-        adm:e.is_admin,
-        cnm:e.company_name
-    });
-  })
+        typ: e.type,
+        dt: e.created_dt,
+        adm: e.is_admin,
+        cnm: e.company_name
+      });
+    })
 
 
     return ok(res, out)
@@ -754,7 +754,7 @@ router.get('/api/filter/user-downloads/:id', isAdmin, async (req, res) => {
         filter.created_dt.$lte = endDate;
       }
     }
-    filter.type.$in = ['download_pdf','submit-design'];
+    filter.type.$in = ['download_pdf', 'submit-design'];
 
     /**
      * update records 
@@ -772,11 +772,11 @@ router.get('/api/filter/user-downloads/:id', isAdmin, async (req, res) => {
       
       await Promise.all(x.map(i => i.save()));
  */
-     /**/
-    const downloads = await logs.find(filter, { template_id:1, type:1, content:1, created_dt:1, file_id:1 });
+    /**/
+    const downloads = await logs.find(filter, { template_id: 1, type: 1, content: 1, created_dt: 1, file_id: 1 });
     const templateIds = [...new Set(downloads.map(i => i.template_id))];
     console.log(`found template ids: ${templateIds.length}`);
-    let templates = await uploads.find({ type:"template", _id: { $in: templateIds } }, { title: 1, ref_code: 1 });
+    let templates = await uploads.find({ type: "template", _id: { $in: templateIds } }, { title: 1, ref_code: 1 });
     console.log(`found templates: ${templates.length}`);
     downloads.forEach((e, i) => {
       try {
@@ -835,40 +835,63 @@ router.get('/api/filter/user-projects/:id', isAdmin, async (req, res) => {
   }
 
 })
-router.get('/api/filter/template-usage/:id', isAdmin, async (req, res) => {
+router.get('/api/filter/template-usage/', isAdmin, async (req, res) => {
   try {
 
-    const template_id = mongoose.Types.ObjectId(req.params["id"]);
+    let { templateId, startDt, endDt, templateNm, partNo } = req.query;
+    if(!templateId)
+    {throw "Template id is null"};
+    templateId = mongoose.Types.ObjectId(templateId);
+    
+    
+    let filter={};
+    if (startDt) {
+      filter.created_dt = { $gt: startDt }
+    }
+    
+    if (endDt) {
+      if (!startDt) {
+        filter.created_dt = { $lte: endDt }
+      } else {
+        filter.created_dt.$lte = endDt;
+      }
+    }
+
+  
+    filter.type = {
+      $in: ["download_pdf", "submit-design"]
+    }
+    filter.template_id =  templateId; 
     
 
-    const log = await logs.find({type:{$in:["download_pdf","submit-design"]}, template_id:template_id},{type:1,user_id:1, content:1, created_dt:1});
+    const log = await logs.find(filter,{ type: 1, user_id: 1, content: 1, created_dt: 1 });
     console.log(`users found in logs againt download_pdf and submit-design ${logs.length}`);
-    const uniqueUsers = new Set(log.map(i=>i.user_id));
-    const userIds =  [...uniqueUsers];
+    const uniqueUsers = new Set(log.map(i => i.user_id));
+    const userIds = [...uniqueUsers];
     console.log(`unique users  ${userIds.length}`);
-    const users = await appusers.find({_id:{$in:userIds}},{fname:1,lname:1,email:1,_id:1}); 
+    const users = await appusers.find({ _id: { $in: userIds } }, { fname: 1, lname: 1, email: 1, _id: 1 });
     console.log(`users found  ${userIds.length}`);
-    const result = []; 
-    log.forEach(x=>{
-      let u = users.find(i=>i._id.toString() == x.user_id.toString()); 
-      
-      let fn =  "N/A";
-      if(x.type == 'submit-design'){
-        try{
+    const result = [];
+    log.forEach(x => {
+      let u = users.find(i => i._id.toString() == x.user_id.toString());
+
+      let fn = "N/A";
+      if (x.type == 'submit-design') {
+        try {
           let j = JSON.parse(x.content);
           fn = `${j.filename}.pdf`;
-        }catch(ex){
+        } catch (ex) {
           console.error(`error parsing content field for submit-design error ${ex}`)
         }
-      }else{
+      } else {
         fn = x.content;
       }
       result.push({
-        user_name : `${u.fname} ${u.lname}`, 
+        user_name: `${u.fname} ${u.lname}`,
         email: u.email,
         download_nm: fn,
         download_dt: x.created_dt,
-        download_type:x.type == 'submit-design'?'Email':'Download' 
+        download_type: x.type == 'submit-design' ? 'Email' : 'Download'
       })
     })
     return ok(res, result)
@@ -912,7 +935,7 @@ router.post('/api/filter/templates', isAdmin, async (req, res) => {
       let t = templates.find(i => i._id.toString() == x.template_id.toString())
       var m = JSON.parse(t.meta);
       let u = users.find(i => i._id.toString() == x.user_id.toString())
-      
+
       out.push({
         user_nm: `${u.fname} ${u.lname}`,
         email: u.email,
@@ -2142,6 +2165,19 @@ router.put("/api/admin/settings/file-upload-limit", isAdmin, async (req, res) =>
   }
 })
 
+router.put("/api/admin/settings/pdf-cleanup", isAdmin, async (req, res) => {
+  const { pdf_cleanup_days } = req.body;
+
+  try {
+    let setting = await app_settings.findOne();
+    setting.pdf_cleanup_days = pdf_cleanup_days;
+    setting.save();
+    return ok(res, setting);
+  } catch (ex) {
+    return error(res, ex);
+  }
+})
+
 router.put("/api/admin/settings/banner-delay", isAdmin, async (req, res) => {
   const { bannerDelay } = req.body;
 
@@ -2169,27 +2205,27 @@ router.put("/api/shutdown", isAdmin, async (req, res) => {
 
 router.get("/api/pdf/:id/:type", isAdmin, async (req, res) => {
   const id = req.params["id"];
-const t = await logs.findById(id);
-if(!t || !t.file_id){ return res.status(204).send('File has been removed from the server'); }
+  const t = await logs.findById(id);
+  if (!t || !t.file_id) { return res.status(204).send('File has been removed from the server'); }
 
-fs.readFile(t.path, (err, data) => {
-  if (err) {
+  fs.readFile(t.path, (err, data) => {
+    if (err) {
       console.error('Error reading file:', err);
       res.status(404).send("File not found on the server");
       return;
-  }
-  const base64 = data.toString('base64');
-  const base64Data = base64.replace(/^data:application\/pdf;base64,/, '');
-  const pdfBuffer = Buffer.from(base64Data, 'base64');
-  res.set({
-    'Content-Type': 'application/pdf',
-    'Content-Disposition': `attachment; filename="downloaded_file.pdf"`,
-    'Content-Length': pdfBuffer.length
-  });
-  res.send(pdfBuffer);
+    }
+    const base64 = data.toString('base64');
+    const base64Data = base64.replace(/^data:application\/pdf;base64,/, '');
+    const pdfBuffer = Buffer.from(base64Data, 'base64');
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename="downloaded_file.pdf"`,
+      'Content-Length': pdfBuffer.length
+    });
+    res.send(pdfBuffer);
 
-});
- 
+  });
+
 })
 
 router.delete("/api/pdf/:id/:type", isAdmin, async (req, res) => {

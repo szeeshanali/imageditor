@@ -27,6 +27,14 @@
                   <p class="tx-12 mg-b-0">Banner Delay in Seconds</p>
               </div>
           </div>
+          <div class="col-lg-3">
+                
+            <div data-toggle="modal" data-target="#pdf-cleanup-days" class="hand card bd pd-20 ht-150">
+                <h6 class="tx-12 tx-uppercase tx-inverse tx-bold mg-b-5">PDF Cleanup</h6>
+                <h1><strong><%=settings.pdf_cleanup_days||0 %></strong><span class="tx-normal">day(s)</span></h1>
+                <p class="tx-12 mg-b-0">Cleanup PDFs for <b><%=settings.pdf_cleanup_days||0 %></b> days(s). <br/>scheduled everyday at (00:00).<br> Set <b>(0)</b> for disable the job.</p>
+            </div>
+        </div>
           <div class="col-lg-3 ">
 
             <div data-toggle="modal" class="hand card bd pd-20 ht-150">
@@ -47,4 +55,5 @@
   <%- include('../../partials/admin/popups/popup-file-upload-limit'); %>
   <%- include('../../partials/admin/popups/popup-banner-delay'); %>
   <%- include('../../partials/admin/popups/popup-shutdown-app'); %>
+  <%- include('../../partials/admin/popups/popup-pdf-cleanup'); %>
   

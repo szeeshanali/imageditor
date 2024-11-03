@@ -7,7 +7,12 @@ const cron = require('node-cron');
 async function  job_cleanup_pdfs() {
     const settings =  await appSettings.findOne(); 
     const age = settings.pdf_cleanup_days;
-    cron.schedule('*/15 * * * *', async () => {
+    console.log("PDF cleanup days: "+ age);
+    //** disable job if zero */
+    if(age === 0){ return; }
+    /* job executes on everyday midnight (00:00)*/
+    
+    cron.schedule('0 0 * * *', async () => {
         try {
           
             console.log('PDF Cleanup Days ==>' + age)

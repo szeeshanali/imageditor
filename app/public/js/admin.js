@@ -2962,7 +2962,7 @@ function showDownloadHistory(userId, title, filteredDownloads, type) {
         temp += tr.replace(
             "{td}",
             `
-    <td class='wd-150'><strong><a href='#' class='underline'  >${ item.fn}</a></strong></td>
+    <td class='wd-150'><strong>${ item.fn}</strong></td>
     <td class='wd-150'>${ item.tn || 'N/A'}</td>
     <td class='wd-150'>${item.pn}</td>
     <td class='wd-150' data-sort='${new Date(item.dt).getTime()}'>${formattedDate}</td>
@@ -3020,10 +3020,25 @@ function show_template_usage_users(data) {
 }
 
 
-function show_template_usage(template_id) {
+function show_template_usage(template_id, startDt, endDt, templateNm, partNo) {
+    let query = `?templateId=${template_id}`;
+    if(startDt){
+        query += `&startDt=${startDt}`;
+    }
+    if(endDt){
+        query += `&endDt=${endDt}`;
+    }
+    if(templateNm){
+        query += `&templateNm=${templateNm}`;
+    }
+    if(partNo){
+        query += `&partNo=${partNo}`;
+    }
+
+    
     $.ajax({
         type: "GET",
-        url: `/api/filter/template-usage/${template_id}`,
+        url: `/api/filter/template-usage/${query}`,
         success: function (res) {
 
             $loader.addClass("hidden");
