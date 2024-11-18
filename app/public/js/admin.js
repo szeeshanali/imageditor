@@ -2989,7 +2989,7 @@ function showDownloadHistory(userId, title, filteredDownloads, type) {
 function show_template_usage_users(data) {
     let tbl = $("#tbl-template-usage-users");
     let table = `<div class='table-responsive'>
-    <table  class='table mg-b-0'>
+    <table  class='table mg-b-0 tx-center table table-striped table mg-b-0 tx-12 tx-bold tx-uppercase' id='dttbl-template-usage'>
         <thead>
             <th>Customer Name</th>
             <th>Email</th>
@@ -2997,7 +2997,7 @@ function show_template_usage_users(data) {
             <th>File Name</th>
             <th>Download Date</th>
             </thead>
-            <tbody>{tr}</tbody>
+            <tbody class='history-table-body'>{tr}</tbody>
       </table></div>`;
     let tr = `<tr>{td}</tr>`;
     let temp = "";
@@ -3005,11 +3005,11 @@ function show_template_usage_users(data) {
 
         temp += tr.replace(
             "{td}",
-            `<td><strong>${item.user_name}</strong></td>
+            `<td class='wd-200'><strong>${item.user_name}</strong></td>
   <td>${ item.email}</td>
   <td class='tx-22 tx-center'><i title='${item.download_type}' class="${item.download_type=='Email'?'ion-ios-email':'ion-ios-download'}"></i></td>
   <td>${item.download_nm}</td>
-  <td>${  getFormattedDate(new Date(item.download_dt))
+  <td class='wd-200'>${  getFormattedDate(new Date(item.download_dt))
             }</td>`)});
 
     table = table.replace("{tr}", temp);
@@ -3017,6 +3017,9 @@ function show_template_usage_users(data) {
         table = "<p clsss='pd-y-20'>No Records Found.</p>"
     }
     tbl.html(table);
+    $("#dttbl-template-usage").DataTable({
+        "iDisplayLength": 100,
+    });
 }
 
 

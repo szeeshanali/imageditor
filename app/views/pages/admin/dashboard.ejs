@@ -109,7 +109,11 @@
 
     $(document).ready(function () {
     var dt = $('#userDT').DataTable(
-        {searching: false, paging: false, info: false}
+      {
+      "order": [[5, 'desc']],
+      "iDisplayLength": 100,
+      }
+        //{searching: false, paging: false, info: false}
     );
     
     $.ajax({

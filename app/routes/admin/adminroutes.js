@@ -874,7 +874,7 @@ router.get('/api/filter/template-usage/', isAdmin, async (req, res) => {
     const result = [];
     log.forEach(x => {
       let u = users.find(i => i._id.toString() == x.user_id.toString());
-
+      if(!u) return;
       let fn = "N/A";
       if (x.type == 'submit-design') {
         try {
@@ -887,7 +887,7 @@ router.get('/api/filter/template-usage/', isAdmin, async (req, res) => {
         fn = x.content;
       }
       result.push({
-        user_name: `${u.fname} ${u.lname}`,
+        user_name: `${u.fname} ${u.lname || ""}`,
         email: u.email,
         download_nm: fn,
         download_dt: x.created_dt,
@@ -933,8 +933,11 @@ router.post('/api/filter/templates', isAdmin, async (req, res) => {
         return;
       }
       let t = templates.find(i => i._id.toString() == x.template_id.toString())
+      if(!t) return;
       var m = JSON.parse(t.meta);
+      if(!m) return;
       let u = users.find(i => i._id.toString() == x.user_id.toString())
+      if(!u) return;
 
       out.push({
         user_nm: `${u.fname} ${u.lname}`,
@@ -1134,10 +1137,14 @@ router.get('/api/filter/top-templates', isAdmin, async (req, res) => {
         return;
       }
       let t = templates.find(i => i._id.toString() == x.template_id.toString())
+      if(!t) return;
       var m = JSON.parse(t.meta);
+      if(!m) return;
       let u = users.find(i => i._id.toString() == x.user_id.toString())
+      if(!u) return;
+     
       out.push({
-        user_nm: `${u.fname} ${u.lname}`,
+        user_nm: `${u.fname} ${u.lname||""}`,
         email: u.email,
         template_nm: t.title,
         count: 1,
