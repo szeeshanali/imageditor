@@ -681,14 +681,20 @@ router.post('/api/filter/users', isAdmin, async (req, res) => {
 
 
     console.log(`${uniqueUsersIds.length} unique userIds found in log against ${filterString}`);
-    const users = await appusers.find({ _id: { $in: uniqueUsersIds } });
+    
+    let users;
+    if (displayAllUsers == "true") {
+      users = await appusers.find({});
+      //userIds = downloads.map(i => i.user_id) || [];
+    }else{
+      users =  await appusers.find({ _id: { $in: uniqueUsersIds } });
+    }
+
     console.log(`${users.length} users found.`);
     const projects = await uploads.find({ uploaded_by: { $in: uniqueUsersIds }, type: 'project', active: true, deleted: false }, { _id: 1, uploaded_by: 1 });
     //userIds = userIds.concat(projects.map(i => i.uploaded_by));
 
-    if (displayAllUsers == "false") {
-      //userIds = downloads.map(i => i.user_id) || [];
-    }
+    
 
     // if (filter.user_id) {
     //   userIds = filter.user_id.$in.map(i => i._id);
@@ -754,6 +760,7 @@ router.get('/api/filter/user-downloads/:id', isAdmin, async (req, res) => {
         filter.created_dt.$lte = endDate;
       }
     }
+    filter.type={};
     filter.type.$in = ['download_pdf', 'submit-design'];
 
     /**
@@ -784,6 +791,8 @@ router.get('/api/filter/user-downloads/:id', isAdmin, async (req, res) => {
         //data = JSON.parse(e.data);
         let t = templates.find(i => i._id.toString() == e.template_id.toString());
         if (e.type === "submit-design") {
+          if(!e.content) {return;}
+
           const c = JSON.parse(e.content);
           downloads[i] = {
             id: e._id,
@@ -805,6 +814,7 @@ router.get('/api/filter/user-downloads/:id', isAdmin, async (req, res) => {
           };
         }
       } catch (error) {
+
         downloads[i] = {
           id: e._id,
           fn: "error content",
@@ -813,6 +823,7 @@ router.get('/api/filter/user-downloads/:id', isAdmin, async (req, res) => {
           pdf: false,
           dt: e.created_dt
         };
+        console.error(error);
         return;
       }
     })
@@ -1191,67 +1202,12 @@ router.get('/api/filter/top-templates', isAdmin, async (req, res) => {
 
     // Convert the result back to an array
     const groupedArray = Object.values(grouped);
-
-
-
     return ok(res, groupedArray);
 
   } catch (error) {
     console.log(error);
   }
 
-
-
-
-  /*
-  try{
-    let filter = { type:"download_pdf"};
-    let _logs = await logs.find(filter); 
-    let out = [];
-    if(_logs)
-    {
-       
-      _logs.forEach(log=>{
-        if(log.data)
-        {
-          let json = JSON.parse(log.data)
-          let templateFound = out.find(o=>o.user_id == log.user_id.toString() && o.templateId == json._id); 
-          if(!templateFound)
-          {
-            out.push({
-              title       : json.title,
-              count       : 1,
-              ref_code    : json.ref_code,
-              created_dt  : json.created_dt,
-              link        : json.link,
-              templateId  : json._id,
-              code        : json.code, 
-              user_id     : log.user_id.toString(),
-              user_count  : 1,
-              userIds     : "",
-            })
-          }else{
-           // out.find(o=>o.templateId === json._id).count +=1; 
-           var f = out.find(o=>o.user_id ==log.user_id.toString());
-           f.user_count +=1;
-           f.userIds += log.user_id.toString() 
-          }
-        }
-      })
-    }
-    out = out.sort(function(a,b){
-      if(a.count > b.count)
-      {return -1}
-      return 1;
-    })
-    out = out.splice(0,10)
-
-
-    return ok(res,out)
-  }catch(ex){
-    return error(res,ex)
-  }
-  */
 })
 
 
@@ -1459,63 +1415,6 @@ router.post('/api/admin/project/validate', isAdmin, async function (req, res) {
     return error(res, ex.message);
   }
 })
-
-
-// router.post('/api/admin/save-design', isAdmin, async function(req, res) {
-//   try{
-
-
-//       const totalProjects =  await uploads.find({ 
-//           uploaded_by     :   req.user._id,  
-//           deleted         :   false,
-//           active          :   true,
-//           type            :   'pre-designed'  
-//       },{title:1}); 
-
-//       let {id, itemId, userDesignId, desc, mime_type, meta, title,name,file_name,file_ext,order_no,active,base64,type,by_admin,link, json, code, ref_code,category} = req.body; 
-
-//       if(totalProjects.find(i=>i.title?.toLowerCase()?.trim() === title?.toLowerCase().trim()))
-//       {
-//           ///return res.status(400).send({message:`A project with the same name  (${title}) is already exists. `, error: `Project with the same name  (${title}) is already exists. `});
-//           return res.status(409).send({
-//               status:409,
-//               message:`Filename already exists, Do you wish to replace?`,
-//               exception:null,
-//               error:true,
-//               valid:false
-//           });
-//       }
-
-//       let _id = mongoose.Types.ObjectId();
-//       let uploadModel = {
-//         title           :   title,
-//         name            :   title,
-//         desc            :   desc,
-//         code            :   _id,
-//         active          :   true,
-//         json            :   json,
-//         base64          :   base64,
-//         path            :   null,
-//         meta            :   meta,
-//         by_admin        :   true,
-//         type            :   type,
-//         uploaded_by     :   req.user._id,
-//         created_dt      :   new Date()      
-//       };
-
-//       let _path = `../app/public/uploads/admin/${type}/${type}-${_id}.jpg`;    
-//       let _base64Alter = base64.replace(`data:${"image/png"};base64,`, "");
-//       await fs.writeFileSync(_path,_base64Alter,{ encoding: 'base64' }); 
-//       uploadModel.path = _path;
-//       var upload = new uploads(uploadModel);
-//       await upload.save();
-//       res.status(200).send({message:`Success`, error: null});
-
-//       }catch(ex) {
-//           res.status(500).send({message:`Something went wrong!`, error: ex.message});
-//       }
-//    })
-
 
 router.post('/api/admin/save-design', isLoggedIn, async function (req, res) {
   try {

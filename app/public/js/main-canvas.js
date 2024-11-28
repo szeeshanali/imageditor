@@ -1096,7 +1096,8 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
                         level:1,
                         type:'download_pdf',
                         content:fn,
-                        data:t,
+                        data:null,
+                        //data:t,
                         template_id:t._id,
                         pdfBase64:pdf.output('datauristring')
                     },(data)=>{}); 
