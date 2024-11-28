@@ -760,8 +760,8 @@ router.get('/api/filter/user-downloads/:id', isAdmin, async (req, res) => {
         filter.created_dt.$lte = endDate;
       }
     }
-    filter.type={};
-    filter.type.$in = ['download_pdf', 'submit-design'];
+    //filter.type={};
+    //filter.type.$in = ['download_pdf', 'submit-design'];
 
     /**
      * update records 
