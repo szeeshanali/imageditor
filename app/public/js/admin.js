@@ -2840,6 +2840,7 @@ function getUserDownloads(userId, userName, type) {
 
 
     let paramsDt = "";
+  
     if (fromDt && toDt) {
         paramsDt = `?from=${fromDt}&to=${toDt}`;
     } else if (fromDt) {
@@ -2847,12 +2848,16 @@ function getUserDownloads(userId, userName, type) {
     } else if (toDt) {
         paramsDt = `?to=${toDt}`;
     }
-
+   if(paramsDt == ''){
+    paramsDt = `?type=${type}`;
+   }else{
+    paramsDt += `&type=${type}`;
+   }
 
     $loader.removeClass("hidden");
     $.ajax({
         type: "GET",
-        url: `/api/filter/user-downloads/${userId}${paramsDt}&type=${type}`,
+        url: `/api/filter/user-downloads/${userId}${paramsDt}`,
         success: function (res) {
             $loader.addClass("hidden");
             let d = [];
