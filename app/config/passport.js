@@ -33,8 +33,8 @@ module.exports = function (passport) {
       headers = req.headers;
       const agreeterms = req.body.agreeterms;
       const admin = req.body.admin;
-      console.log(`admin : ${JSON.stringify(req.body)}`);
-      console.log(`req.params: ${JSON.stringify(req.params)}`);
+      //console.log(`admin : ${JSON.stringify(req.body)}`);
+      //console.log(`req.params: ${JSON.stringify(req.params)}`);
 
       if (req.params ?.mode === "admin") {
         var user = await User.findOne({ email: email, is_admin: true, deleted: false });
@@ -56,6 +56,8 @@ module.exports = function (passport) {
         return done(null, false, { message: 'Please Select I Agree with Terms & Conditions.' });
       }
 
+      /* ---------------------------------------------------------------------- 
+      Obselete:: MySQL connection logic 
 
       var con = mysql.createPool({
 
@@ -88,7 +90,7 @@ module.exports = function (passport) {
           log(req, 'login-failed - User email found in KopyKake DB but password is not matched.');
           console.error('Error: User email found in KopyKake DB but password is not matched.');
           
-          /* quick fix */
+          // quick fix 
           //-------------------------------------------------------------
           const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
@@ -98,21 +100,45 @@ module.exports = function (passport) {
             return done(null, false, { message: 'Incorrect username or password' });
           }
           //-----------------------------------------------------------------------
-          /** end quick fix  */
+          ///** end quick fix  
 
-          // **** Must Must Must uncomment this below line after fixing the password mismatched error. -
+          //// **** Must Must Must uncomment this below line after fixing the password mismatched error. -
           ///return done(null, false, { message: 'Incorrect username or password' });
-        }
+    }*/
 
-        console.log("Success: User Authenticated from KopyKake DB.");
-        console.info("Finding KopyKake User in KakePrint DB if not found then will be inserted.");
+          console.log(`Authenticating user: ${email} on KopyKake.`); 
+        
+          const response = await fetch('https://www.kopykake.com/wp-json/jwt-auth/v1/token',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              username:email,
+              password:password
+            })
+          });
 
-        /// Sync KakePrint User with KopyKake DB
-        var user = await User.findOne({ email: user_email, deleted: false });
-        //.then((user)=>{
+          const data = await response.json();
 
-  
+          if(!data.token){
+            console.error(`Failed authentication for ${email} on KopyKake`); 
+            console.log(data);
+            return done(null, false, { message: 'Incorrect username or password' });
+          }
 
+          console.log(`Success: authentication for ${email} on KopyKake`);
+
+
+          /// Sync KakePrint User with KopyKake DB
+          var user = await User.findOne({ email: email, deleted: false });
+          const display_name = email.split('@')[0]?.toUpperCase(); 
+          const user_email = email; 
+          const user_pass =  passport;
+          
+
+          //.then((user)=>{
 
         if (!user) {
           console.info("User found in KopyKake DB, but not found in KakePrint DB.");
@@ -186,7 +212,7 @@ module.exports = function (passport) {
         //});       
 
 
-      });
+     // });
      
     }))
 
