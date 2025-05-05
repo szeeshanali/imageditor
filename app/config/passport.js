@@ -135,7 +135,7 @@ module.exports = function (passport) {
           var user = await User.findOne({ email: email, deleted: false });
           const display_name = email.split('@')[0]?.toUpperCase(); 
           const user_email = email; 
-          const user_pass =  passport;
+          const user_pass =  password;
           
 
           //.then((user)=>{
