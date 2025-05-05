@@ -154,7 +154,7 @@ module.exports = function (passport) {
           }).save().then((value) => {
             log(req, 'login-success - New User Synced on KakePrint DB');
             console.log(`User (${display_name}) Synced On KakePrint DB.`)
-            return done(null, user);
+            return done(null, value);
           }).catch(value => {
             log(req, 'login-failed - DB_CONN_ERR: KakePrint DB connection Error. ' + value);
             return done(null, false, { message: `DB_CONN_ERR: KakePrint DB connection Error.` });
