@@ -1095,7 +1095,7 @@ fabric.CurvedText.fromObject = function (object, callback, forceAsync) {
                     $.post('/api/logs',{
                         level:1,
                         type:'download_pdf',
-                        content:fn,
+                        content:fn.replace(/[^a-zA-Z0-9]/g, "_"),
                         data:null,
                         //data:t,
                         template_id:t._id,
